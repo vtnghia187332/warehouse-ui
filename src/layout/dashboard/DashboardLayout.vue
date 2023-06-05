@@ -10,6 +10,11 @@
           name="WarehouseList"
           icon="ti-package"
         />
+        <sidebar-link
+          to="/warehouse-detail"
+          name="Warehouse Detail"
+          icon="ti-package"
+        />
       </template>
       <mobile-menu>
         <li class="nav-item">

@@ -22,9 +22,8 @@ export default {};
   /* .fade-leave-active in <2.1.8 */ {
   opacity: 0;
 }
-.container-fluid{
+.container-fluid {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
 </style>
-

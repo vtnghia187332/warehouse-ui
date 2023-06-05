@@ -16,12 +16,12 @@
 import Vue from "vue";
 import App from "./App";
 import router from "./router/index";
-
 import PaperDashboard from "./plugins/paperDashboard";
 import "vue-notifyjs/themes/default.css";
 
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
+import "./css/index.css"
 import locale from "element-ui/lib/locale/lang/vi";
 
 Vue.use(ElementUI, { locale }).use(PaperDashboard);

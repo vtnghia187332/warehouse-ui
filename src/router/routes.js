@@ -11,6 +11,7 @@ import Maps from "@/pages/Maps.vue";
 import Typography from "@/pages/Typography.vue";
 import TableList from "@/pages/TableList.vue";
 import WarehouseList from "@/pages/warehouse/WarehouseList.vue";
+import WarehouseDetail from "@/pages/warehouse/WarehouseDetail.vue";
 
 const routes = [
   {
@@ -57,6 +58,11 @@ const routes = [
         path: "warehouse-list",
         name: "warehouse-list",
         component: WarehouseList,
+      },
+      {
+        path: "warehouse-detail",
+        name: "warehouse-detail",
+        component: WarehouseDetail,
       },
     ],
   },
