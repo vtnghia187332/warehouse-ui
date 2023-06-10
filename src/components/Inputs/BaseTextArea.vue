@@ -10,7 +10,7 @@
             :class="field.error ? `${field.classes} !border-red-500` : field.classes" />
         <div class="flex justify-between absolute ">
             <div class="mb-1 text-red-500">{{ field.error }}</div>
-            <div class="mb-1 text-black-500">{{ field.value.length }}/{{ field.maxlength }}</div>
+            <div v-if="field.maxlength > 0" class="mb-1 text-black-500">{{ field.value.length }}/{{ field.maxlength }}</div>
         </div>
     </div>
 </template>

@@ -56,6 +56,47 @@
             </div>
           </div>
         </div>
+        <div class="card bg-white mb-4">
+          <div class="font-medium text-base text-primary-85 p-3 border border-divider">
+            Window Time
+          </div>
+          <div class="p-3 !pt-2 pb-0">
+            <el-tabs v-model="workingHour.activeName" @tab-click="handleClick">
+              <el-tab-pane label="OpenHour" name="first">
+                <div class="mb-4">
+                  <el-checkbox v-model="openHourTab.checked">Monday</el-checkbox>
+                  <div class="block">
+                    <span class="demonstration">Default</span>
+                    <el-date-picker :default-time="false" v-model="workingHour.value1" type="datetime"
+                      placeholder="Select date and time">
+                    </el-date-picker>
+                  </div>
+                </div>
+                <div class="mb-4">
+                  <el-checkbox v-model="openHourTab.checked">Tuesday</el-checkbox>
+                </div>
+                <div class="mb-4">
+                  <el-checkbox v-model="openHourTab.checked">Wednesday</el-checkbox>
+                </div>
+                <div class="mb-4">
+                  <el-checkbox v-model="openHourTab.checked">Thursday</el-checkbox>
+                </div>
+                <div class="mb-4">
+                  <el-checkbox v-model="openHourTab.checked">Friday</el-checkbox>
+                </div>
+                <div class="mb-4">
+                  <el-checkbox v-model="openHourTab.checked">Saturday</el-checkbox>
+                </div>
+                <div class="mb-4">
+                  <el-checkbox v-model="openHourTab.checked">Sunday</el-checkbox>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="Holiday, Special Day-Off" name="second">Holiday, Special Day-Off</el-tab-pane>
+              <el-tab-pane label="Special Day-On" name="third">Special Day-On</el-tab-pane>
+            </el-tabs>
+          </div>
+        </div>
+
         <FormCard title="Address">
           <template v-slot:content>
             <div class="!w-[1168px]">
@@ -99,6 +140,13 @@ export default {
   components: { FormCard, BaseInput, BaseTextArea, Button },
   data() {
     return {
+      workingHour: {
+        activeName: 'first',
+        value1: '',
+      },
+      openHourTab: {
+        checked: true,
+      },
       warehouse: {
         code: {
           id: "warehouseCode",
@@ -154,7 +202,7 @@ export default {
           isRequired: 'true',
           value: "",
           placeholder: "Enter Keycontact Title",
-          maxlength: '',
+          maxlength: 0,
           error: "",
         },
         firstName: {
@@ -222,7 +270,7 @@ export default {
           isRequired: 'true',
           value: "",
           placeholder: "Enter Country",
-          maxlength: 150,
+          maxlength: 0,
           error: "",
         },
         city: {
@@ -233,7 +281,7 @@ export default {
           isRequired: 'true',
           value: "",
           placeholder: "Enter City",
-          maxlength: 150,
+          maxlength: 0,
           error: "",
         },
         district: {
@@ -244,7 +292,7 @@ export default {
           isRequired: 'true',
           value: "",
           placeholder: "Enter District",
-          maxlength: 150,
+          maxlength: 0,
           error: "",
         },
         subdistrict: {
@@ -255,7 +303,7 @@ export default {
           isRequired: 'true',
           value: "",
           placeholder: "Enter Sub-District",
-          maxlength: 150,
+          maxlength: 0,
           error: "",
         }
       }
@@ -285,6 +333,8 @@ export default {
         }
       });
     },
+    handleClick(tab, event) {
+    }
   },
 };
 </script>
