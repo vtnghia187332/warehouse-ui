@@ -31,8 +31,8 @@
               </button>
             </div>
             <div class="bg-neutral-2 w-full border border-neutral-5 rounded-sm mb-4">
-              <div class="flex justify-between border-b p-3">
-                <span class="text-sm font-bold flex items-center">Key Contact Person
+              <div class="flex justify-between border-b p-3 bg-gray-100">
+                <span class="text-sm font-bold flex items-center ">Key Contact Person
                 </span>
                 <div class="cursor-pointer">
                   <button class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -40,7 +40,7 @@
                   </button>
                 </div>
               </div>
-              <div class="p-3">
+              <div class="p-3 bg-gray-100">
                 <div class="flex justify-between">
                   <BaseInput :field="keyContact.title" v-model="keyContact.title.value" />
                 </div>
