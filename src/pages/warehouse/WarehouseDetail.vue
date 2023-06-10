@@ -56,6 +56,23 @@
             </div>
           </div>
         </div>
+        <FormCard title="Address">
+          <template v-slot:content>
+            <div class="!w-[1168px]">
+              <div>
+                <BaseTextArea :field="address.addressDes" v-model="address.addressDes.value" />
+              </div>
+              <div class="flex justify-between">
+                <BaseInput :field="address.country" v-model="address.country.value" />
+                <BaseInput :field="address.city" v-model="address.city.value" />
+              </div>
+              <div class="flex justify-between">
+                <BaseInput :field="address.district" v-model="address.district.value" />
+                <BaseInput :field="address.subdistrict" v-model="address.subdistrict.value" />
+              </div>
+            </div>
+          </template>
+        </FormCard>
 
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="checkData">
           Button
@@ -184,6 +201,63 @@ export default {
           maxlength: 150,
           error: "",
         }
+      },
+      address: {
+        addressDes: {
+          id: "addressDes",
+          classes: "!w-[1168px]",
+          type: "text",
+          label: "Address",
+          isRequired: 'true',
+          value: "",
+          placeholder: "Enter Adress",
+          maxlength: 150,
+          error: "",
+        },
+        country: {
+          id: "country",
+          classes: "!w-[544px]",
+          type: "text",
+          label: "Country",
+          isRequired: 'true',
+          value: "",
+          placeholder: "Enter Country",
+          maxlength: 150,
+          error: "",
+        },
+        city: {
+          id: "city",
+          classes: "!w-[544px]",
+          type: "text",
+          label: "City",
+          isRequired: 'true',
+          value: "",
+          placeholder: "Enter City",
+          maxlength: 150,
+          error: "",
+        },
+        district: {
+          id: "district",
+          classes: "!w-[544px]",
+          type: "text",
+          label: "District",
+          isRequired: 'true',
+          value: "",
+          placeholder: "Enter District",
+          maxlength: 150,
+          error: "",
+        },
+        subdistrict: {
+          id: "subdistrict",
+          classes: "!w-[544px]",
+          type: "text",
+          label: "Sub-District",
+          isRequired: 'true',
+          value: "",
+          placeholder: "Enter Sub-District",
+          maxlength: 150,
+          error: "",
+        }
       }
     };
   },
@@ -201,6 +275,13 @@ export default {
           this.keyContact[key].error = this.keyContact[key].label.concat(" is not empty");
         } else {
           this.keyContact[key].error = "";
+        }
+      });
+      Object.keys(this.address).forEach((key) => {
+        if (this.address[key].value == "") {
+          this.address[key].error = this.address[key].label.concat(" is not empty");
+        } else {
+          this.address[key].error = "";
         }
       });
     },
