@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white radius-shadow_add">
-    <div class="p-3 text-primary-85 font-medium text-base">{{ title }}</div>
+    <div class="p-3 text-primary-85 !font-bold text-base">{{ title }}</div>
     <div class="p-3 border-t border-gray-200">
       <slot name="content" />
     </div>

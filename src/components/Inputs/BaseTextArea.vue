@@ -4,10 +4,10 @@
         <label v-if="field.label" :for="field.id" class="!font-bold block">
             {{ field.label }}
         </label>
-        <input :id="field.id" :placeholder="field.placeholder" :type="field.type" :value="field.value" @input="updateInput"
+        <textarea :id="field.id" :placeholder="field.placeholder" :type="field.type" :value="field.value" @input="updateInput"
             class="p-2 pl-3 relative border rounded-sm w-full focus:!border-gray-700 focus:!ring-gray-700"
             :class="field.error ? `${field.classes} !border-red-500` : field.classes" />
-        <div class="flex justify-between absolute mt-1 ">
+        <div class="flex justify-between absolute ">
             <div class="mb-1 text-red-500">{{ field.error }}</div>
             <div class="mb-1 text-black-500">{{ field.value.length }}/{{ field.maxlength }}</div>
         </div>
@@ -16,7 +16,7 @@
   
 <script>
 export default {
-    name: "BaseInput",
+    name: "BaseTextArea",
     data() {
         return {
         }

@@ -4,22 +4,23 @@
       <div class="forms grow flex flex-col gap-y-4">
         <FormCard title="Information">
           <template v-slot:content>
-            <div class="flex justify-between">
+            <div>
               <div>
-                <h4 class="mb-2">Warehouse Code</h4>
-                <el-input class="w-[550px]" placeholder="Please input" v-model="input">
-                </el-input>
+                <BaseInput :field="warehouse.code" v-model="warehouse.code.value" />
               </div>
               <div>
-                <h4 class="mb-2">Warehouse Code</h4>
-                <el-input class="w-[550px]" placeholder="Please input" v-model="input">
-                </el-input>
+                <BaseTextArea :field="warehouse.name" v-model="warehouse.name.value" />
+              </div>
+              <div>
+                <BaseInput :field="warehouse.shortName" v-model="warehouse.shortName.value" />
+              </div>
+              <div>
+                <BaseTextArea :field="warehouse.description" v-model="warehouse.description.value" />
               </div>
             </div>
           </template>
         </FormCard>
-        <BaseInput :field="warehouse.name" v-model="warehouse.name.value" />
-        <BaseInput :field="warehouse.email" v-model="warehouse.email.value" />
+
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="checkData">
           Button
         </button>
@@ -38,29 +39,55 @@
 
 <script>
 import BaseInput from "./../../components/Inputs/BaseInput.vue";
+import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
 import FormCard from "./../../components/Cards/FormCard.vue";
 import Button from "../../components/Button.vue";
 export default {
-  components: { FormCard, BaseInput, Button },
+  components: { FormCard, BaseInput, BaseTextArea, Button },
   data() {
     return {
       warehouse: {
+        code: {
+          id: "warehouseCode",
+          classes: "!w-[560px]",
+          type: "text",
+          label: "Warehouse Code",
+          value: "",
+          placeholder: "Enter Warehouse Code",
+          maxlength: 20,
+          error: "",
+        },
         name: {
           id: "warehouseName",
-          classes: "!w-[100px]",
+          classes: "!w-[1200px] !h-[64px]",
           type: "text",
           label: "Warehouse Name",
           value: "",
+          placeholder: "Enter Warehouse Name",
+          maxlength: 150,
           error: "",
         },
-        email: {
-          id: "warehouseEmail",
-          classes: "!w-[100px]",
+        shortName: {
+          id: "warehouseShortName",
+          classes: "!w-[1200px]",
           type: "text",
-          label: "Warehouse Email",
+          label: "Warehouse Short Name",
           value: "",
+          placeholder: "Enter Warehouse Short Name",
+          maxlength: 100,
           error: "",
         },
+        description: {
+          id: "warehouseDescription",
+          classes: "!w-[1200px] !h-[64px]",
+          type: "text",
+          label: "Warehouse Description",
+          value: "",
+          placeholder: "Enter Warehouse Description",
+          maxlength: 150,
+          error: "",
+        },
+
       },
     };
   },
