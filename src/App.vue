@@ -43,6 +43,10 @@ export default {};
   }
 }
 
+.el-range-separator{
+  width: 100px !important;
+}
+
 .el-date-picker__time-header {
   display: none !important;
 }</style>

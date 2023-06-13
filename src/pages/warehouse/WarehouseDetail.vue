@@ -6,6 +6,13 @@
           <template v-slot:content>
             <div class="!w-[1168px]">
               <div>
+                <div>Check input selection</div>
+                <el-select v-model="value" filterable placeholder="Select">
+                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                  </el-option>
+                </el-select>
+              </div>
+              <div>
                 <BaseInput :field="warehouse.code" v-model="warehouse.code.value" />
               </div>
               <div>
@@ -63,36 +70,49 @@
           <div class="p-3 !pt-2 pb-0">
             <el-tabs v-model="workingHour.activeName" @tab-click="handleClick">
               <el-tab-pane label="OpenHour" name="first">
-                <div class="mb-4">
-                  <el-checkbox v-model="openHourTab.checked">Monday</el-checkbox>
-                  <div class="block">
-                    <span class="demonstration">Default</span>
-                    <el-date-picker :default-time="false" v-model="workingHour.value1" type="datetime"
-                      placeholder="Select date and time">
-                    </el-date-picker>
-                  </div>
-                </div>
-                <div class="mb-4">
-                  <el-checkbox v-model="openHourTab.checked">Tuesday</el-checkbox>
-                </div>
-                <div class="mb-4">
-                  <el-checkbox v-model="openHourTab.checked">Wednesday</el-checkbox>
-                </div>
-                <div class="mb-4">
-                  <el-checkbox v-model="openHourTab.checked">Thursday</el-checkbox>
-                </div>
-                <div class="mb-4">
-                  <el-checkbox v-model="openHourTab.checked">Friday</el-checkbox>
-                </div>
-                <div class="mb-4">
-                  <el-checkbox v-model="openHourTab.checked">Saturday</el-checkbox>
-                </div>
-                <div class="mb-4">
-                  <el-checkbox v-model="openHourTab.checked">Sunday</el-checkbox>
+                <div class="mb-2 flex items-center">
+                  <el-checkbox class="!mr-[150px]" v-model="openHourTab.checked">Monday</el-checkbox>
+                  <el-time-picker is-range format="HH:mm" v-model="workingHour.time" range-separator="To"
+                    start-placeholder="Start time" end-placeholder="End time">
+                  </el-time-picker>
                 </div>
               </el-tab-pane>
-              <el-tab-pane label="Holiday, Special Day-Off" name="second">Holiday, Special Day-Off</el-tab-pane>
-              <el-tab-pane label="Special Day-On" name="third">Special Day-On</el-tab-pane>
+              <el-tab-pane class="relative" label="Holiday, Special Day-Off" name="second">
+                <button
+                  class="absolute z-20 ml-[1085px] !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ">
+                  Add
+                </button>
+                <el-table :data="tableData" style="width: 100%">
+                  <el-table-column label="Date" prop="date">
+                  </el-table-column>
+                  <el-table-column label="Name" prop="name">
+                  </el-table-column>
+                  <el-table-column align="right">
+                    <template slot-scope="scope">
+                      <el-button size="mini" type="danger" class="bg-red-300"
+                        @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-tab-pane>
+              <el-tab-pane label="Special Day-On" name="third">
+                <button
+                  class="absolute z-20 ml-[1082px] !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ">
+                  Add
+                </button>
+                <el-table :data="tableData" style="width: 100%">
+                  <el-table-column label="Date" prop="date">
+                  </el-table-column>
+                  <el-table-column label="Name" prop="name">
+                  </el-table-column>
+                  <el-table-column align="right">
+                    <template slot-scope="scope">
+                      <el-button size="mini" type="danger" class="bg-red-300"
+                        @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-tab-pane>
             </el-tabs>
           </div>
         </div>
@@ -140,9 +160,36 @@ export default {
   components: { FormCard, BaseInput, BaseTextArea, Button },
   data() {
     return {
+      options: [{
+        value: 'Option1',
+        label: 'Option1'
+      }, {
+        value: 'Option2',
+        label: 'Option2'
+      }, {
+        value: 'Option3',
+        label: 'Option3'
+      }, {
+        value: 'Option4',
+        label: 'Option4'
+      }, {
+        value: 'Option5',
+        label: 'Option5'
+      }],
+      value: '',
+      tableData: [{
+        date: '2016-05-03',
+        name: 'Tom',
+        address: 'No. 189, Grove St, Los Angeles'
+      }, {
+        date: '2016-05-02',
+        name: 'John',
+        address: 'No. 189, Grove St, Los Angeles'
+      }],
+      search: '',
       workingHour: {
         activeName: 'first',
-        value1: '',
+        time: [new Date(0), new Date(0)],
       },
       openHourTab: {
         checked: true,
@@ -153,7 +200,7 @@ export default {
           classes: "!w-[544px]",
           type: "text",
           label: "Code",
-          isRequired: 'true',
+          isRequired: 'false',
           value: "",
           placeholder: "Enter Warehouse Code",
           maxlength: 20,
