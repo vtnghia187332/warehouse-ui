@@ -189,7 +189,7 @@ export default {
       search: '',
       workingHour: {
         activeName: 'first',
-        time: [new Date(0), new Date(0)],
+        time: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
       },
       openHourTab: {
         checked: true,
