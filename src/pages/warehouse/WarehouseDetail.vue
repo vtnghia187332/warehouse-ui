@@ -6,11 +6,7 @@
           <template v-slot:content>
             <div class="!w-[1168px]">
               <div>
-                <div>Check input selection</div>
-                <el-select v-model="value" filterable placeholder="Select">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                  </el-option>
-                </el-select>
+              <BaseSelection label="hello world" :value=value :options="options"/>
               </div>
               <div>
                 <BaseInput :field="warehouse.code" v-model="warehouse.code.value" />
@@ -156,8 +152,9 @@ import BaseInput from "./../../components/Inputs/BaseInput.vue";
 import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
 import FormCard from "./../../components/Cards/FormCard.vue";
 import Button from "../../components/Button.vue";
+import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 export default {
-  components: { FormCard, BaseInput, BaseTextArea, Button },
+  components: { FormCard, BaseInput, BaseTextArea, Button,BaseSelection },
   data() {
     return {
       options: [{
@@ -176,7 +173,7 @@ export default {
         value: 'Option5',
         label: 'Option5'
       }],
-      value: '',
+      value: 'aaaaa',
       tableData: [{
         date: '2016-05-03',
         name: 'Tom',
