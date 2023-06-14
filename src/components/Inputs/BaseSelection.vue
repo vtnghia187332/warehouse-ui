@@ -8,8 +8,11 @@
             <el-option v-for="item in field.options" :key="item.value" :label="item.label" :value="item.value"
                 @click="updateInput">
             </el-option>
-            <div class="mb-1 text-red-500">{{ field.error }}</div>
         </el-select>
+        <div class="flex justify-between ">
+            <div class="mb-1 h-1 text-red-500">{{ field.error }}</div>
+            <div class="mb-1 h-1"></div>
+        </div>
     </div>
 </template>
 <script>

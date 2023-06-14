@@ -122,7 +122,6 @@
               <div class="flex justify-between">
                 <!-- <BaseInput :field="address.country" v-model="address.country.value" /> -->
                 <BaseSelection :field="address.country" />
-                <p>{{ address.country.value }}</p>
                 <BaseInput :field="address.city" v-model="address.city.value" />
               </div>
               <div class="flex justify-between">
@@ -391,6 +390,7 @@ export default {
       Object.keys(this.address).forEach((key) => {
         if (this.address[key].value == "") {
           this.address[key].error = this.address[key].label.concat(" is not empty");
+          console.log("error", this.address[key].error)
         } else {
           this.address[key].error = "";
         }
