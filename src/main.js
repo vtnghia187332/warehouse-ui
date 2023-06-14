@@ -23,7 +23,7 @@ import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import locale from "element-ui/lib/locale/lang/en";
 
-import "./css/index.css";
+import "./css/index.scss";
 Vue.use(ElementUI, { locale }).use(PaperDashboard);
 
 /* eslint-disable no-new */
