@@ -2,7 +2,7 @@
 <template>
     <div class="mb-2">
         <label v-if="field.label" :for="field.id" class="!font-bold block">
-            <span v-if="field.isRequired" class='text-danger'>*</span>{{ field.label }}
+            <span v-if="field.isRequired == true" class='text-danger'>*</span>{{ field.label }}
         </label>
         <textarea :id="field.id" :placeholder="field.placeholder" :type="field.type" :value="field.value"
             @input="updateInput"

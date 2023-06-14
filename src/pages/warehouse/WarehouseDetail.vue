@@ -98,9 +98,11 @@
                   Add
                 </button>
                 <el-table :data="specialDayOn" style="width: 100%">
-                  <el-table-column label="Date" prop="text">
+                  <el-table-column label="Date" prop="date">
                   </el-table-column>
-                  <el-table-column label="Name" prop="number">
+                  <el-table-column label="Time" prop="time">
+                  </el-table-column>
+                  <el-table-column label="Remark" prop="remark">
                   </el-table-column>
                   <el-table-column align="right">
                     <template slot-scope="scope">

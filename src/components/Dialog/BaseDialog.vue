@@ -1,17 +1,23 @@
 <template>
     <el-dialog title="Tips" :visible="dialogVisible" :before-close="() => $emit('update:dialogVisible', false)" width="30%"
         :append-to-body="true">
-        <el-input placeholder="Please input text" v-model="input.text"></el-input>
-        <el-input placeholder="Please input number" v-model="input.number"></el-input>
+        <DatePicker :field="date" />
+        <TimePicker :field="time" />
+        <BaseTextArea :field="remark" v-model="remark.value" />
         <span slot="footer" class="dialog-footer">
             <el-button @click="$emit('update:dialogVisible', false)">Cancel</el-button>
-            <el-button type="primary" @click="handleData">Confirm</el-button>
+            <el-button class="text-green-500" type="primary" @click="handleData">Confirm</el-button>
         </span>
     </el-dialog>
 </template>
 
 <script>
+import BaseTextArea from '@/components/Inputs/BaseTextArea'
+import DatePicker from '../Date/DatePicker.vue';
+import TimePicker from '../Date/TimePicker.vue';
+
 export default {
+    components: { BaseTextArea, DatePicker, TimePicker },
     props: {
         dialogVisible: {
             type: Boolean,
@@ -19,9 +25,43 @@ export default {
     },
     data() {
         return {
-            input: {
-                text: '',
-                number: '',
+
+            date: {
+                id: "date",
+                classes: "!w-[534px]",
+                label: "Date",
+                isRequired: 'true',
+                value: "",
+                error: "",
+                pickerOptions: {
+                    disabledDate(time) {
+                        return time.getTime() < Date.now();
+                    },
+                },
+            },
+            time: {
+                id: "time",
+                classes: "!w-[534px]",
+                label: "Time",
+                isRequired: 'true',
+                value: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
+                error: "",
+            },
+            remark: {
+                id: "remark",
+                classes: "!w-[534px]",
+                type: "text",
+                label: "Remark",
+                isRequired: 'false',
+                value: "",
+                placeholder: "Enter Remark",
+                maxlength: 150,
+                error: "",
+            },
+            dataSpecialDay: {
+                date: '',
+                time: '',
+                remark: '',
             }
         }
     },
@@ -31,9 +71,14 @@ export default {
             this.$emit("handleAddSpecialDay", false);
         },
         handleData() {
-            this.$emit("handle-data", this.input);
+            var me = this;
+            this.dataSpecialDay.date = this.date.value;
+            this.dataSpecialDay.time = this.time.value;
+            this.dataSpecialDay.remark = this.remark.value;
+            this.$emit("handle-data", this.dataSpecialDay);
+            console.log("data", this.dataSpecialDay)
             this.$emit('update:dialogVisible', false);
-            this.input = {};
+            this.dataSpecialDay = {};
 
         }
     },
