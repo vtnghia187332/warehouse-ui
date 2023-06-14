@@ -31,7 +31,10 @@ export default {
             this.$emit("handleAddSpecialDay", false);
         },
         handleData() {
-            this.$emit("handle-data", input);
+            this.$emit("handle-data", this.input);
+            this.$emit('update:dialogVisible', false);
+            this.input = {};
+
         }
     },
 };

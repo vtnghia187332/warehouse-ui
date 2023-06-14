@@ -98,9 +98,9 @@
                   Add
                 </button>
                 <el-table :data="specialDayOn" style="width: 100%">
-                  <el-table-column label="Date" prop="specialDayOn.date">
+                  <el-table-column label="Date" prop="text">
                   </el-table-column>
-                  <el-table-column label="Name" prop="specialDayOn.name">
+                  <el-table-column label="Name" prop="number">
                   </el-table-column>
                   <el-table-column align="right">
                     <template slot-scope="scope">
@@ -161,12 +161,7 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      specialDayOn: [
-        {
-          "date": '',
-          "name": ''
-        }
-      ],
+      specialDayOn: [],
       demo: {
         options: [{
           value: 'Option1',
@@ -413,8 +408,7 @@ export default {
       }
     },
     handleData(param) {
-      this.specialDayOn = this.specialDayOn.push(param);
-      console.log(param);
+      this.specialDayOn.push(param);
     }
   },
 };
