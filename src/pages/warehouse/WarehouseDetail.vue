@@ -6,9 +6,9 @@
           <template v-slot:content>
             <div class="!w-[1168px]">
               <div>
-              <BaseSelection label="hello world" :value=value :options="options"/>
+                <BaseSelection :field="demo" />
               </div>
-              <div>
+              <div class="w-[540px]">
                 <BaseInput :field="warehouse.code" v-model="warehouse.code.value" />
               </div>
               <div>
@@ -120,7 +120,9 @@
                 <BaseTextArea :field="address.addressDes" v-model="address.addressDes.value" />
               </div>
               <div class="flex justify-between">
-                <BaseInput :field="address.country" v-model="address.country.value" />
+                <!-- <BaseInput :field="address.country" v-model="address.country.value" /> -->
+                <BaseSelection :field="address.country" />
+                <p>{{ address.country.value }}</p>
                 <BaseInput :field="address.city" v-model="address.city.value" />
               </div>
               <div class="flex justify-between">
@@ -154,26 +156,29 @@ import FormCard from "./../../components/Cards/FormCard.vue";
 import Button from "../../components/Button.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 export default {
-  components: { FormCard, BaseInput, BaseTextArea, Button,BaseSelection },
+  components: { FormCard, BaseInput, BaseTextArea, Button, BaseSelection },
   data() {
     return {
-      options: [{
-        value: 'Option1',
-        label: 'Option1'
-      }, {
-        value: 'Option2',
-        label: 'Option2'
-      }, {
-        value: 'Option3',
-        label: 'Option3'
-      }, {
-        value: 'Option4',
-        label: 'Option4'
-      }, {
-        value: 'Option5',
-        label: 'Option5'
-      }],
-      value: 'aaaaa',
+      demo: {
+        options: [{
+          value: 'Option1',
+          label: 'Option1'
+        }, {
+          value: 'Option2',
+          label: 'Option2'
+        }, {
+          value: 'Option3',
+          label: 'Option3'
+        }, {
+          value: 'Option4',
+          label: 'Option4'
+        }, {
+          value: 'Option5',
+          label: 'Option5'
+        }],
+        value: 'aaaaa',
+        label: "Hello world"
+      },
       tableData: [{
         date: '2016-05-03',
         name: 'Tom',
@@ -194,10 +199,10 @@ export default {
       warehouse: {
         code: {
           id: "warehouseCode",
-          classes: "!w-[544px]",
+          classes: "!w-[540px]",
           type: "text",
           label: "Code",
-          isRequired: 'false',
+          isRequired: 'true',
           value: "",
           placeholder: "Enter Warehouse Code",
           maxlength: 20,
@@ -309,13 +314,27 @@ export default {
         country: {
           id: "country",
           classes: "!w-[544px]",
-          type: "text",
-          label: "Country",
           isRequired: 'true',
-          value: "",
-          placeholder: "Enter Country",
-          maxlength: 0,
+          placeholder: "Select Country",
           error: "",
+          value: '',
+          label: "Country",
+          options: [{
+            value: 'Option1',
+            label: 'Option1'
+          }, {
+            value: 'Option2',
+            label: 'Option2'
+          }, {
+            value: 'Option3',
+            label: 'Option3'
+          }, {
+            value: 'Option4',
+            label: 'Option4'
+          }, {
+            value: 'Option5',
+            label: 'Option5'
+          }],
         },
         city: {
           id: "city",

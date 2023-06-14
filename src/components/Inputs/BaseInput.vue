@@ -1,6 +1,6 @@
 
 <template>
-    <div class="mb-2">
+    <div class="mb-2" >
         <label v-if="field.label" :for="field.id" class="!font-bold block">
             <span v-if="field.isRequired == true" class='text-danger'>*</span>{{ field.label }}
         </label>

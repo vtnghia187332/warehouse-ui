@@ -8,7 +8,7 @@
             @input="updateInput"
             class="p-2 pl-3 relative border rounded-sm w-full focus:!border-gray-700 focus:!ring-gray-700"
             :class="field.error ? `${field.classes} !border-red-500` : field.classes" />
-        <div class="flex justify-between absolute ">
+        <div class="flex justify-between ">
             <div class="mb-1 text-red-500">{{ field.error }}</div>
             <div v-if="field.maxlength > 0" class="mb-1 text-black-500">{{ field.value.length }}/{{ field.maxlength }}</div>
         </div>
