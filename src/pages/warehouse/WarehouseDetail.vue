@@ -93,13 +93,14 @@
               </el-tab-pane>
               <el-tab-pane label="Special Day-On" name="third">
                 <button
-                  class="absolute z-20 ml-[1082px] !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ">
+                  class="absolute z-20 ml-[1082px] !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
+                  @click="handleAddSpecialDay(true)" :handleAddSpecialDay="handleAddSpecialDay">
                   Add
                 </button>
-                <el-table :data="tableData" style="width: 100%">
-                  <el-table-column label="Date" prop="date">
+                <el-table :data="specialDayOn" style="width: 100%">
+                  <el-table-column label="Date" prop="specialDayOn.date">
                   </el-table-column>
-                  <el-table-column label="Name" prop="name">
+                  <el-table-column label="Name" prop="specialDayOn.name">
                   </el-table-column>
                   <el-table-column align="right">
                     <template slot-scope="scope">
@@ -112,7 +113,7 @@
             </el-tabs>
           </div>
         </div>
-
+        <BaseDialog :dialogVisible.sync="dialogVisible" @handle-data="handleData" />
         <FormCard title="Address">
           <template v-slot:content>
             <div class="!w-[1168px]">
@@ -140,7 +141,7 @@
         <div class="p-3 bg-white radius-shadow_add">
           <p class="text-xs text-secondary-45">Driver ID:</p>
           <p class="text-base text-neutral-13 font-medium">
-            {{ this.pageId || "ANL-Dxxxxxxxxxx" }}
+            {{ "ANL-Dxxxxxxxxxx" }}
           </p>
         </div>
       </div>
@@ -154,10 +155,18 @@ import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
 import FormCard from "./../../components/Cards/FormCard.vue";
 import Button from "../../components/Button.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
+import BaseDialog from "../../components/Dialog/BaseDialog.vue";
 export default {
-  components: { FormCard, BaseInput, BaseTextArea, Button, BaseSelection },
+  components: { FormCard, BaseInput, BaseTextArea, Button, BaseSelection, BaseDialog },
   data() {
     return {
+      dialogVisible: false,
+      specialDayOn: [
+        {
+          "date": '',
+          "name": ''
+        }
+      ],
       demo: {
         options: [{
           value: 'Option1',
@@ -397,6 +406,15 @@ export default {
       });
     },
     handleClick(tab, event) {
+    },
+    handleAddSpecialDay(param) {
+      if (param !== null) {
+        this.dialogVisible = param;
+      }
+    },
+    handleData(param) {
+      this.specialDayOn = this.specialDayOn.push(param);
+      console.log(param);
     }
   },
 };
