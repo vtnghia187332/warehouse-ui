@@ -2,7 +2,7 @@
 <template>
     <div class="mb-2" >
         <label v-if="field.label" :for="field.id" class="!font-bold block">
-            <span v-if="field.isRequired == true" class='text-danger'>*</span>{{ field.label }}
+            <span v-if="field.isRequired == 'true'" class='text-danger'>*</span>{{ field.label }}
         </label>
         <input :id="field.id" :placeholder="field.placeholder" :type="field.type" :value="field.value" @input="updateInput"
             class="p-2 pl-3 relative border rounded-sm w-full focus:!border-gray-700 focus:!ring-gray-700"
