@@ -5,9 +5,6 @@
         <FormCard title="Information">
           <template v-slot:content>
             <div class="!w-[1168px]">
-              <div>
-                <BaseSelection :field="demo" />
-              </div>
               <div class="w-[540px]">
                 <BaseInput :field="warehouse.code" v-model="warehouse.code.value" />
               </div>
@@ -24,7 +21,7 @@
           </template>
         </FormCard>
 
-        <BaseKeyContact  />
+        <BaseKeyContact />
 
         <div class="card bg-white mb-4">
           <div class="font-medium text-base text-primary-85 p-3 border border-divider">
@@ -34,7 +31,42 @@
             <el-tabs v-model="workingHour.activeName" @tab-click="handleClick">
               <el-tab-pane label="OpenHour" name="first">
                 <div class="mb-2 items-center grid grid-cols-4 gap-4">
-                  <el-checkbox class="" v-model="openHourTab.checked">Monday</el-checkbox>
+                  <el-checkbox class="" v-model="workingHour.monday.checked">Monday</el-checkbox>
+                  <el-time-picker is-range format="HH:mm" v-model="workingHour.monday.time" range-separator="To"
+                    start-placeholder="Start time" end-placeholder="End time">
+                  </el-time-picker>
+                </div>
+
+                <div class="mb-2 items-center grid grid-cols-4 gap-4">
+                  <el-checkbox class="" v-model="openHourTab.checked">Tuesday</el-checkbox>
+                  <el-time-picker is-range format="HH:mm" v-model="workingHour.time" range-separator="To"
+                    start-placeholder="Start time" end-placeholder="End time">
+                  </el-time-picker>
+                </div>
+
+                <div class="mb-2 items-center grid grid-cols-4 gap-4">
+                  <el-checkbox class="" v-model="openHourTab.checked">Wednesday</el-checkbox>
+                  <el-time-picker is-range format="HH:mm" v-model="workingHour.time" range-separator="To"
+                    start-placeholder="Start time" end-placeholder="End time">
+                  </el-time-picker>
+                </div>
+
+                <div class="mb-2 items-center grid grid-cols-4 gap-4">
+                  <el-checkbox class="" v-model="openHourTab.checked">Thursday</el-checkbox>
+                  <el-time-picker is-range format="HH:mm" v-model="workingHour.time" range-separator="To"
+                    start-placeholder="Start time" end-placeholder="End time">
+                  </el-time-picker>
+                </div>
+
+                <div class="mb-2 items-center grid grid-cols-4 gap-4">
+                  <el-checkbox class="" v-model="openHourTab.checked">Saturday</el-checkbox>
+                  <el-time-picker is-range format="HH:mm" v-model="workingHour.time" range-separator="To"
+                    start-placeholder="Start time" end-placeholder="End time">
+                  </el-time-picker>
+                </div>
+
+                <div class="mb-2 items-center grid grid-cols-4 gap-4">
+                  <el-checkbox class="" v-model="openHourTab.checked">Sunday</el-checkbox>
                   <el-time-picker is-range format="HH:mm" v-model="workingHour.time" range-separator="To"
                     start-placeholder="Start time" end-placeholder="End time">
                   </el-time-picker>
@@ -164,7 +196,10 @@ export default {
       search: '',
       workingHour: {
         activeName: 'first',
-        time: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
+        monday: {
+          checked: true,
+          time: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
+        },
       },
       openHourTab: {
         checked: true,
@@ -215,7 +250,7 @@ export default {
         },
 
       },
-      
+
       address: {
         addressDes: {
           id: "addressDes",
