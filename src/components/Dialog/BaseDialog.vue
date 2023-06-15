@@ -78,9 +78,38 @@ export default {
             this.$emit("handle-data", this.dataSpecialDay);
             this.$emit('update:dialogVisible', false);
             this.dataSpecialDay = {};
-            this.date.value = "";
-            this.time.value = "";
-            this.remark.value = "";
+            this.date = {
+                id: "date",
+                classes: "!w-[534px]",
+                label: "Date",
+                isRequired: 'true',
+                value: "",
+                error: "",
+                pickerOptions: {
+                    disabledDate(time) {
+                        return time.getTime() < Date.now();
+                    },
+                },
+            },
+                this.time = {
+                    id: "time",
+                    classes: "!w-[534px]",
+                    label: "Time",
+                    isRequired: 'true',
+                    value: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
+                    error: "",
+                };
+            this.remark = {
+                id: "remark",
+                classes: "!w-[534px]",
+                type: "text",
+                label: "Remark",
+                isRequired: 'false',
+                value: "",
+                placeholder: "Enter Remark",
+                maxlength: 150,
+                error: "",
+            };
 
         }
     },

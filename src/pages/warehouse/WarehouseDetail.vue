@@ -33,8 +33,8 @@
           <div class="p-3 !pt-2 pb-0">
             <el-tabs v-model="workingHour.activeName" @tab-click="handleClick">
               <el-tab-pane label="OpenHour" name="first">
-                <div class="mb-2 flex items-center">
-                  <el-checkbox class="!mr-[150px]" v-model="openHourTab.checked">Monday</el-checkbox>
+                <div class="mb-2 items-center grid grid-cols-4 gap-4">
+                  <el-checkbox class="" v-model="openHourTab.checked">Monday</el-checkbox>
                   <el-time-picker is-range format="HH:mm" v-model="workingHour.time" range-separator="To"
                     start-placeholder="Start time" end-placeholder="End time">
                   </el-time-picker>
