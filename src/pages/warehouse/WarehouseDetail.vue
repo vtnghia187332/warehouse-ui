@@ -29,7 +29,8 @@
             <div class="flex justify-between py-3">
               <span class="text-sm font-bold flex items-center">Key Contact Person (3/3)
               </span>
-              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                @click="HandleAddKeyContact">
                 Add
               </button>
             </div>
@@ -43,17 +44,17 @@
                   </button>
                 </div>
               </div>
-              <div class="p-3 bg-gray-100">
+              <div class="p-3 bg-gray-100" v-for="(item, index) in keyContact" :key="index">
                 <div class="flex justify-between">
-                  <BaseInput :field="keyContact.title" v-model="keyContact.title.value" />
+                  <BaseInput :field="item.title" v-model="item.title.value" />
                 </div>
                 <div class="flex justify-between">
-                  <BaseInput :field="keyContact.firstName" v-model="keyContact.firstName.value" />
-                  <BaseInput :field="keyContact.lastName" v-model="keyContact.lastName.value" />
+                  <BaseInput :field="item.firstName" v-model="item.firstName.value" />
+                  <BaseInput :field="item.lastName" v-model="item.lastName.value" />
                 </div>
                 <div class="flex justify-between">
-                  <BaseInput :field="keyContact.email" v-model="keyContact.email.value" />
-                  <BaseInput :field="keyContact.phoneNumber" v-model="keyContact.phoneNumber.value" />
+                  <BaseInput :field="item.email" v-model="item.email.value" />
+                  <BaseInput :field="item.phoneNumber" v-model="item.phoneNumber.value" />
                 </div>
               </div>
             </div>
@@ -107,7 +108,7 @@
                   <el-table-column align="right">
                     <template slot-scope="scope">
                       <el-button size="mini" type="danger" class="bg-red-300"
-                        @click="handleDeleteSpecialDay()">Delete</el-button>
+                        @click="handleDeleteSpecialDay(scope)">Delete</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -410,8 +411,18 @@ export default {
         this.dialogVisible = param;
       }
     },
+    handleDeleteSpecialDay(item) {
+      const index = item.$index;
+      if (index > -1) { // only splice array when item is found
+        this.specialDayOn.splice(index, 1); // 2nd parameter means remove one item only
+      }
+      console.log(this.specialDayOn);
+    },
     handleData(param) {
       this.specialDayOn.push(param);
+    },
+    HandleAddKeyContact() {
+      this.keyContact.push(this.keyContact);
     }
   },
 };

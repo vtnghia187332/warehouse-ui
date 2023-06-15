@@ -76,9 +76,11 @@ export default {
             this.dataSpecialDay.time = moment(this.time.value[0], 'HH:mm').format('HH:mm') + ' - ' + moment(this.time.value[1], 'HH:mm').format('HH:mm');
             this.dataSpecialDay.remark = this.remark.value;
             this.$emit("handle-data", this.dataSpecialDay);
-            console.log("data", this.dataSpecialDay)
             this.$emit('update:dialogVisible', false);
             this.dataSpecialDay = {};
+            this.date.value = "";
+            this.time.value = "";
+            this.remark.value = "";
 
         }
     },
