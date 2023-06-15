@@ -15,6 +15,7 @@
 import BaseTextArea from '@/components/Inputs/BaseTextArea'
 import DatePicker from '../Date/DatePicker.vue';
 import TimePicker from '../Date/TimePicker.vue';
+import moment from 'moment';
 
 export default {
     components: { BaseTextArea, DatePicker, TimePicker },
@@ -71,9 +72,8 @@ export default {
             this.$emit("handleAddSpecialDay", false);
         },
         handleData() {
-            var me = this;
-            this.dataSpecialDay.date = this.date.value;
-            this.dataSpecialDay.time = this.time.value;
+            this.dataSpecialDay.date = moment(this.date.value, 'DD/MM/YYYY').format('DD/MM/YYYY');
+            this.dataSpecialDay.time = moment(this.time.value[0], 'HH:mm').format('HH:mm') + ' - ' + moment(this.time.value[1], 'HH:mm').format('HH:mm');
             this.dataSpecialDay.remark = this.remark.value;
             this.$emit("handle-data", this.dataSpecialDay);
             console.log("data", this.dataSpecialDay)

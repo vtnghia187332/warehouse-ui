@@ -107,7 +107,7 @@
                   <el-table-column align="right">
                     <template slot-scope="scope">
                       <el-button size="mini" type="danger" class="bg-red-300"
-                        @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+                        @click="handleDeleteSpecialDay()">Delete</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -158,6 +158,7 @@ import FormCard from "./../../components/Cards/FormCard.vue";
 import Button from "../../components/Button.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import BaseDialog from "../../components/Dialog/BaseDialog.vue";
+import moment from 'moment';
 export default {
   components: { FormCard, BaseInput, BaseTextArea, Button, BaseSelection, BaseDialog },
   data() {
