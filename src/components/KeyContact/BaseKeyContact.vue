@@ -115,7 +115,63 @@ export default {
     methods: {
         HandleAddKeyContact() {
             if (this.keyContact.length < 3) {
-                this.keyContact.push(this.keyContact[0]);
+                this.keyContact.push({
+                    title: {
+                        id: "keycontactTitle",
+                        classes: "!w-[540px]",
+                        type: "text",
+                        label: "Title",
+                        isRequired: 'true',
+                        value: "",
+                        placeholder: "Enter Keycontact Title",
+                        maxlength: 0,
+                        error: "",
+                    },
+                    firstName: {
+                        id: "keycontactFirstName",
+                        classes: "!w-[540px]",
+                        type: "text",
+                        label: "Frist Name",
+                        isRequired: 'true',
+                        value: "",
+                        placeholder: "Enter Keycontact FristName",
+                        maxlength: 30,
+                        error: "",
+                    },
+                    lastName: {
+                        id: "keycontactLastName",
+                        classes: "!w-[540px]",
+                        type: "text",
+                        label: "Last Name",
+                        isRequired: 'true',
+                        value: "",
+                        placeholder: "Enter Keycontact LastName",
+                        maxlength: 30,
+                        error: "",
+                    },
+                    email: {
+                        id: "keycontactEmail",
+                        classes: "!w-[540px]",
+                        type: "text",
+                        label: "Email",
+                        isRequired: 'true',
+                        value: "",
+                        placeholder: "Enter Keycontact Email",
+                        maxlength: 150,
+                        error: "",
+                    },
+                    phoneNumber: {
+                        id: "keycontactPhoneNo",
+                        classes: "!w-[540px]",
+                        type: "text",
+                        label: "Phone Number",
+                        isRequired: 'true',
+                        value: "",
+                        placeholder: "Enter Keycontact Phone Number",
+                        maxlength: 150,
+                        error: "",
+                    }
+                });
             }
         },
         handleDeleteKeyContact(index) {
