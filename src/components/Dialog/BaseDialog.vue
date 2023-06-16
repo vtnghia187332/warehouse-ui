@@ -72,6 +72,9 @@ export default {
             this.$emit("handleAddSpecialDay", false);
         },
         handleData() {
+            if (this.date.value == '') {
+                return;
+            }
             this.dataSpecialDay.date = moment(this.date.value, 'DD/MM/YYYY').format('DD/MM/YYYY');
             this.dataSpecialDay.time = moment(this.time.value[0], 'HH:mm').format('HH:mm') + ' - ' + moment(this.time.value[1], 'HH:mm').format('HH:mm');
             this.dataSpecialDay.remark = this.remark.value;

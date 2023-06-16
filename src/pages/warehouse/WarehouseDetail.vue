@@ -30,45 +30,51 @@
           <div class="p-3 !pt-2 pb-0">
             <el-tabs v-model="workingHour.activeName" @tab-click="handleClick">
               <el-tab-pane label="OpenHour" name="first">
-                <div class="mb-2 items-center grid grid-cols-4 gap-4">
+                <div class="mb-4 items-center grid grid-cols-4 gap-4">
                   <el-checkbox class="" v-model="workingHour.monday.checked">Monday</el-checkbox>
                   <el-time-picker is-range format="HH:mm" v-model="workingHour.monday.time" range-separator="To"
-                    start-placeholder="Start time" end-placeholder="End time">
+                    start-placeholder="Start time" end-placeholder="End time"
+                    :disabled="workingHour.monday.checked == false">
                   </el-time-picker>
                 </div>
 
-                <div class="mb-2 items-center grid grid-cols-4 gap-4">
-                  <el-checkbox class="" v-model="openHourTab.checked">Tuesday</el-checkbox>
-                  <el-time-picker is-range format="HH:mm" v-model="workingHour.time" range-separator="To"
-                    start-placeholder="Start time" end-placeholder="End time">
+                <div class="mb-4 items-center grid grid-cols-4 gap-4">
+                  <el-checkbox class="" v-model="workingHour.tuesday.checked">Tuesday</el-checkbox>
+                  <el-time-picker is-range format="HH:mm" v-model="workingHour.tuesday.time" range-separator="To"
+                    start-placeholder="Start time" end-placeholder="End time"
+                    :disabled="workingHour.tuesday.checked == false">
                   </el-time-picker>
                 </div>
 
-                <div class="mb-2 items-center grid grid-cols-4 gap-4">
-                  <el-checkbox class="" v-model="openHourTab.checked">Wednesday</el-checkbox>
-                  <el-time-picker is-range format="HH:mm" v-model="workingHour.time" range-separator="To"
-                    start-placeholder="Start time" end-placeholder="End time">
+                <div class="mb-4 items-center grid grid-cols-4 gap-4">
+                  <el-checkbox class="" v-model="workingHour.wednesday.checked">Wednesday</el-checkbox>
+                  <el-time-picker is-range format="HH:mm" v-model="workingHour.wednesday.time" range-separator="To"
+                    start-placeholder="Start time" end-placeholder="End time"
+                    :disabled="workingHour.wednesday.checked == false">
                   </el-time-picker>
                 </div>
 
-                <div class="mb-2 items-center grid grid-cols-4 gap-4">
-                  <el-checkbox class="" v-model="openHourTab.checked">Thursday</el-checkbox>
-                  <el-time-picker is-range format="HH:mm" v-model="workingHour.time" range-separator="To"
-                    start-placeholder="Start time" end-placeholder="End time">
+                <div class="mb-4 items-center grid grid-cols-4 gap-4">
+                  <el-checkbox class="" v-model="workingHour.thursday.checked">Thursday</el-checkbox>
+                  <el-time-picker is-range format="HH:mm" v-model="workingHour.thursday.time" range-separator="To"
+                    start-placeholder="Start time" end-placeholder="End time"
+                    :disabled="workingHour.thursday.checked == false">
                   </el-time-picker>
                 </div>
 
-                <div class="mb-2 items-center grid grid-cols-4 gap-4">
-                  <el-checkbox class="" v-model="openHourTab.checked">Saturday</el-checkbox>
-                  <el-time-picker is-range format="HH:mm" v-model="workingHour.time" range-separator="To"
-                    start-placeholder="Start time" end-placeholder="End time">
+                <div class="mb-4 items-center grid grid-cols-4 gap-4">
+                  <el-checkbox class="" v-model="workingHour.saturday.checked">Saturday</el-checkbox>
+                  <el-time-picker is-range format="HH:mm" v-model="workingHour.saturday.time" range-separator="To"
+                    start-placeholder="Start time" end-placeholder="End time"
+                    :disabled="workingHour.saturday.checked == false">
                   </el-time-picker>
                 </div>
 
-                <div class="mb-2 items-center grid grid-cols-4 gap-4">
-                  <el-checkbox class="" v-model="openHourTab.checked">Sunday</el-checkbox>
-                  <el-time-picker is-range format="HH:mm" v-model="workingHour.time" range-separator="To"
-                    start-placeholder="Start time" end-placeholder="End time">
+                <div class="mb-4 items-center grid grid-cols-4 gap-4">
+                  <el-checkbox class="" v-model="workingHour.sunday.checked">Sunday</el-checkbox>
+                  <el-time-picker is-range format="HH:mm" v-model="workingHour.sunday.time" range-separator="To"
+                    start-placeholder="Start time" end-placeholder="End time"
+                    :disabled="workingHour.sunday.checked == false">
                   </el-time-picker>
                 </div>
               </el-tab-pane>
@@ -197,6 +203,30 @@ export default {
       workingHour: {
         activeName: 'first',
         monday: {
+          checked: true,
+          time: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
+        },
+        tuesday: {
+          checked: true,
+          time: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
+        },
+        wednesday: {
+          checked: true,
+          time: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
+        },
+        thursday: {
+          checked: true,
+          time: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
+        },
+        friday: {
+          checked: true,
+          time: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
+        },
+        saturday: {
+          checked: true,
+          time: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
+        },
+        sunday: {
           checked: true,
           time: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
         },
@@ -370,9 +400,7 @@ export default {
 };
 </script>
 
-<style scoped>
-.radius-shadow_add {
+<style scoped>.radius-shadow_add {
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 3px;
-}
-</style>
+}</style>
