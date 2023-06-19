@@ -175,7 +175,7 @@ export default {
             }
         },
         handleDeleteKeyContact(index) {
-            if (index > 0) {
+            if (this.keyContact.length > 1) {
                 this.keyContact.splice(index, 1);
             }
         },

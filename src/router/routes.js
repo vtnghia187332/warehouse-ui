@@ -60,7 +60,7 @@ const routes = [
         component: WarehouseList,
       },
       {
-        path: "warehouse-detail",
+        path: "/warehouse-detail/:code",
         name: "warehouse-detail",
         component: WarehouseDetail,
       },

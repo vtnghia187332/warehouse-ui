@@ -5,16 +5,7 @@
         <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel" />
         <sidebar-link to="/icons" name="Icons" icon="ti-pencil-alt2" />
         <sidebar-link to="/notifications" name="Notifications" icon="ti-bell" />
-        <sidebar-link
-          to="/warehouse-list"
-          name="WarehouseList"
-          icon="ti-package"
-        />
-        <sidebar-link
-          to="/warehouse-detail"
-          name="Warehouse Detail"
-          icon="ti-package"
-        />
+        <sidebar-link to="/warehouse-list" name="WarehouseList" icon="ti-package" />
       </template>
       <mobile-menu>
         <li class="nav-item">
@@ -23,12 +14,7 @@
             <p>Stats</p>
           </a>
         </li>
-        <drop-down
-          class="nav-item"
-          title="5 Notifications"
-          title-classes="nav-link"
-          icon="ti-bell"
-        >
+        <drop-down class="nav-item" title="5 Notifications" title-classes="nav-link" icon="ti-bell">
           <a class="dropdown-item">Notification 1</a>
           <a class="dropdown-item">Notification 2</a>
           <a class="dropdown-item">Notification 3</a>

@@ -28,7 +28,7 @@
             Window Time
           </div>
           <div class="p-3 !pt-2 pb-0">
-            <el-tabs v-model="workingHour.activeName" @tab-click="handleClick">
+            <el-tabs v-model="workingHour.activeName">
               <el-tab-pane label="OpenHour" name="first">
                 <div class="mb-4 items-center grid grid-cols-4 gap-4">
                   <el-checkbox class="" v-model="workingHour.monday.checked">Monday</el-checkbox>
@@ -83,7 +83,7 @@
                   class="absolute z-20 ml-[1085px] !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ">
                   Add
                 </button>
-                <el-table :data="tableData" style="width: 100%">
+                <el-table style="width: 100%">
                   <el-table-column label="Date" prop="date">
                   </el-table-column>
                   <el-table-column label="Name" prop="name">
@@ -140,8 +140,8 @@
           </template>
         </FormCard>
 
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="checkData">
-          Button
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="handleSubmit">
+          Create
         </button>
       </div>
       <div class="flex flex-col gap-y-4 min-w-[380px] w-[380px] h-full">
@@ -157,6 +157,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import BaseInput from "./../../components/Inputs/BaseInput.vue";
 import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
 import FormCard from "./../../components/Cards/FormCard.vue";
@@ -170,35 +171,6 @@ export default {
     return {
       dialogVisible: false,
       specialDayOn: [],
-      demo: {
-        options: [{
-          value: 'Option1',
-          label: 'Option1'
-        }, {
-          value: 'Option2',
-          label: 'Option2'
-        }, {
-          value: 'Option3',
-          label: 'Option3'
-        }, {
-          value: 'Option4',
-          label: 'Option4'
-        }, {
-          value: 'Option5',
-          label: 'Option5'
-        }],
-        value: 'aaaaa',
-        label: "Hello world"
-      },
-      tableData: [{
-        date: '2016-05-03',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles'
-      }, {
-        date: '2016-05-02',
-        name: 'John',
-        address: 'No. 189, Grove St, Los Angeles'
-      }],
       search: '',
       workingHour: {
         activeName: 'first',
@@ -230,9 +202,6 @@ export default {
           checked: true,
           time: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
         },
-      },
-      openHourTab: {
-        checked: true,
       },
       warehouse: {
         code: {
@@ -278,9 +247,7 @@ export default {
           maxlength: 150,
           error: "",
         },
-
       },
-
       address: {
         addressDes: {
           id: "addressDes",
@@ -355,7 +322,7 @@ export default {
     };
   },
   methods: {
-    checkData() {
+    handleSubmit() {
       Object.keys(this.warehouse).forEach((key) => {
         if (this.warehouse[key].value == "") {
           this.warehouse[key].error = this.warehouse[key].label.concat(" is not empty");
@@ -363,23 +330,86 @@ export default {
           this.warehouse[key].error = "";
         }
       });
-      Object.keys(this.keyContact).forEach((key) => {
-        if (this.keyContact[key].value == "") {
-          this.keyContact[key].error = this.keyContact[key].label.concat(" is not empty");
-        } else {
-          this.keyContact[key].error = "";
-        }
-      });
       Object.keys(this.address).forEach((key) => {
         if (this.address[key].value == "") {
           this.address[key].error = this.address[key].label.concat(" is not empty");
-          console.log("error", this.address[key].error)
         } else {
           this.address[key].error = "";
         }
       });
-    },
-    handleClick(tab, event) {
+      const warehouseAdd = {
+        "code": "Warehouse Code2",
+        "name": "name123123",
+        "shortName": "shortName",
+        "addressDes": "addressDes",
+        "description": "description",
+        "openWorkingHourReq": {
+          "mondayEnd": "mondayEnd",
+          "tuesdayStart": "tuesdayStart",
+          "tuesdayEnd": "tuesdayEnd",
+          "wednesdayStart": "wednesdayStart",
+          "wednesdayEnd": "wednesdayEnd",
+          "thursdayStart": "thursdayStart",
+          "thursdayEnd": "thursdayEnd",
+          "fridayStart": "fridayStart",
+          "fridayEnd": "fridayEnd",
+          "saturdayStart": "saturdayStart",
+          "saturdayEnd": "saturdayEnd",
+          "sundayStart": "sundayStart",
+          "sundayEnd": "sundayEnd"
+        },
+        "countryId": 1,
+        "cityId": 1,
+        "districtId": 1,
+        "subdistrictId": 1,
+        "postalCode": "123456",
+        "warehouseChainId": 1,
+        "specialDayTimeReqList": [
+          {
+            "specialDay": "specialDay",
+            "specialStartDay": "specialStartDay",
+            "specialCloseDay": "specialCloseDay",
+            "dayType": "dayType",
+            "remark": "remark",
+            "weekDay": "weekDay"
+          },
+          {
+            "specialDay": "specialDay1",
+            "specialStartDay": "specialStartDay1",
+            "specialCloseDay": "specialCloseDay1",
+            "dayType": "dayType1",
+            "remark": "remark1",
+            "weekDay": "weekDay1"
+          }
+        ],
+        "keyContactReqs": [
+          {
+            "code": "code",
+            "firstName": "abc",
+            "lastName": "adb",
+            "title": "title",
+            "email": "email@gmail.com",
+            "mobilePhone": "0987216273",
+            "landlinePhone": "0987216201"
+          }, {
+            "code": "cod12e",
+            "firstName": "aabc",
+            "lastName": "adbb",
+            "title": "title2",
+            "email": "email@gmail.com",
+            "mobilePhone": "0987216273",
+            "landlinePhone": "0987216201"
+          }
+        ]
+      };
+      // Object.keys(this.warehouse).forEach((key) => {
+      //   warehouseAdd[key] = this.warehouse[key].value;
+      // });
+      axios({
+        method: 'post',
+        url: 'http://localhost:9090/api/v1/warehouse',
+        data: warehouseAdd
+      });
     },
     handleAddSpecialDay(param) {
       if (param !== null) {
@@ -388,8 +418,8 @@ export default {
     },
     handleDeleteSpecialDay(item) {
       const index = item.$index;
-      if (index > -1) { // only splice array when item is found
-        this.specialDayOn.splice(index, 1); // 2nd parameter means remove one item only
+      if (index > -1) {
+        this.specialDayOn.splice(index, 1);
       }
     },
     handleData(param) {
@@ -397,10 +427,23 @@ export default {
     },
 
   },
+  mounted() {
+    var me = this;
+    // axios
+    //   .get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`)
+    //   .then(function (response) {
+    //   });
+
+    axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`)
+      .then(res => console.log(res.data))
+      .catch(err => console.log(err));
+  },
 };
 </script>
 
-<style scoped>.radius-shadow_add {
+<style scoped>
+.radius-shadow_add {
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 3px;
-}</style>
+}
+</style>
