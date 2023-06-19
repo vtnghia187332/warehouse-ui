@@ -23,7 +23,7 @@
 
         <BaseKeyContact />
 
-        <div class="card bg-white mb-4">
+        <div class="card bg-white !mb-0">
           <div class="font-medium text-base text-primary-85 p-3 border border-divider">
             Window Time
           </div>
@@ -435,7 +435,12 @@ export default {
     //   });
 
     axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`)
-      .then(res => console.log(res.data))
+      .then(res => {
+        // console.log(res.data.items)
+        Object.keys(this.warehouse).forEach((key) => {
+          this.warehouse[key].value = res.data.items[key];
+        });
+      })
       .catch(err => console.log(err));
   },
 };
@@ -446,4 +451,5 @@ export default {
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 3px;
 }
+
 </style>
