@@ -134,7 +134,7 @@
               </div>
               <div class="flex justify-between">
                 <BaseInput :field="address.district" v-model="address.district.value" />
-                <BaseInput :field="address.subdistrict" v-model="address.subdistrict.value" />
+                <BaseInput :field="address.subDistrict" v-model="address.subDistrict.value" />
               </div>
             </div>
           </template>
@@ -307,7 +307,7 @@ export default {
           maxlength: 0,
           error: "",
         },
-        subdistrict: {
+        subDistrict: {
           id: "subdistrict",
           classes: "!w-[544px]",
           type: "text",
@@ -444,6 +444,9 @@ export default {
           this.warehouse[key].value = res.data.items[key];
         });
         this.initKeyContactForm(res.data.items.keyContactVos);
+        Object.keys(this.address).forEach((key) => {
+          this.address[key].value = res.data.items[key];
+        });
       })
       .catch(err => console.log(err));
   },
