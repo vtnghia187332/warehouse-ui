@@ -24,15 +24,20 @@
                 </div>
                 <div class="p-3 bg-gray-100">
                     <div class="flex justify-between">
-                        <BaseInput :field="item.title" v-model="item.title.value" />
+                        <BaseInput :field="item.formFieldsKeyContact.title"
+                            v-model="item.formFieldsKeyContact.title.value" />
                     </div>
                     <div class="flex justify-between">
-                        <BaseInput :field="item.firstName" v-model="item.firstName.value" />
-                        <BaseInput :field="item.lastName" v-model="item.lastName.value" />
+                        <BaseInput :field="item.formFieldsKeyContact.firstName"
+                            v-model="item.formFieldsKeyContact.firstName.value" />
+                        <BaseInput :field="item.formFieldsKeyContact.lastName"
+                            v-model="item.formFieldsKeyContact.lastName.value" />
                     </div>
                     <div class="flex justify-between">
-                        <BaseInput :field="item.email" v-model="item.email.value" />
-                        <BaseInput :field="item.phoneNumber" v-model="item.phoneNumber.value" />
+                        <BaseInput :field="item.formFieldsKeyContact.email"
+                            v-model="item.formFieldsKeyContact.email.value" />
+                        <BaseInput :field="item.formFieldsKeyContact.mobilePhone"
+                            v-model="item.formFieldsKeyContact.mobilePhone.value" />
                     </div>
                 </div>
             </div>
@@ -43,72 +48,68 @@
 import BaseInput from '../Inputs/BaseInput.vue';
 export default {
     components: { BaseInput },
-    props: {
-        field: {
-            type: Object,
-            default: {},
-        },
-    },
     data() {
         return {
             keyContact: [
                 {
-                    title: {
-                        id: "keycontactTitle",
-                        classes: "!w-[540px]",
-                        type: "text",
-                        label: "Title",
-                        isRequired: 'true',
-                        value: "",
-                        placeholder: "Enter Keycontact Title",
-                        maxlength: 0,
-                        error: "",
+                    formFieldsKeyContact: {
+                        title: {
+                            id: "keycontactTitle",
+                            classes: "!w-[540px]",
+                            type: "text",
+                            label: "Title",
+                            isRequired: 'true',
+                            value: "",
+                            placeholder: "Enter Keycontact Title",
+                            maxlength: 0,
+                            error: "",
+                        },
+                        firstName: {
+                            id: "keycontactFirstName",
+                            classes: "!w-[540px]",
+                            type: "text",
+                            label: "Frist Name",
+                            isRequired: 'true',
+                            value: "",
+                            placeholder: "Enter Keycontact FristName",
+                            maxlength: 30,
+                            error: "",
+                        },
+                        lastName: {
+                            id: "keycontactLastName",
+                            classes: "!w-[540px]",
+                            type: "text",
+                            label: "Last Name",
+                            isRequired: 'true',
+                            value: "",
+                            placeholder: "Enter Keycontact LastName",
+                            maxlength: 30,
+                            error: "",
+                        },
+                        email: {
+                            id: "keycontactEmail",
+                            classes: "!w-[540px]",
+                            type: "text",
+                            label: "Email",
+                            isRequired: 'true',
+                            value: "",
+                            placeholder: "Enter Keycontact Email",
+                            maxlength: 150,
+                            error: "",
+                        },
+                        mobilePhone: {
+                            id: "keycontactPhoneNo",
+                            classes: "!w-[540px]",
+                            type: "text",
+                            label: "Phone Number",
+                            isRequired: 'true',
+                            value: "",
+                            placeholder: "Enter Keycontact Phone Number",
+                            maxlength: 150,
+                            error: "",
+                        }
                     },
-                    firstName: {
-                        id: "keycontactFirstName",
-                        classes: "!w-[540px]",
-                        type: "text",
-                        label: "Frist Name",
-                        isRequired: 'true',
-                        value: "",
-                        placeholder: "Enter Keycontact FristName",
-                        maxlength: 30,
-                        error: "",
-                    },
-                    lastName: {
-                        id: "keycontactLastName",
-                        classes: "!w-[540px]",
-                        type: "text",
-                        label: "Last Name",
-                        isRequired: 'true',
-                        value: "",
-                        placeholder: "Enter Keycontact LastName",
-                        maxlength: 30,
-                        error: "",
-                    },
-                    email: {
-                        id: "keycontactEmail",
-                        classes: "!w-[540px]",
-                        type: "text",
-                        label: "Email",
-                        isRequired: 'true',
-                        value: "",
-                        placeholder: "Enter Keycontact Email",
-                        maxlength: 150,
-                        error: "",
-                    },
-                    phoneNumber: {
-                        id: "keycontactPhoneNo",
-                        classes: "!w-[540px]",
-                        type: "text",
-                        label: "Phone Number",
-                        isRequired: 'true',
-                        value: "",
-                        placeholder: "Enter Keycontact Phone Number",
-                        maxlength: 150,
-                        error: "",
-                    }
-                },
+                }
             ],
         }
     },
@@ -178,6 +179,21 @@ export default {
             if (this.keyContact.length > 1) {
                 this.keyContact.splice(index, 1);
             }
+        },
+        initKeyContact(data) {
+            const keyContactAfterBinding = [];
+            const defaultKeyContact = this.keyContact[0];
+            data.forEach((x, index) => {
+                let keyContactTemp = structuredClone(defaultKeyContact);
+                const { formFieldsKeyContact } = keyContactTemp;
+                Object.keys(x).forEach((key) => {
+                    if (formFieldsKeyContact[key]) {
+                        formFieldsKeyContact[key].value = x[key];
+                    }
+                });
+                keyContactAfterBinding.push(keyContactTemp);
+            });
+            this.keyContact = keyContactAfterBinding.map(x => x);
         },
     },
 }

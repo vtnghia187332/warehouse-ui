@@ -21,7 +21,7 @@
           </template>
         </FormCard>
 
-        <BaseKeyContact />
+        <BaseKeyContact ref="key-contact" />
 
         <div class="card bg-white !mb-0">
           <div class="font-medium text-base text-primary-85 p-3 border border-divider">
@@ -425,6 +425,9 @@ export default {
     handleData(param) {
       this.specialDayOn.push(param);
     },
+    initKeyContactForm(data) {
+      this.$refs["key-contact"].initKeyContact(data);
+    },
 
   },
   mounted() {
@@ -440,6 +443,7 @@ export default {
         Object.keys(this.warehouse).forEach((key) => {
           this.warehouse[key].value = res.data.items[key];
         });
+        this.initKeyContactForm(res.data.items.keyContactVos);
       })
       .catch(err => console.log(err));
   },
@@ -451,5 +455,4 @@ export default {
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 3px;
 }
-
 </style>
