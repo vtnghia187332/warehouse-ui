@@ -429,9 +429,15 @@ export default {
       this.$refs["key-contact"].initKeyContact(data);
     },
     initTimeWorking(data) {
+      this.workingHour.monday.time[0].setHours(this.splitTime(data.mondayStart)[0]);
+      this.workingHour.monday.time[0].setMinutes(this.splitTime(data.mondayStart)[1]);
+      this.workingHour.monday.time[1].setHours(this.splitTime(data.mondayEnd)[0]);
+      this.workingHour.monday.time[1].setMinutes(this.splitTime(data.mondayEnd)[1]);
       this.$refs.timePicker.userInput = [data.mondayStart, data.mondayEnd];
     },
-
+    splitTime(data) {
+      return data.split(":")
+    }
   },
   mounted() {
     axios.get(`http://localhost:9099/api/v1/warehouse/detail/${this.$route.params.code}`)
