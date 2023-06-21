@@ -32,7 +32,7 @@
               <el-tab-pane label="OpenHour" name="first">
                 <div class="mb-4 items-center grid grid-cols-4 gap-4">
                   <el-checkbox class="" v-model="workingHour.monday.checked">Monday</el-checkbox>
-                  <el-time-picker ref="timePicker" is-range format="HH:mm" v-model="workingHour.monday.time"
+                  <el-time-picker ref="mondayPicker" is-range format="HH:mm" v-model="workingHour.monday.time"
                     range-separator="To" start-placeholder="Start time" end-placeholder="End time"
                     :disabled="workingHour.monday.checked == false">
                   </el-time-picker>
@@ -40,40 +40,48 @@
 
                 <div class="mb-4 items-center grid grid-cols-4 gap-4">
                   <el-checkbox class="" v-model="workingHour.tuesday.checked">Tuesday</el-checkbox>
-                  <el-time-picker is-range format="HH:mm" v-model="workingHour.tuesday.time" range-separator="To"
-                    start-placeholder="Start time" end-placeholder="End time"
+                  <el-time-picker ref="tuesdayPicker" is-range format="HH:mm" v-model="workingHour.tuesday.time"
+                    range-separator="To" start-placeholder="Start time" end-placeholder="End time"
                     :disabled="workingHour.tuesday.checked == false">
                   </el-time-picker>
                 </div>
 
                 <div class="mb-4 items-center grid grid-cols-4 gap-4">
                   <el-checkbox class="" v-model="workingHour.wednesday.checked">Wednesday</el-checkbox>
-                  <el-time-picker is-range format="HH:mm" v-model="workingHour.wednesday.time" range-separator="To"
-                    start-placeholder="Start time" end-placeholder="End time"
+                  <el-time-picker ref="wednesdayPicker" is-range format="HH:mm" v-model="workingHour.wednesday.time"
+                    range-separator="To" start-placeholder="Start time" end-placeholder="End time"
                     :disabled="workingHour.wednesday.checked == false">
                   </el-time-picker>
                 </div>
 
                 <div class="mb-4 items-center grid grid-cols-4 gap-4">
                   <el-checkbox class="" v-model="workingHour.thursday.checked">Thursday</el-checkbox>
-                  <el-time-picker is-range format="HH:mm" v-model="workingHour.thursday.time" range-separator="To"
-                    start-placeholder="Start time" end-placeholder="End time"
+                  <el-time-picker ref="thursdayPicker" is-range format="HH:mm" v-model="workingHour.thursday.time"
+                    range-separator="To" start-placeholder="Start time" end-placeholder="End time"
                     :disabled="workingHour.thursday.checked == false">
                   </el-time-picker>
                 </div>
 
                 <div class="mb-4 items-center grid grid-cols-4 gap-4">
+                  <el-checkbox class="" v-model="workingHour.friday.checked">Friday</el-checkbox>
+                  <el-time-picker ref="fridayPicker" is-range format="HH:mm" v-model="workingHour.friday.time"
+                    range-separator="To" start-placeholder="Start time" end-placeholder="End time"
+                    :disabled="workingHour.friday.checked == false">
+                  </el-time-picker>
+                </div>
+
+                <div class="mb-4 items-center grid grid-cols-4 gap-4">
                   <el-checkbox class="" v-model="workingHour.saturday.checked">Saturday</el-checkbox>
-                  <el-time-picker is-range format="HH:mm" v-model="workingHour.saturday.time" range-separator="To"
-                    start-placeholder="Start time" end-placeholder="End time"
+                  <el-time-picker ref="saturdayPicker" is-range format="HH:mm" v-model="workingHour.saturday.time"
+                    range-separator="To" start-placeholder="Start time" end-placeholder="End time"
                     :disabled="workingHour.saturday.checked == false">
                   </el-time-picker>
                 </div>
 
                 <div class="mb-4 items-center grid grid-cols-4 gap-4">
                   <el-checkbox class="" v-model="workingHour.sunday.checked">Sunday</el-checkbox>
-                  <el-time-picker is-range format="HH:mm" v-model="workingHour.sunday.time" range-separator="To"
-                    start-placeholder="Start time" end-placeholder="End time"
+                  <el-time-picker ref="sundayPicker" is-range format="HH:mm" v-model="workingHour.sunday.time"
+                    range-separator="To" start-placeholder="Start time" end-placeholder="End time"
                     :disabled="workingHour.sunday.checked == false">
                   </el-time-picker>
                 </div>
@@ -429,18 +437,77 @@ export default {
       this.$refs["key-contact"].initKeyContact(data);
     },
     initTimeWorking(data) {
-      this.workingHour.monday.time[0].setHours(this.splitTime(data.mondayStart)[0]);
-      this.workingHour.monday.time[0].setMinutes(this.splitTime(data.mondayStart)[1]);
-      this.workingHour.monday.time[1].setHours(this.splitTime(data.mondayEnd)[0]);
-      this.workingHour.monday.time[1].setMinutes(this.splitTime(data.mondayEnd)[1]);
-      this.$refs.timePicker.userInput = [data.mondayStart, data.mondayEnd];
+      if (data.mondayStart == '' || data.mondayEnd == '' || data.mondayStart == null || data.mondayEnd == null) {
+        this.workingHour.monday.checked = false;
+      } else {
+        this.workingHour.monday.time[0].setHours(this.splitTime(data.mondayStart)[0]);
+        this.workingHour.monday.time[0].setMinutes(this.splitTime(data.mondayStart)[1]);
+        this.workingHour.monday.time[1].setHours(this.splitTime(data.mondayEnd)[0]);
+        this.workingHour.monday.time[1].setMinutes(this.splitTime(data.mondayEnd)[1]);
+        this.$refs.mondayPicker.userInput = [data.mondayStart, data.mondayEnd];
+      }
+      if (data.tuesdayStart == '' || data.tuesdayEnd == '' || data.tuesdayStart == null || data.tuesdayEnd == null) {
+        this.workingHour.tuesday.checked = false;
+      } else {
+        this.workingHour.tuesday.time[0].setHours(this.splitTime(data.tuesdayStart)[0]);
+        this.workingHour.tuesday.time[0].setMinutes(this.splitTime(data.tuesdayStart)[1]);
+        this.workingHour.tuesday.time[1].setHours(this.splitTime(data.tuesdayEnd)[0]);
+        this.workingHour.tuesday.time[1].setMinutes(this.splitTime(data.tuesdayEnd)[1]);
+        this.$refs.tuesdayPicker.userInput = [data.tuesdayStart, data.tuesdayEnd];
+      }
+      if (data.wednesdayStart == '' || data.wednesdayEnd == '' || data.wednesdayStart == null || data.wednesdayEnd == null) {
+        this.workingHour.wednesday.checked = false;
+      } else {
+        this.workingHour.wednesday.time[0].setHours(this.splitTime(data.wednesdayStart)[0]);
+        this.workingHour.wednesday.time[0].setMinutes(this.splitTime(data.wednesdayStart)[1]);
+        this.workingHour.wednesday.time[1].setHours(this.splitTime(data.wednesdayEnd)[0]);
+        this.workingHour.wednesday.time[1].setMinutes(this.splitTime(data.wednesdayEnd)[1]);
+        this.$refs.wednesdayPicker.userInput = [data.wednesdayStart, data.wednesdayEnd];
+      }
+      if (data.thursdayStart == '' || data.thursdayEnd == '' || data.thursdayStart == null || data.thursdayEnd == null) {
+        this.workingHour.thursday.checked = false;
+      } else {
+        this.workingHour.thursday.time[0].setHours(this.splitTime(data.thursdayStart)[0]);
+        this.workingHour.thursday.time[0].setMinutes(this.splitTime(data.thursdayStart)[1]);
+        this.workingHour.thursday.time[1].setHours(this.splitTime(data.thursdayEnd)[0]);
+        this.workingHour.thursday.time[1].setMinutes(this.splitTime(data.thursdayEnd)[1]);
+        this.$refs.thursdayPicker.userInput = [data.thursdayStart, data.thursdayEnd];
+      }
+
+      if (data.thursdayStart == '' || data.thursdayEnd == '' || data.thursdayStart == null || data.thursdayEnd == null) {
+        this.workingHour.friday.checked = false;
+      } else {
+        this.workingHour.friday.time[0].setHours(this.splitTime(data.fridayStart)[0]);
+        this.workingHour.friday.time[0].setMinutes(this.splitTime(data.fridayStart)[1]);
+        this.workingHour.friday.time[1].setHours(this.splitTime(data.fridayEnd)[0]);
+        this.workingHour.friday.time[1].setMinutes(this.splitTime(data.fridayEnd)[1]);
+        this.$refs.fridayPicker.userInput = [data.fridayStart, data.fridayEnd];
+      }
+      if (data.saturdayStart == '' || data.saturdayEnd == '' || data.saturdayStart == null || data.saturdayEnd == null) {
+        this.workingHour.saturday.checked = false;
+      } else {
+        this.workingHour.saturday.time[0].setHours(this.splitTime(data.saturdayStart)[0]);
+        this.workingHour.saturday.time[0].setMinutes(this.splitTime(data.saturdayStart)[1]);
+        this.workingHour.saturday.time[1].setHours(this.splitTime(data.saturdayEnd)[0]);
+        this.workingHour.saturday.time[1].setMinutes(this.splitTime(data.saturdayEnd)[1]);
+        this.$refs.saturdayPicker.userInput = [data.saturdayStart, data.saturdayEnd];
+      }
+      if (data.sundayStart == '' || data.sundayEnd == '' || data.sundayStart == null || data.sundayEnd == null) {
+        this.workingHour.sunday.checked = false;
+      } else {
+        this.workingHour.sunday.time[0].setHours(this.splitTime(data.sundayStart)[0]);
+        this.workingHour.sunday.time[0].setMinutes(this.splitTime(data.sundayStart)[1]);
+        this.workingHour.sunday.time[1].setHours(this.splitTime(data.sundayEnd)[0]);
+        this.workingHour.sunday.time[1].setMinutes(this.splitTime(data.sundayEnd)[1]);
+        this.$refs.sundayPicker.userInput = [data.sundayStart, data.sundayEnd];
+      }
     },
     splitTime(data) {
       return data.split(":")
     }
   },
   mounted() {
-    axios.get(`http://localhost:9099/api/v1/warehouse/detail/${this.$route.params.code}`)
+    axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`)
       .then(res => {
         Object.keys(this.warehouse).forEach((key) => {
           this.warehouse[key].value = res.data.items[key];
