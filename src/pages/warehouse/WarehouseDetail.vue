@@ -111,9 +111,9 @@
                   Add
                 </button>
                 <el-table :data="specialDayOn" style="width: 100%">
-                  <el-table-column label="Date" prop="date">
+                  <el-table-column label="Date" prop="specialDay">
                   </el-table-column>
-                  <el-table-column label="Time" prop="time">
+                  <el-table-column label="Time" prop="weekDay">
                   </el-table-column>
                   <el-table-column label="Remark" prop="remark">
                   </el-table-column>
@@ -178,7 +178,17 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      specialDayOn: [],
+      specialDayOn: [
+        {
+          id: 0,
+          specialDay: '',
+          specialStartDay: '',
+          specialCloseDay: '',
+          dayType: '',
+          remark: '',
+          weekDay: ''
+        }
+      ],
       search: '',
       workingHour: {
         activeName: 'first',
@@ -504,6 +514,9 @@ export default {
     },
     splitTime(data) {
       return data.split(":")
+    },
+    initDayTimeOnOff(data) {
+      
     }
   },
   mounted() {
@@ -517,6 +530,7 @@ export default {
           this.address[key].value = res.data.items[key];
         });
         this.initTimeWorking(res.data.items.openWorkingHour);
+        this.initDayTimeOnOff(res.data.items.specialDayTimes);
       })
       .catch(err => console.log(err));
   },
