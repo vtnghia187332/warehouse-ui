@@ -53,7 +53,7 @@ export default {
   created() {
     var me = this;
     axios
-      .get("http://localhost:9090/api/v1/warehouse/list")
+      .get("http://localhost:9099/api/v1/warehouse/list")
       .then(function (response) {
         me.warehouses = response.data.items.list;
         me.total = response.data.items.total;

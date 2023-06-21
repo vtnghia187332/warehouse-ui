@@ -32,8 +32,8 @@
               <el-tab-pane label="OpenHour" name="first">
                 <div class="mb-4 items-center grid grid-cols-4 gap-4">
                   <el-checkbox class="" v-model="workingHour.monday.checked">Monday</el-checkbox>
-                  <el-time-picker is-range format="HH:mm" v-model="workingHour.monday.time" range-separator="To"
-                    start-placeholder="Start time" end-placeholder="End time"
+                  <el-time-picker ref="timePicker" is-range format="HH:mm" v-model="workingHour.monday.time"
+                    range-separator="To" start-placeholder="Start time" end-placeholder="End time"
                     :disabled="workingHour.monday.checked == false">
                   </el-time-picker>
                 </div>
@@ -428,18 +428,14 @@ export default {
     initKeyContactForm(data) {
       this.$refs["key-contact"].initKeyContact(data);
     },
+    initTimeWorking(data) {
+      this.$refs.timePicker.userInput = [data.mondayStart, data.mondayEnd];
+    },
 
   },
   mounted() {
-    var me = this;
-    // axios
-    //   .get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`)
-    //   .then(function (response) {
-    //   });
-
-    axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`)
+    axios.get(`http://localhost:9099/api/v1/warehouse/detail/${this.$route.params.code}`)
       .then(res => {
-        // console.log(res.data.items)
         Object.keys(this.warehouse).forEach((key) => {
           this.warehouse[key].value = res.data.items[key];
         });
@@ -447,6 +443,7 @@ export default {
         Object.keys(this.address).forEach((key) => {
           this.address[key].value = res.data.items[key];
         });
+        this.initTimeWorking(res.data.items.openWorkingHour);
       })
       .catch(err => console.log(err));
   },
