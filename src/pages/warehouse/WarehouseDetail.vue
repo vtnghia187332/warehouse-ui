@@ -91,15 +91,17 @@
                   class="absolute z-20 ml-[1085px] !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ">
                   Add
                 </button>
-                <el-table style="width: 100%">
-                  <el-table-column label="Date" prop="date">
+                <el-table :data="specialDayOff" style="width: 100%" @row-dblclick="handleSpecialDayDetail">
+                  <el-table-column label="Date" prop="specialDay">
                   </el-table-column>
-                  <el-table-column label="Name" prop="name">
+                  <el-table-column label="Name" prop="weekDay">
+                  </el-table-column>
+                  <el-table-column label="Remark" prop="remark">
                   </el-table-column>
                   <el-table-column align="right">
                     <template slot-scope="scope">
                       <el-button size="mini" type="danger" class="bg-red-300"
-                        @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+                        @click="handleDeleteSpecialDay(scope, 'OFF')">Delete</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -110,7 +112,7 @@
                   @click="handleAddSpecialDay(true)" :handleAddSpecialDay="handleAddSpecialDay">
                   Add
                 </button>
-                <el-table :data="specialDayOn" style="width: 100%">
+                <el-table :data="specialDayOn" style="width: 100%" @row-dblclick="handleSpecialDayDetail">
                   <el-table-column label="Date" prop="specialDay">
                   </el-table-column>
                   <el-table-column label="Time" prop="weekDay">
@@ -120,7 +122,7 @@
                   <el-table-column align="right">
                     <template slot-scope="scope">
                       <el-button size="mini" type="danger" class="bg-red-300"
-                        @click="handleDeleteSpecialDay(scope)">Delete</el-button>
+                        @click="handleDeleteSpecialDay(scope, 'ON')">Delete</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -128,7 +130,7 @@
             </el-tabs>
           </div>
         </div>
-        <BaseDialog :dialogVisible.sync="dialogVisible" @handle-data="handleData" />
+        <BaseDialog ref="refDialog" :dialogVisible.sync="dialogVisible" @handle-data="handleData" />
         <FormCard title="Address">
           <template v-slot:content>
             <div class="!w-[1168px]">
@@ -136,7 +138,6 @@
                 <BaseTextArea :field="address.addressDes" v-model="address.addressDes.value" />
               </div>
               <div class="flex justify-between">
-                <!-- <BaseInput :field="address.country" v-model="address.country.value" /> -->
                 <BaseSelection :field="address.country" />
                 <BaseInput :field="address.city" v-model="address.city.value" />
               </div>
@@ -179,15 +180,8 @@ export default {
     return {
       dialogVisible: false,
       specialDayOn: [
-        {
-          id: 0,
-          specialDay: '',
-          specialStartDay: '',
-          specialCloseDay: '',
-          dayType: '',
-          remark: '',
-          weekDay: ''
-        }
+      ],
+      specialDayOff: [
       ],
       search: '',
       workingHour: {
@@ -434,11 +428,19 @@ export default {
         this.dialogVisible = param;
       }
     },
-    handleDeleteSpecialDay(item) {
+    handleDeleteSpecialDay(item, type) {
       const index = item.$index;
       if (index > -1) {
-        this.specialDayOn.splice(index, 1);
+        if (type = 'ON') {
+          this.specialDayOn.splice(index, 1);
+        } else if (type = 'OFF') {
+          this.specialDayOff.splice(index, 1);
+        }
       }
+    },
+    handleSpecialDayDetail(row) {
+      this.$refs["refDialog"].initData(row);
+      this.handleAddSpecialDay(true);
     },
     handleData(param) {
       this.specialDayOn.push(param);
@@ -516,7 +518,14 @@ export default {
       return data.split(":")
     },
     initDayTimeOnOff(data) {
-      
+      var me = this;
+      data.forEach(function (element) {
+        if (element.dayType == 'ON') {
+          me.specialDayOn.push(element);
+        } else if (element.dayType == 'OFF') {
+          me.specialDayOff.push(element);
+        }
+      });
     }
   },
   mounted() {

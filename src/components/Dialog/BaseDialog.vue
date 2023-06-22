@@ -26,7 +26,7 @@ export default {
     },
     data() {
         return {
-
+            type: '',
             date: {
                 id: "date",
                 classes: "!w-[534px]",
@@ -45,7 +45,7 @@ export default {
                 classes: "!w-[534px]",
                 label: "Time",
                 isRequired: 'true',
-                value: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
+                value: [new Date(0, 0, 0, 23, 59)],
                 error: "",
             },
             remark: {
@@ -75,8 +75,8 @@ export default {
             if (this.date.value == '') {
                 return;
             }
-            this.dataSpecialDay.date = moment(this.date.value, 'DD/MM/YYYY').format('DD/MM/YYYY');
-            this.dataSpecialDay.time = moment(this.time.value[0], 'HH:mm').format('HH:mm') + ' - ' + moment(this.time.value[1], 'HH:mm').format('HH:mm');
+            this.dataSpecialDay.specialDay = moment(this.date.value, 'DD/MM/YYYY').format('DD/MM/YYYY');
+            this.dataSpecialDay.weekDay = moment(this.time.value[0], 'HH:mm').format('HH:mm') + ' - ' + moment(this.time.value[1], 'HH:mm').format('HH:mm');
             this.dataSpecialDay.remark = this.remark.value;
             this.$emit("handle-data", this.dataSpecialDay);
             this.$emit('update:dialogVisible', false);
@@ -99,7 +99,7 @@ export default {
                     classes: "!w-[534px]",
                     label: "Time",
                     isRequired: 'true',
-                    value: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
+                    value: [new Date(0, 0, 0, 23, 59)],
                     error: "",
                 };
             this.remark = {
@@ -114,6 +114,13 @@ export default {
                 error: "",
             };
 
+        },
+        initData(data) {
+            console.log(data);
+            this.type = data.type;
+            const tempDate = data.specialDay;
+            this.date.value = moment(tempDate, "DD/MM/YYYY");
+            this.remark.value = data.remark;
         }
     },
 };
