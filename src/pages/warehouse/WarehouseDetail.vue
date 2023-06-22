@@ -280,22 +280,7 @@ export default {
           error: "",
           value: '',
           label: "Country",
-          options: [{
-            value: 'Option1',
-            label: 'Option1'
-          }, {
-            value: 'Option2',
-            label: 'Option2'
-          }, {
-            value: 'Option3',
-            label: 'Option3'
-          }, {
-            value: 'Option4',
-            label: 'Option4'
-          }, {
-            value: 'Option5',
-            label: 'Option5'
-          }],
+          options: [],
         },
         city: {
           id: "city",
@@ -540,6 +525,13 @@ export default {
         });
         this.initTimeWorking(res.data.items.openWorkingHour);
         this.initDayTimeOnOff(res.data.items.specialDayTimes);
+      })
+      .catch(err => console.log(err));
+
+    axios.get('http://localhost:9090/api/v1/address')
+      .then(res => {
+        this.address.country.options = res.data.items.countriesLists;
+        console.log(this.address.country);
       })
       .catch(err => console.log(err));
   },
