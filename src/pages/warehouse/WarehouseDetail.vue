@@ -139,11 +139,11 @@
               </div>
               <div class="flex justify-between">
                 <BaseSelection :field="address.country" />
-                <BaseInput :field="address.city" v-model="address.city.value" />
+                <BaseSelection :field="address.city" />
               </div>
               <div class="flex justify-between">
-                <BaseInput :field="address.district" v-model="address.district.value" />
-                <BaseInput :field="address.subDistrict" v-model="address.subDistrict.value" />
+                <BaseSelection :field="address.district" />
+                <BaseSelection :field="address.subDistrict" />
               </div>
             </div>
           </template>
@@ -285,35 +285,32 @@ export default {
         city: {
           id: "city",
           classes: "!w-[544px]",
-          type: "text",
-          label: "City",
           isRequired: 'true',
-          value: "",
-          placeholder: "Enter City",
-          maxlength: 0,
+          placeholder: "Select City",
           error: "",
+          value: '',
+          label: "City",
+          options: [],
         },
         district: {
           id: "district",
           classes: "!w-[544px]",
-          type: "text",
-          label: "District",
           isRequired: 'true',
-          value: "",
-          placeholder: "Enter District",
-          maxlength: 0,
+          placeholder: "Select District",
           error: "",
+          value: '',
+          label: "District",
+          options: [],
         },
         subDistrict: {
           id: "subdistrict",
           classes: "!w-[544px]",
-          type: "text",
-          label: "Sub-District",
           isRequired: 'true',
-          value: "",
-          placeholder: "Enter Sub-District",
-          maxlength: 0,
+          placeholder: "Select Sub District",
           error: "",
+          value: '',
+          label: "Sub District",
+          options: [],
         }
       }
     };
@@ -531,6 +528,10 @@ export default {
     axios.get('http://localhost:9090/api/v1/address')
       .then(res => {
         this.address.country.options = res.data.items.countriesLists;
+        this.address.city.options = res.data.items.citiesLists;
+        this.address.district.options = res.data.items.districtsLists;
+        this.address.subDistrict.options = res.data.items.subdistrictLists;
+
         console.log(this.address.country);
       })
       .catch(err => console.log(err));
