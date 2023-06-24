@@ -1,8 +1,26 @@
 <template>
   <div>
-    <button class="!bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="HandleAddWarehouse">
-      Add
-    </button>
+    <div class="flex justify-between px-4 py-2">
+      <div class="flex">
+        <BaseSearch :field="search" />
+        <button class="ml-1 !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Filter
+        </button>
+      </div>
+      <div>
+        <button class="ml-1 !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          History
+        </button>
+        <button class="ml-1 !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          @click="HandleAddWarehouse">
+          Add
+        </button>
+        <button class="ml-1 !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          @click="HandleAddWarehouse">
+          Import
+        </button>
+      </div>
+    </div>
     <el-table :data="warehouses" style="width: 100%" @row-dblclick="goToDetailWarehouse">
       <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
       </el-table-column>
@@ -33,9 +51,14 @@
 
 <script>
 import axios from "axios";
+import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 export default {
+  components: { BaseSearch },
   data() {
     return {
+      search: {
+        value: ''
+      },
       warehouses: [],
       total: 0,
       currentPage: 0,
