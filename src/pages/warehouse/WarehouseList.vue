@@ -38,7 +38,7 @@
       </el-table-column>
       <el-table-column fixed="right" label="Operations" width="120">
         <template slot-scope="scope">
-          <el-button type="text" size="small">Detail</el-button>
+          <el-button type="text" size="small">Duplicate</el-button>
           <el-button type="text" size="small">Edit</el-button>
         </template>
       </el-table-column>
