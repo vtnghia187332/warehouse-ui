@@ -43,26 +43,30 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination class="end-right" background :total="total" :current-page="currentPage"
-      :page-sizes="[30, 100, 200, 300, 400]" layout="prev, pager, next,sizes">
-    </el-pagination>
+    <BasePagination :field="paginationPage" @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange" />
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
+import BasePagination from "../../components/Pagination/BasePagination.vue";
 export default {
-  components: { BaseSearch },
+  components: { BaseSearch, BasePagination },
   data() {
     return {
       search: {
         value: ''
       },
       warehouses: [],
-      total: 0,
-      currentPage: 0,
       warehouseDetail: {},
+      paginationPage: {
+        currentPage: 1,
+        pageSizeList: [10, 30, 50, 100],
+        pageSizeval: 10,
+        total: 100,
+      },
     };
   },
   methods: {
@@ -71,7 +75,8 @@ export default {
     },
     goToDetailWarehouse(row) {
       this.$router.push({ path: `/warehouse-detail/${row.code}` });
-    }
+    },
+
   },
   created() {
     var me = this;
