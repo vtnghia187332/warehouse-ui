@@ -113,9 +113,9 @@
                   Add
                 </button>
                 <el-table :data="specialDayOn" style="width: 100%" @row-dblclick="handleSpecialDayDetail">
-                  <el-table-column label="Date" prop="specialDay">
+                  <el-table-column label="Date" prop="date">
                   </el-table-column>
-                  <el-table-column label="Time" prop="weekDay">
+                  <el-table-column label="Time" prop="time">
                   </el-table-column>
                   <el-table-column label="Remark" prop="remark">
                   </el-table-column>
@@ -421,16 +421,21 @@ export default {
         }
       }
     },
-    handleSpecialDayDetail(row) {
+    handleSpecialDayDetail(row, col, event) {
       this.editMode = true
       this.$refs["refDialog"].initData(row);
       this.handleAddSpecialDay(true);
     },
     handleData(param) {
       if (this.editMode) {
-        console.log("edit success");
+        console.log("edit success", param);
+       this.specialDayOn = this.specialDayOn.map(item => {
+          if (param.id === item.id) {
+            return param
+          }
+        })
       } else {
-        this.specialDayOn.push(param);
+        this.specialDayOn.push({ ...param, id: this.specialDayOn.length });
       }
 
     },
