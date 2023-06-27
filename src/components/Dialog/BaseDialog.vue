@@ -34,7 +34,7 @@ export default {
                 id: { value: null },
                 date: {
                     id: "date",
-                    classes: "!w-[534px]",
+                    classes: "!w-full",
                     label: "Date",
                     isRequired: 'true',
                     value: "",
@@ -47,7 +47,7 @@ export default {
                 },
                 time: {
                     id: "time",
-                    classes: "!w-[534px]",
+                    classes: "!w-full",
                     label: "Time",
                     isRequired: 'true',
                     value: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
@@ -55,7 +55,7 @@ export default {
                 },
                 remark: {
                     id: "remark",
-                    classes: "!w-[534px]",
+                    classes: "!w-full",
                     type: "text",
                     label: "Remark",
                     isRequired: 'false',
@@ -85,13 +85,10 @@ export default {
             this.$emit('update:dialogVisible', false);
         },
         initData(data) {
-           console.log("data",data);
             Object.keys(data).map((key) => {
                 this.dataSpecialDay[key].value = data[key]
             })
-            
-            const tempDate = data.specialDay;
-            this.dataSpecialDay.date.value = moment(tempDate, "DD/MM/YYYY");
+            this.dataSpecialDay.date.value = moment(data.date, "DD/MM/YYYY");
         }
     },
 };
