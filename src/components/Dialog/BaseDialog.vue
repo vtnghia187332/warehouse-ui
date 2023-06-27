@@ -23,6 +23,9 @@ export default {
         dialogVisible: {
             type: Boolean,
         },
+        editMode:  {
+            type: Boolean,
+        },
     },
     data() {
         return {

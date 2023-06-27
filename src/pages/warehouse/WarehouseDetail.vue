@@ -4,17 +4,17 @@
       <div class="w-[1130px] forms grow flex flex-col gap-y-4">
         <FormCard title="Information">
           <template v-slot:content>
-            <div class="!w-[1168px]">
-              <div class="w-[540px]">
+            <div class=" grid grid-cols-12 gap-x-2 gap-y-3">
+              <div class="col-span-6">
                 <BaseInput :field="warehouse.code" v-model="warehouse.code.value" />
               </div>
-              <div>
+              <div class="col-span-12">
                 <BaseTextArea :field="warehouse.name" v-model="warehouse.name.value" />
               </div>
-              <div>
+              <div class="col-span-12">
                 <BaseInput :field="warehouse.shortName" v-model="warehouse.shortName.value" />
               </div>
-              <div>
+              <div class="col-span-12">
                 <BaseTextArea :field="warehouse.description" v-model="warehouse.description.value" />
               </div>
             </div>
@@ -130,10 +130,10 @@
             </el-tabs>
           </div>
         </div>
-        <BaseDialog ref="refDialog" :dialogVisible.sync="dialogVisible" @handle-data="handleData" />
+        <BaseDialog ref="refDialog" :dialogVisible.sync="dialogVisible" @handle-data="handleData" :editMode="editMode" />
         <FormCard title="Address">
           <template v-slot:content>
-            <div class="!w-[1168px]">
+            <div class="w-full">
               <div>
                 <BaseTextArea :field="address.addressDes" v-model="address.addressDes.value" />
               </div>
@@ -178,6 +178,7 @@ export default {
   components: { FormCard, BaseInput, BaseTextArea, Button, BaseSelection, BaseDialog, BaseKeyContact },
   data() {
     return {
+      editMode: false,
       dialogVisible: false,
       specialDayOn: [
       ],
@@ -218,7 +219,7 @@ export default {
       warehouse: {
         code: {
           id: "warehouseCode",
-          classes: "!w-[540px]",
+          classes: "w-full col-span-6",
           type: "text",
           label: "Code",
           isRequired: 'true',
@@ -229,7 +230,7 @@ export default {
         },
         name: {
           id: "warehouseName",
-          classes: "!w-[1168px] !h-[64px]",
+          classes: "col-span-12 !h-[64px]",
           type: "text",
           label: "Name",
           isRequired: 'true',
@@ -240,7 +241,7 @@ export default {
         },
         shortName: {
           id: "warehouseShortName",
-          classes: "!w-[1168px]",
+          classes: "col-span-12",
           type: "text",
           label: "Short Name",
           value: "",
@@ -250,7 +251,7 @@ export default {
         },
         description: {
           id: "warehouseDescription",
-          classes: "!w-[1168px] !h-[64px]",
+          classes: "col-span-12 !h-[64px]",
           type: "text",
           label: "Description",
           isRequired: 'true',
@@ -263,7 +264,7 @@ export default {
       address: {
         addressDes: {
           id: "addressDes",
-          classes: "!w-[1168px]",
+          classes: "w-full",
           type: "text",
           label: "Address",
           isRequired: 'true',
@@ -421,11 +422,17 @@ export default {
       }
     },
     handleSpecialDayDetail(row) {
+      this.editMode = true
       this.$refs["refDialog"].initData(row);
       this.handleAddSpecialDay(true);
     },
     handleData(param) {
-      this.specialDayOn.push(param);
+      if(this.editMode){
+console.log("edit success");
+      }else{
+        this.specialDayOn.push(param);
+      }
+      
     },
     initKeyContactForm(data) {
       this.$refs["key-contact"].initKeyContact(data);

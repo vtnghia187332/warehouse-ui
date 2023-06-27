@@ -43,8 +43,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <BasePagination :field="paginationPage" @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange" />
+    <BasePagination :field="paginationPage"  />
   </div>
 </template>
 
@@ -83,6 +82,7 @@ export default {
     axios
       .get("http://localhost:9090/api/v1/warehouse/list")
       .then(function (response) {
+        console.log(response);
         me.warehouses = response.data.items.list;
         me.total = response.data.items.total;
         me.currentPage = response.data.items.pages;
