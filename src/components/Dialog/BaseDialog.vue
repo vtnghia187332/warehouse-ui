@@ -77,7 +77,8 @@ export default {
 
             const dataReturn = {}
             dataReturn.date = moment(this.dataSpecialDay.date.value, 'DD/MM/YYYY').format('DD/MM/YYYY');
-            dataReturn.time = moment(this.dataSpecialDay.time.value[0], 'HH:mm').format('HH:mm') + ' - ' + moment(this.dataSpecialDay.time.value[1], 'HH:mm').format('HH:mm');
+            // dataReturn.time = moment(this.dataSpecialDay.time.value[0], 'HH:mm').format('HH:mm') + ' - ' + moment(this.dataSpecialDay.time.value[1], 'HH:mm').format('HH:mm');
+            dataReturn.time=this.dataSpecialDay.time.value;
             dataReturn.remark = this.dataSpecialDay.remark.value;
             dataReturn.id = this.dataSpecialDay.id.value
 

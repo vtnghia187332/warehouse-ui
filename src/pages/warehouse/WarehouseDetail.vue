@@ -114,10 +114,19 @@
                 </button>
                 <el-table :data="specialDayOn" style="width: 100%" @row-dblclick="handleSpecialDayDetail">
                   <el-table-column label="Date" prop="date">
+                    <template slot-scope="scope">
+                      {{ scope.row.date }}
+                    </template>
                   </el-table-column>
                   <el-table-column label="Time" prop="time">
+                    <template slot-scope="scope">
+                      {{ scope.row.time }}
+                    </template>
                   </el-table-column>
                   <el-table-column label="Remark" prop="remark">
+                    <template slot-scope="scope">
+                      {{ scope.row.remark }}
+                    </template>
                   </el-table-column>
                   <el-table-column align="right">
                     <template slot-scope="scope">
@@ -429,7 +438,7 @@ export default {
     handleData(param) {
       if (this.editMode) {
         console.log("edit success", param);
-       this.specialDayOn = this.specialDayOn.map(item => {
+        this.specialDayOn = this.specialDayOn.map(item => {
           if (param.id === item.id) {
             return param
           }
