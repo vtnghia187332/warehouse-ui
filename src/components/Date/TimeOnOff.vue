@@ -22,7 +22,6 @@ export default {
     },
     methods: {
         initData(dataStart, dataEnd) {
-            console.log(dataStart, dataEnd, "data");
             this.$refs.timePicker.userInput = [dataStart, dataEnd];
         }
     },

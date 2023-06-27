@@ -427,12 +427,12 @@ export default {
       this.handleAddSpecialDay(true);
     },
     handleData(param) {
-      if(this.editMode){
-console.log("edit success");
-      }else{
+      if (this.editMode) {
+        console.log("edit success");
+      } else {
         this.specialDayOn.push(param);
       }
-      
+
     },
     initKeyContactForm(data) {
       this.$refs["key-contact"].initKeyContact(data);
@@ -538,8 +538,6 @@ console.log("edit success");
         this.address.city.options = res.data.items.citiesLists;
         this.address.district.options = res.data.items.districtsLists;
         this.address.subDistrict.options = res.data.items.subdistrictLists;
-
-        console.log(this.address.country);
       })
       .catch(err => console.log(err));
   },

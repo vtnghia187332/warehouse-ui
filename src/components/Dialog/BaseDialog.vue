@@ -23,7 +23,7 @@ export default {
         dialogVisible: {
             type: Boolean,
         },
-        editMode:  {
+        editMode: {
             type: Boolean,
         },
     },
@@ -48,7 +48,7 @@ export default {
                 classes: "!w-[534px]",
                 label: "Time",
                 isRequired: 'true',
-                value: [new Date(0, 0, 0, 23, 59)],
+                value: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
                 error: "",
             },
             remark: {
@@ -99,10 +99,10 @@ export default {
             },
                 this.time = {
                     id: "time",
-                    classes: "!w-[534px]",
+                    classes: "w-full",
                     label: "Time",
                     isRequired: 'true',
-                    value: [new Date(0, 0, 0, 23, 59)],
+                    value: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
                     error: "",
                 };
             this.remark = {
@@ -119,7 +119,6 @@ export default {
 
         },
         initData(data) {
-            console.log(data);
             this.type = data.type;
             const tempDate = data.specialDay;
             this.date.value = moment(tempDate, "DD/MM/YYYY");
