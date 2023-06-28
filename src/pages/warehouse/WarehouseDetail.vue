@@ -115,12 +115,12 @@
                 <el-table :data="specialDayOn" style="width: 100%" @row-dblclick="handleSpecialDayDetail">
                   <el-table-column label="Date" prop="date">
                     <template slot-scope="scope">
-                      {{ scope.row.date }}
+                      {{ moment(scope.row.date).format("DD/MM/YYYY") }}
                     </template>
                   </el-table-column>
                   <el-table-column label="Time" prop="time">
                     <template slot-scope="scope">
-                      {{ scope.row.time }}
+                      {{ moment(scope.row.time[0]).format("HH:mm") + " - " + moment(scope.row.time[1]).format("HH:mm") }}
                     </template>
                   </el-table-column>
                   <el-table-column label="Remark" prop="remark">
@@ -183,6 +183,8 @@ import Button from "../../components/Button.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import BaseDialog from "../../components/Dialog/BaseDialog.vue";
 import BaseKeyContact from "../../components/KeyContact/BaseKeyContact.vue";
+import moment from 'moment';
+
 export default {
   components: { FormCard, BaseInput, BaseTextArea, Button, BaseSelection, BaseDialog, BaseKeyContact },
   data() {
@@ -325,6 +327,11 @@ export default {
       }
     };
   },
+  computed: {
+    moment() {
+      return moment
+    }
+  },
   methods: {
     handleSubmit() {
       Object.keys(this.warehouse).forEach((key) => {
@@ -437,7 +444,6 @@ export default {
     },
     handleData(param) {
       if (this.editMode) {
-        console.log("edit success", param);
         this.specialDayOn = this.specialDayOn.map(item => {
           if (param.id === item.id) {
             return param
