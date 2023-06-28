@@ -5,7 +5,7 @@
         <TimePicker :field="dataSpecialDay.time" />
         <BaseTextArea :field="dataSpecialDay.remark" v-model="dataSpecialDay.remark.value" />
         <span slot="footer" class="dialog-footer">
-            <el-button @click="$emit('update:dialogVisible', false)">Cancel</el-button>
+            <el-button @click="handleCloseDialog">Cancel</el-button>
             <el-button class="text-green-500" type="primary" @click="handleData">Confirm</el-button>
         </span>
     </el-dialog>
@@ -23,48 +23,14 @@ export default {
         dialogVisible: {
             type: Boolean,
         },
-        editMode: {
-            type: Boolean,
-        },
+        rowDataSpecialDayOn: {
+            type: Object
+        }
     },
     data() {
         return {
             type: '',
-            defaultSpecialDay: _.cloneDeep({
-                id: { value: null },
-                date: {
-                    id: "date",
-                    classes: "!w-full",
-                    label: "Date",
-                    isRequired: 'true',
-                    value: "",
-                    error: "",
-                    pickerOptions: {
-                        disabledDate(time) {
-                            return time.getTime() < Date.now();
-                        },
-                    },
-                },
-                time: {
-                    id: "time",
-                    classes: "!w-full",
-                    label: "Time",
-                    isRequired: 'true',
-                    value: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
-                    error: "",
-                },
-                remark: {
-                    id: "remark",
-                    classes: "!w-full",
-                    type: "text",
-                    label: "Remark",
-                    isRequired: 'false',
-                    value: "",
-                    placeholder: "Enter Remark",
-                    maxlength: 150,
-                    error: "",
-                },
-            }),
+            defaultSpecialDay: _.cloneDeep(),
             dataSpecialDay: {
                 id: { value: null },
                 date: {
@@ -102,7 +68,14 @@ export default {
             }
         }
     },
-
+    watch: {
+        rowDataSpecialDayOn: function (old, newValue) {
+            console.log(newValue);
+            this.initData(newValue)
+        },
+        deep: true,
+        immediate: true
+    },
     methods: {
         closeForm() {
             this.$emit("handleAddSpecialDay", false);
@@ -114,20 +87,53 @@ export default {
             dataReturn.date = this.dataSpecialDay.date.value
             dataReturn.time = this.dataSpecialDay.time.value;
             dataReturn.remark = this.dataSpecialDay.remark.value;
-            dataReturn.id = this.dataSpecialDay.id.value;
+            dataReturn.id = this.dataSpecialDay.length;
 
             this.$emit("handle-data", dataReturn);
-            this.handleCloseDialog()
+            this.handleCloseDialog();
         },
         handleCloseDialog() {
-            this.dataSpecialDay = this.defaultSpecialDay
+            this.dataSpecialDay = {
+                id: { value: null },
+                date: {
+                    id: "date",
+                    classes: "!w-full",
+                    label: "Date",
+                    isRequired: 'true',
+                    value: "",
+                    error: "",
+                    pickerOptions: {
+                        disabledDate(time) {
+                            return time.getTime() < Date.now();
+                        },
+                    },
+                },
+                time: {
+                    id: "time",
+                    classes: "!w-full",
+                    label: "Time",
+                    isRequired: 'true',
+                    value: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
+                    error: "",
+                },
+                remark: {
+                    id: "remark",
+                    classes: "!w-full",
+                    type: "text",
+                    label: "Remark",
+                    isRequired: 'false',
+                    value: "",
+                    placeholder: "Enter Remark",
+                    maxlength: 150,
+                    error: "",
+                },
+            };
             this.$emit('update:dialogVisible', false);
         },
         initData(data) {
             Object.keys(data).map((key) => {
                 this.dataSpecialDay[key].value = data[key]
             })
-            this.dataSpecialDay.date.value = moment(data.date, "DD/MM/YYYY");
         }
     },
 };

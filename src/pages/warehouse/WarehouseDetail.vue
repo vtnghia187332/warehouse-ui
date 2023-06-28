@@ -139,7 +139,8 @@
             </el-tabs>
           </div>
         </div>
-        <BaseDialog ref="refDialog" :dialogVisible.sync="dialogVisible" @handle-data="handleData" :editMode="editMode" />
+        <BaseDialog ref="refDialog" :dialogVisible.sync="dialogVisible" @handle-data="handleData" 
+          :rowDataSpecialDayOn="rowDataSpecialDayOn" />
         <FormCard title="Address">
           <template v-slot:content>
             <div class="w-full">
@@ -189,7 +190,6 @@ export default {
   components: { FormCard, BaseInput, BaseTextArea, Button, BaseSelection, BaseDialog, BaseKeyContact },
   data() {
     return {
-      editMode: false,
       dialogVisible: false,
       specialDayOn: [
       ],
@@ -324,7 +324,8 @@ export default {
           label: "Sub District",
           options: [],
         }
-      }
+      },
+      rowDataSpecialDayOn: {}
     };
   },
   computed: {
@@ -423,8 +424,10 @@ export default {
       });
     },
     handleAddSpecialDay(param) {
+      console.log(param);
       if (param !== null) {
         this.dialogVisible = param;
+        this.rowDataSpecialDayOn = {}
       }
     },
     handleDeleteSpecialDay(item, type) {
@@ -438,12 +441,12 @@ export default {
       }
     },
     handleSpecialDayDetail(row, col, event) {
-      this.editMode = true
-      this.$refs["refDialog"].initData(row);
+      console.log(row);
+      this.rowDataSpecialDayOn = row
       this.handleAddSpecialDay(true);
     },
     handleData(param) {
-      if (this.editMode) {
+      if (param.id) {
         this.specialDayOn = this.specialDayOn.map(item => {
           if (param.id === item.id) {
             return param
