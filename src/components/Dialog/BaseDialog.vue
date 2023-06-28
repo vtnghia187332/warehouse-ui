@@ -24,8 +24,9 @@ export default {
             type: Boolean,
         },
         rowDataSpecialDayOn: {
-            type: Object
-        }
+            type: Object,
+            default: () => { }
+        },
     },
     data() {
         return {
@@ -68,13 +69,8 @@ export default {
             }
         }
     },
-    watch: {
-        rowDataSpecialDayOn: function (old, newValue) {
-            console.log(newValue);
-            this.initData(newValue)
-        },
-        deep: true,
-        immediate: true
+    mounted() {
+        this.initData(this.rowDataSpecialDayOn)
     },
     methods: {
         closeForm() {

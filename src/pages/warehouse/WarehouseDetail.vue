@@ -139,7 +139,7 @@
             </el-tabs>
           </div>
         </div>
-        <BaseDialog ref="refDialog" :dialogVisible.sync="dialogVisible" @handle-data="handleData" 
+        <BaseDialog v-if="dialogVisible" :dialogVisible.sync="dialogVisible" @handle-data="handleData" 
           :rowDataSpecialDayOn="rowDataSpecialDayOn" />
         <FormCard title="Address">
           <template v-slot:content>
@@ -424,10 +424,9 @@ export default {
       });
     },
     handleAddSpecialDay(param) {
-      console.log(param);
       if (param !== null) {
-        this.dialogVisible = param;
         this.rowDataSpecialDayOn = {}
+        this.dialogVisible = true;
       }
     },
     handleDeleteSpecialDay(item, type) {
@@ -441,9 +440,8 @@ export default {
       }
     },
     handleSpecialDayDetail(row, col, event) {
-      console.log(row);
       this.rowDataSpecialDayOn = row
-      this.handleAddSpecialDay(true);
+      this.dialogVisible = true;
     },
     handleData(param) {
       if (param.id) {
