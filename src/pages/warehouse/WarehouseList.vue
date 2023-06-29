@@ -8,16 +8,16 @@
         </button>
       </div>
       <div>
-        <button class="ml-1 !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-sm">
-          History
+        <button class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm ">
+          <i class="el-icon-files font-bold"></i> History
         </button>
-        <button class="ml-1 !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-sm"
-          @click="HandleAddWarehouse">
-          Add
+        <button class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm" @click="HandleAddWarehouse">
+          <i class="el-icon-plus ml font-bold"></i> Import
         </button>
-        <button class="ml-1 !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-sm"
-          @click="HandleAddWarehouse">
-          Import
+        <button class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm" @click="HandleAddWarehouse">
+          <i class="el-icon-plus ml font-bold"></i> Export
+        </button> <button class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm" @click="HandleAddWarehouse">
+          <i class="el-icon-plus ml font-bold"></i> Add
         </button>
       </div>
     </div>
@@ -37,7 +37,7 @@
       <el-table-column prop="addressDes" label="Warehouse Address" width="300">
       </el-table-column>
       <el-table-column fixed="right" label="Operations" width="100">
-        <template slot-scope="scope" >
+        <template slot-scope="scope">
           <el-button type="text" size="small"><i class="el-icon-document-copy text-2xl"></i></el-button>
           <el-button type="text" size="small"><i class="el-icon-edit-outline text-2xl"></i></el-button>
         </template>
