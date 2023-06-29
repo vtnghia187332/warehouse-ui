@@ -4,7 +4,7 @@
       <div class="flex">
         <BaseSearch :field="search" />
         <button class="ml-1 !bg-[#f4f3ef] border border-indigo-600 text-black font-medium py-2 px-4 rounded-sm">
-          Filter
+          <span class="ti-filter"></span> Filter
         </button>
       </div>
       <div>
@@ -43,7 +43,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <BasePagination :field="paginationPage"  />
+    <BasePagination :field="paginationPage" />
   </div>
 </template>
 
@@ -57,7 +57,7 @@ export default {
     return {
       search: {
         value: '',
-        class:'w-96'
+        class: 'w-96'
       },
       warehouses: [],
       warehouseDetail: {},
