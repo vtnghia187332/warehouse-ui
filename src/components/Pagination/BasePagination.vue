@@ -33,30 +33,54 @@ export default {
 
 <style>
 .el-pagination__sizes .el-input__inner {
-    background-color: red !important;
+    background-color: #f4f3ef !important;
 }
 
 .el-pagination .btn-prev {
-    background-color: red !important;
+    background-color: #f4f3ef !important;
+    border: 1px solid #e5e7eb;
+    margin-right: 4px !important;
 }
 
 .el-pagination .btn-next {
-    background-color: red !important;
+    background-color: #f4f3ef !important;
+    border: 1px solid #e5e7eb;
+    margin-left: 4px !important;
 }
 
 .el-pagination .number {
-    background-color: red !important;
+    background-color: #f4f3ef !important;
+    border: 1px solid #e5e7eb;
+    margin-left: 4px;
+    margin-right: 4px;
 }
 
 .el-pagination .el-icon-more {
-    background-color: red !important;
+    background-color: #f4f3ef !important;
+    border: 1px solid #e5e7eb;
+    margin-left: 4px;
+    margin-right: 4px;
 }
 
-.el-pagination .el-icon-more:after {
-    background-color: blue;
+.el-pagination .el-pager .el-icon.more.btn-quicknext.el-icon-d-arrow-right {
+    margin-left: 4px;
+    margin-right: 4px;
 }
 
 .el-pagination .el-input__inner {
-    background-color: red !important;
+    background-color: #f4f3ef !important;
 }
+
+.el-pagination .el-pager .number.active {
+    border: 1px solid #409EFF !important;
+}
+
+.el-pagination {
+    margin-top: 8px !important;
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+    width: 100%;
+}
+
+
 </style>
