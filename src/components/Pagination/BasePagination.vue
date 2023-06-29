@@ -2,7 +2,7 @@
     <div>
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
             :current-page.sync="field.currentPage" :page-sizes="field.pageSizeList" :page-size="field.pageSizeval"
-            layout="total, sizes, prev, pager, next, jumper" :total="field.total">
+            layout="total, prev, pager, next, sizes, jumper" :total="field.total">
         </el-pagination>
     </div>
 </template>
@@ -67,6 +67,12 @@ export default {
     margin-right: 4px;
 }
 
+.el-pagination .el-pager .el-icon.more.btn-quickprev.el-icon-d-arrow-left {
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+
 .el-pagination .el-input__inner {
     background-color: #f4f3ef !important;
 }
@@ -82,5 +88,16 @@ export default {
     width: 100%;
 }
 
+.el-pagination {
+    display: flex;
+    justify-content: flex-end;
+}
 
+.el-pagination .el-pagination__jump {
+    margin-left: -8px;
+}
+
+.el-pagination .el-pagination__total {
+    margin-right: auto;
+}
 </style>
