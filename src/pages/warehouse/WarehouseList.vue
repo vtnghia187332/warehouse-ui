@@ -3,19 +3,19 @@
     <div class="flex justify-between px-4 py-2">
       <div class="flex">
         <BaseSearch :field="search" />
-        <button class="ml-1 !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <button class="ml-1 !bg-[#f4f3ef] border border-indigo-600 text-black font-medium py-2 px-4 rounded-sm">
           Filter
         </button>
       </div>
       <div>
-        <button class="ml-1 !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <button class="ml-1 !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-sm">
           History
         </button>
-        <button class="ml-1 !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        <button class="ml-1 !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-sm"
           @click="HandleAddWarehouse">
           Add
         </button>
-        <button class="ml-1 !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        <button class="ml-1 !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-sm"
           @click="HandleAddWarehouse">
           Import
         </button>
@@ -56,7 +56,8 @@ export default {
   data() {
     return {
       search: {
-        value: ''
+        value: '',
+        class:'w-96'
       },
       warehouses: [],
       warehouseDetail: {},

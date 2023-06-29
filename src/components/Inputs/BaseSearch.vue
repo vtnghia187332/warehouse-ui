@@ -1,5 +1,7 @@
 <template>
-    <el-input placeholder="Please input" v-model="field.input"></el-input>
+    <el-input placeholder="Please input" v-model="field.input" :class="field.class">
+        <el-button slot="append" icon="el-icon-search"></el-button>
+    </el-input>
 </template>
 <script>
 export default {
@@ -11,4 +13,11 @@ export default {
     },
 }
 </script>
-<style></style>
+<style>
+.el-input-group__append{
+    background-color: #60A5FA !important;
+}
+.el-input-group__append .el-icon-search{
+    color: white;
+}
+</style>
