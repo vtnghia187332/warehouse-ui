@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="fix_highted">
     <div class="flex justify-between px-4 py-2">
       <div class="flex">
         <BaseSearch :field="search" />
-        <button class="ml-1 !bg-[#f4f3ef] border border-indigo-600 text-black font-medium py-2 px-4 rounded-sm">
+        <button class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm">
           <span class="ti-filter"></span> Filter
         </button>
       </div>
@@ -36,10 +36,10 @@
       </el-table-column>
       <el-table-column prop="addressDes" label="Warehouse Address" width="300">
       </el-table-column>
-      <el-table-column fixed="right" label="Operations" width="120">
-        <template slot-scope="scope">
-          <el-button type="text" size="small">Duplicate</el-button>
-          <el-button type="text" size="small">Edit</el-button>
+      <el-table-column fixed="right" label="Operations" width="100">
+        <template slot-scope="scope" >
+          <el-button type="text" size="small"><i class="el-icon-document-copy text-2xl"></i></el-button>
+          <el-button type="text" size="small"><i class="el-icon-edit-outline text-2xl"></i></el-button>
         </template>
       </el-table-column>
     </el-table>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="m-2">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
             :current-page.sync="field.currentPage" :page-sizes="field.pageSizeList" :page-size="field.pageSizeval"
             layout="total, prev, pager, next, sizes, jumper" :total="field.total">
@@ -51,25 +51,25 @@ export default {
 .el-pagination .number {
     background-color: #f4f3ef !important;
     border: 1px solid #e5e7eb;
-    margin-left: 4px;
-    margin-right: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 .el-pagination .el-icon-more {
     background-color: #f4f3ef !important;
     border: 1px solid #e5e7eb;
-    margin-left: 4px;
-    margin-right: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 .el-pagination .el-pager .el-icon.more.btn-quicknext.el-icon-d-arrow-right {
-    margin-left: 4px;
-    margin-right: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 .el-pagination .el-pager .el-icon.more.btn-quickprev.el-icon-d-arrow-left {
-    margin-left: 4px;
-    margin-right: 4px;
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 
@@ -82,7 +82,7 @@ export default {
 }
 
 .el-pagination {
-    margin-top: 8px !important;
+
     padding-left: 24px !important;
     padding-right: 24px !important;
     width: 100%;

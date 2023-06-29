@@ -14,10 +14,16 @@ export default {
 }
 </script>
 <style>
-.el-input-group__append{
+.el-input-group__append {
     background-color: #60A5FA !important;
 }
-.el-input-group__append .el-icon-search{
+
+.el-input-group__append .el-icon-search {
     color: white;
 }
-</style>
+
+.el-input-group__append,
+.el-input-group__prepend {
+    border: none !important;
+
+}</style>
