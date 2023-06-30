@@ -28,7 +28,7 @@
             Window Time
           </div>
           <div class="p-3 !pt-2 pb-0">
-            <el-tabs v-model="workingHour.activeName">
+            <el-tabs v-model="activeName">
               <el-tab-pane label="OpenHour" name="first">
                 <div class="mb-4 items-center grid grid-cols-4 gap-4">
                   <el-checkbox class="" v-model="workingHour.monday.checked">Monday</el-checkbox>
@@ -196,8 +196,8 @@ export default {
       specialDayOff: [
       ],
       search: '',
+      activeName: 'first',
       workingHour: {
-        activeName: 'first',
         monday: {
           checked: true,
           time: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
@@ -350,69 +350,20 @@ export default {
         }
       });
       const warehouseAdd = {
-        "code": "Warehouse Code2",
-        "name": "name123123",
-        "shortName": "shortName",
-        "addressDes": "addressDes",
-        "description": "description",
-        "openWorkingHourReq": {
-          "mondayEnd": "mondayEnd",
-          "tuesdayStart": "tuesdayStart",
-          "tuesdayEnd": "tuesdayEnd",
-          "wednesdayStart": "wednesdayStart",
-          "wednesdayEnd": "wednesdayEnd",
-          "thursdayStart": "thursdayStart",
-          "thursdayEnd": "thursdayEnd",
-          "fridayStart": "fridayStart",
-          "fridayEnd": "fridayEnd",
-          "saturdayStart": "saturdayStart",
-          "saturdayEnd": "saturdayEnd",
-          "sundayStart": "sundayStart",
-          "sundayEnd": "sundayEnd"
-        },
-        "countryId": 1,
-        "cityId": 1,
-        "districtId": 1,
-        "subdistrictId": 1,
+        "code": this.warehouse.code.value,
+        "name": this.warehouse.name.value,
+        "shortName": this.warehouse.shortName.value,
+        "addressDes": this.warehouse.address.addressDes.value,
+        "description": this.warehouse.description.value,
+        "openWorkingHourReq": this.workingHour,
+        "countryId": this.address.country.value,
+        "cityId": this.address.city.value,
+        "districtId": this.address.district.value,
+        "subdistrictId": this.address.subDistrict.value,
         "postalCode": "123456",
         "warehouseChainId": 1,
-        "specialDayTimeReqList": [
-          {
-            "specialDay": "specialDay",
-            "specialStartDay": "specialStartDay",
-            "specialCloseDay": "specialCloseDay",
-            "dayType": "dayType",
-            "remark": "remark",
-            "weekDay": "weekDay"
-          },
-          {
-            "specialDay": "specialDay1",
-            "specialStartDay": "specialStartDay1",
-            "specialCloseDay": "specialCloseDay1",
-            "dayType": "dayType1",
-            "remark": "remark1",
-            "weekDay": "weekDay1"
-          }
-        ],
-        "keyContactReqs": [
-          {
-            "code": "code",
-            "firstName": "abc",
-            "lastName": "adb",
-            "title": "title",
-            "email": "email@gmail.com",
-            "mobilePhone": "0987216273",
-            "landlinePhone": "0987216201"
-          }, {
-            "code": "cod12e",
-            "firstName": "aabc",
-            "lastName": "adbb",
-            "title": "title2",
-            "email": "email@gmail.com",
-            "mobilePhone": "0987216273",
-            "landlinePhone": "0987216201"
-          }
-        ]
+        "specialDayTimeReqList": this.specialDayOn,
+        "keyContactReqs": this.keyContactReqs,
       };
       // Object.keys(this.warehouse).forEach((key) => {
       //   warehouseAdd[key] = this.warehouse[key].value;
