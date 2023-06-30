@@ -21,28 +21,30 @@
         </button>
       </div>
     </div>
-    <el-table :data="warehouses" style="width: 100%" @row-dblclick="goToDetailWarehouse">
-      <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
-      </el-table-column>
-      <el-table-column prop="createdAt" label="Create Date" width="250">
-      </el-table-column>
-      <el-table-column prop="editedAt" label="Updated Date" width="250">
-      </el-table-column>
-      <el-table-column prop="code" label="Warehouse Code" width="300">
-      </el-table-column>
-      <el-table-column prop="name" label="Warehouse Name" width="300">
-      </el-table-column>
-      <el-table-column prop="shortName" label="Warehouse Short Name" width="300">
-      </el-table-column>
-      <el-table-column prop="addressDes" label="Warehouse Address" width="300">
-      </el-table-column>
-      <el-table-column fixed="right" label="Operations" width="100">
-        <template slot-scope="scope">
-          <el-button type="text" size="small"><i class="el-icon-document-copy text-2xl"></i></el-button>
-          <el-button type="text" size="small"><i class="el-icon-edit-outline text-2xl"></i></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <div class="table_style">
+      <el-table :data="warehouses" style="width: 100%" @row-dblclick="goToDetailWarehouse">
+        <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
+        </el-table-column>
+        <el-table-column prop="createdAt" label="Create Date" width="250">
+        </el-table-column>
+        <el-table-column prop="editedAt" label="Updated Date" width="250">
+        </el-table-column>
+        <el-table-column prop="code" label="Warehouse Code" width="300">
+        </el-table-column>
+        <el-table-column prop="name" label="Warehouse Name" width="300">
+        </el-table-column>
+        <el-table-column prop="shortName" label="Warehouse Short Name" width="300">
+        </el-table-column>
+        <el-table-column prop="addressDes" label="Warehouse Address" width="300">
+        </el-table-column>
+        <el-table-column fixed="right" label="Operations" width="100">
+          <template slot-scope="scope">
+            <el-button type="text" size="small"><i class="el-icon-document-copy text-2xl"></i></el-button>
+            <el-button type="text" size="small"><i class="el-icon-edit-outline text-2xl"></i></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
     <BasePagination :field="paginationPage" />
   </div>
 </template>
@@ -95,5 +97,10 @@ export default {
 .end-right {
   display: flex;
   justify-content: end;
+}
+
+.table_style {
+  height: calc(100vh - 185px);
+  overflow: auto;
 }
 </style>
