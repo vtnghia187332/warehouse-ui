@@ -1,7 +1,7 @@
 <template>
   <div class="bg-page-background overflow-y-auto">
-    <div class="p-4 flex gap-x-4">
-      <div class="w-[1130px] forms grow flex flex-col gap-y-4">
+    <el-row :gutter="20" class="p-4 flex gap-x-4 detail">
+      <el-col :span="15" class="forms grow">
         <FormCard title="Information">
           <template v-slot:content>
             <div class=" grid grid-cols-12 gap-x-2 gap-y-3">
@@ -139,7 +139,7 @@
             </el-tabs>
           </div>
         </div>
-        <BaseDialog v-if="dialogVisible" :dialogVisible.sync="dialogVisible" @handle-data="handleData" 
+        <BaseDialog v-if="dialogVisible" :dialogVisible.sync="dialogVisible" @handle-data="handleData"
           :rowDataSpecialDayOn="rowDataSpecialDayOn" />
         <FormCard title="Address">
           <template v-slot:content>
@@ -162,16 +162,16 @@
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="handleSubmit">
           Create
         </button>
-      </div>
-      <div class="flex flex-col gap-y-4 min-w-[380px] w-[380px] h-full">
+      </el-col>
+      <el-col :span="5" class="">
         <div class="p-3 bg-white radius-shadow_add">
           <p class="text-xs text-secondary-45">Driver ID:</p>
           <p class="text-base text-neutral-13 font-medium">
             {{ "ANL-Dxxxxxxxxxx" }}
           </p>
         </div>
-      </div>
-    </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -569,5 +569,9 @@ export default {
 .radius-shadow_add {
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 3px;
+}
+
+.detail .el-col.el-col-5 {
+  padding: 0 !important;
 }
 </style>
