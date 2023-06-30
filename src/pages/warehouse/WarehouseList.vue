@@ -21,7 +21,7 @@
         </button>
       </div>
     </div>
-    <div class="table_style">
+    <div class="table_style px-2">
       <el-table :data="warehouses" style="width: 100%" @row-dblclick="goToDetailWarehouse">
         <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
         </el-table-column>

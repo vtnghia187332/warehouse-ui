@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-page-background overflow-y-auto">
-    <el-row :gutter="20" class="p-4 flex gap-x-4 detail">
+  <div class="bg-page-background overflow-y-auto w-full py-4">
+    <el-row :gutter="20" class="flex gap-x-4 detail w-full">
       <el-col :span="15" class="forms grow">
         <FormCard title="Information">
           <template v-slot:content>
