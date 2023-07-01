@@ -2,9 +2,9 @@
   <div class="bg-page-background overflow-y-auto w-full py-4">
     <el-row :gutter="20" class="flex gap-x-4 detail w-full">
       <el-col :span="15" class="forms grow">
-        <FormCard title="Information">
+        <FormCard title="Information" class="mb-3">
           <template v-slot:content>
-            <div class=" grid grid-cols-12 gap-x-2 gap-y-3">
+            <div class="grid grid-cols-12 gap-x-6 gap-y-3">
               <div class="col-span-6">
                 <BaseInput :field="warehouse.code" v-model="warehouse.code.value" />
               </div>
@@ -23,7 +23,7 @@
 
         <BaseKeyContact ref="key-contact" />
 
-        <div class="card bg-white !mb-0">
+        <div class="card bg-white !mb-3">
           <div class="font-medium text-base text-primary-85 p-3 border border-divider">
             Window Time
           </div>
@@ -141,18 +141,22 @@
         </div>
         <BaseDialog v-if="dialogVisible" :dialogVisible.sync="dialogVisible" @handle-data="handleData"
           :rowDataSpecialDayOn="rowDataSpecialDayOn" />
-        <FormCard title="Address">
+        <FormCard title="Address" class="mb-3">
           <template v-slot:content>
-            <div class="w-full">
-              <div>
+            <div class="grid grid-cols-12 gap-x-6">
+              <div class="col-span-12">
                 <BaseTextArea :field="address.addressDes" v-model="address.addressDes.value" />
               </div>
-              <div class="flex justify-between">
+              <div class="col-span-6">
                 <BaseSelection :field="address.country" />
+              </div>
+              <div class="col-span-6">
                 <BaseSelection :field="address.city" />
               </div>
-              <div class="flex justify-between">
+              <div class="col-span-6">
                 <BaseSelection :field="address.district" />
+              </div>
+              <div class="col-span-6">
                 <BaseSelection :field="address.subDistrict" />
               </div>
             </div>
@@ -286,7 +290,7 @@ export default {
         },
         country: {
           id: "country",
-          classes: "!w-[544px]",
+          classes: "w-full",
           isRequired: 'true',
           placeholder: "Select Country",
           error: "",
@@ -296,7 +300,7 @@ export default {
         },
         city: {
           id: "city",
-          classes: "!w-[544px]",
+          classes: "w-full",
           isRequired: 'true',
           placeholder: "Select City",
           error: "",
@@ -306,7 +310,7 @@ export default {
         },
         district: {
           id: "district",
-          classes: "!w-[544px]",
+          classes: "w-full",
           isRequired: 'true',
           placeholder: "Select District",
           error: "",
@@ -316,7 +320,7 @@ export default {
         },
         subDistrict: {
           id: "subdistrict",
-          classes: "!w-[544px]",
+          classes: "w-full",
           isRequired: 'true',
           placeholder: "Select Sub District",
           error: "",

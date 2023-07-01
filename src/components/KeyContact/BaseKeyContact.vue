@@ -1,5 +1,5 @@
 <template>
-    <div class="pt-3 bg-white radius-shadow_add">
+    <div class="pt-3 mb-3 bg-white radius-shadow_add">
         <div class="px-3 text-primary-85 font-bold text-base">Key Contact</div>
         <div class="mt-3 px-[15px] border-t border-b border-divider content-rate-card">
             <div class="flex justify-between py-3">
@@ -22,16 +22,21 @@
                         </button>
                     </div>
                 </div>
-                <div class="p-3 bg-gray-100">
-                    <div class="flex justify-between">
+                <div class="p-3 bg-gray-100 grid grid-cols-12 gap-x-6">
+                    <div class="col-span-6">
                         <BaseInput :field="item.title" v-model="item.title.value" />
                     </div>
-                    <div class="flex justify-between">
+                    <div class="col-span-6"></div>
+                    <div class="col-span-6">
                         <BaseInput :field="item.firstName" v-model="item.firstName.value" />
+                    </div>
+                    <div class="col-span-6">
                         <BaseInput :field="item.lastName" v-model="item.lastName.value" />
                     </div>
-                    <div class="flex justify-between">
+                    <div class="col-span-6">
                         <BaseInput :field="item.email" v-model="item.email.value" />
+                    </div>
+                    <div class="col-span-6">
                         <BaseInput :field="item.mobilePhone" v-model="item.mobilePhone.value" />
                     </div>
                 </div>
@@ -49,7 +54,7 @@ export default {
             defaultKeyContact: {
                 title: {
                     id: "keycontactTitle",
-                    classes: "!w-[540px]",
+                    classes: "w-full",
                     type: "text",
                     label: "Title",
                     isRequired: 'true',
@@ -60,7 +65,7 @@ export default {
                 },
                 firstName: {
                     id: "keycontactFirstName",
-                    classes: "!w-[540px]",
+                    classes: "w-full",
                     type: "text",
                     label: "Frist Name",
                     isRequired: 'true',
@@ -71,7 +76,7 @@ export default {
                 },
                 lastName: {
                     id: "keycontactLastName",
-                    classes: "!w-[540px]",
+                    classes: "w-full",
                     type: "text",
                     label: "Last Name",
                     isRequired: 'true',
@@ -82,7 +87,7 @@ export default {
                 },
                 email: {
                     id: "keycontactEmail",
-                    classes: "!w-[540px]",
+                    classes: "w-full",
                     type: "text",
                     label: "Email",
                     isRequired: 'true',
@@ -93,7 +98,7 @@ export default {
                 },
                 mobilePhone: {
                     id: "keycontactPhoneNo",
-                    classes: "!w-[540px]",
+                    classes: "w-full",
                     type: "text",
                     label: "Phone Number",
                     isRequired: 'true',
@@ -107,7 +112,7 @@ export default {
                 {
                     title: {
                         id: "keycontactTitle",
-                        classes: "!w-[540px]",
+                        classes: "w-full",
                         type: "text",
                         label: "Title",
                         isRequired: 'true',
@@ -118,7 +123,7 @@ export default {
                     },
                     firstName: {
                         id: "keycontactFirstName",
-                        classes: "!w-[540px]",
+                        classes: "w-full",
                         type: "text",
                         label: "Frist Name",
                         isRequired: 'true',
@@ -129,7 +134,7 @@ export default {
                     },
                     lastName: {
                         id: "keycontactLastName",
-                        classes: "!w-[540px]",
+                        classes: "w-full",
                         type: "text",
                         label: "Last Name",
                         isRequired: 'true',
@@ -140,7 +145,7 @@ export default {
                     },
                     email: {
                         id: "keycontactEmail",
-                        classes: "!w-[540px]",
+                        classes: "w-full",
                         type: "text",
                         label: "Email",
                         isRequired: 'true',
@@ -151,7 +156,7 @@ export default {
                     },
                     mobilePhone: {
                         id: "keycontactPhoneNo",
-                        classes: "!w-[540px]",
+                        classes: "w-full",
                         type: "text",
                         label: "Phone Number",
                         isRequired: 'true',
