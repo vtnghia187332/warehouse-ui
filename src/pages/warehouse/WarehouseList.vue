@@ -83,12 +83,13 @@ export default {
   created() {
     var me = this;
     axios
-      .get("http://localhost:9090/api/v1/warehouse/list")
+      .get("http://localhost:9090/api/v1/warehouse/list", { headers: { "Access-Control-Allow-Origin": "*" } },)
       .then(function (response) {
         me.warehouses = response.data.items.list;
         me.total = response.data.items.total;
         me.currentPage = response.data.items.pages;
       });
+
   },
 };
 </script>

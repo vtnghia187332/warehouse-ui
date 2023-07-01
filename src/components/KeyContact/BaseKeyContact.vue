@@ -6,7 +6,7 @@
                 <span class="text-sm font-bold flex items-center">Key Contact Person
                 </span>
                 <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    @click="HandleAddKeyContact">
+                    @click="handleAddKeyContact">
                     Add
                 </button>
             </div>
@@ -170,7 +170,16 @@ export default {
         }
     },
     methods: {
-        HandleAddKeyContact() {
+        getDataKeyContacts() {
+            return this.keyContact.map((item) => {
+                const keyContactItem = {}
+                Object.keys(this.defaultKeyContact).map((key) => {
+                    keyContactItem[key] = item[key].value
+                })
+                return keyContactItem
+            })
+        },
+        handleAddKeyContact() {
             if (this.keyContact.length < 3) {
                 this.keyContact.push(_.cloneDeep(this.defaultKeyContact));
             }

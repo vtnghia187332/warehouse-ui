@@ -157,7 +157,7 @@
                 <BaseSelection :field="address.district" />
               </div>
               <div class="col-span-6">
-                <BaseSelection :field="address.subDistrict" />
+                <BaseSelection :field="address.subdistrict" />
               </div>
             </div>
           </template>
@@ -318,7 +318,7 @@ export default {
           label: "District",
           options: [],
         },
-        subDistrict: {
+        subdistrict: {
           id: "subdistrict",
           classes: "w-full",
           isRequired: 'true',
@@ -339,43 +339,46 @@ export default {
   },
   methods: {
     handleSubmit() {
-      Object.keys(this.warehouse).forEach((key) => {
-        if (this.warehouse[key].value == "") {
-          this.warehouse[key].error = this.warehouse[key].label.concat(" is not empty");
-        } else {
-          this.warehouse[key].error = "";
-        }
-      });
-      Object.keys(this.address).forEach((key) => {
-        if (this.address[key].value == "") {
-          this.address[key].error = this.address[key].label.concat(" is not empty");
-        } else {
-          this.address[key].error = "";
-        }
-      });
-      const warehouseAdd = {
-        "code": this.warehouse.code.value,
-        "name": this.warehouse.name.value,
-        "shortName": this.warehouse.shortName.value,
-        "addressDes": this.warehouse.address.addressDes.value,
-        "description": this.warehouse.description.value,
-        "openWorkingHourReq": this.workingHour,
-        "countryId": this.address.country.value,
-        "cityId": this.address.city.value,
-        "districtId": this.address.district.value,
-        "subdistrictId": this.address.subDistrict.value,
-        "postalCode": "123456",
-        "warehouseChainId": 1,
-        "specialDayTimeReqList": this.specialDayOn,
-        "keyContactReqs": this.keyContactReqs,
-      };
       // Object.keys(this.warehouse).forEach((key) => {
-      //   warehouseAdd[key] = this.warehouse[key].value;
+      //   if (this.warehouse[key].value == "") {
+      //     this.warehouse[key].error = this.warehouse[key].label.concat(" is not empty");
+      //   } else {
+      //     this.warehouse[key].error = "";
+      //   }
       // });
+      // Object.keys(this.address).forEach((key) => {
+      //   if (this.address[key].value == "") {
+      //     this.address[key].error = this.address[key].label.concat(" is not empty");
+      //   } else {
+      //     this.address[key].error = "";
+      //   }
+      // });
+      const keyContactReqs = this.$refs["key-contact"].getDataKeyContacts()
+      console.log("keyContactReqs", keyContactReqs);
+      const warehouseAdd = {
+        warehouseChainId: 1,
+        specialDayTimeReqList: this.specialDayOff,
+        keyContactReqs: keyContactReqs,
+        openWorkingHourReq: {}
+      };
+      Object.keys(this.warehouse).map((key) => {
+        console.log("key", key, this.warehouse[key].value);
+        warehouseAdd[key] = this.warehouse[key].value
+      })
+      Object.keys(this.workingHour).map((key) => {
+        warehouseAdd.openWorkingHourReq[key + "Start"] = this.workingHour[key].time[0]
+        warehouseAdd.openWorkingHourReq[key + "End"] = this.workingHour[key].time[1]
+      })
+      Object.keys(this.address).map((key) => {
+        warehouseAdd[key + "Id"] = this.address[key].value
+      })
+
+      console.log("warehouseAdd", warehouseAdd);
       axios({
         method: 'post',
         url: 'http://localhost:9090/api/v1/warehouse',
-        data: warehouseAdd
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: warehouseAdd,
       });
     },
     handleAddSpecialDay(param) {
@@ -513,7 +516,7 @@ export default {
         this.address.country.options = res.data.items.countriesLists;
         this.address.city.options = res.data.items.citiesLists;
         this.address.district.options = res.data.items.districtsLists;
-        this.address.subDistrict.options = res.data.items.subdistrictLists;
+        this.address.subdistrict.options = res.data.items.subdistrictLists;
       })
       .catch(err => console.log(err));
   },
