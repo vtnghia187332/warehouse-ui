@@ -357,7 +357,7 @@ export default {
       console.log("keyContactReqs", keyContactReqs);
       const warehouseAdd = {
         warehouseChainId: 1,
-        specialDayTimeReqList: this.specialDayOff,
+        specialDayTimeReqList: this.specialDayOn,
         keyContactReqs: keyContactReqs,
         openWorkingHourReq: {}
       };
@@ -371,9 +371,9 @@ export default {
       })
       Object.keys(this.address).map((key) => {
         warehouseAdd[key + "Id"] = this.address[key].value
+        warehouseAdd[key] = this.address[key].value
       })
 
-      console.log("warehouseAdd", warehouseAdd);
       axios({
         method: 'post',
         url: 'http://localhost:9090/api/v1/warehouse',
@@ -497,7 +497,7 @@ export default {
     }
   },
   mounted() {
-    axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`)
+    axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`, { headers: { "Access-Control-Allow-Origin": "*" } },)
       .then(res => {
         Object.keys(this.warehouse).forEach((key) => {
           this.warehouse[key].value = res.data.items[key];
@@ -511,7 +511,7 @@ export default {
       })
       .catch(err => console.log(err));
 
-    axios.get('http://localhost:9090/api/v1/address')
+    axios.get('http://localhost:9090/api/v1/address', { headers: { "Access-Control-Allow-Origin": "*" } },)
       .then(res => {
         this.address.country.options = res.data.items.countriesLists;
         this.address.city.options = res.data.items.citiesLists;
