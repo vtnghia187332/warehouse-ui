@@ -366,8 +366,8 @@ export default {
         warehouseAdd[key] = this.warehouse[key].value
       })
       Object.keys(this.workingHour).map((key) => {
-        warehouseAdd.openWorkingHourReq[key + "Start"] = this.workingHour[key].time[0]
-        warehouseAdd.openWorkingHourReq[key + "End"] = this.workingHour[key].time[1]
+        warehouseAdd.openWorkingHourReq[key + "Start"] = moment(this.workingHour[key].time[0]).format("YYYY-MM-DD HH:mm:ss");
+        warehouseAdd.openWorkingHourReq[key + "End"] = moment(this.workingHour[key].time[1]).format("YYYY-MM-DD HH:mm:ss");
       })
       Object.keys(this.address).map((key) => {
         warehouseAdd[key + "Id"] = this.address[key].value
@@ -418,77 +418,16 @@ export default {
       this.$refs["key-contact"].initKeyContact(data);
     },
     initTimeWorking(data) {
-      if (data.mondayStart == '' || data.mondayEnd == '' || data.mondayStart == null || data.mondayEnd == null) {
-        this.workingHour.monday.checked = false;
-      } else {
-        this.workingHour.monday.time[0].setHours(this.splitTime(data.mondayStart)[0]);
-        this.workingHour.monday.time[0].setMinutes(this.splitTime(data.mondayStart)[1]);
-        this.workingHour.monday.time[1].setHours(this.splitTime(data.mondayEnd)[0]);
-        this.workingHour.monday.time[1].setMinutes(this.splitTime(data.mondayEnd)[1]);
-        this.$refs.mondayPicker.userInput = [data.mondayStart, data.mondayEnd];
-      }
-      if (data.tuesdayStart == '' || data.tuesdayEnd == '' || data.tuesdayStart == null || data.tuesdayEnd == null) {
-        this.workingHour.tuesday.checked = false;
-      } else {
-        this.workingHour.tuesday.time[0].setHours(this.splitTime(data.tuesdayStart)[0]);
-        this.workingHour.tuesday.time[0].setMinutes(this.splitTime(data.tuesdayStart)[1]);
-        this.workingHour.tuesday.time[1].setHours(this.splitTime(data.tuesdayEnd)[0]);
-        this.workingHour.tuesday.time[1].setMinutes(this.splitTime(data.tuesdayEnd)[1]);
-        this.$refs.tuesdayPicker.userInput = [data.tuesdayStart, data.tuesdayEnd];
-      }
-      if (data.wednesdayStart == '' || data.wednesdayEnd == '' || data.wednesdayStart == null || data.wednesdayEnd == null) {
-        this.workingHour.wednesday.checked = false;
-      } else {
-        this.workingHour.wednesday.time[0].setHours(this.splitTime(data.wednesdayStart)[0]);
-        this.workingHour.wednesday.time[0].setMinutes(this.splitTime(data.wednesdayStart)[1]);
-        this.workingHour.wednesday.time[1].setHours(this.splitTime(data.wednesdayEnd)[0]);
-        this.workingHour.wednesday.time[1].setMinutes(this.splitTime(data.wednesdayEnd)[1]);
-        this.$refs.wednesdayPicker.userInput = [data.wednesdayStart, data.wednesdayEnd];
-      }
-      if (data.thursdayStart == '' || data.thursdayEnd == '' || data.thursdayStart == null || data.thursdayEnd == null) {
-        this.workingHour.thursday.checked = false;
-      } else {
-        this.workingHour.thursday.time[0].setHours(this.splitTime(data.thursdayStart)[0]);
-        this.workingHour.thursday.time[0].setMinutes(this.splitTime(data.thursdayStart)[1]);
-        this.workingHour.thursday.time[1].setHours(this.splitTime(data.thursdayEnd)[0]);
-        this.workingHour.thursday.time[1].setMinutes(this.splitTime(data.thursdayEnd)[1]);
-        this.$refs.thursdayPicker.userInput = [data.thursdayStart, data.thursdayEnd];
-      }
-
-      if (data.thursdayStart == '' || data.thursdayEnd == '' || data.thursdayStart == null || data.thursdayEnd == null) {
-        this.workingHour.friday.checked = false;
-      } else {
-        this.workingHour.friday.time[0].setHours(this.splitTime(data.fridayStart)[0]);
-        this.workingHour.friday.time[0].setMinutes(this.splitTime(data.fridayStart)[1]);
-        this.workingHour.friday.time[1].setHours(this.splitTime(data.fridayEnd)[0]);
-        this.workingHour.friday.time[1].setMinutes(this.splitTime(data.fridayEnd)[1]);
-        this.$refs.fridayPicker.userInput = [data.fridayStart, data.fridayEnd];
-      }
-      if (data.saturdayStart == '' || data.saturdayEnd == '' || data.saturdayStart == null || data.saturdayEnd == null) {
-        this.workingHour.saturday.checked = false;
-      } else {
-        this.workingHour.saturday.time[0].setHours(this.splitTime(data.saturdayStart)[0]);
-        this.workingHour.saturday.time[0].setMinutes(this.splitTime(data.saturdayStart)[1]);
-        this.workingHour.saturday.time[1].setHours(this.splitTime(data.saturdayEnd)[0]);
-        this.workingHour.saturday.time[1].setMinutes(this.splitTime(data.saturdayEnd)[1]);
-        this.$refs.saturdayPicker.userInput = [data.saturdayStart, data.saturdayEnd];
-      }
-      if (data.sundayStart == '' || data.sundayEnd == '' || data.sundayStart == null || data.sundayEnd == null) {
-        this.workingHour.sunday.checked = false;
-      } else {
-        this.workingHour.sunday.time[0].setHours(this.splitTime(data.sundayStart)[0]);
-        this.workingHour.sunday.time[0].setMinutes(this.splitTime(data.sundayStart)[1]);
-        this.workingHour.sunday.time[1].setHours(this.splitTime(data.sundayEnd)[0]);
-        this.workingHour.sunday.time[1].setMinutes(this.splitTime(data.sundayEnd)[1]);
-        this.$refs.sundayPicker.userInput = [data.sundayStart, data.sundayEnd];
-      }
+      Object.keys(this.workingHour).map((key) => {
+        this.workingHour[key].time[0] = data[key + "Start"];
+        this.workingHour[key].time[1] = data[key + "End"];
+      })
     },
     splitTime(data) {
       return data.split(":")
     },
     initDayTimeOnOff(data) {
       console.log(data);
-      this.$refs["special-time"].initSepcialTimes(data);
     },
   },
   mounted() {
