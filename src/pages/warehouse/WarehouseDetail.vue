@@ -139,7 +139,7 @@
             </el-tabs>
           </div>
         </div>
-        <BaseDialog v-if="dialogVisible" :dialogVisible.sync="dialogVisible" @handle-data="handleData"
+        <BaseDialog ref="special-time" v-if="dialogVisible" :dialogVisible.sync="dialogVisible" @handle-data="handleData"
           :rowDataSpecialDayOn="rowDataSpecialDayOn" />
         <FormCard title="Address" class="mb-3">
           <template v-slot:content>
@@ -354,7 +354,7 @@ export default {
       //   }
       // });
       const keyContactReqs = this.$refs["key-contact"].getDataKeyContacts()
-      console.log("keyContactReqs", keyContactReqs);
+      console.log("specialDayOn", this.specialDayOn);
       const warehouseAdd = {
         warehouseChainId: 1,
         specialDayTimeReqList: this.specialDayOn,
@@ -402,6 +402,7 @@ export default {
       this.dialogVisible = true;
     },
     handleData(param) {
+      console.log(param);
       if (param.id) {
         this.specialDayOn = this.specialDayOn.map(item => {
           if (param.id === item.id) {
@@ -486,15 +487,9 @@ export default {
       return data.split(":")
     },
     initDayTimeOnOff(data) {
-      var me = this;
-      data.forEach(function (element) {
-        if (element.dayType == 'ON') {
-          me.specialDayOn.push(element);
-        } else if (element.dayType == 'OFF') {
-          me.specialDayOff.push(element);
-        }
-      });
-    }
+      console.log(data);
+      this.$refs["special-time"].initSepcialTimes(data);
+    },
   },
   mounted() {
     axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`, { headers: { "Access-Control-Allow-Origin": "*" } },)

@@ -1,7 +1,7 @@
 <template>
     <el-dialog title="Tips" :visible="dialogVisible" :before-close="handleCloseDialog" width="30%" :append-to-body="true"
         destroy-on-close>
-        <DatePicker :field="dataSpecialDay.date" />
+        <DatePicker :field="dataSpecialDay.specialDay" />
         <TimePicker :field="dataSpecialDay.time" />
         <BaseTextArea :field="dataSpecialDay.remark" v-model="dataSpecialDay.remark.value" />
         <span slot="footer" class="dialog-footer">
@@ -34,8 +34,8 @@ export default {
             defaultSpecialDay: _.cloneDeep(),
             dataSpecialDay: {
                 id: { value: null },
-                date: {
-                    id: "date",
+                specialDay: {
+                    id: "specialDay",
                     classes: "!w-full",
                     label: "Date",
                     isRequired: 'true',
@@ -66,33 +66,41 @@ export default {
                     maxlength: 150,
                     error: "",
                 },
+                dayType: {
+                    id: "type",
+                    value: null,
+
+                },
             }
         }
     },
     mounted() {
-        this.initData(this.rowDataSpecialDayOn)
+        this.initData(this.rowDataSpecialDayOn);
     },
     methods: {
         closeForm() {
             this.$emit("handleAddSpecialDay", false);
         },
         handleData() {
-            if (!this.dataSpecialDay.date.value) return;
-
+            if (!this.dataSpecialDay.specialDay.value) return;
             const dataReturn = {}
-            dataReturn.date = this.dataSpecialDay.date.value
+            dataReturn.specialDay = this.dataSpecialDay.specialDay.value
             dataReturn.time = this.dataSpecialDay.time.value;
             dataReturn.remark = this.dataSpecialDay.remark.value;
             dataReturn.id = this.dataSpecialDay.length;
+            dataReturn.dayType = 'ON';
 
             this.$emit("handle-data", dataReturn);
             this.handleCloseDialog();
         },
+        initSepcialTimes(data) {
+            console.log(data);
+        },
         handleCloseDialog() {
             this.dataSpecialDay = {
                 id: { value: null },
-                date: {
-                    id: "date",
+                specialDay: {
+                    id: "specialDay",
                     classes: "!w-full",
                     label: "Date",
                     isRequired: 'true',
@@ -122,6 +130,11 @@ export default {
                     placeholder: "Enter Remark",
                     maxlength: 150,
                     error: "",
+                },
+                dayType: {
+                    id: "type",
+                    value: null,
+
                 },
             };
             this.$emit('update:dialogVisible', false);
@@ -134,6 +147,4 @@ export default {
     },
 };
 </script>
-<style>
-
-</style>
+<style></style>
