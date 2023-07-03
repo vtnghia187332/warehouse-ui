@@ -176,6 +176,9 @@ export default {
             this.$emit('update:dialogVisible', false);
         },
         initData(data) {
+            delete data['specialStartDay'];
+            delete data['specialCloseDay'];
+            delete data['weekDay'];
             Object.keys(data).map((key) => {
                 this.dataSpecialDay[key].value = data[key]
             })

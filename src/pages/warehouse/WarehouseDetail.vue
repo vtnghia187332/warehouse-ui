@@ -22,8 +22,8 @@
         </FormCard>
 
         <BaseKeyContact ref="key-contact" />
-        <BaseDialog v-show="dialogVisible" :dialogVisible.sync="dialogVisible" @handle-data="handleData"
-          :rowDataSpecialDayOn="rowDataSpecialDayOn" />
+        <BaseDialog ref="special-time" v-show="dialogVisible" :dialogVisible.sync="dialogVisible"
+          @handle-data="handleData" :rowDataSpecialDayOn="rowDataSpecialDayOn" />
         <div class="card bg-white !mb-3">
           <div class="font-medium text-base text-primary-85 p-3 border border-divider">
             Window Time
@@ -401,7 +401,8 @@ export default {
       }
     },
     handleSpecialDayDetail(row, col, event) {
-      this.rowDataSpecialDayOn = row
+      this.rowDataSpecialDayOn = row;
+      this.$refs["special-time"].initData(row);
       this.dialogVisible = true;
     },
     handleData(param) {
