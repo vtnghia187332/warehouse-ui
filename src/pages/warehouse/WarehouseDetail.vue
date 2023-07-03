@@ -117,12 +117,11 @@
                   <el-table-column label="Date" prop="date">
                     <template slot-scope="scope">
                       {{ moment(scope.row.date).format("DD/MM/YYYY") }}
-
                     </template>
                   </el-table-column>
                   <el-table-column label="Time" prop="time">
                     <template slot-scope="scope">
-
+                      {{ moment(scope.row.time[0]).format("HH:mm") + " - " + moment(scope.row.time[1]).format("HH:mm") }}
                     </template>
                   </el-table-column>
                   <el-table-column label="Remark" prop="remark">
@@ -197,6 +196,7 @@ export default {
     return {
       dialogVisible: false,
       specialDayOn: [
+
       ],
       specialDayOff: [
       ],
@@ -355,7 +355,10 @@ export default {
       //   }
       // });
       const keyContactReqs = this.$refs["key-contact"].getDataKeyContacts()
-      console.log("specialDayOn", this.specialDayOn);
+      this.specialDayOn.forEach(object => {
+        object.specialStartDay = object.time[0];
+        object.specialCloseDay = object.time[1];
+      });
       const warehouseAdd = {
         warehouseChainId: 1,
         specialDayTimeReqList: this.specialDayOn,
@@ -363,7 +366,6 @@ export default {
         openWorkingHourReq: {}
       };
       Object.keys(this.warehouse).map((key) => {
-        console.log("key", key, this.warehouse[key].value);
         warehouseAdd[key] = this.warehouse[key].value
       })
       Object.keys(this.workingHour).map((key) => {
@@ -403,7 +405,6 @@ export default {
       this.dialogVisible = true;
     },
     handleData(param) {
-      console.log(param);
       if (param.id) {
         this.specialDayOn = this.specialDayOn.map(item => {
           if (param.id === item.id) {
@@ -437,7 +438,9 @@ export default {
         });
         this.initTimeWorking(res.data.items.openWorkingHour);
         this.specialDayOn = res.data.items.specialDayTimes;
-        console.log(this.specialDayOn);
+        this.specialDayOn.forEach(object => {
+          object.time = [object.specialStartDay, object.specialCloseDay]
+        });
       })
       .catch(err => console.log(err));
 
@@ -447,6 +450,7 @@ export default {
         this.address.city.options = res.data.items.citiesLists;
         this.address.district.options = res.data.items.districtsLists;
         this.address.subdistrict.options = res.data.items.subdistrictLists;
+
       })
       .catch(err => console.log(err));
   },
