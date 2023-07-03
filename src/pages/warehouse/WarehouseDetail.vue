@@ -22,7 +22,8 @@
         </FormCard>
 
         <BaseKeyContact ref="key-contact" />
-
+        <BaseDialog ref="special-time" v-show="dialogVisible" :dialogVisible.sync="dialogVisible" @handle-data="handleData"
+          :rowDataSpecialDayOn="rowDataSpecialDayOn" />
         <div class="card bg-white !mb-3">
           <div class="font-medium text-base text-primary-85 p-3 border border-divider">
             Window Time
@@ -139,8 +140,7 @@
             </el-tabs>
           </div>
         </div>
-        <BaseDialog ref="special-time" v-if="dialogVisible" :dialogVisible.sync="dialogVisible" @handle-data="handleData"
-          :rowDataSpecialDayOn="rowDataSpecialDayOn" />
+
         <FormCard title="Address" class="mb-3">
           <template v-slot:content>
             <div class="grid grid-cols-12 gap-x-6">
@@ -423,11 +423,9 @@ export default {
         this.workingHour[key].time[1] = data[key + "End"];
       })
     },
-    splitTime(data) {
-      return data.split(":")
-    },
+
     initDayTimeOnOff(data) {
-      console.log(data);
+      this.$refs["special-time"].initSepcialTimes(data);
     },
   },
   mounted() {

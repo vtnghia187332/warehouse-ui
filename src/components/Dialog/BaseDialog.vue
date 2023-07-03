@@ -16,7 +16,7 @@ import BaseTextArea from '@/components/Inputs/BaseTextArea'
 import DatePicker from '../Date/DatePicker.vue';
 import TimePicker from '../Date/TimePicker.vue';
 import moment from 'moment';
-
+import _ from 'lodash'
 export default {
     components: { BaseTextArea, DatePicker, TimePicker },
     props: {
@@ -31,7 +31,46 @@ export default {
     data() {
         return {
             type: '',
-            defaultSpecialDay: _.cloneDeep(),
+            defaultSpecialDay: {
+                id: { value: null },
+                specialDay: {
+                    id: "specialDay",
+                    classes: "!w-full",
+                    label: "Date",
+                    isRequired: 'true',
+                    value: "",
+                    error: "",
+                    pickerOptions: {
+                        disabledDate(time) {
+                            return time.getTime() < Date.now();
+                        },
+                    },
+                },
+                time: {
+                    id: "time",
+                    classes: "!w-full",
+                    label: "Time",
+                    isRequired: 'true',
+                    value: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
+                    error: "",
+                },
+                remark: {
+                    id: "remark",
+                    classes: "!w-full",
+                    type: "text",
+                    label: "Remark",
+                    isRequired: 'false',
+                    value: "",
+                    placeholder: "Enter Remark",
+                    maxlength: 150,
+                    error: "",
+                },
+                dayType: {
+                    id: "type",
+                    value: null,
+
+                },
+            },
             dataSpecialDay: {
                 id: { value: null },
                 specialDay: {
@@ -94,7 +133,17 @@ export default {
             this.handleCloseDialog();
         },
         initSepcialTimes(data) {
-            console.log(data);
+            const keyContactAfterBinding = [];
+            data.forEach((x, index) => {
+                let keyContactTemp = this.defaultSpecialDay;
+                Object.keys(keyContactTemp).forEach((key) => {
+                    if (keyContactTemp[key]) {
+                        keyContactTemp[key].value = x[key];
+                    }
+                });
+                keyContactAfterBinding.push(keyContactTemp);
+            });
+            this.dataSpecialDay = keyContactAfterBinding.map(x => x);
         },
         handleCloseDialog() {
             this.dataSpecialDay = {
