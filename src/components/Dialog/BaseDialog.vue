@@ -132,19 +132,6 @@ export default {
             this.$emit("handle-data", dataReturn);
             this.handleCloseDialog();
         },
-        initSepcialTimes(data) {
-            const keyContactAfterBinding = [];
-            data.forEach((x, index) => {
-                let keyContactTemp = this.defaultSpecialDay;
-                Object.keys(keyContactTemp).forEach((key) => {
-                    if (keyContactTemp[key]) {
-                        keyContactTemp[key].value = x[key];
-                    }
-                });
-                keyContactAfterBinding.push(keyContactTemp);
-            });
-            this.dataSpecialDay = keyContactAfterBinding.map(x => x);
-        },
         handleCloseDialog() {
             this.dataSpecialDay = {
                 id: { value: null },

@@ -22,7 +22,7 @@
         </FormCard>
 
         <BaseKeyContact ref="key-contact" />
-        <BaseDialog ref="special-time" v-show="dialogVisible" :dialogVisible.sync="dialogVisible" @handle-data="handleData"
+        <BaseDialog v-show="dialogVisible" :dialogVisible.sync="dialogVisible" @handle-data="handleData"
           :rowDataSpecialDayOn="rowDataSpecialDayOn" />
         <div class="card bg-white !mb-3">
           <div class="font-medium text-base text-primary-85 p-3 border border-divider">
@@ -117,11 +117,12 @@
                   <el-table-column label="Date" prop="date">
                     <template slot-scope="scope">
                       {{ moment(scope.row.date).format("DD/MM/YYYY") }}
+
                     </template>
                   </el-table-column>
                   <el-table-column label="Time" prop="time">
                     <template slot-scope="scope">
-                      {{ moment(scope.row.time[0]).format("HH:mm") + " - " + moment(scope.row.time[1]).format("HH:mm") }}
+
                     </template>
                   </el-table-column>
                   <el-table-column label="Remark" prop="remark">
@@ -423,10 +424,6 @@ export default {
         this.workingHour[key].time[1] = data[key + "End"];
       })
     },
-
-    initDayTimeOnOff(data) {
-      this.$refs["special-time"].initSepcialTimes(data);
-    },
   },
   mounted() {
     axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`, { headers: { "Access-Control-Allow-Origin": "*" } },)
@@ -439,7 +436,8 @@ export default {
           this.address[key].value = res.data.items[key];
         });
         this.initTimeWorking(res.data.items.openWorkingHour);
-        this.initDayTimeOnOff(res.data.items.specialDayTimes);
+        this.specialDayOn = res.data.items.specialDayTimes;
+        console.log(this.specialDayOn);
       })
       .catch(err => console.log(err));
 
