@@ -114,6 +114,8 @@
                   Add
                 </button>
                 <el-table :data="specialDayOn" style="width: 100%" @row-dblclick="handleSpecialDayDetail">
+                  <el-table-column label="STT" type="index" :index="indexMethod">
+                  </el-table-column>
                   <el-table-column label="Date" prop="date">
                     <template slot-scope="scope">
                       {{ moment(scope.row.date).format("DD/MM/YYYY") }}
@@ -425,6 +427,9 @@ export default {
         this.workingHour[key].time[0] = data[key + "Start"];
         this.workingHour[key].time[1] = data[key + "End"];
       })
+    },
+    indexMethod(index) {
+      return index + 1;
     },
   },
   mounted() {
