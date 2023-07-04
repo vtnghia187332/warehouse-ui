@@ -124,11 +124,9 @@ export default {
             if (!this.dataSpecialDay.specialDay.value) return;
             const dataReturn = {}
             dataReturn.specialDay = this.dataSpecialDay.specialDay.value
-            dataReturn.specialStartDay = this.dataSpecialDay.time.value[0];
-            dataReturn.specialCloseDay = this.dataSpecialDay.time.value[1];
+            dataReturn.time = this.dataSpecialDay.time.value;
             dataReturn.remark = this.dataSpecialDay.remark.value;
-            dataReturn.id = this.dataSpecialDay.id.value;
-            dataReturn.index = this.dataSpecialDay.id.value;
+            dataReturn.id = this.dataSpecialDay.length;
             dataReturn.dayType = 'ON';
             this.$emit("handle-data", dataReturn);
             this.handleCloseDialog();

@@ -405,21 +405,22 @@ export default {
     },
     handleSpecialDayDetail(row, col, event) {
       this.rowDataSpecialDayOn = row;
-      this.$refs["special-time"].initData({ ...row, id: row.index });
+      this.$refs["special-time"].initData(row);
       this.dialogVisible = true;
     },
     specialTimeOn({ row, rowIndex }) {
       row.index = rowIndex;
     },
     handleData(param) {
-      if (param.id != null && param.id >= 0) {
-        //update
-        console.log(param);
+      if (param.id) {
+        this.specialDayOn = this.specialDayOn.map(item => {
+          if (param.id === item.id) {
+            return param
+          }
+        })
       } else {
-        //insert
         this.specialDayOn.push({ ...param, id: this.specialDayOn.length });
       }
-
     },
     initKeyContactForm(data) {
       this.$refs["key-contact"].initKeyContact(data);
