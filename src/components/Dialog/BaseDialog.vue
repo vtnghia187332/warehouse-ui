@@ -126,7 +126,7 @@ export default {
             dataReturn.specialDay = this.dataSpecialDay.specialDay.value
             dataReturn.time = this.dataSpecialDay.time.value;
             dataReturn.remark = this.dataSpecialDay.remark.value;
-            dataReturn.id = this.dataSpecialDay.length;
+            dataReturn.id = this.dataSpecialDay.id.value;
             dataReturn.dayType = 'ON';
             this.$emit("handle-data", dataReturn);
             this.handleCloseDialog();
@@ -175,6 +175,7 @@ export default {
             this.$emit('update:dialogVisible', false);
         },
         initData(data) {
+            console.log(data);
             delete data['specialStartDay'];
             delete data['specialCloseDay'];
             delete data['weekDay'];

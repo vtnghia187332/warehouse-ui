@@ -405,19 +405,19 @@ export default {
     },
     handleSpecialDayDetail(row, col, event) {
       this.rowDataSpecialDayOn = row;
-      this.$refs["special-time"].initData(row);
+      this.$refs["special-time"].initData({ ...row, id: { value: row.index } });
       this.dialogVisible = true;
     },
     specialTimeOn({ row, rowIndex }) {
       row.index = rowIndex;
     },
     handleData(param) {
+      console.log(param);
+
       if (param.id) {
-        this.specialDayOn = this.specialDayOn.map(item => {
-          if (param.id === item.id) {
-            return param
-          }
-        })
+        debugger
+        console.log(param.id.value == 2);
+        this.specialDayOn = this.specialDayOn.map(el => { return el.index == param.id.value ? { ...param } : el })
       } else {
         this.specialDayOn.push({ ...param, id: this.specialDayOn.length });
       }
