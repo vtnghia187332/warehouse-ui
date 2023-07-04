@@ -114,7 +114,7 @@
                   Add
                 </button>
                 <el-table :data="specialDayOn" style="width: 100%" @row-dblclick="handleSpecialDayDetail"
-                  :row-class-name="specialTimeOn" @row-click="onRowClick">
+                  :row-class-name="specialTimeOn">
                   <el-table-column label="STT" type="index" :index="indexMethod">
                   </el-table-column>
                   <el-table-column label="Date" prop="date">
@@ -404,24 +404,17 @@ export default {
       }
     },
     handleSpecialDayDetail(row, col, event) {
-      console.log(row.index);
       this.rowDataSpecialDayOn = row;
-      this.$refs["special-time"].initData(row);
+      this.$refs["special-time"].initData({ ...row, id: row.index });
       this.dialogVisible = true;
-    },
-    onRowClick(row, event, column) {
-      console.log(row.index);
     },
     specialTimeOn({ row, rowIndex }) {
       row.index = rowIndex;
     },
     handleData(param) {
-      if (param.id) {
-        this.specialDayOn = this.specialDayOn.map(item => {
-          if (param.id === item.id) {
-            return param
-          }
-        })
+      debugger
+      if (param.id >= 0) {
+        console.log(param);
       } else {
         this.specialDayOn.push({ ...param, id: this.specialDayOn.length });
       }
