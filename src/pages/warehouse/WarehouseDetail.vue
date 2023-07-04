@@ -110,7 +110,7 @@
               <el-tab-pane label="Special Day-On" name="third">
                 <button
                   class="absolute z-20 ml-[1082px] !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
-                  @click="handleAddSpecialDay(true)" :handleAddSpecialDay="handleAddSpecialDay">
+                  @click="handleAddSpecialDay(true, 'ON')" :handleAddSpecialDay="handleAddSpecialDay">
                   Add
                 </button>
                 <el-table :data="specialDayOn" style="width: 100%" @row-dblclick="handleSpecialDayDetail"
@@ -197,6 +197,7 @@ export default {
   components: { FormCard, BaseInput, BaseTextArea, Button, BaseSelection, BaseDialog, BaseKeyContact },
   data() {
     return {
+      typeSpecialTime: '',
       dialogVisible: false,
       specialDayOn: [
 
@@ -389,11 +390,13 @@ export default {
         data: warehouseAdd,
       });
     },
-    handleAddSpecialDay(param) {
+    handleAddSpecialDay(param, type) {
       if (param !== null) {
+        this.$refs["special-time"].typeSpecialTime = type;
         this.rowDataSpecialDayOn = {}
         this.dialogVisible = true;
       }
+      console.log(this.typeSpecialTime);
     },
     handleDeleteSpecialDay(item, type) {
       const index = item.$index;
@@ -421,6 +424,7 @@ export default {
         console.log(param.id.value == 2);
         this.specialDayOn = this.specialDayOn.map(el => { return el.index == param.id.value ? { ...param } : el })
       } else {
+        console.log(param);
         this.specialDayOn.push({ ...param, id: this.specialDayOn.length });
       }
     },

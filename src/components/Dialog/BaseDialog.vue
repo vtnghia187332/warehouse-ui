@@ -23,6 +23,7 @@ export default {
         dialogVisible: {
             type: Boolean,
         },
+
         rowDataSpecialDayOn: {
             type: Object,
             default: () => { }
@@ -31,6 +32,7 @@ export default {
     data() {
         return {
             type: '',
+            typeSpecialTime: '',
             defaultSpecialDay: {
                 id: { value: null },
                 specialDay: {
@@ -115,6 +117,7 @@ export default {
     },
     mounted() {
         this.initData(this.rowDataSpecialDayOn);
+        this.typeSpecialTime = this.typeSpecialTime;
     },
     methods: {
         closeForm() {
@@ -127,7 +130,7 @@ export default {
             dataReturn.time = this.dataSpecialDay.time.value;
             dataReturn.remark = this.dataSpecialDay.remark.value;
             dataReturn.id = this.dataSpecialDay.id.value;
-            dataReturn.dayType = 'ON';
+            dataReturn.dayType = this.typeSpecialTime;
             this.$emit("handle-data", dataReturn);
             this.handleCloseDialog();
         },
