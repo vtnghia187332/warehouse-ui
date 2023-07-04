@@ -372,8 +372,10 @@ export default {
         warehouseAdd[key] = this.warehouse[key].value
       })
       Object.keys(this.workingHour).map((key) => {
-        warehouseAdd.openWorkingHourReq[key + "Start"] = moment(this.workingHour[key].time[0]).format("YYYY-MM-DD HH:mm:ss");
-        warehouseAdd.openWorkingHourReq[key + "End"] = moment(this.workingHour[key].time[1]).format("YYYY-MM-DD HH:mm:ss");
+        if (this.workingHour[key].checked) {
+          warehouseAdd.openWorkingHourReq[key + "Start"] = moment(this.workingHour[key].time[0]).format("YYYY-MM-DD HH:mm:ss");
+          warehouseAdd.openWorkingHourReq[key + "End"] = moment(this.workingHour[key].time[1]).format("YYYY-MM-DD HH:mm:ss");
+        }
       })
       Object.keys(this.address).map((key) => {
         warehouseAdd[key + "Id"] = this.address[key].value
@@ -427,8 +429,12 @@ export default {
     },
     initTimeWorking(data) {
       Object.keys(this.workingHour).map((key) => {
-        this.workingHour[key].time[0] = data[key + "Start"];
-        this.workingHour[key].time[1] = data[key + "End"];
+        if (data[key + "Start"] != null || data[key + "Start"] != null) {
+          this.workingHour[key].time[0] = data[key + "Start"];
+          this.workingHour[key].time[1] = data[key + "End"];
+        } else {
+          this.workingHour[key].checked = false;
+        }
       })
     },
     indexMethod(index) {
