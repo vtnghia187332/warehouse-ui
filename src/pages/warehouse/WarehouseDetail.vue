@@ -108,11 +108,6 @@
                 </el-table>
               </el-tab-pane>
               <el-tab-pane label="Special Day-On" name="third">
-                <button
-                  class="absolute z-20 ml-[1082px] !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
-                  @click="handleAddSpecialDay(true, 'ON')" :handleAddSpecialDay="handleAddSpecialDay">
-                  Add
-                </button>
                 <el-table :data="specialDayOn" style="width: 100%" @row-dblclick="handleSpecialDayDetail"
                   :row-class-name="specialTimeOn">
                   <el-table-column label="STT" type="index" :index="indexMethod">
@@ -133,6 +128,10 @@
                     </template>
                   </el-table-column>
                   <el-table-column align="right">
+                    <template slot="header" slot-scope="scope">
+                      <el-button size="mini" type="danger" class="bg-blue-300" @click="handleAddSpecialDay(true, 'ON')"
+                        :handleAddSpecialDay="handleAddSpecialDay">Add</el-button>
+                    </template>
                     <template slot-scope="scope">
                       <el-button size="mini" type="danger" class="bg-red-300"
                         @click="handleDeleteSpecialDay(scope, 'ON')">Delete</el-button>
