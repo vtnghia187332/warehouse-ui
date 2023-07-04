@@ -412,10 +412,11 @@ export default {
       row.index = rowIndex;
     },
     handleData(param) {
-      debugger
-      if (param.id >= 0) {
+      if (param.id != null && param.id >= 0) {
+        //update
         console.log(param);
       } else {
+        //insert
         this.specialDayOn.push({ ...param, id: this.specialDayOn.length });
       }
 
