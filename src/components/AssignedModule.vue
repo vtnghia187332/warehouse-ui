@@ -1,12 +1,12 @@
 <template>
     <div class="bg-white radius-shadow_add">
-        <div class="p-4 flex items-center justify-between">
+        <div class="p-3 flex items-center justify-between">
             <div class="text-base font-medium">{{ title }}</div>
             <el-button class="bg-slate-500" type="primary" :disabled="disabled" @click="visible = true">{{
                 buttonLabel
             }}</el-button>
         </div>
-        <div v-if="item" class="p-4 flex items-center justify-between border-t border-neutral-1">
+        <div v-if="item" class="p-3 flex items-center justify-between border-t border-neutral-1">
             <div>
                 <div class="text-base font-bold">{{ item[nameKey] }}</div>
                 <div class="text-sm text-secondary-45" v-for="field in fields" :key="field.value">
