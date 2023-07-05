@@ -23,7 +23,7 @@
 
         <BaseKeyContact ref="key-contact" />
         <BaseDialog ref="special-time" v-show="dialogVisible" :dialogVisible.sync="dialogVisible"
-          @handle-data="handleData" :rowDataSpecialDayOn="rowDataSpecialDayOn" />
+          @handle-data="handleData" :rowDataSpecialDay="rowDataSpecialDay" />
         <div class="card bg-white !mb-3">
           <div class="font-medium text-base text-primary-85 p-3 border border-divider">
             Window Time
@@ -88,21 +88,33 @@
                 </div>
               </el-tab-pane>
               <el-tab-pane class="relative" label="Holiday, Special Day-Off" name="second">
-                <button
-                  class="absolute z-20 ml-[1085px] !bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ">
-                  Add
-                </button>
-                <el-table :data="specialDayOff" style="width: 100%" @row-dblclick="handleSpecialDayDetail">
-                  <el-table-column label="Date" prop="specialDay">
+                <el-table :data="specialDayOff" style="width: 100%" @row-dblclick="handleSpecialDayDetail"
+                  :row-class-name="specialTimeOn">
+                  <el-table-column label="STT" type="index" :index="indexMethod">
                   </el-table-column>
-                  <el-table-column label="Name" prop="weekDay">
+                  <el-table-column label="Date" prop="date">
+                    <template slot-scope="scope">
+                      {{ moment(scope.row.date).format("DD/MM/YYYY") }}
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="Time" prop="time">
+                    <template slot-scope="scope">
+                      {{ moment(scope.row.time[0]).format("HH:mm") + " - " + moment(scope.row.time[1]).format("HH:mm") }}
+                    </template>
                   </el-table-column>
                   <el-table-column label="Remark" prop="remark">
+                    <template slot-scope="scope">
+                      {{ scope.row.remark }}
+                    </template>
                   </el-table-column>
                   <el-table-column align="right">
+                    <template slot="header" slot-scope="scope">
+                      <el-button size="mini" type="danger" class="bg-blue-300" @click="handleAddSpecialDay(true, 'OFF')"
+                        :handleAddSpecialDay="handleAddSpecialDay">Add</el-button>
+                    </template>
                     <template slot-scope="scope">
                       <el-button size="mini" type="danger" class="bg-red-300"
-                        @click="handleDeleteSpecialDay(scope, 'OFF')">Delete</el-button>
+                        @click="handleDeleteSpecialDay(scope, 'ON')">Delete</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -170,12 +182,8 @@
         </button>
       </el-col>
       <el-col :span="5" class="">
-        <div class="p-3 bg-white radius-shadow_add">
-          <p class="text-xs text-secondary-45">Driver ID:</p>
-          <p class="text-base text-neutral-13 font-medium">
-            {{ "ANL-Dxxxxxxxxxx" }}
-          </p>
-        </div>
+        <AssignedModuleVue title="Warehouse Chain" :nameKey="'code'" :item="warehouseChain.data"
+          :fields="warehouseChain.fields" />
       </el-col>
     </el-row>
   </div>
@@ -191,13 +199,21 @@ import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import BaseDialog from "../../components/Dialog/BaseDialog.vue";
 import BaseKeyContact from "../../components/KeyContact/BaseKeyContact.vue";
 import moment from 'moment';
+import AssignedModuleVue from '../../components/AssignedModule.vue';
 
 export default {
-  components: { FormCard, BaseInput, BaseTextArea, Button, BaseSelection, BaseDialog, BaseKeyContact },
+  components: { FormCard, BaseInput, BaseTextArea, Button, BaseSelection, BaseDialog, BaseKeyContact, AssignedModuleVue },
   data() {
     return {
       typeSpecialTime: '',
       dialogVisible: false,
+      warehouseChain: {
+        data: null,
+        fields: [
+          { text: "warehouse Chain ID", value: "id" },
+          { text: "Tax ID", value: "taxNumber" },
+        ],
+      },
       specialDayOn: [
 
       ],
@@ -333,7 +349,7 @@ export default {
           options: [],
         }
       },
-      rowDataSpecialDayOn: {}
+      rowDataSpecialDay: {},
     };
   },
   computed: {
@@ -357,17 +373,22 @@ export default {
       //     this.address[key].error = "";
       //   }
       // });
-      const keyContactReqs = this.$refs["key-contact"].getDataKeyContacts()
+      const keyContactReqs = this.$refs["key-contact"].getDataKeyContacts();
       this.specialDayOn.forEach(object => {
+        object.specialStartDay = object.time[0];
+        object.specialCloseDay = object.time[1];
+      });
+      this.specialDayOff.forEach(object => {
         object.specialStartDay = object.time[0];
         object.specialCloseDay = object.time[1];
       });
       const warehouseAdd = {
         warehouseChainId: 1,
-        specialDayTimeReqList: this.specialDayOn,
+        specialDayTimeReqList: [...this.specialDayOn, ...this.specialDayOff],
         keyContactReqs: keyContactReqs,
         openWorkingHourReq: {}
       };
+      console.log(warehouseAdd.specialDayTimeReqList);
       Object.keys(this.warehouse).map((key) => {
         warehouseAdd[key] = this.warehouse[key].value
       })
@@ -392,10 +413,9 @@ export default {
     handleAddSpecialDay(param, type) {
       if (param !== null) {
         this.$refs["special-time"].typeSpecialTime = type;
-        this.rowDataSpecialDayOn = {}
+        this.rowDataSpecialDay = {}
         this.dialogVisible = true;
       }
-      console.log(this.typeSpecialTime);
     },
     handleDeleteSpecialDay(item, type) {
       const index = item.$index;
@@ -408,7 +428,7 @@ export default {
       }
     },
     handleSpecialDayDetail(row, col, event) {
-      this.rowDataSpecialDayOn = row;
+      this.rowDataSpecialDay = row;
       this.$refs["special-time"].initData({ ...row, id: { value: row.index } });
       this.dialogVisible = true;
     },
@@ -416,16 +436,20 @@ export default {
       row.index = rowIndex;
     },
     handleData(param) {
-      console.log(param);
-
-      if (param.id) {
-        debugger
-        console.log(param.id.value == 2);
-        this.specialDayOn = this.specialDayOn.map(el => { return el.index == param.id.value ? { ...param } : el })
-      } else {
-        console.log(param);
-        this.specialDayOn.push({ ...param, id: this.specialDayOn.length });
+      if (param.dayType == 'ON') {
+        if (param.id) {
+          this.specialDayOn = this.specialDayOn.map(el => { return el.index == param.id.value ? { ...param } : el })
+        } else {
+          this.specialDayOn.push({ ...param, id: this.specialDayOn.length });
+        }
+      } else if (param.dayType == 'OFF') {
+        if (param.id) {
+          this.specialDayOff = this.specialDayOff.map(el => { return el.index == param.id.value ? { ...param } : el })
+        } else {
+          this.specialDayOff.push({ ...param, id: this.specialDayOff.length });
+        }
       }
+
     },
     initKeyContactForm(data) {
       this.$refs["key-contact"].initKeyContact(data);
@@ -435,6 +459,7 @@ export default {
         if (data[key + "Start"] != null || data[key + "Start"] != null) {
           this.workingHour[key].time[0] = data[key + "Start"];
           this.workingHour[key].time[1] = data[key + "End"];
+          this.workingHour[key].time = [data[key + "Start"], data[key + "End"]];
         } else {
           this.workingHour[key].checked = false;
         }
@@ -443,6 +468,22 @@ export default {
     indexMethod(index) {
       return index + 1;
     },
+    initSpecialtime(data) {
+      data.forEach(el => {
+        if (el.dayType === 'ON') {
+          this.specialDayOn.push(el);
+          this.specialDayOn.forEach(object => {
+            object.time = [object.specialStartDay, object.specialCloseDay]
+          });
+        } else if (el.dayType === 'OFF') {
+          this.specialDayOff.push(el);
+          this.specialDayOff.forEach(object => {
+            object.time = [object.specialStartDay, object.specialCloseDay]
+          });
+        }
+      })
+
+    }
   },
   mounted() {
     axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`, { headers: { "Access-Control-Allow-Origin": "*" } },)
@@ -455,10 +496,8 @@ export default {
           this.address[key].value = res.data.items[key];
         });
         this.initTimeWorking(res.data.items.openWorkingHour);
-        this.specialDayOn = res.data.items.specialDayTimes;
-        this.specialDayOn.forEach(object => {
-          object.time = [object.specialStartDay, object.specialCloseDay]
-        });
+        this.initSpecialtime(res.data.items.specialDayTimes);
+        this.warehouseChain.data = res.data.items.warehousechainRes;
       })
       .catch(err => console.log(err));
 

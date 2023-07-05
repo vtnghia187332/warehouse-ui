@@ -24,7 +24,7 @@ export default {
             type: Boolean,
         },
 
-        rowDataSpecialDayOn: {
+        rowDataSpecialDay: {
             type: Object,
             default: () => { }
         },
@@ -116,7 +116,7 @@ export default {
         }
     },
     mounted() {
-        this.initData(this.rowDataSpecialDayOn);
+        this.initData(this.rowDataSpecialDay);
         this.typeSpecialTime = this.typeSpecialTime;
     },
     methods: {
@@ -178,7 +178,6 @@ export default {
             this.$emit('update:dialogVisible', false);
         },
         initData(data) {
-            console.log(data);
             delete data['specialStartDay'];
             delete data['specialCloseDay'];
             delete data['weekDay'];
