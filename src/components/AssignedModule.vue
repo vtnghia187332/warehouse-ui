@@ -2,7 +2,7 @@
     <div class="bg-white radius-shadow_add">
         <div class="p-4 flex items-center justify-between">
             <div class="text-base font-medium">{{ title }}</div>
-            <el-button type="primary" :disabled="disabled" @click="visible = true">{{
+            <el-button class="bg-slate-500" type="primary" :disabled="disabled" @click="visible = true">{{
                 buttonLabel
             }}</el-button>
         </div>
@@ -13,7 +13,7 @@
                     {{ field.text }}: {{ item[field.value] }}
                 </div>
             </div>
-            <el-button type="primary" :disabled="disabled" @click="visible = true">delete</el-button>
+            <el-button class="bg-slate-500" type="primary" :disabled="disabled" @click="visible = true">delete</el-button>
         </div>
         <component v-if="visible" :is="dialog" :visible.sync="visible" @change="handleChange" />
     </div>
