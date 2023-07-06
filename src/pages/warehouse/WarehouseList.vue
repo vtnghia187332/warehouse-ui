@@ -67,10 +67,7 @@ export default {
       warehouses: [],
       warehouseDetail: {},
       paginationPage: {
-        currentPage: 1,
-        pageSizeList: [10, 30, 50, 100],
-        pageSizeval: 10,
-        total: 100,
+
       },
     };
   },
@@ -90,9 +87,14 @@ export default {
       .get("http://localhost:9090/api/v1/warehouse/list", { headers: { "Access-Control-Allow-Origin": "*" } },)
       .then(function (response) {
         me.warehouses = response.data.items.list;
-        me.total = response.data.items.total;
         me.currentPage = response.data.items.pages;
-        me.loadingTable = false;
+        me.paginationPage = {
+          currentPage: response.data.items.pageNum,
+          pageSizeList: [10,20, 30, 50, 100],
+          pageSizeval: 10,
+          total: response.data.items.total,
+        },
+          me.loadingTable = false;
       });
     console.log(this.loadingTable);
 

@@ -528,7 +528,6 @@ export default {
         this.address.city.options = res.data.items.citiesLists;
         this.address.district.options = res.data.items.districtsLists;
         this.address.subdistrict.options = res.data.items.subdistrictLists;
-
       })
       .catch(err => console.log(err));
     this.loadingPageDetail = false;
