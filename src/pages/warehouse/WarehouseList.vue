@@ -21,8 +21,9 @@
         </button>
       </div>
     </div>
-    <div class="table_style px-2">
-      <el-table :data="warehouses" style="width: 100%" @row-dblclick="goToDetailWarehouse">
+    <LoadingPage v-show="loadingTable"></LoadingPage>
+    <div class="table_style px-2" v-show="!loadingTable">
+      <el-table :data="warehouses" style="width: 100%" @row-dblclick="goToDetailWarehouse" height="776">
         <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
         </el-table-column>
         <el-table-column prop="createdAt" label="Create Date" width="250">
@@ -45,7 +46,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <BasePagination :field="paginationPage" />
+    <BasePagination v-show="!loadingTable" :field="paginationPage" />
   </div>
 </template>
 
@@ -53,14 +54,16 @@
 import axios from "axios";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
+import LoadingPage from '@/components/Cards/LoadingPage'
 export default {
-  components: { BaseSearch, BasePagination },
+  components: { BaseSearch, BasePagination, LoadingPage },
   data() {
     return {
       search: {
         value: '',
         class: 'w-96'
       },
+      loadingTable: false,
       warehouses: [],
       warehouseDetail: {},
       paginationPage: {
@@ -82,13 +85,16 @@ export default {
   },
   created() {
     var me = this;
+    me.loadingTable = true;
     axios
       .get("http://localhost:9090/api/v1/warehouse/list", { headers: { "Access-Control-Allow-Origin": "*" } },)
       .then(function (response) {
         me.warehouses = response.data.items.list;
         me.total = response.data.items.total;
         me.currentPage = response.data.items.pages;
+        me.loadingTable = false;
       });
+    console.log(this.loadingTable);
 
   },
 };

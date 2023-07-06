@@ -1,191 +1,196 @@
 <template>
-  <div class="bg-page-background overflow-y-auto w-full py-4">
-    <el-row :gutter="20" class="flex gap-x-4 detail w-full">
-      <el-col :span="15" class="forms grow">
-        <FormCard title="Information" class="mb-3">
-          <template v-slot:content>
-            <div class="grid grid-cols-12 gap-x-6 gap-y-3">
-              <div class="col-span-6">
-                <BaseInput :field="warehouse.code" v-model="warehouse.code.value" />
+  <div>
+    <loading-page v-show="loadingPageDetail"></loading-page>
+    <div v-show="!loadingPageDetail" class="bg-page-background overflow-y-auto w-full py-4">
+      <el-row :gutter="20" class="flex gap-x-4 detail w-full">
+        <el-col :span="15" class="forms grow">
+          <FormCard title="Information" class="mb-3">
+            <template v-slot:content>
+              <div class="grid grid-cols-12 gap-x-6">
+                <div class="col-span-6">
+                  <BaseInput :field="warehouse.code" v-model="warehouse.code.value" />
+                </div>
+                <div class="col-span-12">
+                  <BaseTextArea :field="warehouse.name" v-model="warehouse.name.value" />
+                </div>
+                <div class="col-span-12">
+                  <BaseInput :field="warehouse.shortName" v-model="warehouse.shortName.value" />
+                </div>
+                <div class="col-span-12">
+                  <BaseTextArea :field="warehouse.description" v-model="warehouse.description.value" />
+                </div>
               </div>
-              <div class="col-span-12">
-                <BaseTextArea :field="warehouse.name" v-model="warehouse.name.value" />
-              </div>
-              <div class="col-span-12">
-                <BaseInput :field="warehouse.shortName" v-model="warehouse.shortName.value" />
-              </div>
-              <div class="col-span-12">
-                <BaseTextArea :field="warehouse.description" v-model="warehouse.description.value" />
-              </div>
+            </template>
+          </FormCard>
+
+          <BaseKeyContact ref="key-contact" />
+          <BaseDialog ref="special-time" v-show="dialogVisible" :dialogVisible.sync="dialogVisible"
+            @handle-data="handleData" :rowDataSpecialDay="rowDataSpecialDay" />
+          <div class="card bg-white !mb-3">
+            <div class="font-medium text-base text-primary-85 p-3 border border-divider">
+              Window Time
             </div>
-          </template>
-        </FormCard>
+            <div class="p-3 !pt-2 pb-0">
+              <el-tabs v-model="activeName">
+                <el-tab-pane label="OpenHour" name="first">
+                  <div class="mb-4 items-center grid grid-cols-4 gap-4">
+                    <el-checkbox class="" v-model="workingHour.monday.checked">Monday</el-checkbox>
+                    <el-time-picker ref="mondayPicker" is-range format="HH:mm" v-model="workingHour.monday.time"
+                      range-separator="To" start-placeholder="Start time" end-placeholder="End time"
+                      :disabled="workingHour.monday.checked == false">
+                    </el-time-picker>
+                  </div>
 
-        <BaseKeyContact ref="key-contact" />
-        <BaseDialog ref="special-time" v-show="dialogVisible" :dialogVisible.sync="dialogVisible"
-          @handle-data="handleData" :rowDataSpecialDay="rowDataSpecialDay" />
-        <div class="card bg-white !mb-3">
-          <div class="font-medium text-base text-primary-85 p-3 border border-divider">
-            Window Time
-          </div>
-          <div class="p-3 !pt-2 pb-0">
-            <el-tabs v-model="activeName">
-              <el-tab-pane label="OpenHour" name="first">
-                <div class="mb-4 items-center grid grid-cols-4 gap-4">
-                  <el-checkbox class="" v-model="workingHour.monday.checked">Monday</el-checkbox>
-                  <el-time-picker ref="mondayPicker" is-range format="HH:mm" v-model="workingHour.monday.time"
-                    range-separator="To" start-placeholder="Start time" end-placeholder="End time"
-                    :disabled="workingHour.monday.checked == false">
-                  </el-time-picker>
-                </div>
+                  <div class="mb-4 items-center grid grid-cols-4 gap-4">
+                    <el-checkbox class="" v-model="workingHour.tuesday.checked">Tuesday</el-checkbox>
+                    <el-time-picker ref="tuesdayPicker" is-range format="HH:mm" v-model="workingHour.tuesday.time"
+                      range-separator="To" start-placeholder="Start time" end-placeholder="End time"
+                      :disabled="workingHour.tuesday.checked == false">
+                    </el-time-picker>
+                  </div>
 
-                <div class="mb-4 items-center grid grid-cols-4 gap-4">
-                  <el-checkbox class="" v-model="workingHour.tuesday.checked">Tuesday</el-checkbox>
-                  <el-time-picker ref="tuesdayPicker" is-range format="HH:mm" v-model="workingHour.tuesday.time"
-                    range-separator="To" start-placeholder="Start time" end-placeholder="End time"
-                    :disabled="workingHour.tuesday.checked == false">
-                  </el-time-picker>
-                </div>
+                  <div class="mb-4 items-center grid grid-cols-4 gap-4">
+                    <el-checkbox class="" v-model="workingHour.wednesday.checked">Wednesday</el-checkbox>
+                    <el-time-picker ref="wednesdayPicker" is-range format="HH:mm" v-model="workingHour.wednesday.time"
+                      range-separator="To" start-placeholder="Start time" end-placeholder="End time"
+                      :disabled="workingHour.wednesday.checked == false">
+                    </el-time-picker>
+                  </div>
 
-                <div class="mb-4 items-center grid grid-cols-4 gap-4">
-                  <el-checkbox class="" v-model="workingHour.wednesday.checked">Wednesday</el-checkbox>
-                  <el-time-picker ref="wednesdayPicker" is-range format="HH:mm" v-model="workingHour.wednesday.time"
-                    range-separator="To" start-placeholder="Start time" end-placeholder="End time"
-                    :disabled="workingHour.wednesday.checked == false">
-                  </el-time-picker>
-                </div>
+                  <div class="mb-4 items-center grid grid-cols-4 gap-4">
+                    <el-checkbox class="" v-model="workingHour.thursday.checked">Thursday</el-checkbox>
+                    <el-time-picker ref="thursdayPicker" is-range format="HH:mm" v-model="workingHour.thursday.time"
+                      range-separator="To" start-placeholder="Start time" end-placeholder="End time"
+                      :disabled="workingHour.thursday.checked == false">
+                    </el-time-picker>
+                  </div>
 
-                <div class="mb-4 items-center grid grid-cols-4 gap-4">
-                  <el-checkbox class="" v-model="workingHour.thursday.checked">Thursday</el-checkbox>
-                  <el-time-picker ref="thursdayPicker" is-range format="HH:mm" v-model="workingHour.thursday.time"
-                    range-separator="To" start-placeholder="Start time" end-placeholder="End time"
-                    :disabled="workingHour.thursday.checked == false">
-                  </el-time-picker>
-                </div>
+                  <div class="mb-4 items-center grid grid-cols-4 gap-4">
+                    <el-checkbox class="" v-model="workingHour.friday.checked">Friday</el-checkbox>
+                    <el-time-picker ref="fridayPicker" is-range format="HH:mm" v-model="workingHour.friday.time"
+                      range-separator="To" start-placeholder="Start time" end-placeholder="End time"
+                      :disabled="workingHour.friday.checked == false">
+                    </el-time-picker>
+                  </div>
 
-                <div class="mb-4 items-center grid grid-cols-4 gap-4">
-                  <el-checkbox class="" v-model="workingHour.friday.checked">Friday</el-checkbox>
-                  <el-time-picker ref="fridayPicker" is-range format="HH:mm" v-model="workingHour.friday.time"
-                    range-separator="To" start-placeholder="Start time" end-placeholder="End time"
-                    :disabled="workingHour.friday.checked == false">
-                  </el-time-picker>
-                </div>
+                  <div class="mb-4 items-center grid grid-cols-4 gap-4">
+                    <el-checkbox class="" v-model="workingHour.saturday.checked">Saturday</el-checkbox>
+                    <el-time-picker ref="saturdayPicker" is-range format="HH:mm" v-model="workingHour.saturday.time"
+                      range-separator="To" start-placeholder="Start time" end-placeholder="End time"
+                      :disabled="workingHour.saturday.checked == false">
+                    </el-time-picker>
+                  </div>
 
-                <div class="mb-4 items-center grid grid-cols-4 gap-4">
-                  <el-checkbox class="" v-model="workingHour.saturday.checked">Saturday</el-checkbox>
-                  <el-time-picker ref="saturdayPicker" is-range format="HH:mm" v-model="workingHour.saturday.time"
-                    range-separator="To" start-placeholder="Start time" end-placeholder="End time"
-                    :disabled="workingHour.saturday.checked == false">
-                  </el-time-picker>
-                </div>
-
-                <div class="mb-4 items-center grid grid-cols-4 gap-4">
-                  <el-checkbox class="" v-model="workingHour.sunday.checked">Sunday</el-checkbox>
-                  <el-time-picker ref="sundayPicker" is-range format="HH:mm" v-model="workingHour.sunday.time"
-                    range-separator="To" start-placeholder="Start time" end-placeholder="End time"
-                    :disabled="workingHour.sunday.checked == false">
-                  </el-time-picker>
-                </div>
-              </el-tab-pane>
-              <el-tab-pane class="relative" label="Holiday, Special Day-Off" name="second">
-                <el-table :data="specialDayOff" style="width: 100%" @row-dblclick="handleSpecialDayDetail"
-                  :row-class-name="specialTimeOn">
-                  <el-table-column label="STT" type="index" :index="indexMethod">
-                  </el-table-column>
-                  <el-table-column label="Date" prop="date">
-                    <template slot-scope="scope">
-                      {{ moment(scope.row.date).format("DD/MM/YYYY") }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="Time" prop="time">
-                    <template slot-scope="scope">
-                      {{ moment(scope.row.time[0]).format("HH:mm") + " - " + moment(scope.row.time[1]).format("HH:mm") }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="Remark" prop="remark">
-                    <template slot-scope="scope">
-                      {{ scope.row.remark }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column align="right">
-                    <template slot="header" slot-scope="scope">
-                      <el-button size="mini" type="danger" class="bg-blue-300" @click="handleAddSpecialDay(true, 'OFF')"
-                        :handleAddSpecialDay="handleAddSpecialDay">Add</el-button>
-                    </template>
-                    <template slot-scope="scope">
-                      <el-button size="mini" type="danger" class="bg-red-300"
-                        @click="handleDeleteSpecialDay(scope, 'ON')">Delete</el-button>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </el-tab-pane>
-              <el-tab-pane label="Special Day-On" name="third">
-                <el-table :data="specialDayOn" style="width: 100%" @row-dblclick="handleSpecialDayDetail"
-                  :row-class-name="specialTimeOn">
-                  <el-table-column label="STT" type="index" :index="indexMethod">
-                  </el-table-column>
-                  <el-table-column label="Date" prop="date">
-                    <template slot-scope="scope">
-                      {{ moment(scope.row.date).format("DD/MM/YYYY") }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="Time" prop="time">
-                    <template slot-scope="scope">
-                      {{ moment(scope.row.time[0]).format("HH:mm") + " - " + moment(scope.row.time[1]).format("HH:mm") }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="Remark" prop="remark">
-                    <template slot-scope="scope">
-                      {{ scope.row.remark }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column align="right">
-                    <template slot="header" slot-scope="scope">
-                      <el-button size="mini" type="danger" class="bg-blue-300" @click="handleAddSpecialDay(true, 'ON')"
-                        :handleAddSpecialDay="handleAddSpecialDay">Add</el-button>
-                    </template>
-                    <template slot-scope="scope">
-                      <el-button size="mini" type="danger" class="bg-red-300"
-                        @click="handleDeleteSpecialDay(scope, 'ON')">Delete</el-button>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </el-tab-pane>
-            </el-tabs>
-          </div>
-        </div>
-
-        <FormCard title="Address" class="mb-3">
-          <template v-slot:content>
-            <div class="grid grid-cols-12 gap-x-6">
-              <div class="col-span-12">
-                <BaseTextArea :field="address.addressDes" v-model="address.addressDes.value" />
-              </div>
-              <div class="col-span-6">
-                <BaseSelection :field="address.country" />
-              </div>
-              <div class="col-span-6">
-                <BaseSelection :field="address.city" />
-              </div>
-              <div class="col-span-6">
-                <BaseSelection :field="address.district" />
-              </div>
-              <div class="col-span-6">
-                <BaseSelection :field="address.subdistrict" />
-              </div>
+                  <div class="mb-4 items-center grid grid-cols-4 gap-4">
+                    <el-checkbox class="" v-model="workingHour.sunday.checked">Sunday</el-checkbox>
+                    <el-time-picker ref="sundayPicker" is-range format="HH:mm" v-model="workingHour.sunday.time"
+                      range-separator="To" start-placeholder="Start time" end-placeholder="End time"
+                      :disabled="workingHour.sunday.checked == false">
+                    </el-time-picker>
+                  </div>
+                </el-tab-pane>
+                <el-tab-pane class="relative" label="Holiday, Special Day-Off" name="second">
+                  <el-table :data="specialDayOff" style="width: 100%" @row-dblclick="handleSpecialDayDetail"
+                    :row-class-name="specialTimeOn">
+                    <el-table-column label="STT" type="index" :index="indexMethod">
+                    </el-table-column>
+                    <el-table-column label="Date" prop="date">
+                      <template slot-scope="scope">
+                        {{ moment(scope.row.date).format("DD/MM/YYYY") }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="Time" prop="time">
+                      <template slot-scope="scope">
+                        {{ moment(scope.row.time[0]).format("HH:mm") + " - " + moment(scope.row.time[1]).format("HH:mm")
+                        }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="Remark" prop="remark">
+                      <template slot-scope="scope">
+                        {{ scope.row.remark }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column align="right">
+                      <template slot="header" slot-scope="scope">
+                        <el-button size="mini" type="danger" class="bg-blue-300" @click="handleAddSpecialDay(true, 'OFF')"
+                          :handleAddSpecialDay="handleAddSpecialDay">Add</el-button>
+                      </template>
+                      <template slot-scope="scope">
+                        <el-button size="mini" type="danger" class="bg-red-300"
+                          @click="handleDeleteSpecialDay(scope, 'ON')">Delete</el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </el-tab-pane>
+                <el-tab-pane label="Special Day-On" name="third">
+                  <el-table :data="specialDayOn" style="width: 100%" @row-dblclick="handleSpecialDayDetail"
+                    :row-class-name="specialTimeOn">
+                    <el-table-column label="STT" type="index" :index="indexMethod">
+                    </el-table-column>
+                    <el-table-column label="Date" prop="date">
+                      <template slot-scope="scope">
+                        {{ moment(scope.row.date).format("DD/MM/YYYY") }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="Time" prop="time">
+                      <template slot-scope="scope">
+                        {{ moment(scope.row.time[0]).format("HH:mm") + " - " + moment(scope.row.time[1]).format("HH:mm")
+                        }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="Remark" prop="remark">
+                      <template slot-scope="scope">
+                        {{ scope.row.remark }}
+                      </template>
+                    </el-table-column>
+                    <el-table-column align="right">
+                      <template slot="header" slot-scope="scope">
+                        <el-button size="mini" type="danger" class="bg-blue-300" @click="handleAddSpecialDay(true, 'ON')"
+                          :handleAddSpecialDay="handleAddSpecialDay">Add</el-button>
+                      </template>
+                      <template slot-scope="scope">
+                        <el-button size="mini" type="danger" class="bg-red-300"
+                          @click="handleDeleteSpecialDay(scope, 'ON')">Delete</el-button>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </el-tab-pane>
+              </el-tabs>
             </div>
-          </template>
-        </FormCard>
+          </div>
 
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="handleSubmit">
-          Create
-        </button>
-      </el-col>
-      <el-col :span="5" class="">
-        <AssignedModuleVue title="Warehouse Chain" :nameKey="'code'" :item="warehouseChain.data"
-          :fields="warehouseChain.fields" />
-      </el-col>
-    </el-row>
+          <FormCard title="Address" class="mb-3">
+            <template v-slot:content>
+              <div class="grid grid-cols-12 gap-x-6">
+                <div class="col-span-12">
+                  <BaseTextArea :field="address.addressDes" v-model="address.addressDes.value" />
+                </div>
+                <div class="col-span-6">
+                  <BaseSelection :field="address.country" />
+                </div>
+                <div class="col-span-6">
+                  <BaseSelection :field="address.city" />
+                </div>
+                <div class="col-span-6">
+                  <BaseSelection :field="address.district" />
+                </div>
+                <div class="col-span-6">
+                  <BaseSelection :field="address.subdistrict" />
+                </div>
+              </div>
+            </template>
+          </FormCard>
+
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="handleSubmit">
+            Create
+          </button>
+        </el-col>
+        <el-col :span="5" class="">
+          <AssignedModuleVue title="Warehouse Chain" :nameKey="'code'" :item="warehouseChain.data"
+            :fields="warehouseChain.fields" :isShowButton="false" />
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -200,11 +205,14 @@ import BaseDialog from "../../components/Dialog/BaseDialog.vue";
 import BaseKeyContact from "../../components/KeyContact/BaseKeyContact.vue";
 import moment from 'moment';
 import AssignedModuleVue from '../../components/AssignedModule.vue';
+import LoadingPage from '../../components/Cards/LoadingPage.vue';
 
 export default {
-  components: { FormCard, BaseInput, BaseTextArea, Button, BaseSelection, BaseDialog, BaseKeyContact, AssignedModuleVue },
+  components: { FormCard, BaseInput, BaseTextArea, Button, BaseSelection, BaseDialog, BaseKeyContact, AssignedModuleVue, LoadingPage },
   data() {
     return {
+      loadingPageDetail: false,
+      warehouseId: null,
       typeSpecialTime: '',
       dialogVisible: false,
       warehouseChain: {
@@ -382,33 +390,42 @@ export default {
         object.specialStartDay = object.time[0];
         object.specialCloseDay = object.time[1];
       });
-      const warehouseAdd = {
+      const warehouseDetail = {
         warehouseChainId: 1,
+        id: this.warehouseId,
         specialDayTimeReqList: [...this.specialDayOn, ...this.specialDayOff],
         keyContactReqs: keyContactReqs,
-        openWorkingHourReq: {}
+        openWorkingHourReq: {},
       };
-      console.log(warehouseAdd.specialDayTimeReqList);
       Object.keys(this.warehouse).map((key) => {
-        warehouseAdd[key] = this.warehouse[key].value
+        warehouseDetail[key] = this.warehouse[key].value
       })
       Object.keys(this.workingHour).map((key) => {
         if (this.workingHour[key].checked) {
-          warehouseAdd.openWorkingHourReq[key + "Start"] = moment(this.workingHour[key].time[0]).format("YYYY-MM-DD HH:mm:ss");
-          warehouseAdd.openWorkingHourReq[key + "End"] = moment(this.workingHour[key].time[1]).format("YYYY-MM-DD HH:mm:ss");
+          warehouseDetail.openWorkingHourReq[key + "Start"] = moment(this.workingHour[key].time[0]).format("YYYY-MM-DD HH:mm:ss");
+          warehouseDetail.openWorkingHourReq[key + "End"] = moment(this.workingHour[key].time[1]).format("YYYY-MM-DD HH:mm:ss");
         }
       })
       Object.keys(this.address).map((key) => {
-        warehouseAdd[key + "Id"] = this.address[key].value
-        warehouseAdd[key] = this.address[key].value
+        warehouseDetail[key + "Id"] = this.address[key].value
+        warehouseDetail[key] = this.address[key].value
       })
-
-      axios({
-        method: 'post',
-        url: 'http://localhost:9090/api/v1/warehouse',
-        headers: { "Access-Control-Allow-Origin": "*" },
-        data: warehouseAdd,
-      });
+      if (this.$route.params.code) {
+        axios({
+          method: 'put',
+          url: 'http://localhost:9090/api/v1/warehouse',
+          headers: { "Access-Control-Allow-Origin": "*" },
+          data: warehouseDetail,
+        });
+      } else {
+        axios({
+          method: 'post',
+          url: 'http://localhost:9090/api/v1/warehouse',
+          headers: { "Access-Control-Allow-Origin": "*" },
+          data: warehouseDetail,
+        });
+      }
+      this.$router.push({ name: 'warehouse-list' })
     },
     handleAddSpecialDay(param, type) {
       if (param !== null) {
@@ -485,22 +502,26 @@ export default {
 
     }
   },
-  mounted() {
-    axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`, { headers: { "Access-Control-Allow-Origin": "*" } },)
-      .then(res => {
-        Object.keys(this.warehouse).forEach((key) => {
-          this.warehouse[key].value = res.data.items[key];
-        });
-        this.initKeyContactForm(res.data.items.keyContactVos);
-        Object.keys(this.address).forEach((key) => {
-          this.address[key].value = res.data.items[key];
-        });
-        this.initTimeWorking(res.data.items.openWorkingHour);
-        this.initSpecialtime(res.data.items.specialDayTimes);
-        this.warehouseChain.data = res.data.items.warehousechainRes;
-      })
-      .catch(err => console.log(err));
+  created() {
+    this.loadingPageDetail = true;
+    if (this.$route.params.code) {
+      axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`, { headers: { "Access-Control-Allow-Origin": "*" } },)
+        .then(res => {
+          Object.keys(this.warehouse).forEach((key) => {
+            this.warehouse[key].value = res.data.items[key];
+          });
+          this.initKeyContactForm(res.data.items.keyContactVos);
+          Object.keys(this.address).forEach((key) => {
+            this.address[key].value = res.data.items[key];
+          });
+          this.initTimeWorking(res.data.items.openWorkingHour);
+          this.initSpecialtime(res.data.items.specialDayTimes);
+          this.warehouseChain.data = res.data.items.warehousechainRes;
+          this.warehouseId = res.data.items.id;
 
+        })
+        .catch(err => console.log(err));
+    }
     axios.get('http://localhost:9090/api/v1/address', { headers: { "Access-Control-Allow-Origin": "*" } },)
       .then(res => {
         this.address.country.options = res.data.items.countriesLists;
@@ -510,6 +531,7 @@ export default {
 
       })
       .catch(err => console.log(err));
+    this.loadingPageDetail = false;
   },
 };
 </script>
