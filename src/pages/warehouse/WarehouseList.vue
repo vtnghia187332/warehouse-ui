@@ -78,26 +78,28 @@ export default {
     goToDetailWarehouse(row) {
       this.$router.push({ path: `/warehouse-detail/${row.code}` });
     },
+    getWarehouses() {
+      var me = this;
+      me.loadingTable = true;
+      axios
+        .get("http://localhost:9090/api/v1/warehouse/list", { headers: { "Access-Control-Allow-Origin": "*" } },)
+        .then(function (response) {
+          me.warehouses = response.data.items.list;
+          me.currentPage = response.data.items.pages;
+          me.paginationPage = {
+            currentPage: response.data.items.pageNum,
+            pageSizeList: [10, 20, 30, 50, 100],
+            pageSizeval: 10,
+            total: response.data.items.total,
+          },
+            me.loadingTable = false;
+        });
+      console.log(this.loadingTable);
+    }
 
   },
-  created() {
-    var me = this;
-    me.loadingTable = true;
-    axios
-      .get("http://localhost:9090/api/v1/warehouse/list", { headers: { "Access-Control-Allow-Origin": "*" } },)
-      .then(function (response) {
-        me.warehouses = response.data.items.list;
-        me.currentPage = response.data.items.pages;
-        me.paginationPage = {
-          currentPage: response.data.items.pageNum,
-          pageSizeList: [10,20, 30, 50, 100],
-          pageSizeval: 10,
-          total: response.data.items.total,
-        },
-          me.loadingTable = false;
-      });
-    console.log(this.loadingTable);
-
+  mounted() {
+    this.getWarehouses();
   },
 };
 </script>

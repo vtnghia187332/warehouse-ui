@@ -499,38 +499,42 @@ export default {
           });
         }
       })
-
-    }
-  },
-  created() {
-    this.loadingPageDetail = true;
-    if (this.$route.params.code) {
-      axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`, { headers: { "Access-Control-Allow-Origin": "*" } },)
+    },
+    getWarehouseDetail() {
+      this.loadingPageDetail = true;
+      if (this.$route.params.code) {
+        axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`, { headers: { "Access-Control-Allow-Origin": "*" } },)
+          .then(res => {
+            Object.keys(this.warehouse).forEach((key) => {
+              this.warehouse[key].value = res.data.items[key];
+            });
+            this.initKeyContactForm(res.data.items.keyContactVos);
+            Object.keys(this.address).forEach((key) => {
+              this.address[key].value = res.data.items[key];
+            });
+            this.initTimeWorking(res.data.items.openWorkingHour);
+            this.initSpecialtime(res.data.items.specialDayTimes);
+            this.warehouseChain.data = res.data.items.warehousechainRes;
+            this.warehouseId = res.data.items.id;
+            this.loadingPageDetail = false;
+          })
+          .catch(err => console.log(err));
+      }
+    },
+    getListAddress() {
+      axios.get('http://localhost:9090/api/v1/address', { headers: { "Access-Control-Allow-Origin": "*" } },)
         .then(res => {
-          Object.keys(this.warehouse).forEach((key) => {
-            this.warehouse[key].value = res.data.items[key];
-          });
-          this.initKeyContactForm(res.data.items.keyContactVos);
-          Object.keys(this.address).forEach((key) => {
-            this.address[key].value = res.data.items[key];
-          });
-          this.initTimeWorking(res.data.items.openWorkingHour);
-          this.initSpecialtime(res.data.items.specialDayTimes);
-          this.warehouseChain.data = res.data.items.warehousechainRes;
-          this.warehouseId = res.data.items.id;
-
+          this.address.country.options = res.data.items.countriesLists;
+          this.address.city.options = res.data.items.citiesLists;
+          this.address.district.options = res.data.items.districtsLists;
+          this.address.subdistrict.options = res.data.items.subdistrictLists;
         })
         .catch(err => console.log(err));
-    }
-    axios.get('http://localhost:9090/api/v1/address', { headers: { "Access-Control-Allow-Origin": "*" } },)
-      .then(res => {
-        this.address.country.options = res.data.items.countriesLists;
-        this.address.city.options = res.data.items.citiesLists;
-        this.address.district.options = res.data.items.districtsLists;
-        this.address.subdistrict.options = res.data.items.subdistrictLists;
-      })
-      .catch(err => console.log(err));
-    this.loadingPageDetail = false;
+    },
+  },
+  mounted() {
+    this.getWarehouseDetail();
+    this.getListAddress();
   },
 };
 </script>
