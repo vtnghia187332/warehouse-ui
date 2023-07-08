@@ -22,10 +22,10 @@ export default {
     },
     methods: {
         handleSizeChange(val) {
-            console.log(`${val} items per page`);
+            this.$emit("handleSizeChange", val);
         },
         handleCurrentChange(val) {
-            console.log(`current page: ${val}`);
+            this.$emit("handleCurrentChange", val);
         }
     },
 }

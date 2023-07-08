@@ -1,15 +1,27 @@
 <template>
-    <el-input placeholder="Please input" v-model="field.input" :class="field.class">
-        <el-button slot="append" icon="el-icon-search"></el-button>
+    <el-input placeholder="Please input" v-model="value" :class="field.class" @input.native="change">
+        <el-button slot="append" icon="el-icon-search" @click="change"></el-button>
     </el-input>
 </template>
 <script>
 export default {
+    data() {
+        return {
+            value: '',
+        }
+    },
+    watch: {
+    },
     props: {
         field: {
             type: Object,
             default: {},
         },
+    },
+    methods: {
+        change(event) {
+            this.$emit("get-value", event.target.value);
+        }
     },
 }
 </script>
@@ -26,4 +38,5 @@ export default {
 .el-input-group__prepend {
     border: none !important;
 
-}</style>
+}
+</style>

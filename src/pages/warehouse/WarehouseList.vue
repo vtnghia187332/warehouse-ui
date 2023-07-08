@@ -2,7 +2,7 @@
   <div class="fix_highted">
     <div class="flex justify-between px-4 py-2">
       <div class="flex">
-        <BaseSearch :field="search" />
+        <BaseSearch :field="search" @get-value="getBaseSearchVal" />
         <button class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm">
           <span class="ti-filter"></span> Filter
         </button>
@@ -46,7 +46,8 @@
         </el-table-column>
       </el-table>
     </div>
-    <BasePagination v-show="!loadingTable" :field="paginationPage" />
+    <BasePagination v-show="!loadingTable" :field="paginationVal" @handleSizeChang="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange" />
   </div>
 </template>
 
@@ -59,6 +60,7 @@ export default {
   components: { BaseSearch, BasePagination, LoadingPage },
   data() {
     return {
+      timer: 0,
       search: {
         value: '',
         class: 'w-96'
@@ -67,38 +69,75 @@ export default {
       warehouses: [],
       warehouseDetail: {},
       paginationPage: {
-
+        pageNo: 1,
+        pageSize: 30,
+        sorting: 'createdAt',
+        orderBy: 'DESC',
       },
+      paginationVal: {
+
+      }
     };
   },
   methods: {
+    getBaseSearchVal(param) {
+      // clears the timer on a call so there is always x seconds in between calls
+      clearTimeout(this.timer);
+      // if the timer resets before it hits 150ms it will not run 
+      this.timer = setTimeout(function () {
+        this.search.value = param;
+        this.getWarehouses();
+      }.bind(this), 300);
+    },
     HandleAddWarehouse() {
       this.$router.push({ name: "warehouse-detail" });
     },
     goToDetailWarehouse(row) {
       this.$router.push({ path: `/warehouse-detail/${row.code}` });
     },
+    handleSizeChange(param) {
+      this.paginationPage.pageNo = param;
+      this.getWarehouses();
+    },
+    handleCurrentChange(param) {
+      this.paginationPage.pageNo = param;
+      this.getWarehouses();
+    },
     getWarehouses() {
       var me = this;
       me.loadingTable = true;
       axios
-        .get("http://localhost:9090/api/v1/warehouse/list", { headers: { "Access-Control-Allow-Origin": "*" } },)
+        .get("http://localhost:9090/api/v1/warehouse/list", {
+          headers: { "Access-Control-Allow-Origin": "*" }, params: {
+            searchText: me.search.value,
+            pageNo: me.paginationPage.pageNo,
+            pageSize: me.paginationPage.pageSize,
+            sorting: me.paginationPage.sorting,
+            orderBy: me.paginationPage.orderBy,
+          }
+        },)
         .then(function (response) {
-          me.warehouses = response.data.items.list;
-          me.currentPage = response.data.items.pages;
-          me.paginationPage = {
+          me.warehouses = response.data.items.content;
+          me.paginationVal = {
             currentPage: response.data.items.pageNum,
             pageSizeList: [10, 20, 30, 50, 100],
-            pageSizeval: 10,
-            total: response.data.items.total,
+            currentPage: me.paginationPage.pageNo,
+            pageSizeval: me.paginationPage.pageSize,
+            total: response.data.items.totalElements,
           },
             me.loadingTable = false;
         });
-      console.log(this.loadingTable);
     }
 
   },
   mounted() {
+    this.paginationPage = {
+      pageNo: 1,
+      pageSize: 30,
+      sorting: 'createdAt',
+      orderBy: 'DESC',
+    },
+      this.search.value = '';
     this.getWarehouses();
   },
 };
