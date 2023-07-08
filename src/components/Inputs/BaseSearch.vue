@@ -20,7 +20,10 @@ export default {
     },
     methods: {
         change(event) {
-            this.$emit("get-value", event.target.value);
+            if (event.target.value) {
+                this.value = event.target.value;
+            }
+            this.$emit("get-value", this.value);
         }
     },
 }
