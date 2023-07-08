@@ -51,7 +51,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <BasePagination v-show="!loadingTable" :field="paginationVal" @handleSizeChang="handleSizeChange"
+    <BasePagination v-show="!loadingTable" :field="paginationVal" @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange" />
   </div>
 </template>
@@ -109,7 +109,9 @@ export default {
       //duplicated row to insert
     },
     handleSizeChange(param) {
-      this.paginationPage.pageNo = param;
+      this.paginationPage.pageNo = 1;
+      this.paginationPage.pageSize = param;
+      console.log(this.paginationPage);
       this.getWarehouses();
     },
     handleCurrentChange(param) {
@@ -134,8 +136,8 @@ export default {
           me.paginationVal = {
             currentPage: response.data.items.pageNum,
             pageSizeList: [10, 20, 30, 50, 100],
-            currentPage: me.paginationPage.pageNo,
-            pageSizeval: me.paginationPage.pageSize,
+            currentPage: response.data.items.number + 1,
+            pageSizeval: response.data.items.size,
             total: response.data.items.totalElements,
           },
             me.loadingTable = false;
