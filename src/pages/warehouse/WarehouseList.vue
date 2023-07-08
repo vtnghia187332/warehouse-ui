@@ -25,6 +25,9 @@
     <div class="table_style px-2" v-show="!loadingTable">
       <el-table :data="warehouses" style="width: 100%" @row-dblclick="goToDetailWarehouse" height="776">
         <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
+          <template slot-scope="scope">
+            {{ scope.row.warehouseId }}
+          </template>
         </el-table-column>
         <el-table-column prop="createdAt" label="Create Date" width="250">
         </el-table-column>
@@ -42,7 +45,8 @@
           <template slot-scope="scope">
             <el-button @click="handeViewDetail(scope.row)" type="text" size="small"><i
                 class="el-icon-document-copy text-2xl"></i></el-button>
-            <el-button type="text" size="small"><i class="el-icon-edit-outline text-2xl"></i></el-button>
+            <el-button @click="handeDuplicateDetail(scope.row)" type="text" size="small"><i
+                class="el-icon-edit-outline text-2xl"></i></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -80,6 +84,8 @@ export default {
       }
     };
   },
+  computed: {
+  },
   methods: {
     getBaseSearchVal(param) {
       // clears the timer on a call so there is always x seconds in between calls
@@ -94,10 +100,13 @@ export default {
       this.$router.push({ name: "warehouse-detail" });
     },
     goToDetailWarehouse(row) {
-      this.$router.push({ path: `/warehouse-detail/${row.code}` });
+      this.$router.push({ path: `/warehouse-detail/${row.warehouseId}` });
     },
     handeViewDetail(row) {
-      this.$router.push({ path: `/warehouse-detail/${row.code}` });
+      this.$router.push({ path: `/warehouse-detail/${row.warehouseId}` });
+    },
+    handeDuplicateDetail(row) {
+      //duplicated row to insert
     },
     handleSizeChange(param) {
       this.paginationPage.pageNo = param;

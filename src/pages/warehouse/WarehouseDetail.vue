@@ -213,6 +213,7 @@ export default {
     return {
       loadingPageDetail: false,
       warehouseId: null,
+      warehouseIdTxt: null,
       typeSpecialTime: '',
       dialogVisible: false,
       warehouseChain: {
@@ -396,6 +397,7 @@ export default {
         specialDayTimeReqList: [...this.specialDayOn, ...this.specialDayOff],
         keyContactReqs: keyContactReqs,
         openWorkingHourReq: {},
+        warehouseId: this.warehouseIdTxt,
       };
       Object.keys(this.warehouse).map((key) => {
         warehouseDetail[key] = this.warehouse[key].value
@@ -516,7 +518,7 @@ export default {
             this.initSpecialtime(res.data.items.specialDayTimes);
             this.warehouseChain.data = res.data.items.warehousechainRes;
             this.warehouseId = res.data.items.id;
-            this.loadingPageDetail = false;
+            this.warehouseIdTxt = res.data.items.warehouseId;
           })
           .catch(err => console.log(err));
       }
@@ -535,6 +537,7 @@ export default {
   mounted() {
     this.getWarehouseDetail();
     this.getListAddress();
+    this.loadingPageDetail = false;
   },
 };
 </script>
