@@ -11,7 +11,7 @@
         <button class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm ">
           <i class="el-icon-files font-bold"></i> History
         </button>
-        <button class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm" @click="HandleAddWarehouse">
+        <button class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm" @click="HandleImportWarehouse">
           <i class="el-icon-plus ml font-bold"></i> Import
         </button>
         <button class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm" @click="HandleAddWarehouse">
@@ -53,18 +53,23 @@
     </div>
     <BasePagination v-show="!loadingTable" :field="paginationVal" @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange" />
+    <ImportDialog v-show="isOpenDialogImport" :isOpenDialogImport.sync="isOpenDialogImport">
+    </ImportDialog>
+    {{ isOpenDialogImport }}
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import ImportDialog from "../../components/OverrideDialog/ImportDialog.vue";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import LoadingPage from '@/components/Cards/LoadingPage'
 export default {
-  components: { BaseSearch, BasePagination, LoadingPage },
+  components: { BaseSearch, BasePagination, LoadingPage, ImportDialog },
   data() {
     return {
+      isOpenDialogImport: false,
       timer: 0,
       search: {
         value: '',
@@ -87,6 +92,9 @@ export default {
   computed: {
   },
   methods: {
+    HandleImportWarehouse() {
+      this.isOpenDialogImport = true;
+    },
     replaceFromEnd(string1, string2) {
       return string1.substr(0, string1.length - string2.length) + string2;
     },
