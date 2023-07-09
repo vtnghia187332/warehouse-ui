@@ -419,12 +419,22 @@ export default {
           headers: { "Access-Control-Allow-Origin": "*" },
           data: warehouseDetail,
         });
+        this.$message({
+          showClose: true,
+          message: 'Updated successfully',
+          type: 'success'
+        });
       } else {
         axios({
           method: 'post',
           url: 'http://localhost:9090/api/v1/warehouse',
           headers: { "Access-Control-Allow-Origin": "*" },
           data: warehouseDetail,
+        });
+        this.$message({
+          showClose: true,
+          message: 'Created successfully',
+          type: 'success'
         });
       }
       this.$router.push({ name: 'warehouse-list' })

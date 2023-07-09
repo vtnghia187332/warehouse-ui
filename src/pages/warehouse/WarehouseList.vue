@@ -87,6 +87,9 @@ export default {
   computed: {
   },
   methods: {
+    replaceFromEnd(string1, string2) {
+      return string1.substr(0, string1.length - string2.length) + string2;
+    },
     getBaseSearchVal(param) {
       // clears the timer on a call so there is always x seconds in between calls
       clearTimeout(this.timer);
