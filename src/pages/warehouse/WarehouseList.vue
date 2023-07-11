@@ -60,13 +60,17 @@
 </template>
 
 <script>
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
 import axios from "axios";
 import ImportDialog from "../../components/OverrideDialog/ImportDialog.vue";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import LoadingPage from '@/components/Cards/LoadingPage'
 export default {
-  components: { BaseSearch, BasePagination, LoadingPage, ImportDialog },
+  components: {
+    BaseSearch, BasePagination, LoadingPage, ImportDialog, ValidationObserver,
+    ValidationProvider
+  },
   data() {
     return {
       isOpenDialogImport: false,
