@@ -26,7 +26,7 @@
       <el-table :data="warehouses" style="width: 100%" @row-dblclick="goToDetailWarehouse" height="776">
         <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
           <template slot-scope="scope">
-            {{ scope.row.warehouseId }}
+            {{ replaceFromEnd('WH-00000000', scope.row.warehouseId) }}
           </template>
         </el-table-column>
         <el-table-column prop="createdAt" label="Create Date" width="250">
@@ -100,7 +100,12 @@ export default {
       this.isOpenDialogImport = true;
     },
     replaceFromEnd(string1, string2) {
-      return string1.substr(0, string1.length - string2.length) + string2;
+      if (string2 != null) {
+        return string1.substr(0, string1.length - string2.toString().length) + string2.toString();
+      }
+      else {
+        return null;
+      }
     },
     getBaseSearchVal(param) {
       // clears the timer on a call so there is always x seconds in between calls
@@ -126,7 +131,6 @@ export default {
     handleSizeChange(param) {
       this.paginationPage.pageNo = 1;
       this.paginationPage.pageSize = param;
-      console.log(this.paginationPage);
       this.getWarehouses();
     },
     handleCurrentChange(param) {

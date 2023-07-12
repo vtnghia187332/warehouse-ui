@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <ValidationObserver ref="observer">
     <loading-page v-show="loadingPageDetail"></loading-page>
     <div v-show="!loadingPageDetail" class="bg-page-background overflow-y-auto w-full py-4">
       <el-row :gutter="20" class="flex gap-x-4 detail w-full">
@@ -191,7 +191,7 @@
         </el-col>
       </el-row>
     </div>
-  </div>
+  </ValidationObserver>
 </template>
 
 <script>
@@ -206,9 +206,10 @@ import BaseKeyContact from "../../components/KeyContact/BaseKeyContact.vue";
 import moment from 'moment';
 import AssignedModuleVue from '../../components/AssignedModule.vue';
 import LoadingPage from '../../components/Cards/LoadingPage.vue';
+import { ValidationObserver } from 'vee-validate';
 
 export default {
-  components: { FormCard, BaseInput, BaseTextArea, Button, BaseSelection, BaseDialog, BaseKeyContact, AssignedModuleVue, LoadingPage },
+  components: { FormCard, BaseInput, BaseTextArea, Button, BaseSelection, BaseDialog, BaseKeyContact, AssignedModuleVue, LoadingPage, ValidationObserver },
   data() {
     return {
       loadingPageDetail: false,
@@ -263,6 +264,8 @@ export default {
       warehouse: {
         code: {
           id: "warehouseCode",
+          name: "warehouseCode",
+          rules: "required",
           classes: "w-full col-span-6",
           type: "text",
           label: "Code",
@@ -274,6 +277,8 @@ export default {
         },
         name: {
           id: "warehouseName",
+          name: "warehouseName",
+          rules: "required",
           classes: "col-span-12 !h-[64px]",
           type: "text",
           label: "Name",
@@ -285,6 +290,8 @@ export default {
         },
         shortName: {
           id: "warehouseShortName",
+          name: "warehouseShortName",
+          rules: "required",
           classes: "col-span-12",
           type: "text",
           label: "Short Name",
@@ -295,6 +302,8 @@ export default {
         },
         description: {
           id: "warehouseDescription",
+          name: "warehouseDescription",
+          rules: "required",
           classes: "col-span-12 !h-[64px]",
           type: "text",
           label: "Description",
@@ -308,6 +317,8 @@ export default {
       address: {
         addressDes: {
           id: "addressDes",
+          name: "addressDes",
+          rules: "required",
           classes: "w-full",
           type: "text",
           label: "Address",
@@ -319,6 +330,8 @@ export default {
         },
         country: {
           id: "country",
+          name: "country",
+          rules: "required",
           classes: "w-full",
           isRequired: 'true',
           placeholder: "Select Country",
@@ -329,6 +342,8 @@ export default {
         },
         city: {
           id: "city",
+          name: "city",
+          rules: "required",
           classes: "w-full",
           isRequired: 'true',
           placeholder: "Select City",
@@ -339,6 +354,8 @@ export default {
         },
         district: {
           id: "district",
+          name: "district",
+          rules: "required",
           classes: "w-full",
           isRequired: 'true',
           placeholder: "Select District",
@@ -349,6 +366,8 @@ export default {
         },
         subdistrict: {
           id: "subdistrict",
+          name: "subdistrict",
+          rules: "required",
           classes: "w-full",
           isRequired: 'true',
           placeholder: "Select Sub District",

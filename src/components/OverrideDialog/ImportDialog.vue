@@ -25,7 +25,6 @@ export default {
     methods: {
         handleCloseDialog() {
             this.$emit('update:isOpenDialogImport', false);
-            console.log(this.isOpenDialogImport, "b");
         }
     },
 }
