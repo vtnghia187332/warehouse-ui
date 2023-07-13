@@ -55,7 +55,6 @@
       @handleCurrentChange="handleCurrentChange" />
     <ImportDialog v-show="isOpenDialogImport" :isOpenDialogImport.sync="isOpenDialogImport">
     </ImportDialog>
-    {{ isOpenDialogImport }}
   </div>
 </template>
 
