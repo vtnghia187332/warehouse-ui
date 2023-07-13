@@ -90,8 +90,11 @@
                   </div>
                 </el-tab-pane>
                 <el-tab-pane class="relative" label="Holiday, Special Day-Off" name="second">
-                  <el-table :data="specialDayOff" style="width: 100%" @row-dblclick="handleSpecialDayDetail"
+                  <el-table height="448" :data="specialDayOff" style="width: 100%" @row-dblclick="handleSpecialDayDetail"
                     :row-class-name="specialTimeOn">
+                    <div slot="append" v-if="specialDayOff.length == '0'">
+                      <el-empty :image-size="200"></el-empty>
+                    </div>
                     <el-table-column label="STT" type="index" :index="indexMethod">
                     </el-table-column>
                     <el-table-column label="Date" prop="date">
@@ -123,8 +126,12 @@
                   </el-table>
                 </el-tab-pane>
                 <el-tab-pane label="Special Day-On" name="third">
-                  <el-table :data="specialDayOn" style="width: 100%" @row-dblclick="handleSpecialDayDetail"
+                  <el-table height="448" :data="specialDayOn" style="width: 100%" @row-dblclick="handleSpecialDayDetail"
                     :row-class-name="specialTimeOn">
+                    <div slot="append" v-if="specialDayOn.length == '0'">
+                      <el-empty :image-size="200"></el-empty>
+                    </div>
+
                     <el-table-column label="STT" type="index" :index="indexMethod">
                     </el-table-column>
                     <el-table-column label="Date" prop="date">
