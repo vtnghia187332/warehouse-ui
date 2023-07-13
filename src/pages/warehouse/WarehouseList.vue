@@ -24,6 +24,11 @@
     <LoadingPage v-show="loadingTable"></LoadingPage>
     <div class="table_style px-2" v-show="!loadingTable">
       <el-table :data="warehouses" style="width: 100%" @row-dblclick="goToDetailWarehouse" height="776">
+
+        <div slot="append" v-if="warehouses.length == '0'">
+          <el-empty :image-size="300"></el-empty>
+        </div>
+
         <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
           <template slot-scope="scope">
             {{ replaceFromEnd('WH-00000000', scope.row.warehouseId) }}
@@ -150,15 +155,15 @@ export default {
           }
         },)
         .then(function (response) {
-          me.warehouses = response.data.items.content;
-          me.paginationVal = {
-            currentPage: response.data.items.pageNum,
-            pageSizeList: [10, 20, 30, 50, 100],
-            currentPage: response.data.items.number + 1,
-            pageSizeval: response.data.items.size,
-            total: response.data.items.totalElements,
-          },
-            me.loadingTable = false;
+          // me.warehouses = response.data.items.content;
+          // me.paginationVal = {
+          //   currentPage: response.data.items.pageNum,
+          //   pageSizeList: [10, 20, 30, 50, 100],
+          //   currentPage: response.data.items.number + 1,
+          //   pageSizeval: response.data.items.size,
+          //   total: response.data.items.totalElements,
+          // },
+          me.loadingTable = false;
         });
     }
 
@@ -177,6 +182,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.el-table__empty-text {
+  display: none !important;
+}
+
 .end-right {
   display: flex;
   justify-content: end;

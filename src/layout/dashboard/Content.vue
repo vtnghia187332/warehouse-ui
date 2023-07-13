@@ -17,11 +17,22 @@ export default {};
   transition: opacity 0.1s;
 }
 
+.el-table__empty-block {
+  display: none !important;
+}
+
+.el-empty__description {
+  display: none !important;
+}
+
 .fade-enter,
-  .fade-leave-to
-  /* .fade-leave-active in <2.1.8 */ {
+.fade-leave-to
+
+/* .fade-leave-active in <2.1.8 */
+  {
   opacity: 0;
 }
+
 .container-fluid {
   padding-left: 0 !important;
   padding-right: 0 !important;
