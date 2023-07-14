@@ -12,6 +12,7 @@ import Typography from "@/pages/Typography.vue";
 import TableList from "@/pages/TableList.vue";
 import WarehouseList from "@/pages/warehouse/WarehouseList.vue";
 import WarehouseDetail from "@/pages/warehouse/WarehouseDetail.vue";
+import WarehouseHistory from '@/pages/warehouse/WarehouseHistory';
 
 const routes = [
   {
@@ -63,6 +64,11 @@ const routes = [
         path: "/warehouse-detail/:code",
         name: "warehouse-detail",
         component: WarehouseDetail,
+      },
+      {
+        path: "warehouse-history",
+        name: "warehouse-history",
+        component: WarehouseHistory,
       },
     ],
   },
