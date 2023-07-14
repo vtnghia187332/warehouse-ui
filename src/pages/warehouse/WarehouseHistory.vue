@@ -32,6 +32,12 @@
                 </el-table-column>
                 <el-table-column prop="addressDes" label="Warehouse Address" width="300">
                 </el-table-column>
+                <el-table-column fixed="right" label="Operations" width="100">
+                    <template slot-scope="scope">
+                        <el-button @click="handleRestoreWarehouse(scope.row)" type="text" size="small"><i
+                                class="el-icon-document-copy text-2xl"></i></el-button>
+                    </template>
+                </el-table-column>
             </el-table>
         </div>
         <BasePagination v-show="!loadingTable" :field="paginationVal" @handleSizeChange="handleSizeChange"
@@ -90,6 +96,9 @@ export default {
             else {
                 return null;
             }
+        },
+        handleRestoreWarehouse() {
+            console.log(data, "data to restore");
         },
         getHistoryWarehouses() {
             var me = this;

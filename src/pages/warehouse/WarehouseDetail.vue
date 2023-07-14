@@ -394,20 +394,6 @@ export default {
   },
   methods: {
     handleSubmit() {
-      // Object.keys(this.warehouse).forEach((key) => {
-      //   if (this.warehouse[key].value == "") {
-      //     this.warehouse[key].error = this.warehouse[key].label.concat(" is not empty");
-      //   } else {
-      //     this.warehouse[key].error = "";
-      //   }
-      // });
-      // Object.keys(this.address).forEach((key) => {
-      //   if (this.address[key].value == "") {
-      //     this.address[key].error = this.address[key].label.concat(" is not empty");
-      //   } else {
-      //     this.address[key].error = "";
-      //   }
-      // });
       const keyContactReqs = this.$refs["key-contact"].getDataKeyContacts();
       this.specialDayOn.forEach(object => {
         object.specialStartDay = object.time[0];
@@ -569,6 +555,9 @@ export default {
         })
         .catch(err => console.log(err));
     },
+    initData(data){
+      console.log(data);
+    }
   },
   mounted() {
     this.getWarehouseDetail();

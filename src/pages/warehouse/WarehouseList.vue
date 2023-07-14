@@ -49,9 +49,9 @@
         </el-table-column>
         <el-table-column fixed="right" label="Operations" width="100">
           <template slot-scope="scope">
-            <el-button @click="handeViewDetail(scope.row)" type="text" size="small"><i
-                class="el-icon-document-copy text-2xl"></i></el-button>
             <el-button @click="handeDuplicateDetail(scope.row)" type="text" size="small"><i
+                class="el-icon-document-copy text-2xl"></i></el-button>
+            <el-button @click="handeViewDetail(scope.row)" type="text" size="small"><i
                 class="el-icon-edit-outline text-2xl"></i></el-button>
           </template>
         </el-table-column>
@@ -134,7 +134,7 @@ export default {
       this.$router.push({ path: `/warehouse-detail/${row.warehouseId}` });
     },
     handeDuplicateDetail(row) {
-      //duplicated row to insert
+      this.$router.push({ name: "warehouse-detail" });
     },
     handleSizeChange(param) {
       this.paginationPage.pageNo = 1;
