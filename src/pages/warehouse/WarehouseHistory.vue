@@ -97,8 +97,19 @@ export default {
                 return null;
             }
         },
-        handleRestoreWarehouse() {
-            console.log(data, "data to restore");
+        handleRestoreWarehouse(data) {
+            axios({
+                method: 'post',
+                url: 'http://localhost:9090/api/v1/warehouse/restore',
+                headers: { "Access-Control-Allow-Origin": "*" },
+                params: { warehouseId: data.id },
+            });
+            this.$message({
+                showClose: true,
+                message: 'Restored successfully',
+                type: 'success'
+            });
+            this.getHistoryWarehouses();
         },
         getHistoryWarehouses() {
             var me = this;
@@ -114,7 +125,6 @@ export default {
                     }
                 },)
                 .then(function (response) {
-                    console.log(response, "response");
                     me.warehouses = response.data.items.content;
                     me.paginationVal = {
                         currentPage: response.data.items.pageNum,
@@ -131,7 +141,7 @@ export default {
         this.paginationPage = {
             pageNo: 1,
             pageSize: 50,
-            sorting: 'createdAt, editedAt',
+            sorting: 'editedAt',
             orderBy: 'DESC',
         },
             this.search.value = '';
