@@ -2,6 +2,9 @@
     <div class="import-dlg">
         <el-dialog :append-to-body="true" title="Import Warehouse" :before-close="handleCloseDialog"
             :visible="isOpenDialogImport">
+            <div class="flex">
+                <el-button class="mb-2 ml-auto" @click="downloadFileTemplate">Download Template</el-button>
+            </div>
             <el-upload :action-upload="false" class="upload-demo" :before-upload="handleUploadBefore" :auto-upload="false"
                 :on-change="handleChange" drag action="https://jsonplaceholder.typicode.com/posts/" multiple>
                 <i class="el-icon-upload"></i>
@@ -81,6 +84,10 @@ export default {
 .import-dlg .el-dialog {
     width: 934px !important;
     margin-top: 15vh !important;
+}
+
+.import-dlg .el-dialog__body {
+    margin-top: -20px;
 }
 
 .el-upload-dragger {

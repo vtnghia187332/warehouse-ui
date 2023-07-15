@@ -39,6 +39,11 @@
         </el-table-column>
         <el-table-column prop="editedAt" label="Updated Date" width="250">
         </el-table-column>
+        <el-table-column prop="warehouseChainInfo" label="Warehouse Chain" width="300">
+          <template slot-scope="scope">
+            {{ scope.row.warehouseChainInfo.name }}
+          </template>
+        </el-table-column>
         <el-table-column prop="code" label="Warehouse Code" width="300">
         </el-table-column>
         <el-table-column prop="name" label="Warehouse Name" width="300">
@@ -46,6 +51,31 @@
         <el-table-column prop="shortName" label="Warehouse Short Name" width="300">
         </el-table-column>
         <el-table-column prop="addressDes" label="Warehouse Address" width="300">
+        </el-table-column>
+        <el-table-column prop="keyContactVos" label="Contact Title" width="300">
+          <template slot-scope="scope">
+            {{ scope.row.keyContactVos[0].title }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="keyContactVos" label="Contact First Name" width="300">
+          <template slot-scope="scope">
+            {{ scope.row.keyContactVos[0].firstName }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="keyContactVos" label="Contact Last Name" width="300">
+          <template slot-scope="scope">
+            {{ scope.row.keyContactVos[0].lastName }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="keyContactVos" label="Contact Email" width="300">
+          <template slot-scope="scope">
+            {{ scope.row.keyContactVos[0].email }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="keyContactVos" label="Contact Mobile Phone" width="300">
+          <template slot-scope="scope">
+            {{ scope.row.keyContactVos[0].mobilePhone }}
+          </template>
         </el-table-column>
         <el-table-column fixed="right" label="Operations" width="100">
           <template slot-scope="scope">
