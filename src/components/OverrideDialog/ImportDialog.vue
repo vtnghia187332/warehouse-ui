@@ -37,6 +37,9 @@ export default {
         }
     },
     methods: {
+        downloadFileTemplate() {
+
+        },
         handleChange(file) {
             this.dataImporting = file.raw;
         },
