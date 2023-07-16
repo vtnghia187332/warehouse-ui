@@ -47,6 +47,7 @@ export default {
     },
     methods: {
         handleErrorFile(data) {
+            this.$emit('update:isOpenDialogImport', false);
             this.isOpenDialogErr = true;
             this.$refs["import-dialog-data"].initDataErr(data);
         },
