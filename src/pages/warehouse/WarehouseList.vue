@@ -9,6 +9,10 @@
       </div>
       <div>
         <button class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm "
+          @click="testFunc">
+          <i class="el-icon-files font-bold"></i> Delete
+        </button>
+        <button class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm "
           @click="goWarehouseHistoryPage">
           <i class="el-icon-files font-bold"></i> History
         </button>
@@ -91,6 +95,8 @@
       @handleCurrentChange="handleCurrentChange" />
     <ImportDialog v-show="isOpenDialogImport" :isOpenDialogImport.sync="isOpenDialogImport">
     </ImportDialog>
+    <ImportDialogError v-show="isOpenDialogTest" :isOpenDialogImport.sync="isOpenDialogTest" />
+    <ImportDialogOverride />
   </div>
 </template>
 
@@ -100,14 +106,18 @@ import axios from "axios";
 import ImportDialog from "../../components/OverrideDialog/ImportDialog.vue";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
-import LoadingPage from '@/components/Cards/LoadingPage'
+import LoadingPage from '@/components/Cards/LoadingPage';
+import ImportDialogError from "../../components/OverrideDialog/ImportDialogError.vue";
+import ImportDialogOverride from "../../components/OverrideDialog/ImportDialogOverride.vue";
+
 export default {
   components: {
-    BaseSearch, BasePagination, LoadingPage, ImportDialog, ValidationObserver,
+    BaseSearch, BasePagination, LoadingPage, ImportDialog, ValidationObserver, ImportDialogError, ImportDialogOverride,
     ValidationProvider
   },
   data() {
     return {
+      isOpenDialogTest: false,
       isOpenDialogImport: false,
       timer: 0,
       search: {
@@ -131,6 +141,9 @@ export default {
   computed: {
   },
   methods: {
+    testFunc() {
+      this.isOpenDialogTest = true;
+    },
     goWarehouseHistoryPage() {
       this.$router.push({ name: "warehouse-history" });
     },
