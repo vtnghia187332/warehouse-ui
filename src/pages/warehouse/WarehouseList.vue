@@ -13,10 +13,6 @@
           <i class="el-icon-files font-bold"></i> Delete
         </button>
         <button class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm "
-          @click="testFunc12">
-          <i class="el-icon-files font-bold"></i> Check fuc
-        </button>
-        <button class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm "
           @click="goWarehouseHistoryPage">
           <i class="el-icon-files font-bold"></i> History
         </button>
@@ -97,8 +93,6 @@
       @handleCurrentChange="handleCurrentChange" />
     <ImportDialog v-show="isOpenDialogImport" :isOpenDialogImport.sync="isOpenDialogImport">
     </ImportDialog>
-    <ImportDialogError v-show="isOpenDialogTest" :isOpenDialogImport.sync="isOpenDialogTest" />
-    <ImportDialogOverride v-show="isOpenDialogTest12" :isOpenDialogImport.sync="isOpenDialogTest12" />
   </div>
 </template>
 
@@ -120,7 +114,6 @@ export default {
   data() {
     return {
       isOpenDialogTest: false,
-      isOpenDialogTest12: false,
       isOpenDialogImport: false,
       timer: 0,
       search: {
@@ -145,10 +138,6 @@ export default {
   },
   methods: {
     testFunc() {
-      this.isOpenDialogTest = true;
-    },
-    testFunc12(){
-      this.isOpenDialogTest12 = true;
     },
     goWarehouseHistoryPage() {
       this.$router.push({ name: "warehouse-history" });

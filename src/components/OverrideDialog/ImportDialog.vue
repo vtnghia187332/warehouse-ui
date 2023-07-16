@@ -19,7 +19,9 @@
                 </div>
             </span>
         </el-dialog>
-        <ImportDialogError ref="import-dialog-data" v-show="isOpenDialogErr" :isOpenDialogImport.sync="isOpenDialogErr" />
+
+        <ImportDialogError ref="import-dialog-data" v-show="isOpenDialogErr"
+            :isOpenDialogImportErr.sync="isOpenDialogErr" />
         <ImportDialogOverride />
     </div>
 </template>
@@ -75,8 +77,11 @@ export default {
                     me.handleErrorFile(response);
                 })
                 .catch(function (response) {
-                    //handle error
-                    console.log(response);
+                    me.$message({
+                        showClose: true,
+                        message: response.response.data.message,
+                        type: 'error'
+                    });
                 });
         },
     },
