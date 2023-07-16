@@ -555,8 +555,7 @@ export default {
         })
         .catch(err => console.log(err));
     },
-    initData(data){
-      console.log(data);
+    initData(data) {
     }
   },
   mounted() {

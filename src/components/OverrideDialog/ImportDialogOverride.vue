@@ -15,9 +15,12 @@
                 <LoadingPage v-show="loadingTable"></LoadingPage>
                 <div class="table_style px-2" v-show="!loadingTable">
                     <el-table :data="warehousesOverrided" style="width: 100%" height="400">
-                        <div slot="append" v-if="warehousesOverrided.length == '0'">
+                        <div slot="append" v-if="warehousesOverrided.length == '0'"
+                            @selection-change="handleSelectionChange">
                             <el-empty :image-size="250"></el-empty>
                         </div>
+                        <el-table-column type="selection" width="55">
+                        </el-table-column>
                         <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
                             <template slot-scope="scope">
                                 {{ replaceFromEnd('WH-00000000', scope.row.warehouseId) }}
@@ -84,6 +87,9 @@ export default {
         }
     },
     methods: {
+        handleSelectionChange(val) {
+            this.multipleSelection = val;
+        },
         handleSizeChange(param) {
             this.paginationPage.pageNo = 1;
             this.paginationPage.pageSize = param;

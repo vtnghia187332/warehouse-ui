@@ -19,15 +19,24 @@
                 </div>
             </span>
         </el-dialog>
-        <div>hello</div>
+        <ImportDialogError ref="import-dialog-data" v-show="isOpenDialogErr" :isOpenDialogImport.sync="isOpenDialogErr" />
+        <ImportDialogOverride />
     </div>
 </template>
 <script>
 import axios from "axios";
+import ImportDialogError from "./ImportDialogError.vue";
+import ImportDialogOverride from "./ImportDialogOverride.vue";
 
 export default {
+    components: {
+        ImportDialogError, ImportDialogOverride
+    },
     data() {
         return {
+            isOpenDialogErr: false,
+
+            importOverride: {},
             dataImporting: null,
         }
     },
@@ -37,6 +46,10 @@ export default {
         }
     },
     methods: {
+        handleErrorFile(data) {
+            this.isOpenDialogErr = true;
+            this.$refs["import-dialog-data"].initDataErr(data);
+        },
         downloadFileTemplate() {
 
         },
@@ -47,8 +60,9 @@ export default {
             this.$emit('update:isOpenDialogImport', false);
         },
         async handleUploadBefore() {
+            var me = this;
             var bodyFormData = new FormData();
-            bodyFormData.append('uploadFiles', this.dataImporting);
+            bodyFormData.append('uploadFiles', me.dataImporting);
             await axios({
                 method: "post",
                 url: "http://localhost:9090/api/v1/warehouse/import",
@@ -57,8 +71,7 @@ export default {
                 headers: { "Access-Control-Allow-Origin": "*" },
             })
                 .then(function (response) {
-                    //handle success
-                    console.log(response);
+                    me.handleErrorFile(response);
                 })
                 .catch(function (response) {
                     //handle error

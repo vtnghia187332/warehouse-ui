@@ -3,15 +3,17 @@
         <el-dialog :append-to-body="true" title="Import Warehouse" :before-close="handleCloseDialog"
             :visible="isOpenDialogImport">
             <div class="flex justify-center">
-                <i v-show="false" class="el-icon-success text-7xl text-green-600"></i>
-                <i v-show="true" class="el-icon-error text-7xl text-red-600"></i>
+                <i v-if="this.importError.numberSuccessItem.numItems > 0"
+                    class="el-icon-success text-7xl text-green-600"></i>
+                <i v-else class="el-icon-error text-7xl text-red-600"></i>
             </div>
             <div class="flex justify-center mt-4 mb-4">
                 <h2 v-show="false" class="text-2xl">Import successfully</h2>
                 <h2 v-show="true" class="text-2xl">Import unsuccessfully</h2>
             </div>
             <div class="flex justify-center mb-4">
-                <h2>file have been uploaded and information has been update</h2>
+                <h2><span class="font-bold">{{ importError.fileName.join() }}</span> have been uploaded and information has
+                    been update</h2>
             </div>
             <div v-show="false" class="h-16 bg-gray-100 flex flex-col flex-grow place-content-center pl-3 rounded-sm">
                 <div class="mx-auto w-full">
@@ -29,7 +31,8 @@
                         <span class="ml-1 mr-1 text-red-400">1</span>
                         <span>item with an issue</span>
                     </div>
-                    <div class="text-red-300 font-medium text-xs">Item with an issue will not be uploaded and save to servier. Please
+                    <div class="text-red-300 font-medium text-xs">Item with an issue will not be uploaded and save to
+                        servier. Please
                         solve these issues, and reupload file</div>
                 </div>
             </div>
@@ -49,8 +52,26 @@ import axios from "axios";
 export default {
     data() {
         return {
-            dataImporting: null,
+            errorImporing: {},
+            importError: {
+                fileName: [],
+                numberErrItem: {
+                    numItems: 0,
+                    errorId: 0,
+                },
+                numberSuccessItem: {
+                    numItems: 0,
+                    errorId: 0,
+                },
+                numberOverrideItem: {
+                    numItems: 0,
+                    errorId: 0,
+                },
+            },
         }
+    },
+    watch: {
+
     },
     props: {
         isOpenDialogImport: {
@@ -64,14 +85,26 @@ export default {
         downloadFileTemplate() {
 
         },
-        handleChange(file) {
-            this.dataImporting = file.raw;
-        },
         handleCloseDialog() {
             this.$emit('update:isOpenDialogImport', false);
         },
         reUploadFile() {
-
+        },
+        initDataErr(data) {
+            if (data.data.items.numOfSuccess > 0) {
+                this.importError.numberSuccessItem.numItems = data.data.items.numOfSuccess;
+                this.importError.numberSuccessItem.errorId = data.data.items.successId;
+            }
+            if (data.data.items.numOfFailure > 0) {
+                this.importError.numberErrItem.numItems = data.data.items.numOfFailure;
+                this.importError.numberSuccessItem.errorId = data.data.items.errorId;
+            }
+            if (data.data.items.numOfConfirms > 0) {
+                this.importError.numberOverrideItem.numItems = data.data.items.numOfConfirms;
+                this.importError.numberSuccessItem.errorId = data.data.items.confirmId;
+            }
+            this.importError.fileName = data.data.items.fileNames;
+            console.log(this.importError);
         },
     },
     beforeCreate() {
