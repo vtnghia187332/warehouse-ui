@@ -13,6 +13,10 @@
           <i class="el-icon-files font-bold"></i> Delete
         </button>
         <button class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm "
+          @click="testFunc12">
+          <i class="el-icon-files font-bold"></i> Check fuc
+        </button>
+        <button class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm "
           @click="goWarehouseHistoryPage">
           <i class="el-icon-files font-bold"></i> History
         </button>
@@ -29,11 +33,9 @@
     <LoadingPage v-show="loadingTable"></LoadingPage>
     <div class="table_style px-2" v-show="!loadingTable">
       <el-table :data="warehouses" style="width: 100%" @row-dblclick="goToDetailWarehouse" height="776">
-
         <div slot="append" v-if="warehouses.length == '0'">
           <el-empty :image-size="300"></el-empty>
         </div>
-
         <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
           <template slot-scope="scope">
             {{ replaceFromEnd('WH-00000000', scope.row.warehouseId) }}
@@ -96,7 +98,7 @@
     <ImportDialog v-show="isOpenDialogImport" :isOpenDialogImport.sync="isOpenDialogImport">
     </ImportDialog>
     <ImportDialogError v-show="isOpenDialogTest" :isOpenDialogImport.sync="isOpenDialogTest" />
-    <ImportDialogOverride />
+    <ImportDialogOverride v-show="isOpenDialogTest12" :isOpenDialogImport.sync="isOpenDialogTest12" />
   </div>
 </template>
 
@@ -118,6 +120,7 @@ export default {
   data() {
     return {
       isOpenDialogTest: false,
+      isOpenDialogTest12: false,
       isOpenDialogImport: false,
       timer: 0,
       search: {
@@ -143,6 +146,9 @@ export default {
   methods: {
     testFunc() {
       this.isOpenDialogTest = true;
+    },
+    testFunc12(){
+      this.isOpenDialogTest12 = true;
     },
     goWarehouseHistoryPage() {
       this.$router.push({ name: "warehouse-history" });
