@@ -45,7 +45,6 @@
                 </div>
             </span>
         </el-dialog>
-        <div>hello</div>
     </div>
 </template>
 <script>
@@ -90,9 +89,23 @@ export default {
         handleCloseDialog() {
             this.$emit('update:isOpenDialogImportErr', false);
         },
+        handleOpenDialog() {
+            this.$emit('update:isOpenDialogImportErr', true);
+        },
         reUploadFile() {
+            this.$emit('handleOpenDialog');
+        },
+        clearState() {
+            this.importError.numberSuccessItem.numItems = 0;
+            this.importError.numberSuccessItem.errorId = 0;
+            this.importError.numberErrItem.numItems = 0;
+            this.importError.numberSuccessItem.errorId = 0;
+            this.importError.numberOverrideItem.numItems = 0;
+            this.importError.numberSuccessItem.errorId = 0;
+            this.importError.fileName = [];
         },
         initDataErr(data) {
+            this.clearState();
             if (data.data.items.numOfSuccess > 0) {
                 this.importError.numberSuccessItem.numItems = data.data.items.numOfSuccess;
                 this.importError.numberSuccessItem.errorId = data.data.items.successId;

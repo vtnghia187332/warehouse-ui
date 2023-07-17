@@ -5,8 +5,9 @@
             <div class="flex">
                 <el-button class="mb-2 ml-auto" @click="downloadFileTemplate">Download Template</el-button>
             </div>
-            <el-upload :action-upload="false" class="upload-demo" :before-upload="handleUploadBefore" :auto-upload="false"
-                :on-change="handleChange" drag action="https://jsonplaceholder.typicode.com/posts/" multiple>
+            <el-upload ref="upload" :action-upload="false" class="upload-demo" :before-upload="handleUploadBefore"
+                :auto-upload="false" :on-change="handleChange" drag action="https://jsonplaceholder.typicode.com/posts/"
+                multiple>
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text"><b>Click or drag file to this area</b></div>
                 <div class="el-upload__text">Only .xls or .xlsx file format is supported.</div>
@@ -20,9 +21,9 @@
             </span>
         </el-dialog>
 
-        <ImportDialogError ref="import-dialog-data" v-show="isOpenDialogErr"
-            :isOpenDialogImportErr.sync="isOpenDialogErr" />
-        <ImportDialogOverride />
+        <ImportDialogError ref="import-dialog-data" v-show="isOpenDialogErr" :isOpenDialogImportErr.sync="isOpenDialogErr"
+            @handleOpenDialog="handleOpenDialog" />
+        <ImportDialogOverride @handleOpenDialog="handleOpenDialog" />
     </div>
 </template>
 <script>
@@ -62,6 +63,13 @@ export default {
         handleCloseDialog() {
             this.$emit('update:isOpenDialogImport', false);
         },
+        clearStateFile() {
+            this.$refs["upload"].clearFiles();
+            this.dataImporting = null;
+        },
+        handleOpenDialog() {
+            this.$emit('update:isOpenDialogImport', true);
+        },
         async handleUploadBefore() {
             var me = this;
             var bodyFormData = new FormData();
@@ -74,6 +82,7 @@ export default {
                 headers: { "Access-Control-Allow-Origin": "*" },
             })
                 .then(function (response) {
+                    me.clearStateFile();
                     me.handleErrorFile(response);
                 })
                 .catch(function (response) {
@@ -87,6 +96,8 @@ export default {
     },
     beforeCreate() {
         this.$nextTick().then(() => document.body.classList.add('import-dlg'))
+    },
+    mounted() {
     },
 }
 </script>
