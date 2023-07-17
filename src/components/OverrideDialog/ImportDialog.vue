@@ -41,6 +41,13 @@ export default {
 
             importOverride: {},
             dataImporting: null,
+            continuedImportItems: {
+                "successId": null,
+                "errorId": null,
+                "confirmId": null,
+                "ids": [],
+                "fileNames": [],
+            },
         }
     },
     props: {
@@ -83,7 +90,8 @@ export default {
             })
                 .then(function (response) {
                     me.clearStateFile();
-                    me.handleErrorFile(response);
+                    me.handleContinueImport(response);
+                    this.$router.push({ name: 'warehouse-list' })
                 })
                 .catch(function (response) {
                     me.$message({
@@ -93,6 +101,41 @@ export default {
                     });
                 });
         },
+        async handleContinueImport(data) {
+            this.continuedImportItems = {
+                successId: null,
+                errorId: null,
+                confirmId: null,
+                ids: [],
+                fileNames: [],
+            };
+            if (data.data.items.errorId) {
+                this.continuedImportItems.errorId = data.data.items.errorId;
+            };
+            if (data.data.items.successId) {
+                this.continuedImportItems.successId = data.data.items.successId;
+            };
+            if (data.data.items.confirmId) {
+                this.continuedImportItems.confirmId = data.data.items.confirmId;
+            };
+            await axios({
+                method: 'post',
+                url: 'http://localhost:9090/api/v1/warehouse/continue',
+                headers: { "Access-Control-Allow-Origin": "*" },
+                data: this.continuedImportItems,
+            })
+                .then(function (response) {
+                    this.handleErrorFile(data);
+                })
+                .catch(function (response) {
+                    console.log("response", response);
+                    this.$message({
+                        showClose: true,
+                        message: response.response.data.message,
+                        type: 'error'
+                    });
+                });
+        }
     },
     beforeCreate() {
         this.$nextTick().then(() => document.body.classList.add('import-dlg'))

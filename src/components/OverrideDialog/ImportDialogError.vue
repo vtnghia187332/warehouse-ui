@@ -119,7 +119,6 @@ export default {
                 this.importError.numberSuccessItem.errorId = data.data.items.confirmId;
             }
             this.importError.fileName = data.data.items.fileNames;
-            console.log(this.importError);
         },
     },
     beforeCreate() {
