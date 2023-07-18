@@ -107,7 +107,7 @@ export default {
             val.map(item => {
                 this.multipleSelection.push(item.id);
             })
-            console.log(this.multipleSelection);
+            console.log();
         },
         handleSizeChange(param) {
             this.paginationPage.pageNo = 1;
@@ -127,19 +127,8 @@ export default {
         handleCloseDialog() {
             this.$emit('update:isOpenDialogConfirmed', false);
         },
-        async handleContinueImport() {
-            await axios({
-                method: 'post',
-                url: 'http://localhost:9090/api/v1/warehouse/continue',
-                headers: { "Access-Control-Allow-Origin": "*" },
-                data: this.continuedImportItems,
-            })
-                .then(function (response) {
-                    this.handleErrorFile(data);
-                })
-                .catch(function (response) {
-
-                });
+        handleContinueImport() {
+            this.$emit('handleContinueImport', this.multipleSelection);
         },
         initData(data) {
             this.getWarehouseConfirm(data);

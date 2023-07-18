@@ -24,7 +24,8 @@
         <ImportDialogError ref="import-dialog-data" v-show="isOpenDialogErr" :isOpenDialogImportErr.sync="isOpenDialogErr"
             @handleOpenDialog="handleOpenDialog" />
         <ImportDialogOverride ref="import-confirmed-dialog" v-show="isOpenDialogConfirmed"
-            :isOpenDialogConfirmed.sync="isOpenDialogConfirmed" @handleOpenDialog="handleOpenDialog" />
+            :isOpenDialogConfirmed.sync="isOpenDialogConfirmed" @handleOpenDialog="handleOpenDialog"
+            @handleContinueOvvImport="handleContinueOvvImport" />
     </div>
 </template>
 <script>
@@ -79,6 +80,11 @@ export default {
         clearStateFile() {
             this.$refs["upload"].clearFiles();
             this.dataImporting = null;
+        },
+        handleContinueOvvImport(data) {
+            if (data) {
+
+            }
         },
         handleOpenDialog() {
             this.isOpenDialogConfirmed = false;
