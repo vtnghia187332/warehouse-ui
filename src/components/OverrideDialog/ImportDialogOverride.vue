@@ -1,7 +1,7 @@
 <template>
     <div class="import-dlg">
         <el-dialog :append-to-body="true" title="Import Warehouse" :before-close="handleCloseDialog"
-            :visible="isOpenDialogImport">
+            :visible="isOpenDialogConfirmed">
             <div class="flex justify-center mt-4 mb-4">
                 <div class="text-2xl">Select <span> Warehouse you want to <span class="underline">override</span></span>
                 </div>
@@ -14,9 +14,9 @@
                 <BaseSearch :field="search" @get-value="getBaseSearchVal" />
                 <LoadingPage v-show="loadingTable"></LoadingPage>
                 <div class="table_style px-2" v-show="!loadingTable">
-                    <el-table :data="warehousesOverrided" style="width: 100%" height="400">
-                        <div slot="append" v-if="warehousesOverrided.length == '0'"
-                            @selection-change="handleSelectionChange">
+                    <el-table :data="warehousesOverrided" style="width: 100%" @selection-change="handleSelectionChange"
+                        height="400">
+                        <div slot="append" v-if="warehousesOverrided.length == '0'">
                             <el-empty :image-size="250"></el-empty>
                         </div>
                         <el-table-column type="selection" width="55">
@@ -72,6 +72,13 @@ export default {
             warehousesOverrided: [],
             loadingTable: false,
             paginationVal: {},
+            multipleSelection: [],
+            paginationPage: {
+                pageNo: 1,
+                pageSize: 30,
+                sorting: 'createdAt',
+                orderBy: 'DESC',
+            },
             search: {
                 value: '',
                 class: 'w-full'
@@ -79,7 +86,7 @@ export default {
         }
     },
     props: {
-        isOpenDialogImport: {
+        isOpenDialogConfirmed: {
             type: Boolean,
         },
         field: {
@@ -87,8 +94,20 @@ export default {
         }
     },
     methods: {
+        replaceFromEnd(string1, string2) {
+            if (string2 != null) {
+                return string1.substr(0, string1.length - string2.toString().length) + string2.toString();
+            }
+            else {
+                return null;
+            }
+        },
         handleSelectionChange(val) {
-            this.multipleSelection = val;
+            this.multipleSelection = [];
+            val.map(item => {
+                this.multipleSelection.push(item.id);
+            })
+            console.log(this.multipleSelection);
         },
         handleSizeChange(param) {
             this.paginationPage.pageNo = 1;
@@ -106,10 +125,40 @@ export default {
             this.dataImporting = file.raw;
         },
         handleCloseDialog() {
-            this.$emit('update:isOpenDialogImport', false);
+            this.$emit('update:isOpenDialogConfirmed', false);
         },
         handleContinueImport() {
 
+        },
+        initData(data) {
+            this.getWarehouseConfirm(data);
+        },
+        async getWarehouseConfirm(data) {
+            var me = this;
+            me.loadingTable = true;
+            const confirmedId = data;
+            await axios
+                .get("http://localhost:9090/api/v1/warehouse/confirm", {
+                    headers: { "Access-Control-Allow-Origin": "*" }, params: {
+                        searchText: me.search.value,
+                        pageNo: me.paginationPage.pageNo,
+                        pageSize: me.paginationPage.pageSize,
+                        sorting: me.paginationPage.sorting,
+                        orderBy: me.paginationPage.orderBy,
+                        errorId: confirmedId,
+                    }
+                })
+                .then(function (response) {
+                    me.warehousesOverrided = response.data.items.content;
+                    me.paginationVal = {
+                        currentPage: response.data.items.pageNum,
+                        pageSizeList: [10, 20, 30, 50, 100],
+                        currentPage: response.data.items.number + 1,
+                        pageSizeval: response.data.items.size,
+                        total: response.data.items.totalElements,
+                    },
+                        me.loadingTable = false;
+                });
         },
         getBaseSearchVal(param) {
             // clears the timer on a call so there is always x seconds in between calls

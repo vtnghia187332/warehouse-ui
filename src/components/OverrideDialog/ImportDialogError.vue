@@ -89,9 +89,7 @@ export default {
         handleCloseDialog() {
             this.$emit('update:isOpenDialogImportErr', false);
         },
-        handleOpenDialog() {
-            this.$emit('update:isOpenDialogImportErr', true);
-        },
+       
         reUploadFile() {
             this.$emit('handleOpenDialog');
         },

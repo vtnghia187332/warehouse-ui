@@ -23,7 +23,8 @@
 
         <ImportDialogError ref="import-dialog-data" v-show="isOpenDialogErr" :isOpenDialogImportErr.sync="isOpenDialogErr"
             @handleOpenDialog="handleOpenDialog" />
-        <ImportDialogOverride @handleOpenDialog="handleOpenDialog" />
+        <ImportDialogOverride ref="import-confirmed-dialog" v-show="isOpenDialogConfirmed"
+            :isOpenDialogConfirmed.sync="isOpenDialogConfirmed" @handleOpenDialog="handleOpenDialog" />
     </div>
 </template>
 <script>
@@ -38,8 +39,8 @@ export default {
     data() {
         return {
             isOpenDialogErr: false,
-
             importOverride: {},
+            isOpenDialogConfirmed: false,
             dataImporting: null,
             continuedImportItems: {
                 "successId": null,
@@ -48,6 +49,7 @@ export default {
                 "ids": [],
                 "fileNames": [],
             },
+            confirmedImporedFile: {},
         }
     },
     props: {
@@ -61,8 +63,12 @@ export default {
             this.isOpenDialogErr = true;
             this.$refs["import-dialog-data"].initDataErr(data);
         },
+        handleConfirmedData(data) {
+            this.$emit('update:isOpenDialogImport', false);
+            this.isOpenDialogConfirmed = true;
+            this.$refs["import-confirmed-dialog"].initData(data);
+        },
         downloadFileTemplate() {
-
         },
         handleChange(file) {
             this.dataImporting = file.raw;
@@ -91,7 +97,6 @@ export default {
                 .then(function (response) {
                     me.clearStateFile();
                     me.handleContinueImport(response);
-                    this.$router.push({ name: 'warehouse-list' })
                 })
                 .catch(function (response) {
                     me.$message({
@@ -118,23 +123,23 @@ export default {
             if (data.data.items.confirmId) {
                 this.continuedImportItems.confirmId = data.data.items.confirmId;
             };
-            await axios({
-                method: 'post',
-                url: 'http://localhost:9090/api/v1/warehouse/continue',
-                headers: { "Access-Control-Allow-Origin": "*" },
-                data: this.continuedImportItems,
-            })
-                .then(function (response) {
-                    this.handleErrorFile(data);
+            if (this.continuedImportItems.confirmId) {
+                this.handleConfirmedData(this.continuedImportItems.confirmId);
+            } else {
+                await axios({
+                    method: 'post',
+                    url: 'http://localhost:9090/api/v1/warehouse/continue',
+                    headers: { "Access-Control-Allow-Origin": "*" },
+                    data: this.continuedImportItems,
                 })
-                .catch(function (response) {
-                    console.log("response", response);
-                    this.$message({
-                        showClose: true,
-                        message: response.response.data.message,
-                        type: 'error'
+                    .then(function (response) {
+                        this.handleErrorFile(data);
+                    })
+                    .catch(function (response) {
+
                     });
-                });
+            }
+
         }
     },
     beforeCreate() {
