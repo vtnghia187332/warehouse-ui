@@ -81,6 +81,7 @@ export default {
             this.dataImporting = null;
         },
         handleOpenDialog() {
+            this.isOpenDialogConfirmed = false;
             this.$emit('update:isOpenDialogImport', true);
         },
         async handleUploadBefore() {

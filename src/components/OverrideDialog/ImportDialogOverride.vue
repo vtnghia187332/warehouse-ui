@@ -127,11 +127,27 @@ export default {
         handleCloseDialog() {
             this.$emit('update:isOpenDialogConfirmed', false);
         },
-        handleContinueImport() {
+        async handleContinueImport() {
+            await axios({
+                method: 'post',
+                url: 'http://localhost:9090/api/v1/warehouse/continue',
+                headers: { "Access-Control-Allow-Origin": "*" },
+                data: this.continuedImportItems,
+            })
+                .then(function (response) {
+                    this.handleErrorFile(data);
+                })
+                .catch(function (response) {
 
+                });
         },
         initData(data) {
             this.getWarehouseConfirm(data);
+        },
+        handleErrorFile(data) {
+            this.$emit('handleOpenDialog');
+            this.isOpenDialogErr = true;
+            this.$refs["import-dialog-data"].initDataErr(data);
         },
         async getWarehouseConfirm(data) {
             var me = this;
