@@ -1,11 +1,11 @@
 <template>
     <div class="import-dlg">
-        <el-dialog :append-to-body="true" title="Import Warehouse" :before-close="handleCloseDialog"
-            :visible="isOpenDialogImport">
+        <el-dialog v-show="this.step === 'IMPORTED'" :append-to-body="true" title="Import Warehouse"
+            :before-close="handleCloseDialog" :visible="isOpenDialogImport">
             <div class="flex">
                 <el-button class="mb-2 ml-auto" @click="downloadFileTemplate">Download Template</el-button>
             </div>
-            <el-upload ref="upload" :action-upload="false" class="upload-demo" :before-upload="handleUploadBefore"
+            <el-upload ref="upload" :action-upload="false" class="upload-demo" :on-remove="clearStateFile"
                 :auto-upload="false" :on-change="handleChange" drag action="https://jsonplaceholder.typicode.com/posts/"
                 multiple>
                 <i class="el-icon-upload"></i>
@@ -16,41 +16,167 @@
             <span slot="footer" class="dialog-footer">
                 <div class="flex justify-end border-spacing-1">
                     <el-button @click="handleCloseDialog">Cancel</el-button>
-                    <el-button @click="handleUploadBefore" class="bg-blue-400 text-white">Import</el-button>
+                    <el-button :disabled="!this.dataImporting" @click="handleImportFunc"
+                        class="bg-blue-400 text-white">Import</el-button>
                 </div>
             </span>
         </el-dialog>
 
-        <ImportDialogError ref="import-dialog-data" v-show="isOpenDialogErr" :isOpenDialogImportErr.sync="isOpenDialogErr"
-            @handleOpenDialog="handleOpenDialog" />
-        <ImportDialogOverride ref="import-confirmed-dialog" v-show="isOpenDialogConfirmed"
-            :isOpenDialogConfirmed.sync="isOpenDialogConfirmed" @handleOpenDialog="handleOpenDialog"
-            @handleContinueOvvImport="handleContinueOvvImport" />
+        <el-dialog v-show="this.step === 'CONFIRMED'" :append-to-body="true" title="Import Warehouse"
+            :before-close="handleCloseDialog" :visible="this.step === 'CONFIRMED'">
+            <div class="flex justify-center mt-4 mb-4">
+                <div class="text-2xl">Select <span> Warehouse you want to <span class="underline">override</span></span>
+                </div>
+            </div>
+            <div class="flex justify-center mt-4 mb-4">
+                <div class="text-center w-[403px]">Found 1 item imported Warehouse with the same Code, Name, and Short Name
+                    as the current Warehouse. Select new imported Warehouse you want to override</div>
+            </div>
+            <div class="mt-4 mb-4">
+                <BaseSearch :field="search" @get-value="getBaseSearchVal" />
+                <LoadingPage v-show="loadingTable"></LoadingPage>
+                <div class="table_style px-2" v-show="!loadingTable">
+                    <el-table :data="datasOverrided" style="width: 100%" @selection-change="handleSelectedItemChange"
+                        height="400">
+                        <div slot="append" v-if="datasOverrided.length == '0'">
+                            <el-empty :image-size="250"></el-empty>
+                        </div>
+                        <el-table-column type="selection" width="55">
+                        </el-table-column>
+                        <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
+                            <template slot-scope="scope">
+                                {{ replaceFromEnd('WH-00000000', scope.row.warehouseId) }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="warehouseChainInfo" label="Warehouse Chain" width="300">
+                            <template slot-scope="scope">
+                                {{ scope.row.warehouseChainInfo.name }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="code" label="Warehouse Code" width="300">
+                        </el-table-column>
+                        <el-table-column prop="name" label="Warehouse Name" width="300">
+                        </el-table-column>
+                        <el-table-column prop="shortName" label="Warehouse Short Name" width="300">
+                        </el-table-column>
+                        <el-table-column prop="createdAt" label="Create Date" width="250">
+                        </el-table-column>
+                        <el-table-column prop="editedAt" label="Updated Date" width="250">
+                        </el-table-column>
+                    </el-table>
+                </div>
+                <BasePagination v-show="loadingTable" :field="paginationVal" @handleSizeChange="handleSizeChange"
+                    @handleCurrentChange="handleCurrentChange" />
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <div class="flex justify-end border-spacing-1">
+                    <el-button @click="handleCancelConfirmDlg">Cancel</el-button>
+                    <el-button @click="handleContinueImport" class="bg-blue-400 text-white">Continue</el-button>
+                </div>
+            </span>
+        </el-dialog>
+
+        <el-dialog v-show="this.step === 'ERROR'" :append-to-body="true" title="Import Warehouse"
+            :visible="this.step === 'ERROR'">
+            <div class="flex justify-center">
+                <i v-if="this.importError.numberSuccessItem.numItems > 0"
+                    class="el-icon-success text-7xl text-green-600"></i>
+                <i v-else class="el-icon-error text-7xl text-red-600"></i>
+            </div>
+            <div class="flex justify-center mt-4 mb-4">
+                <h2 v-if="this.importError.numberSuccessItem.numItems > 0" class="text-2xl">Import successfully</h2>
+                <h2 v-else class="text-2xl">Import unsuccessfully</h2>
+            </div>
+            <div class="flex justify-center mb-4">
+                <h2><span class="font-bold">{{ importError.fileName.join() }}</span> have been uploaded and information has
+                    been update</h2>
+            </div>
+            <div v-show="this.importError.numberSuccessItem.numItems > 0"
+                class="h-16 bg-gray-100 flex flex-col flex-grow place-content-center pl-3 rounded-sm">
+                <div class="mx-auto w-full">
+                    <div class="flex items-center">
+                        <i class="el-icon-edit-outline text-lg "></i>
+                        <span class="ml-1 mr-1">{{ this.importError.numberSuccessItem.numItems }}</span>
+                        <span>item have been updated</span>
+                    </div>
+                </div>
+            </div>
+            <div v-show="this.importError.numberErrItem.numItems > 0"
+                class="h-16 bg-gray-100 flex flex-col flex-grow place-content-center pl-3 rounded-sm mt-2">
+                <div class="mx-auto w-full">
+                    <div class="flex items-center">
+                        <i class="el-icon-edit-outline text-lg "></i>
+                        <span class="ml-1 mr-1 text-red-400">{{ this.importError.numberErrItem.numItems }}</span>
+                        <span>item with an issue</span>
+                    </div>
+                    <div class="text-red-300 font-medium text-xs">Item with an issue will not be uploaded and save to
+                        servier. Please
+                        solve these issues, and reupload file</div>
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <div class="flex justify-end border-spacing-1">
+                    <el-button @click="handleCloseDialog">Cancel</el-button>
+                    <el-button @click="reUploadFile" class="bg-blue-400 text-white">Reupload File</el-button>
+                </div>
+            </span>
+        </el-dialog>
+
     </div>
 </template>
 <script>
 import axios from "axios";
-import ImportDialogError from "./ImportDialogError.vue";
-import ImportDialogOverride from "./ImportDialogOverride.vue";
+import BasePagination from './../Pagination/BasePagination.vue';
+import BaseSearch from '@/components/Inputs/BaseSearch';
+import LoadingPage from '@/components/Cards/LoadingPage'
 
 export default {
     components: {
-        ImportDialogError, ImportDialogOverride
+        BasePagination, BaseSearch, LoadingPage
     },
     data() {
         return {
+            importError: {
+                fileName: [],
+                numberErrItem: {
+                    numItems: 0,
+                    errorId: 0,
+                },
+                numberSuccessItem: {
+                    numItems: 0,
+                    errorId: 0,
+                },
+                numberOverrideItem: {
+                    numItems: 0,
+                    errorId: 0,
+                },
+            },
+            search: {
+                value: '',
+                class: 'w-full'
+            },
+            paginationPage: {
+                pageNo: 1,
+                pageSize: 30,
+                sorting: 'createdAt',
+                orderBy: 'DESC',
+            },
+            multipleSelection: [],
             isOpenDialogErr: false,
             importOverride: {},
             isOpenDialogConfirmed: false,
             dataImporting: null,
+            step: 'IMPORTED',
+            loadingTable: false,
+            paginationVal: {},
+            datasOverrided: [],
             continuedImportItems: {
-                "successId": null,
-                "errorId": null,
-                "confirmId": null,
-                "ids": [],
-                "fileNames": [],
+                successId: null,
+                errorId: null,
+                confirmId: null,
+                ids: [],
+                fileNames: [],
             },
-            confirmedImporedFile: {},
         }
     },
     props: {
@@ -59,15 +185,45 @@ export default {
         }
     },
     methods: {
-        handleErrorFile(data) {
-            this.$emit('update:isOpenDialogImport', false);
-            this.isOpenDialogErr = true;
-            this.$refs["import-dialog-data"].initDataErr(data);
+        handleSelectedItemChange(val) {
+            this.multipleSelection = [];
+            val.map(item => {
+                this.multipleSelection.push(item.id);
+            })
         },
-        handleConfirmedData(data) {
-            this.$emit('update:isOpenDialogImport', false);
-            this.isOpenDialogConfirmed = true;
-            this.$refs["import-confirmed-dialog"].initData(data);
+        replaceFromEnd(string1, string2) {
+            if (string2 != null) {
+                return string1.substr(0, string1.length - string2.toString().length) + string2.toString();
+            }
+            else {
+                return null;
+            }
+        },
+        reUploadFile() {
+            this.step = 'IMPORTED',
+                this.clearStateFile();
+        },
+        handleCancelConfirmDlg() {
+            this.step = 'IMPORTED';
+            console.log(this.dataImporting);
+        },
+        handleSizeChange(param) {
+            this.paginationPage.pageNo = 1;
+            this.paginationPage.pageSize = param;
+            this.getDataOverride();
+        },
+        handleCurrentChange(param) {
+            this.paginationPage.pageNo = param;
+            this.getDataOverride();
+        },
+        getBaseSearchVal(param) {
+            // clears the timer on a call so there is always x seconds in between calls
+            clearTimeout(this.timer);
+            // if the timer resets before it hits 150ms it will not run 
+            this.timer = setTimeout(function () {
+                this.search.value = param;
+                this.getDataOverride();
+            }.bind(this), 300);
         },
         downloadFileTemplate() {
         },
@@ -75,22 +231,15 @@ export default {
             this.dataImporting = file.raw;
         },
         handleCloseDialog() {
+            this.clearStateFile();
+            this.step = '';
             this.$emit('update:isOpenDialogImport', false);
         },
         clearStateFile() {
             this.$refs["upload"].clearFiles();
             this.dataImporting = null;
         },
-        handleContinueOvvImport(data) {
-            if (data) {
-
-            }
-        },
-        handleOpenDialog() {
-            this.isOpenDialogConfirmed = false;
-            this.$emit('update:isOpenDialogImport', true);
-        },
-        async handleUploadBefore() {
+        async handleImportFunc() {
             var me = this;
             var bodyFormData = new FormData();
             bodyFormData.append('uploadFiles', me.dataImporting);
@@ -103,7 +252,7 @@ export default {
             })
                 .then(function (response) {
                     me.clearStateFile();
-                    me.handleContinueImport(response);
+                    me.handleAfterImporting(response);
                 })
                 .catch(function (response) {
                     me.$message({
@@ -113,40 +262,98 @@ export default {
                     });
                 });
         },
-        async handleContinueImport(data) {
-            this.continuedImportItems = {
-                successId: null,
-                errorId: null,
-                confirmId: null,
-                ids: [],
-                fileNames: [],
+        async handleAfterImporting(response) {
+            var me = this;
+            me.importError = {
+                fileName: [],
+                numberErrItem: {
+                    numItems: 0,
+                    errorId: 0,
+                },
+                numberSuccessItem: {
+                    numItems: 0,
+                    errorId: 0,
+                },
+                numberOverrideItem: {
+                    numItems: 0,
+                    errorId: 0,
+                },
             };
-            if (data.data.items.errorId) {
-                this.continuedImportItems.errorId = data.data.items.errorId;
+            if (response.data.items.errorId) {
+                me.importError.numberErrItem.errorId = response.data.items.errorId;
+                me.importError.numberErrItem.numItems = response.data.items.numOfFailure;
             };
-            if (data.data.items.successId) {
-                this.continuedImportItems.successId = data.data.items.successId;
+            if (response.data.items.successId) {
+                me.importError.numberSuccessItem.errorId = response.data.items.successId;
+                me.importError.numberSuccessItem.numItems = response.data.items.numOfSuccess;
             };
-            if (data.data.items.confirmId) {
-                this.continuedImportItems.confirmId = data.data.items.confirmId;
+            if (response.data.items.confirmId) {
+                me.importError.numberOverrideItem.errorId = response.data.items.confirmId;
+                me.importError.numberOverrideItem.numItems = response.data.items.numOfConfirms;
             };
-            if (this.continuedImportItems.confirmId) {
-                this.handleConfirmedData(this.continuedImportItems.confirmId);
-            } else {
-                await axios({
-                    method: 'post',
-                    url: 'http://localhost:9090/api/v1/warehouse/continue',
-                    headers: { "Access-Control-Allow-Origin": "*" },
-                    data: this.continuedImportItems,
-                })
-                    .then(function (response) {
-                        this.handleErrorFile(data);
+            if (response.data.items.confirmId) {
+                me.step = 'CONFIRMED';
+                me.loadingTable = true;
+                await axios
+                    .get("http://localhost:9090/api/v1/warehouse/confirm", {
+                        headers: { "Access-Control-Allow-Origin": "*" }, params: {
+                            searchText: me.search.value,
+                            pageNo: me.paginationPage.pageNo,
+                            pageSize: me.paginationPage.pageSize,
+                            sorting: me.paginationPage.sorting,
+                            orderBy: me.paginationPage.orderBy,
+                            errorId: me.importError.numberOverrideItem.errorId,
+                        }
                     })
-                    .catch(function (response) {
+                    .then(function (response) {
+                        me.datasOverrided = response.data.items.content;
+                        me.paginationVal = {
+                            currentPage: response.data.items.pageNum,
+                            pageSizeList: [10, 20, 30, 50, 100],
+                            currentPage: response.data.items.number + 1,
+                            pageSizeval: response.data.items.size,
+                            total: response.data.items.totalElements,
+                        },
+                            me.loadingTable = false;
 
                     });
+            } else {
+                me.step = 'ERROR';
             }
+        },
+        async handleContinueImport(data) {
+            this.clearStateFile();
+            const bodyImport = {
+                successId: this.importError.numberSuccessItem.errorId,
+                errorId: this.importError.numberSuccessItem.errorId,
+                confirmId: this.importError.numberOverrideItem.errorId,
+                ids: this.multipleSelection,
+                fileNames: []
+            };
+            await axios({
+                method: 'post',
+                url: 'http://localhost:9090/api/v1/warehouse/continue',
+                headers: { "Access-Control-Allow-Origin": "*" },
+                data: bodyImport,
+            })
+                .then(function (response) {
+                    if (response.data.items.errorId) {
+                        this.importError.numberErrItem.errorId = response.data.items.errorId;
+                        this.importError.numberErrItem.numItems = response.data.items.numOfFailure;
+                    };
+                    if (response.data.items.successId) {
+                        this.importError.numberSuccessItem.errorId = response.data.items.successId;
+                        this.importError.numberSuccessItem.numItems = response.data.items.numOfSuccess;
+                    };
+                    if (response.data.items.confirmId) {
+                        this.importError.numberOverrideItem.errorId = response.data.items.confirmId;
+                        this.importError.numberOverrideItem.numItems = response.data.items.numOfConfirms;
+                    };
+                    this.step = 'ERROR';
+                })
+                .catch(function (response) {
 
+                });
         }
     },
     beforeCreate() {
@@ -182,5 +389,13 @@ export default {
     width: 895px !important;
     height: 220px !important;
     background: rgba(128, 128, 128, 0.089) !important;
+}
+
+.el-button.is-disabled,
+.el-button.is-disabled:focus,
+.el-button.is-disabled {
+    background: rgba(128, 128, 128, 0.274) !important;
+    color: white !important;
+    font: bold !important;
 }
 </style>
