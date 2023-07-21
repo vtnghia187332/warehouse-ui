@@ -33,9 +33,6 @@
           <el-empty :image-size="300"></el-empty>
         </div>
         <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
-          <template slot-scope="scope">
-            {{ replaceFromEnd('WH-00000000', scope.row.warehouseId) }}
-          </template>
         </el-table-column>
         <el-table-column prop="createdAt" label="Create Date" width="250">
         </el-table-column>
@@ -145,14 +142,6 @@ export default {
     HandleImportWarehouse() {
       this.isOpenDialogImport = true;
     },
-    replaceFromEnd(string1, string2) {
-      if (string2 != null) {
-        return string1.substr(0, string1.length - string2.toString().length) + string2.toString();
-      }
-      else {
-        return null;
-      }
-    },
     getBaseSearchVal(param) {
       // clears the timer on a call so there is always x seconds in between calls
       clearTimeout(this.timer);
@@ -163,7 +152,14 @@ export default {
       }.bind(this), 300);
     },
     HandleAddWarehouse() {
-      this.$router.push({ name: "warehouse-detail" });
+      let data = {
+        id: null,
+        type: "ADD"
+      };
+      this.$router.push({
+        name: "warehouse-detail", //use name for router push
+        params: { data }
+      });
     },
     goToDetailWarehouse(row) {
       let data = {

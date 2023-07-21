@@ -424,7 +424,7 @@ export default {
         warehouseDetail[key + "Id"] = this.address[key].value
         warehouseDetail[key] = this.address[key].value
       })
-      if (this.$route.params.code) {
+      if (this.$route.params.data.type === 'EDIT') {
         axios({
           method: 'put',
           url: 'http://localhost:9090/api/v1/warehouse',
@@ -526,8 +526,7 @@ export default {
     },
     getWarehouseDetail() {
       this.loadingPageDetail = true;
-      console.log(this.$route.params.data, "data");
-      if (this.$route.params.data) {
+      if (this.$route.params.data.id != null) {
         axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.data.id}`, { headers: { "Access-Control-Allow-Origin": "*" } },)
           .then(res => {
             Object.keys(this.warehouse).forEach((key) => {

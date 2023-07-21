@@ -16,13 +16,15 @@
                 </div>
 
                 <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
+                </el-table-column>
+                <el-table-column prop="createdAt" label="Create Date" width="180">
+                </el-table-column>
+                <el-table-column prop="editedAt" label="Updated Date" width="180">
+                </el-table-column>
+                <el-table-column prop="actionType" label="Action" width="100">
                     <template slot-scope="scope">
-                        {{ replaceFromEnd('WH-00000000', scope.row.warehouseId) }}
+                        {{ scope.row.actionType == 0 ? "INSERT" : "UPDATE" }}
                     </template>
-                </el-table-column>
-                <el-table-column prop="createdAt" label="Create Date" width="250">
-                </el-table-column>
-                <el-table-column prop="editedAt" label="Updated Date" width="250">
                 </el-table-column>
                 <el-table-column prop="code" label="Warehouse Code" width="300">
                 </el-table-column>
@@ -32,6 +34,110 @@
                 </el-table-column>
                 <el-table-column prop="addressDes" label="Warehouse Address" width="300">
                 </el-table-column>
+
+                <el-table-column prop="openWorkingHour" label="Monday" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="openWorkingHour" label="Tuesday" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="openWorkingHour" label="Wednesday" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="openWorkingHour" label="Thursday" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="openWorkingHour" label="Friday" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="openWorkingHour" label="Saturday" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="openWorkingHour" label="Sunday" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+
+
+                <el-table-column prop="keyContactVos" label="Contact Title" width="300">
+                    <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[0].title }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="keyContactVos" label="Contact First Name" width="300">
+                    <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[0].firstName }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="keyContactVos" label="Contact Last Name" width="300">
+                    <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[0].lastName }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="keyContactVos" label="Contact Email" width="300">
+                    <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[0].email }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="keyContactVos" label="Contact Mobile Phone" width="300">
+                    <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[0].mobilePhone }}
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="keyContactVos" label="Contact Title 1" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="keyContactVos" label="Contact First Name 1" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="keyContactVos" label="Contact Last Name 1" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="keyContactVos" label="Contact Email 1" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="keyContactVos" label="Contact Mobile Phone 1" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+
+                <el-table-column prop="keyContactVos" label="Contact Title 2" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="keyContactVos" label="Contact First Name 2" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="keyContactVos" label="Contact Last Name 2" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="keyContactVos" label="Contact Email 2" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="keyContactVos" label="Contact Mobile Phone 2" width="300">
+                    <template slot-scope="scope">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="isActive" label="Status" width="100">
+                    <template slot-scope="scope">
+                        {{ scope.row.isActive == 1 ? 'ACTIVE' : 'INACTIVE' }}
+                    </template>
+                </el-table-column>
+
                 <el-table-column fixed="right" label="Operations" width="100">
                     <template slot-scope="scope">
                         <el-button @click="handleRestoreWarehouse(scope.row)" type="text" size="small"><i
@@ -90,11 +196,8 @@ export default {
             this.getHistoryWarehouses();
         },
         replaceFromEnd(string1, string2) {
-            if (string2 != null) {
-                return string1.substr(0, string1.length - string2.toString().length) + string2.toString();
-            }
-            else {
-                return null;
+            if (string2 !== null) {
+                return string1.concat(string2);
             }
         },
         handleRestoreWarehouse(data) {

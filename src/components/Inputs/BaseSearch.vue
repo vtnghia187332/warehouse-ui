@@ -1,5 +1,5 @@
 <template>
-    <el-input placeholder="Please input" v-model="value" :class="field.class" @input.native="change">
+    <el-input placeholder="Please input" v-model="value" :class="field.class" clearable @input.native="change">
         <el-button slot="append" icon="el-icon-search" @click="change"></el-button>
     </el-input>
 </template>
@@ -20,9 +20,7 @@ export default {
     },
     methods: {
         change(event) {
-            if (event.target.value) {
-                this.value = event.target.value;
-            }
+            this.value = event.target.value;
             this.$emit("get-value", this.value);
         }
     },
