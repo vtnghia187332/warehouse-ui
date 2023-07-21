@@ -138,7 +138,7 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column fixed="right" label="Operations" width="100">
+                <el-table-column fixed="right" label="Action" width="70">
                     <template slot-scope="scope">
                         <el-button @click="handleRestoreWarehouse(scope.row)" type="text" size="small"><i
                                 class="el-icon-document-copy text-2xl"></i></el-button>

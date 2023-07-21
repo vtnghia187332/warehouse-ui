@@ -9,10 +9,6 @@
       </div>
       <div>
         <button class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm "
-          @click="testFunc">
-          <i class="el-icon-files font-bold"></i> Delete
-        </button>
-        <button class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm "
           @click="goWarehouseHistoryPage">
           <i class="el-icon-files font-bold"></i> History
         </button>
@@ -80,8 +76,8 @@
           <template slot-scope="scope">
             <el-button @click="handeDuplicateDetail(scope.row)" type="text" size="small"><i
                 class="el-icon-document-copy text-2xl"></i></el-button>
-            <el-button @click="handeViewDetail(scope.row)" type="text" size="small"><i
-                class="el-icon-edit-outline text-2xl"></i></el-button>
+            <el-button @click="handeDeleteDetail(scope.row)" type="text" size="small"><i
+                class="el-icon-delete text-2xl"></i></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -171,7 +167,20 @@ export default {
         params: { data }
       });
     },
-    handeViewDetail(row) {
+    handeDeleteDetail(row) {
+      const ids = [];
+      ids.push(row.id)
+      axios({
+        method: 'put',
+        url: 'http://localhost:9090/api/v1/warehouse/delete',
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: { ids }
+      });
+      this.$message({
+        showClose: true,
+        message: 'Deleted successfully',
+        type: 'success'
+      });
     },
     handeDuplicateDetail(row) {
       let data = {
