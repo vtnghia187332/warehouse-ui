@@ -526,8 +526,9 @@ export default {
     },
     getWarehouseDetail() {
       this.loadingPageDetail = true;
-      if (this.$route.params.code) {
-        axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.code}`, { headers: { "Access-Control-Allow-Origin": "*" } },)
+      console.log(this.$route.params.data, "data");
+      if (this.$route.params.data) {
+        axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.data.id}`, { headers: { "Access-Control-Allow-Origin": "*" } },)
           .then(res => {
             Object.keys(this.warehouse).forEach((key) => {
               this.warehouse[key].value = res.data.items[key];
@@ -543,6 +544,10 @@ export default {
             this.warehouseIdTxt = res.data.items.warehouseId;
           })
           .catch(err => console.log(err));
+        if (this.$route.params.data.type === 'DUPLICATED') {
+          this.warehouseId = null;
+          this.warehouseIdTxt = null;
+        }
       }
     },
     getListAddress() {

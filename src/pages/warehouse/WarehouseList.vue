@@ -166,13 +166,26 @@ export default {
       this.$router.push({ name: "warehouse-detail" });
     },
     goToDetailWarehouse(row) {
-      this.$router.push({ path: `/warehouse-detail/${row.warehouseId}` });
+      let data = {
+        id: row.warehouseId,
+        type: "EDIT"
+      };
+      this.$router.push({
+        name: "warehouse-detail", //use name for router push
+        params: { data }
+      });
     },
     handeViewDetail(row) {
-      this.$router.push({ path: `/warehouse-detail/${row.warehouseId}` });
     },
     handeDuplicateDetail(row) {
-      this.$router.push({ name: "warehouse-detail" });
+      let data = {
+        id: row.warehouseId,
+        type: "DUPLICATED"
+      };
+      this.$router.push({
+        name: "warehouse-detail", //use name for router push
+        params: { data }
+      });
     },
     handleSizeChange(param) {
       this.paginationPage.pageNo = 1;
