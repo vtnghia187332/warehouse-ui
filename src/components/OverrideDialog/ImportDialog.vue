@@ -23,7 +23,7 @@
         </el-dialog>
 
         <el-dialog v-show="this.step === 'CONFIRMED'" :append-to-body="true" title="Import Warehouse"
-            :before-close="handleCloseDialog" :visible="this.step === 'CONFIRMED'">
+            :visible="this.step === 'CONFIRMED'">
             <div class="flex justify-center mt-4 mb-4">
                 <div class="text-2xl">Select <span> Warehouse you want to <span class="underline">override</span></span>
                 </div>
@@ -234,6 +234,7 @@ export default {
             this.clearStateFile();
             this.step = '';
             this.$emit('update:isOpenDialogImport', false);
+            this.$router.push({ name: 'warehouse-list' });
         },
         clearStateFile() {
             this.$refs["upload"].clearFiles();
@@ -315,19 +316,20 @@ export default {
                             total: response.data.items.totalElements,
                         },
                             me.loadingTable = false;
-
                     });
             } else {
                 me.step = 'ERROR';
+                this.handleContinueImport();
             }
         },
-        async handleContinueImport(data) {
-            this.clearStateFile();
+        async handleContinueImport() {
+            var me = this;
+            me.clearStateFile();
             const bodyImport = {
-                successId: this.importError.numberSuccessItem.errorId,
-                errorId: this.importError.numberSuccessItem.errorId,
-                confirmId: this.importError.numberOverrideItem.errorId,
-                ids: this.multipleSelection,
+                successId: me.importError.numberSuccessItem.errorId,
+                errorId: me.importError.numberSuccessItem.errorId,
+                confirmId: me.importError.numberOverrideItem.errorId,
+                ids: me.multipleSelection,
                 fileNames: []
             };
             await axios({
@@ -337,22 +339,10 @@ export default {
                 data: bodyImport,
             })
                 .then(function (response) {
-                    if (response.data.items.errorId) {
-                        this.importError.numberErrItem.errorId = response.data.items.errorId;
-                        this.importError.numberErrItem.numItems = response.data.items.numOfFailure;
-                    };
-                    if (response.data.items.successId) {
-                        this.importError.numberSuccessItem.errorId = response.data.items.successId;
-                        this.importError.numberSuccessItem.numItems = response.data.items.numOfSuccess;
-                    };
-                    if (response.data.items.confirmId) {
-                        this.importError.numberOverrideItem.errorId = response.data.items.confirmId;
-                        this.importError.numberOverrideItem.numItems = response.data.items.numOfConfirms;
-                    };
-                    this.step = 'ERROR';
+                    me.importError.numberSuccessItem.numItems = response.data.items.numOfSuccess;
+                    me.step = 'ERROR';
                 })
                 .catch(function (response) {
-
                 });
         }
     },
