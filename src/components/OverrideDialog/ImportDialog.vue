@@ -44,9 +44,6 @@
                         <el-table-column type="selection" width="55">
                         </el-table-column>
                         <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
-                            <template slot-scope="scope">
-                                {{ replaceFromEnd('WH-00000000', scope.row.warehouseId) }}
-                            </template>
                         </el-table-column>
                         <el-table-column prop="warehouseChainInfo" label="Warehouse Chain" width="300">
                             <template slot-scope="scope">
@@ -65,7 +62,7 @@
                         </el-table-column>
                     </el-table>
                 </div>
-                <BasePagination v-show="loadingTable" :field="paginationVal" @handleSizeChange="handleSizeChange"
+                <BasePagination :field="paginationVal" @handleSizeChange="handleSizeChange"
                     @handleCurrentChange="handleCurrentChange" />
             </div>
             <span slot="footer" class="dialog-footer">
@@ -204,17 +201,22 @@ export default {
                 this.clearStateFile();
         },
         handleCancelConfirmDlg() {
-            this.step = 'IMPORTED';
-            console.log(this.dataImporting);
+            this.$confirm('Are you sure to close Confirm dialog?')
+                .then(_ => {
+                    this.step = 'IMPORTED';
+                })
+                .catch(_ => {
+                });
+
         },
         handleSizeChange(param) {
             this.paginationPage.pageNo = 1;
             this.paginationPage.pageSize = param;
-            this.getDataOverride();
+            this.callApiToGetDataConfirm();
         },
         handleCurrentChange(param) {
             this.paginationPage.pageNo = param;
-            this.getDataOverride();
+            this.callApiToGetDataConfirm();
         },
         getBaseSearchVal(param) {
             // clears the timer on a call so there is always x seconds in between calls
@@ -222,7 +224,7 @@ export default {
             // if the timer resets before it hits 150ms it will not run 
             this.timer = setTimeout(function () {
                 this.search.value = param;
-                this.getDataOverride();
+                this.callApiToGetDataConfirm();
             }.bind(this), 300);
         },
         downloadFileTemplate() {
@@ -231,10 +233,23 @@ export default {
             this.dataImporting = file.raw;
         },
         handleCloseDialog() {
-            this.clearStateFile();
-            this.step = '';
-            this.$emit('update:isOpenDialogImport', false);
-            this.$router.push({ name: 'warehouse-list' });
+            if (this.dataImporting !== null) {
+                this.$confirm('Are you sure to close import dialog?')
+                    .then(_ => {
+                        this.clearStateFile();
+                        this.step = '';
+                        this.$emit('update:isOpenDialogImport', false);
+                        this.$router.push({ name: 'warehouse-list' });
+                    })
+                    .catch(_ => {
+                    });
+            } else {
+                this.clearStateFile();
+                this.step = '';
+                this.$emit('update:isOpenDialogImport', false);
+                this.$router.push({ name: 'warehouse-list' });
+            }
+
         },
         clearStateFile() {
             this.$refs["upload"].clearFiles();
@@ -261,6 +276,41 @@ export default {
                     me.$message({
                         showClose: true,
                         message: response.response.data.message,
+                        type: 'error'
+                    });
+                });
+        },
+        async callApiToGetDataConfirm() {
+            var me = this;
+            me.loadingTable = true;
+            await axios
+                .get("http://localhost:9090/api/v1/warehouse/confirm", {
+                    headers: { "Access-Control-Allow-Origin": "*" }, params: {
+                        searchText: me.search.value,
+                        pageNo: me.paginationPage.pageNo,
+                        pageSize: me.paginationPage.pageSize,
+                        sorting: me.paginationPage.sorting,
+                        orderBy: me.paginationPage.orderBy,
+                        errorId: me.importError.numberOverrideItem.errorId,
+                    }
+                })
+                .then(function (response) {
+                    if (response.status === 200) {
+                        me.datasOverrided = response.data.items.content;
+                        me.paginationVal = {
+                            currentPage: response.data.items.pageNum,
+                            pageSizeList: [10, 20, 30, 50, 100],
+                            currentPage: response.data.items.number + 1,
+                            pageSizeval: response.data.items.size,
+                            total: response.data.items.totalElements,
+                        },
+                            me.loadingTable = false;
+                    }
+                })
+                .catch(error => {
+                    this.$message({
+                        showClose: true,
+                        message: error,
                         type: 'error'
                     });
                 });
@@ -296,38 +346,7 @@ export default {
             };
             if (response.data.items.confirmId) {
                 me.step = 'CONFIRMED';
-                me.loadingTable = true;
-                await axios
-                    .get("http://localhost:9090/api/v1/warehouse/confirm", {
-                        headers: { "Access-Control-Allow-Origin": "*" }, params: {
-                            searchText: me.search.value,
-                            pageNo: me.paginationPage.pageNo,
-                            pageSize: me.paginationPage.pageSize,
-                            sorting: me.paginationPage.sorting,
-                            orderBy: me.paginationPage.orderBy,
-                            errorId: me.importError.numberOverrideItem.errorId,
-                        }
-                    })
-                    .then(function (response) {
-                        if (response.status === 200) {
-                            me.datasOverrided = response.data.items.content;
-                            me.paginationVal = {
-                                currentPage: response.data.items.pageNum,
-                                pageSizeList: [10, 20, 30, 50, 100],
-                                currentPage: response.data.items.number + 1,
-                                pageSizeval: response.data.items.size,
-                                total: response.data.items.totalElements,
-                            },
-                                me.loadingTable = false;
-                        }
-                    })
-                    .catch(error => {
-                        this.$message({
-                            showClose: true,
-                            message: error,
-                            type: 'error'
-                        });
-                    });
+                me.callApiToGetDataConfirm();
             } else {
                 me.step = 'ERROR';
                 this.handleContinueImport();
