@@ -15,7 +15,7 @@
         <button class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm" @click="HandleImportWarehouse">
           <i class="el-icon-plus ml font-bold"></i> Import
         </button>
-        <button class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm" @click="HandleAddWarehouse">
+        <button class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm" @click="testFunc">
           <i class="el-icon-plus ml font-bold"></i> Export
         </button> <button class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm" @click="HandleAddWarehouse">
           <i class="el-icon-plus ml font-bold"></i> Add
@@ -131,6 +131,12 @@ export default {
   },
   methods: {
     testFunc() {
+      this.$confirm('Are you sure to close this dialog?')
+        .then(_ => {
+          console.log("Confirm");
+        })
+        .catch(_ => {
+        });
     },
     goWarehouseHistoryPage() {
       this.$router.push({ name: "warehouse-history" });
@@ -167,8 +173,7 @@ export default {
         params: { data }
       });
     },
-    handeDeleteDetail(row) {
-      const ids = row.id;
+    callApiToDelete(ids) {
       axios({
         method: 'put',
         url: 'http://localhost:9090/api/v1/warehouse/delete',
@@ -192,6 +197,16 @@ export default {
           });
         })
         .finally(() => this.getWarehouses())
+    },
+    handeDeleteDetail(row) {
+      this.$confirm(`Are you want to delete ${row.warehouseId}?`)
+        .then(_ => {
+          const ids = row.id;
+          this.callApiToDelete(ids)
+        })
+        .catch(_ => {
+        });
+
     },
     handeDuplicateDetail(row) {
       let data = {
