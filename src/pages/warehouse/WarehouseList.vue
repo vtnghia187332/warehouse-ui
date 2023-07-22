@@ -168,19 +168,30 @@ export default {
       });
     },
     handeDeleteDetail(row) {
-      const ids = [];
-      ids.push(row.id)
+      const ids = row.id;
       axios({
         method: 'put',
         url: 'http://localhost:9090/api/v1/warehouse/delete',
         headers: { "Access-Control-Allow-Origin": "*" },
-        data: { ids }
-      });
-      this.$message({
-        showClose: true,
-        message: 'Deleted successfully',
-        type: 'success'
-      });
+        params: { ids }
+      })
+        .then(response => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: 'Deleted successfully',
+              type: 'success'
+            });
+          }
+        })
+        .catch(error => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: 'error'
+          });
+        })
+        .finally(() => this.getWarehouses())
     },
     handeDuplicateDetail(row) {
       let data = {
