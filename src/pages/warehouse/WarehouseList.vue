@@ -235,9 +235,15 @@ export default {
             total: response.data.items.totalElements,
           },
             me.loadingTable = false;
+        })
+        .catch(error => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: 'error'
+          });
         });
     }
-
   },
   mounted() {
     this.paginationPage = {

@@ -252,8 +252,10 @@ export default {
                 headers: { "Access-Control-Allow-Origin": "*" },
             })
                 .then(function (response) {
-                    me.clearStateFile();
-                    me.handleAfterImporting(response);
+                    if (response.status === 200) {
+                        me.clearStateFile();
+                        me.handleAfterImporting(response);
+                    }
                 })
                 .catch(function (response) {
                     me.$message({
@@ -307,15 +309,24 @@ export default {
                         }
                     })
                     .then(function (response) {
-                        me.datasOverrided = response.data.items.content;
-                        me.paginationVal = {
-                            currentPage: response.data.items.pageNum,
-                            pageSizeList: [10, 20, 30, 50, 100],
-                            currentPage: response.data.items.number + 1,
-                            pageSizeval: response.data.items.size,
-                            total: response.data.items.totalElements,
-                        },
-                            me.loadingTable = false;
+                        if (response.status === 200) {
+                            me.datasOverrided = response.data.items.content;
+                            me.paginationVal = {
+                                currentPage: response.data.items.pageNum,
+                                pageSizeList: [10, 20, 30, 50, 100],
+                                currentPage: response.data.items.number + 1,
+                                pageSizeval: response.data.items.size,
+                                total: response.data.items.totalElements,
+                            },
+                                me.loadingTable = false;
+                        }
+                    })
+                    .catch(error => {
+                        this.$message({
+                            showClose: true,
+                            message: error,
+                            type: 'error'
+                        });
                     });
             } else {
                 me.step = 'ERROR';
@@ -339,11 +350,18 @@ export default {
                 data: bodyImport,
             })
                 .then(function (response) {
-                    me.importError.numberSuccessItem.numItems = response.data.items.numOfSuccess;
-                    me.step = 'ERROR';
+                    if (response.status === 200) {
+                        me.importError.numberSuccessItem.numItems = response.data.items.numOfSuccess;
+                        me.step = 'ERROR';
+                    }
                 })
-                .catch(function (response) {
-                });
+                .catch(error => {
+                    this.$message({
+                        showClose: true,
+                        message: error,
+                        type: 'error'
+                    });
+                })
         }
     },
     beforeCreate() {

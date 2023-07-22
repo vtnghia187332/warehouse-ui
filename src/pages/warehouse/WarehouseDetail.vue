@@ -430,26 +430,49 @@ export default {
           url: 'http://localhost:9090/api/v1/warehouse',
           headers: { "Access-Control-Allow-Origin": "*" },
           data: warehouseDetail,
-        });
-        this.$message({
-          showClose: true,
-          message: 'Updated successfully',
-          type: 'success'
-        });
+        })
+          .then(response => {
+            if (response.status === 200) {
+              this.$message({
+                showClose: true,
+                message: 'Updated successfully',
+                type: 'success'
+              });
+            }
+          })
+          .catch(error => {
+            this.$message({
+              showClose: true,
+              message: error,
+              type: 'error'
+            });
+          })
+          .finally(() => this.$router.push({ name: 'warehouse-list' }))
       } else {
         axios({
           method: 'post',
           url: 'http://localhost:9090/api/v1/warehouse',
           headers: { "Access-Control-Allow-Origin": "*" },
           data: warehouseDetail,
-        });
-        this.$message({
-          showClose: true,
-          message: 'Created successfully',
-          type: 'success'
-        });
+        })
+          .then(response => {
+            if (response.status === 200) {
+              this.$message({
+                showClose: true,
+                message: 'Created successfully',
+                type: 'success'
+              });
+            }
+          })
+          .catch(error => {
+            this.$message({
+              showClose: true,
+              message: error,
+              type: 'error'
+            });
+          })
+          .finally(() => this.$router.push({ name: 'warehouse-list' }))
       }
-      this.$router.push({ name: 'warehouse-list' })
     },
     handleAddSpecialDay(param, type) {
       if (param !== null) {
@@ -529,20 +552,29 @@ export default {
       if (this.$route.params.data.id != null) {
         axios.get(`http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.data.id}`, { headers: { "Access-Control-Allow-Origin": "*" } },)
           .then(res => {
-            Object.keys(this.warehouse).forEach((key) => {
-              this.warehouse[key].value = res.data.items[key];
-            });
-            this.initKeyContactForm(res.data.items.keyContactVos);
-            Object.keys(this.address).forEach((key) => {
-              this.address[key].value = res.data.items[key];
-            });
-            this.initTimeWorking(res.data.items.openWorkingHour);
-            this.initSpecialtime(res.data.items.specialDayTimes);
-            this.warehouseChain.data = res.data.items.warehousechainRes;
-            this.warehouseId = res.data.items.id;
-            this.warehouseIdTxt = res.data.items.warehouseId;
+            if (res.status === 200) {
+              Object.keys(this.warehouse).forEach((key) => {
+                this.warehouse[key].value = res.data.items[key];
+              });
+              this.initKeyContactForm(res.data.items.keyContactVos);
+              Object.keys(this.address).forEach((key) => {
+                this.address[key].value = res.data.items[key];
+              });
+              this.initTimeWorking(res.data.items.openWorkingHour);
+              this.initSpecialtime(res.data.items.specialDayTimes);
+              this.warehouseChain.data = res.data.items.warehousechainRes;
+              this.warehouseId = res.data.items.id;
+              this.warehouseIdTxt = res.data.items.warehouseId;
+            }
           })
-          .catch(err => console.log(err));
+          .catch(error => {
+            this.$message({
+              showClose: true,
+              message: error,
+              type: 'error'
+            });
+          })
+          .finally(() => this.loadingPageDetail = false)
         if (this.$route.params.data.type === 'DUPLICATED') {
           this.warehouseId = null;
           this.warehouseIdTxt = null;
@@ -552,12 +584,20 @@ export default {
     getListAddress() {
       axios.get('http://localhost:9090/api/v1/address', { headers: { "Access-Control-Allow-Origin": "*" } },)
         .then(res => {
-          this.address.country.options = res.data.items.countriesLists;
-          this.address.city.options = res.data.items.citiesLists;
-          this.address.district.options = res.data.items.districtsLists;
-          this.address.subdistrict.options = res.data.items.subdistrictLists;
+          if (res.status === 200) {
+            this.address.country.options = res.data.items.countriesLists;
+            this.address.city.options = res.data.items.citiesLists;
+            this.address.district.options = res.data.items.districtsLists;
+            this.address.subdistrict.options = res.data.items.subdistrictLists;
+          }
         })
-        .catch(err => console.log(err));
+        .catch(error => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: 'error'
+          });
+        })
     },
     initData(data) {
     }
