@@ -24,13 +24,14 @@
     </div>
     <LoadingPage v-show="loadingTable"></LoadingPage>
     <div class="table_style px-2" v-show="!loadingTable">
-      <el-table :data="warehouses" style="width: 100%" @row-dblclick="goToDetailWarehouse" height="776">
+      <el-table :data="warehouses" style="width: 100%" @row-dblclick="goToDetailWarehouse"  @sort-change="sortChange"
+        :default-sort="{ prop: 'createdAt', order: 'descending' }" height="770">
         <div slot="append" v-if="warehouses.length == '0'">
           <el-empty :image-size="300"></el-empty>
         </div>
         <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
         </el-table-column>
-        <el-table-column prop="createdAt" label="Create Date" width="250">
+        <el-table-column sortable  prop="createdAt" label="Create Date" width="250">
         </el-table-column>
         <el-table-column prop="editedAt" label="Updated Date" width="250">
         </el-table-column>
@@ -41,7 +42,7 @@
         </el-table-column>
         <el-table-column prop="code" label="Warehouse Code" width="300">
         </el-table-column>
-        <el-table-column prop="name" label="Warehouse Name" width="300">
+        <el-table-column sortable  prop="name" label="Warehouse Name" width="300">
         </el-table-column>
         <el-table-column prop="shortName" label="Warehouse Short Name" width="300">
         </el-table-column>
@@ -96,12 +97,10 @@ import ImportDialog from "../../components/OverrideDialog/ImportDialog.vue";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import LoadingPage from '@/components/Cards/LoadingPage';
-import ImportDialogError from "../../components/OverrideDialog/ImportDialogError.vue";
-import ImportDialogOverride from "../../components/OverrideDialog/ImportDialogOverride.vue";
 
 export default {
   components: {
-    BaseSearch, BasePagination, LoadingPage, ImportDialog, ValidationObserver, ImportDialogError, ImportDialogOverride,
+    BaseSearch, BasePagination, LoadingPage, ImportDialog, ValidationObserver,
     ValidationProvider
   },
   data() {
@@ -130,6 +129,11 @@ export default {
   computed: {
   },
   methods: {
+    sortChange(column, prop, order) {
+      console.log("column", column)
+      console.log("prop", prop)
+      console.log("order", order)
+    },
     testFunc() {
       this.$confirm('Are you sure to close this dialog?')
         .then(_ => {

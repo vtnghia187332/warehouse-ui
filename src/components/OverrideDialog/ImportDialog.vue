@@ -227,7 +227,7 @@ export default {
                 this.callApiToGetDataConfirm();
             }.bind(this), 300);
         },
-        downloadFileTemplate() {
+        async downloadFileTemplate() {
         },
         handleChange(file) {
             this.dataImporting = file.raw;
