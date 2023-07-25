@@ -94,6 +94,7 @@
 
                 <el-table-column prop="keyContactVos" label="Contact Title 1" width="300">
                     <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[1] ? scope.row.keyContactVos[1].title : "A" }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="keyContactVos" label="Contact First Name 1" width="300">
