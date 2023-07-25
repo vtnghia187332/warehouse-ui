@@ -1,5 +1,5 @@
 <template>
-  <ValidationObserver ref="observer">
+  <ValidationObserver v-slot="{ invalid }" ref="observer">
     <loading-page v-show="loadingPageDetail"></loading-page>
     <div v-show="!loadingPageDetail" class="bg-page-background overflow-y-auto w-full py-4">
       <el-row :gutter="20" class="flex gap-x-4 detail w-full">
@@ -188,9 +188,16 @@
             </template>
           </FormCard>
 
-          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="handleSubmit">
-            Create
-          </button>
+
+          <div :class="invalid ? `footer-btn-fixed flex justify-end p-2 no-display` : `footer-btn-fixed flex justify-end p-2`">
+            <button class="text-gray-500 border border-gray-500 font-bold py-2 px-4 rounded" @click="handleCancelSubmit">
+              Cancel
+            </button>
+            <button class="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              @click="handleSubmit">
+              Create
+            </button>
+          </div>
         </el-col>
         <el-col :span="5" class="">
           <AssignedModuleVue title="Warehouse Chain" :nameKey="'code'" :item="warehouseChain.data"
@@ -393,6 +400,7 @@ export default {
     }
   },
   methods: {
+    handleCancelSubmit() { },
     handleSubmit() {
       const keyContactReqs = this.$refs["key-contact"].getDataKeyContacts();
       this.specialDayOn.forEach(object => {
@@ -433,6 +441,7 @@ export default {
         })
           .then(response => {
             if (response.status === 200) {
+              this.$router.push({ path: '/warehouse-list' });
               this.$message({
                 showClose: true,
                 message: 'Updated successfully',
@@ -447,7 +456,7 @@ export default {
               type: 'error'
             });
           })
-          .finally(() => this.$router.push({ name: 'warehouse-list' }))
+
       } else {
         axios({
           method: 'post',
@@ -457,6 +466,7 @@ export default {
         })
           .then(response => {
             if (response.status === 200) {
+              this.$router.push({ path: '/warehouse-list' });
               this.$message({
                 showClose: true,
                 message: 'Created successfully',
@@ -471,7 +481,6 @@ export default {
               type: 'error'
             });
           })
-          .finally(() => this.$router.push({ name: 'warehouse-list' }))
       }
     },
     handleAddSpecialDay(param, type) {
@@ -611,6 +620,21 @@ export default {
 </script>
 
 <style scoped>
+.footer-btn-fixed {
+  z-index: 99 !important;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  background-color: white !important;
+  margin-top: 12px;
+}
+
+.no-display {
+  display: none;
+}
+
 .radius-shadow_add {
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
   border-radius: 3px;

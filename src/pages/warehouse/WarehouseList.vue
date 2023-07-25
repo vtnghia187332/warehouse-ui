@@ -24,29 +24,29 @@
     </div>
     <LoadingPage v-show="loadingTable"></LoadingPage>
     <div class="table_style px-2" v-show="!loadingTable">
-      <el-table :data="warehouses" style="width: 100%" @row-dblclick="goToDetailWarehouse"  @sort-change="sortChange"
-        :default-sort="{ prop: 'createdAt', order: 'descending' }" height="770">
+      <el-table :data="warehouses" style="width: 100%" @row-dblclick="goToDetailWarehouse" @sort-change="sortChange"
+        height="770">
         <div slot="append" v-if="warehouses.length == '0'">
           <el-empty :image-size="300"></el-empty>
         </div>
         <el-table-column fixed prop="warehouseId" label="Warehouse ID" width="150">
         </el-table-column>
-        <el-table-column sortable  prop="createdAt" label="Create Date" width="250">
+        <el-table-column sortable prop="createdAt" label="Create Date" width="250">
         </el-table-column>
-        <el-table-column prop="editedAt" label="Updated Date" width="250">
+        <el-table-column sortable prop="editedAt" label="Updated Date" width="250">
         </el-table-column>
         <el-table-column prop="warehouseChainInfo" label="Warehouse Chain" width="300">
           <template slot-scope="scope">
             {{ scope.row.warehouseChainInfo.name }}
           </template>
         </el-table-column>
-        <el-table-column prop="code" label="Warehouse Code" width="300">
+        <el-table-column sortable prop="code" label="Warehouse Code" width="300">
         </el-table-column>
-        <el-table-column sortable  prop="name" label="Warehouse Name" width="300">
+        <el-table-column sortable sortable prop="name" label="Warehouse Name" width="300">
         </el-table-column>
-        <el-table-column prop="shortName" label="Warehouse Short Name" width="300">
+        <el-table-column sortable prop="shortName" label="Warehouse Short Name" width="300">
         </el-table-column>
-        <el-table-column prop="addressDes" label="Warehouse Address" width="300">
+        <el-table-column sortable prop="addressDes" label="Warehouse Address" width="300">
         </el-table-column>
         <el-table-column prop="keyContactVos" label="Contact Title" width="300">
           <template slot-scope="scope">
@@ -130,9 +130,25 @@ export default {
   },
   methods: {
     sortChange(column, prop, order) {
-      console.log("column", column)
-      console.log("prop", prop)
-      console.log("order", order)
+      console.log(column);
+      if (column.prop.order == null) {
+        this.paginationPage = {
+          pageNo: 1,
+          pageSize: 30,
+          sorting: 'createdAt',
+          orderBy: 'DESC',
+        }
+      } else {
+        this.paginationPage.sorting = null;
+        this.paginationPage.orderby = null;
+        this.paginationPage.sorting = column.prop;
+        if (column.prop.order == 'ascending') {
+          this.paginationPage.orderby = 'ASC'
+        } else {
+          this.paginationPage.orderby = 'DESC'
+        }
+      }
+      this.getWarehouses();
     },
     testFunc() {
       this.$confirm('Are you sure to close this dialog?')

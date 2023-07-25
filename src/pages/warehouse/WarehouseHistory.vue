@@ -21,9 +21,10 @@
                 </el-table-column>
                 <el-table-column prop="editedAt" label="Updated Date" width="180">
                 </el-table-column>
-                <el-table-column prop="actionType" label="Action" width="100">
+                <el-table-column prop="actionType" label="Action" width="150">
                     <template slot-scope="scope">
-                        {{ scope.row.actionType == 0 ? "INSERT" : "UPDATE" }}
+                        <el-tag :type="scope.row.actionType == 1 ? 'success' : 'primary'" disable-transitions>{{
+                            scope.row.actionType == 1 ? 'INSERTED' : 'UPDATED' }}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column prop="code" label="Warehouse Code" width="300">
@@ -134,7 +135,8 @@
                 </el-table-column>
                 <el-table-column prop="isActive" label="Status" width="100">
                     <template slot-scope="scope">
-                        {{ scope.row.isActive == 1 ? 'ACTIVE' : 'INACTIVE' }}
+                        <el-tag :type="scope.row.isActive === 1 ? 'success' : 'danger'" disable-transitions>{{
+                            scope.row.isActive == 1 ? 'ACTIVE' : 'INACTIVE' }}</el-tag>
                     </template>
                 </el-table-column>
 

@@ -239,7 +239,7 @@ export default {
                         this.clearStateFile();
                         this.step = '';
                         this.$emit('update:isOpenDialogImport', false);
-                        this.$router.push({ name: 'warehouse-list' });
+                        this.$router.push({ path: '/warehouse-list' });
                     })
                     .catch(_ => {
                     });
@@ -247,7 +247,7 @@ export default {
                 this.clearStateFile();
                 this.step = '';
                 this.$emit('update:isOpenDialogImport', false);
-                this.$router.push({ name: 'warehouse-list' });
+                this.$router.push({ path: '/warehouse-list' });
             }
 
         },
