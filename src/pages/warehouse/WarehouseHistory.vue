@@ -38,6 +38,8 @@
 
                 <el-table-column prop="openWorkingHour" label="Monday" width="300">
                     <template slot-scope="scope">
+                        {{ scope.row.openWorkingHour ? scope.row.openWorkingHour.mondayStart + " - "
+                            + scope.row.openWorkingHour.mondayEnd : "" }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="openWorkingHour" label="Tuesday" width="300">
@@ -94,44 +96,54 @@
 
                 <el-table-column prop="keyContactVos" label="Contact Title 1" width="300">
                     <template slot-scope="scope">
-                        {{ scope.row.keyContactVos[1] ? scope.row.keyContactVos[1].title : "A" }}
+                        {{ scope.row.keyContactVos[1] ? scope.row.keyContactVos[1].title : "" }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="keyContactVos" label="Contact First Name 1" width="300">
                     <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[1] ? scope.row.keyContactVos[1].firstName : "" }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="keyContactVos" label="Contact Last Name 1" width="300">
                     <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[1] ? scope.row.keyContactVos[1].lastName : "" }}
+
                     </template>
                 </el-table-column>
                 <el-table-column prop="keyContactVos" label="Contact Email 1" width="300">
                     <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[1] ? scope.row.keyContactVos[1].email : "" }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="keyContactVos" label="Contact Mobile Phone 1" width="300">
                     <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[1] ? scope.row.keyContactVos[1].mobilePhone : "" }}
                     </template>
                 </el-table-column>
 
                 <el-table-column prop="keyContactVos" label="Contact Title 2" width="300">
                     <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[2] ? scope.row.keyContactVos[2].title : "" }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="keyContactVos" label="Contact First Name 2" width="300">
                     <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[2] ? scope.row.keyContactVos[2].firstName : "" }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="keyContactVos" label="Contact Last Name 2" width="300">
                     <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[2] ? scope.row.keyContactVos[2].lastName : "" }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="keyContactVos" label="Contact Email 2" width="300">
                     <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[2] ? scope.row.keyContactVos[2].email : "" }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="keyContactVos" label="Contact Mobile Phone 2" width="300">
                     <template slot-scope="scope">
+                        {{ scope.row.keyContactVos[2] ? scope.row.keyContactVos[2].mobilePhone : "" }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="isActive" label="Status" width="100">
