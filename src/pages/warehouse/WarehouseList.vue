@@ -151,12 +151,7 @@ export default {
       this.getWarehouses();
     },
     testFunc() {
-      this.$confirm('Are you sure to close this dialog?')
-        .then(_ => {
-          console.log("Confirm");
-        })
-        .catch(_ => {
-        });
+      
     },
     goWarehouseHistoryPage() {
       this.$router.push({ name: "warehouse-history" });
