@@ -727,6 +727,7 @@ export default {
     },
     getWarehouseDetail() {
       this.loadingPageDetail = true;
+
       if (this.$route.params.data.id != null) {
         axios
           .get(
@@ -761,6 +762,7 @@ export default {
           this.warehouseId = null;
           this.warehouseIdTxt = null;
         }
+      } else {
       }
     },
     getListAddress() {
@@ -787,6 +789,10 @@ export default {
     initData(data) {},
   },
   mounted() {
+    if (!this.$route.params.data) {
+      this.$router.push({ path: "/warehouse-list" });
+      return;
+    }
     this.getWarehouseDetail();
     this.getListAddress();
     this.loadingPageDetail = false;
