@@ -197,6 +197,7 @@ export default {
     return {
       isOpenDialogTest: false,
       isOpenDialogImport: false,
+      templateUrl: "",
       timer: 0,
       search: {
         value: "",
@@ -237,7 +238,33 @@ export default {
       }
       this.getWarehouses();
     },
-    testFunc() {},
+    async testFunc() {
+      let me = this;
+      // time biến thành tên của file
+      const tempDateTime = new Date();
+      const fileName = `WarehouseTemplate${tempDateTime.getTime()}.xlsx`;
+      //  Khai báo mảng để hứng dữ liệu nguyên vật liệu trả về
+      await axios
+        .get("http://localhost:9090/api/v1/warehouse/template", {
+          responseType: "blob",
+          contentType: "application/json-patch+json",
+        })
+        .then(function (res) {
+          if (res) {
+            var url = window.URL.createObjectURL(new Blob([res.data]));
+            var a = document.createElement("a");
+            a.href = url;
+            //Lấy file name mà server trả về -> save file
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }
+        })
+        .catch(function (res) {
+          console.log(res);
+        });
+    },
     goWarehouseHistoryPage() {
       this.$router.push({ name: "warehouse-history" });
     },
