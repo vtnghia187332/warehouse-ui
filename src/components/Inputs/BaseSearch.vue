@@ -1,43 +1,56 @@
 <template>
-    <el-input placeholder="Please input" v-model="value" :class="field.class" clearable @input.native="change">
-        <el-button slot="append" icon="el-icon-search" @click="change"></el-button>
-    </el-input>
+  <el-input
+    placeholder="Please input"
+    v-model="value"
+    :class="field.class"
+    clearable
+    @input.native="change"
+  >
+    <el-button slot="append" icon="el-icon-search" @click="change"></el-button>
+  </el-input>
 </template>
 <script>
 export default {
-    data() {
-        return {
-            value: '',
-        }
+  data() {
+    return {
+      value: "",
+    };
+  },
+  watch: {
+    value: function (newVal, oldVal) {
+      if (newVal === "") {
+        this.$nextTick(() => {
+          this.value = "";
+          this.$emit("get-value", this.value);
+        });
+      }
     },
-    watch: {
+  },
+  props: {
+    field: {
+      type: Object,
+      default: {},
     },
-    props: {
-        field: {
-            type: Object,
-            default: {},
-        },
+  },
+  methods: {
+    change(event) {
+      this.value = event.target.value;
+      this.$emit("get-value", this.value);
     },
-    methods: {
-        change(event) {
-            this.value = event.target.value;
-            this.$emit("get-value", this.value);
-        }
-    },
-}
+  },
+};
 </script>
 <style>
 .el-input-group__append {
-    background-color: #60A5FA !important;
+  background-color: #60a5fa !important;
 }
 
 .el-input-group__append .el-icon-search {
-    color: white;
+  color: white;
 }
 
 .el-input-group__append,
 .el-input-group__prepend {
-    border: none !important;
-
+  border: none !important;
 }
 </style>
