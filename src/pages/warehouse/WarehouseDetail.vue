@@ -514,6 +514,7 @@ export default {
           placeholder: "Select Country",
           error: "",
           value: "",
+          disabled: "notDisabled",
           label: "Country",
           options: [],
         },
@@ -527,6 +528,7 @@ export default {
           error: "",
           value: "",
           label: "City",
+          disabled: "disabled",
           options: [],
         },
         district: {
@@ -538,6 +540,7 @@ export default {
           placeholder: "Select District",
           error: "",
           value: "",
+          disabled: "disabled",
           label: "District",
           options: [],
         },
@@ -550,6 +553,7 @@ export default {
           placeholder: "Select Sub District",
           error: "",
           value: "",
+          disabled: "disabled",
           label: "Sub District",
           options: [],
         },
@@ -560,6 +564,11 @@ export default {
   computed: {
     moment() {
       return moment;
+    },
+  },
+  watch: {
+    'address.country.value': function (newVal, oldVal) {
+      console.log(newVal, oldVal);
     },
   },
   methods: {
