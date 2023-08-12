@@ -567,8 +567,11 @@ export default {
     },
   },
   watch: {
-    'address.country.value': function (newVal, oldVal) {
-      console.log(newVal, oldVal);
+    "address.country.value": function (newVal, oldVal) {
+      if (newVal) {
+        this.address.city.disabled = "notDisabled";
+        this.getListCityByCountry(newVal);
+      }
     },
   },
   methods: {
@@ -782,9 +785,25 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             this.address.country.options = res.data.items.countriesLists;
-            this.address.city.options = res.data.items.citiesLists;
-            this.address.district.options = res.data.items.districtsLists;
-            this.address.subdistrict.options = res.data.items.subdistrictLists;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
+    getListCityByCountry(id) {
+      axios
+        .get("http://localhost:9090/api/v1/city", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+          params: { id: id } ,
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.address.city.options = res.data.items;
           }
         })
         .catch((error) => {
