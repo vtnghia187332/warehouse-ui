@@ -573,6 +573,18 @@ export default {
         this.getListCityByCountry(newVal);
       }
     },
+    "address.city.value": function (newVal, oldVal) {
+      if (newVal) {
+        this.address.district.disabled = "notDisabled";
+        this.getListDistrictByCity(newVal);
+      }
+    },
+    "address.district.value": function (newVal, oldVal) {
+      if (newVal) {
+        this.address.subdistrict.disabled = "notDisabled";
+        this.getListSubDistrictByDistrict(newVal);
+      }
+    },
   },
   methods: {
     handleCancelSubmit() {},
@@ -804,6 +816,44 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             this.address.city.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
+    getListDistrictByCity(id) {
+      axios
+        .get("http://localhost:9090/api/v1/district", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+          params: { id: id } ,
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.address.district.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
+    getListSubDistrictByDistrict(id) {
+      axios
+        .get("http://localhost:9090/api/v1/subDistrict", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+          params: { id: id } ,
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.address.subdistrict.options = res.data.items;
           }
         })
         .catch((error) => {
