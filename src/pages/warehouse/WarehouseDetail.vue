@@ -1,5 +1,5 @@
 <template>
-  <ValidationObserver v-slot="{ invalid }" ref="observer">
+  <ValidationObserver v-slot="{ invalid }" ref="observerAdd">
     <loading-page v-show="loadingPageDetail"></loading-page>
     <div
       v-show="!loadingPageDetail"
@@ -587,7 +587,13 @@ export default {
     },
   },
   methods: {
-    handleCancelSubmit() {},
+    handleCancelSubmit() {
+      this.$confirm("Are you sure to canncel adding Warehouse")
+        .then((_) => {
+          this.$router.push({ path: "/warehouse-list" });
+        })
+        .catch((_) => {});
+    },
     handleSubmit() {
       const keyContactReqs = this.$refs["key-contact"].getDataKeyContacts();
       this.specialDayOn.forEach((object) => {
@@ -667,9 +673,10 @@ export default {
           .catch((error) => {
             this.$message({
               showClose: true,
-              message: error,
+              message: error.response.data.items,
               type: "error",
             });
+            this.$refs.observerAdd.setErrors(error.response.data.items);
           });
       }
     },
@@ -811,7 +818,7 @@ export default {
       axios
         .get("http://localhost:9090/api/v1/city", {
           headers: { "Access-Control-Allow-Origin": "*" },
-          params: { id: id } ,
+          params: { id: id },
         })
         .then((res) => {
           if (res.status === 200) {
@@ -830,7 +837,7 @@ export default {
       axios
         .get("http://localhost:9090/api/v1/district", {
           headers: { "Access-Control-Allow-Origin": "*" },
-          params: { id: id } ,
+          params: { id: id },
         })
         .then((res) => {
           if (res.status === 200) {
@@ -849,7 +856,7 @@ export default {
       axios
         .get("http://localhost:9090/api/v1/subDistrict", {
           headers: { "Access-Control-Allow-Origin": "*" },
-          params: { id: id } ,
+          params: { id: id },
         })
         .then((res) => {
           if (res.status === 200) {
