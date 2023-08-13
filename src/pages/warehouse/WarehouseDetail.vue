@@ -571,18 +571,27 @@ export default {
       if (newVal) {
         this.address.city.disabled = "notDisabled";
         this.getListCityByCountry(newVal);
+        this.address.city.value = "";
+        this.address.district.value = "";
+        this.address.district.disabled = "disabled";
+        this.address.subdistrict.value = "";
+        this.address.subdistrict.disabled = "disabled";
       }
     },
     "address.city.value": function (newVal, oldVal) {
       if (newVal) {
         this.address.district.disabled = "notDisabled";
         this.getListDistrictByCity(newVal);
+        this.address.district.value = "";
+        this.address.subdistrict.value = "";
+        this.address.subdistrict.disabled = "disabled";
       }
     },
     "address.district.value": function (newVal, oldVal) {
       if (newVal) {
         this.address.subdistrict.disabled = "notDisabled";
         this.getListSubDistrictByDistrict(newVal);
+        this.address.subdistrict.value = "";
       }
     },
   },
