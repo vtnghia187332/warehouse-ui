@@ -4,8 +4,9 @@
       <template slot="links">
         <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel" />
         <sidebar-link to="/icons" name="Icons" icon="ti-pencil-alt2" />
-        <sidebar-link to="/notifications" name="Notifications" icon="ti-bell" />
+        <!-- <sidebar-link to="/notifications" name="Notifications" icon="ti-bell" /> -->
         <sidebar-link to="/warehouse-list" name="WarehouseList" icon="ti-package" />
+        <sidebar-link to="/address" name="AddressList" icon="ti-map" />
       </template>
       <mobile-menu>
         <li class="nav-item">

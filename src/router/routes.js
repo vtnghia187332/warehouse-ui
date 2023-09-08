@@ -13,6 +13,7 @@ import TableList from "@/pages/TableList.vue";
 import WarehouseList from "@/pages/warehouse/WarehouseList.vue";
 import WarehouseDetail from "@/pages/warehouse/WarehouseDetail.vue";
 import WarehouseHistory from '@/pages/warehouse/WarehouseHistory';
+import AddressList from '@/pages/address/AddressList.vue';
 
 const routes = [
   {
@@ -69,6 +70,11 @@ const routes = [
         path: "warehouse-history",
         name: "warehouse-history",
         component: WarehouseHistory,
+      },
+      {
+        path: "/address",
+        name: "address",
+        component: AddressList,
       },
     ],
   },
