@@ -46,6 +46,7 @@ export default {
       default: {},
     },
   },
+  watch: {},
   methods: {
     updateInput(event) {
       this.$emit("input", event.target.value);

@@ -16,16 +16,7 @@ export default {
       value: "",
     };
   },
-  watch: {
-    value: function (newVal, oldVal) {
-      if (newVal === "") {
-        this.$nextTick(() => {
-          this.value = "";
-          this.$emit("get-value", this.value);
-        });
-      }
-    },
-  },
+
   props: {
     field: {
       type: Object,
