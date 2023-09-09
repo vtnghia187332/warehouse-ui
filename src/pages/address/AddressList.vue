@@ -12,11 +12,18 @@
             <div class="">
               <div class="font-semibold text-lg">Country</div>
             </div>
-            <div class="add-header-btn">
+            <div class="add-header-btn flex">
+              <el-button
+                v-show="isCountrySelected"
+                type="danger"
+                class="bg-red-600"
+                @click="handleDeleteCountry()"
+                >Delete</el-button
+              >
               <el-button
                 type="primary"
                 icon="el-icon-plus"
-                @click="isCreateAddress"
+                @click="isCreateAddress('country')"
                 >Create</el-button
               >
             </div>
@@ -33,7 +40,12 @@
               isCountrySelected == item.id ? 'is-selected' : 'is-not-selected'
             "
           >
-            <div><el-checkbox :label="item.countryName"></el-checkbox></div>
+            <div>
+              <el-checkbox
+                :label="item.countryName"
+                @change="handleChooseCountry(item.id)"
+              ></el-checkbox>
+            </div>
             <button
               class="el-icon-arrow-right"
               @click="getCitiesByCountry(item.id)"
@@ -59,7 +71,12 @@
               <div class="font-semibold text-lg">City</div>
             </div>
             <div class="add-header-btn">
-              <el-button type="primary" icon="el-icon-plus">Create</el-button>
+              <el-button
+                type="primary"
+                icon="el-icon-plus"
+                @click="isCreateAddress('city')"
+                >Create</el-button
+              >
             </div>
           </div>
           <div v-if="cities.length == '0'">
@@ -70,6 +87,9 @@
             class="p-3 hover:bg-slate-100 item h-16 flex justify-between items-center"
             v-for="item in cities"
             :key="item.value"
+            :class="
+              isCitySelected == item.value ? 'is-selected' : 'is-not-selected'
+            "
           >
             <div><el-checkbox :label="item.label"></el-checkbox></div>
             <button
@@ -97,7 +117,12 @@
               <div class="font-semibold text-lg">District</div>
             </div>
             <div class="add-header-btn">
-              <el-button type="primary" icon="el-icon-plus">Create</el-button>
+              <el-button
+                type="primary"
+                icon="el-icon-plus"
+                @click="isCreateAddress('district')"
+                >Create</el-button
+              >
             </div>
           </div>
           <div v-if="districts.length == '0'">
@@ -108,6 +133,11 @@
             class="p-3 hover:bg-slate-100 item h-16 flex justify-between items-center"
             v-for="item in districts"
             :key="item.value"
+            :class="
+              isDistrictSelected == item.value
+                ? 'is-selected'
+                : 'is-not-selected'
+            "
           >
             <div><el-checkbox :label="item.label"></el-checkbox></div>
             <button
@@ -135,7 +165,12 @@
               <div class="font-semibold text-lg">Subdistrict</div>
             </div>
             <div class="add-header-btn">
-              <el-button type="primary" icon="el-icon-plus">Create</el-button>
+              <el-button
+                type="primary"
+                icon="el-icon-plus"
+                @click="isCreateAddress('subdistrict')"
+                >Create</el-button
+              >
             </div>
           </div>
           <div v-if="subdistricts.length == '0'">
@@ -206,17 +241,16 @@ export default {
     handleDataAddr(field) {
       switch (field.id) {
         case "country":
-          console.log("country", field);
           this.handleCreateCountry(field);
           break;
         case "city":
-          console.log("city", field);
+          this.handleCreateCity(field);
           break;
         case "district":
-          console.log("district", field);
+          this.handleCreateDistrict(field);
           break;
         case "subdistrict":
-          console.log("subdistrict", field);
+          this.handleCreateSubdistrict(field);
           break;
         default:
           return;
@@ -253,6 +287,124 @@ export default {
           this.$refs.observerAdd.setErrors(error.response.data.items);
         });
     },
+
+    handleCreateCity(field) {
+      const city = {
+        countryId: field.refId,
+        name: field.value,
+      };
+      axios({
+        method: "post",
+        url: "http://localhost:9090/api/v1/city",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: city,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Created successfully",
+              type: "success",
+            });
+            this.getCitiesByCountry(field.refId);
+            this.dialogVisible = false;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+          this.$refs.observerAdd.setErrors(error.response.data.items);
+        });
+    },
+
+    handleCreateDistrict(field) {
+      const district = {
+        cityId: field.refId,
+        name: field.value,
+      };
+      axios({
+        method: "post",
+        url: "http://localhost:9090/api/v1/district",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: district,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Created successfully",
+              type: "success",
+            });
+            this.getListDistrictByCity(field.refId);
+            this.dialogVisible = false;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+          this.$refs.observerAdd.setErrors(error.response.data.items);
+        });
+    },
+
+    handleCreateSubdistrict(field) {
+      const subdistrict = {
+        districtId: field.refId,
+        name: field.value,
+      };
+      axios({
+        method: "post",
+        url: "http://localhost:9090/api/v1/subDistrict",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: subdistrict,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Created successfully",
+              type: "success",
+            });
+            this.getListSubDistrictByDistrict(field.refId);
+            this.dialogVisible = false;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+          this.$refs.observerAdd.setErrors(error.response.data.items);
+        });
+    },
+
+    handleDeleteCountry() {
+      //TODO: Handle delete a list of address
+      console.log("country-id", this.isCountrySelected);
+    },
+    handleDeleteCity(id) {
+      console.log("handleDeleteCity", id);
+    },
+    handleDeleteDistrict(id) {
+      console.log("handleDeleteDistrict", id);
+    },
+    handleDeleteSubdistrict(id) {
+      console.log("handleDeleteSubdistrict", id);
+    },
+    handleChooseCountry(id) {
+      if (this.isCountrySelected == id) {
+        this.isCountrySelected = 0;
+      } else {
+        this.isCountrySelected = id;
+      }
+      console.log("this.isCountrySelected", this.isCountrySelected);
+    },
     isOpenCityTab() {
       this.isHideCity = false;
       this.isHideDistrict = true;
@@ -265,23 +417,79 @@ export default {
     isOpenSubdistrictTab() {
       this.isHideSubdistrict = false;
     },
-    isCreateAddress() {
-      this.dialogVisible = true;
-      this.addressField = {
-        title: "Create Country",
-        id: "country",
-        refId: "",
-        classes: "!w-full",
-        type: "text",
-        label: "Country",
-        rules: "required",
-        isRequired: "true",
-        value: "",
-        placeholder: "Typing country name...",
-        maxlength: 50,
-        error: "",
-      };
-      console.log(this.addressField);
+    isCreateAddress(type) {
+      switch (type) {
+        case "country":
+          this.dialogVisible = true;
+          this.addressField = {
+            title: "Create Country",
+            id: "country",
+            refId: "",
+            classes: "!w-full",
+            type: "text",
+            label: "Country",
+            rules: "required",
+            isRequired: "true",
+            value: "",
+            placeholder: "Typing country name...",
+            maxlength: 50,
+            error: "",
+          };
+          break;
+        case "city":
+          this.dialogVisible = true;
+          this.addressField = {
+            title: "Create City",
+            id: "city",
+            refId: this.isCountrySelected,
+            classes: "!w-full",
+            type: "text",
+            label: "City",
+            rules: "required",
+            isRequired: "true",
+            value: "",
+            placeholder: "Typing city name...",
+            maxlength: 50,
+            error: "",
+          };
+          break;
+        case "district":
+          this.dialogVisible = true;
+          this.addressField = {
+            title: "Create District",
+            id: "district",
+            refId: this.isCitySelected,
+            classes: "!w-full",
+            type: "text",
+            label: "District",
+            rules: "required",
+            isRequired: "true",
+            value: "",
+            placeholder: "Typing district name...",
+            maxlength: 50,
+            error: "",
+          };
+          break;
+        case "subdistrict":
+          this.dialogVisible = true;
+          this.addressField = {
+            title: "Create Subdistrict",
+            id: "subdistrict",
+            refId: this.isDistrictSelected,
+            classes: "!w-full",
+            type: "text",
+            label: "Subdistrict",
+            rules: "required",
+            isRequired: "true",
+            value: "",
+            placeholder: "Typing subdistrict name...",
+            maxlength: 50,
+            error: "",
+          };
+          break;
+        default:
+          return;
+      }
     },
     getCountries() {
       this.loadingTable = true;
@@ -309,6 +517,9 @@ export default {
       this.isHideSubdistrict = true;
       this.loadingTable = true;
       this.isCountrySelected = countryId;
+      this.isCitySelected = 0;
+      this.isDistrictSelected = 0;
+      this.isSubdistrictSelected = 0;
       axios
         .get("http://localhost:9090/api/v1/city", {
           headers: { "Access-Control-Allow-Origin": "*" },
@@ -331,6 +542,9 @@ export default {
     },
 
     getListDistrictByCity(id) {
+      this.isCitySelected = id;
+      this.isDistrictSelected = 0;
+      this.isSubdistrictSelected = 0;
       this.loadingTable = true;
       this.isHideSubdistrict = true;
       axios
@@ -355,6 +569,8 @@ export default {
     },
     getListSubDistrictByDistrict(id) {
       this.loadingTable = true;
+      this.isDistrictSelected = id;
+      this.isSubdistrictSelected = 0;
       axios
         .get("http://localhost:9090/api/v1/subDistrict", {
           headers: { "Access-Control-Allow-Origin": "*" },
