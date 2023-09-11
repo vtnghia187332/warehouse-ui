@@ -14,7 +14,7 @@
             </div>
             <div class="add-header-btn flex">
               <el-button
-                v-show="isCountrySelected"
+                v-show="this.countriesChoosed.length > 0"
                 type="danger"
                 class="bg-red-600"
                 @click="handleDeleteCountry()"
@@ -40,7 +40,7 @@
               isCountrySelected == item.id ? 'is-selected' : 'is-not-selected'
             "
           >
-            <div>
+            <div @dblclick="handleUpdateAddress(item, 'country')">
               <el-checkbox
                 :label="item.countryName"
                 @change="handleChooseCountry(item.id)"
@@ -216,12 +216,14 @@ export default {
       isCitySelected: null,
       isDistrictSelected: null,
       isSubdistrictSelected: null,
+      countriesChoosed: [],
       countries: [],
       cities: [],
       districts: [],
       subdistricts: [],
       addressField: {
         title: "",
+        baseId: "",
         id: "",
         refId: "",
         classes: "!w-full",
@@ -233,6 +235,7 @@ export default {
         placeholder: "",
         maxlength: 50,
         error: "",
+        actionType: "",
       },
       dialogVisible: false,
     };
@@ -241,7 +244,12 @@ export default {
     handleDataAddr(field) {
       switch (field.id) {
         case "country":
-          this.handleCreateCountry(field);
+          if (field.actionType == "CREATED") {
+            this.handleCreateCountry(field);
+          } else if (field.actionType == "UPDATED") {
+            this.updateCountry(field);
+          }
+          this.countriesChoosed = [];
           break;
         case "city":
           this.handleCreateCity(field);
@@ -281,10 +289,9 @@ export default {
         .catch((error) => {
           this.$message({
             showClose: true,
-            message: error.response.data.items,
+            message: error.response.data.message,
             type: "error",
           });
-          this.$refs.observerAdd.setErrors(error.response.data.items);
         });
     },
 
@@ -313,10 +320,9 @@ export default {
         .catch((error) => {
           this.$message({
             showClose: true,
-            message: error.response.data.items,
+            message: error.response.data.message,
             type: "error",
           });
-          this.$refs.observerAdd.setErrors(error.response.data.items);
         });
     },
 
@@ -345,10 +351,9 @@ export default {
         .catch((error) => {
           this.$message({
             showClose: true,
-            message: error.response.data.items,
+            message: error.response.data.message,
             type: "error",
           });
-          this.$refs.observerAdd.setErrors(error.response.data.items);
         });
     },
 
@@ -377,16 +382,97 @@ export default {
         .catch((error) => {
           this.$message({
             showClose: true,
-            message: error.response.data.items,
+            message: error.response.data.message,
             type: "error",
           });
-          this.$refs.observerAdd.setErrors(error.response.data.items);
         });
     },
 
+    handleUpdateAddress(item, type) {
+      switch (type) {
+        case "country":
+          this.dialogVisible = true;
+          this.addressField = {
+            title: "Update Country",
+            baseId: item.id,
+            id: "country",
+            refId: "",
+            classes: "!w-full",
+            type: "text",
+            label: "Country",
+            rules: "required",
+            isRequired: "true",
+            value: item.countryName,
+            placeholder: "Typing country name...",
+            maxlength: 50,
+            error: "",
+            actionType: "UPDATED",
+          };
+          break;
+        case "city":
+          this.dialogVisible = true;
+          this.addressField = {
+            title: "Update City",
+            baseId: item.id,
+            id: "city",
+            refId: this.isCountrySelected,
+            classes: "!w-full",
+            type: "text",
+            label: "City",
+            rules: "required",
+            isRequired: "true",
+            value: item.label,
+            placeholder: "Typing city name...",
+            maxlength: 50,
+            error: "",
+            actionType: "UPDATED",
+          };
+          break;
+        case "district":
+          this.dialogVisible = true;
+          this.addressField = {
+            title: "Update District",
+            baseId: item.id,
+            id: "district",
+            refId: this.isCitySelected,
+            classes: "!w-full",
+            type: "text",
+            label: "District",
+            rules: "required",
+            isRequired: "true",
+            value: item.label,
+            placeholder: "Typing district name...",
+            maxlength: 50,
+            error: "",
+            actionType: "UPDATED",
+          };
+          break;
+        case "subdistrict":
+          this.dialogVisible = true;
+          this.addressField = {
+            title: "Update Subdistrict",
+            baseId: item.id,
+            id: "subdistrict",
+            refId: this.isDistrictSelected,
+            classes: "!w-full",
+            type: "text",
+            label: "Subdistrict",
+            rules: "required",
+            isRequired: "true",
+            value: item.label,
+            placeholder: "Typing subdistrict name...",
+            maxlength: 50,
+            error: "",
+            actionType: "UPDATED",
+          };
+          break;
+        default:
+          return;
+      }
+    },
+
     handleDeleteCountry() {
-      //TODO: Handle delete a list of address
-      console.log("country-id", this.isCountrySelected);
+      this.deleteCountries();
     },
     handleDeleteCity(id) {
       console.log("handleDeleteCity", id);
@@ -398,12 +484,12 @@ export default {
       console.log("handleDeleteSubdistrict", id);
     },
     handleChooseCountry(id) {
-      if (this.isCountrySelected == id) {
-        this.isCountrySelected = 0;
+      const index = this.countriesChoosed.indexOf(id);
+      if (index > -1) {
+        this.countriesChoosed.splice(index, 1);
       } else {
-        this.isCountrySelected = id;
+        this.countriesChoosed.push(id);
       }
-      console.log("this.isCountrySelected", this.isCountrySelected);
     },
     isOpenCityTab() {
       this.isHideCity = false;
@@ -434,6 +520,7 @@ export default {
             placeholder: "Typing country name...",
             maxlength: 50,
             error: "",
+            actionType: "CREATED",
           };
           break;
         case "city":
@@ -451,6 +538,7 @@ export default {
             placeholder: "Typing city name...",
             maxlength: 50,
             error: "",
+            actionType: "CREATED",
           };
           break;
         case "district":
@@ -468,6 +556,7 @@ export default {
             placeholder: "Typing district name...",
             maxlength: 50,
             error: "",
+            actionType: "CREATED",
           };
           break;
         case "subdistrict":
@@ -485,6 +574,7 @@ export default {
             placeholder: "Typing subdistrict name...",
             maxlength: 50,
             error: "",
+            actionType: "CREATED",
           };
           break;
         default:
@@ -516,7 +606,6 @@ export default {
       this.isHideDistrict = true;
       this.isHideSubdistrict = true;
       this.loadingTable = true;
-      this.isCountrySelected = countryId;
       this.isCitySelected = 0;
       this.isDistrictSelected = 0;
       this.isSubdistrictSelected = 0;
@@ -581,6 +670,65 @@ export default {
             this.subdistricts = res.data.items;
           }
           this.isHideSubdistrict = false;
+          this.loadingTable = false;
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
+    updateCountry(field) {
+      console.log(field, "fieldfield");
+      const country = {
+        id: field.baseId,
+        name: field.value,
+      };
+      axios({
+        method: "put",
+        url: "http://localhost:9090/api/v1/country",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: country,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Updated successfully",
+              type: "success",
+            });
+            this.getCountries();
+            this.dialogVisible = false;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.message,
+            type: "error",
+          });
+        });
+    },
+
+    deleteCountries() {
+      this.loadingTable = true;
+      axios
+        .delete("http://localhost:9090/api/v1/country", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+          params: { id: this.countriesChoosed.toString() },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Created successfully",
+              type: "success",
+            });
+            this.getCountries();
+            this.countriesChoosed = [];
+          }
           this.loadingTable = false;
         })
         .catch((error) => {
