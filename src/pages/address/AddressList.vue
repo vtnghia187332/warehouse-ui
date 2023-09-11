@@ -70,7 +70,14 @@
             <div class="">
               <div class="font-semibold text-lg">City</div>
             </div>
-            <div class="add-header-btn">
+            <div class="add-header-btn flex">
+              <el-button
+                v-show="this.citiesChoosed.length > 0"
+                type="danger"
+                class="bg-red-600"
+                @click="handleDeleteCity()"
+                >Delete</el-button
+              >
               <el-button
                 type="primary"
                 icon="el-icon-plus"
@@ -91,7 +98,12 @@
               isCitySelected == item.value ? 'is-selected' : 'is-not-selected'
             "
           >
-            <div><el-checkbox :label="item.label"></el-checkbox></div>
+            <div @dblclick="handleUpdateAddress(item, 'city')">
+              <el-checkbox
+                :label="item.label"
+                @change="handleChooseCity(item.value)"
+              ></el-checkbox>
+            </div>
             <button
               class="el-icon-arrow-right"
               @click="getListDistrictByCity(item.value)"
@@ -116,7 +128,14 @@
             <div class="">
               <div class="font-semibold text-lg">District</div>
             </div>
-            <div class="add-header-btn">
+            <div class="add-header-btn flex">
+              <el-button
+                v-show="this.districtsChoosed.length > 0"
+                type="danger"
+                class="bg-red-600"
+                @click="handleDeleteDistrict()"
+                >Delete</el-button
+              >
               <el-button
                 type="primary"
                 icon="el-icon-plus"
@@ -139,7 +158,12 @@
                 : 'is-not-selected'
             "
           >
-            <div><el-checkbox :label="item.label"></el-checkbox></div>
+            <div>
+              <el-checkbox
+                :label="item.label"
+                @change="handleChooseDistrict(item.value)"
+              ></el-checkbox>
+            </div>
             <button
               class="el-icon-arrow-right"
               @click="getListSubDistrictByDistrict(item.value)"
@@ -164,7 +188,14 @@
             <div class="">
               <div class="font-semibold text-lg">Subdistrict</div>
             </div>
-            <div class="add-header-btn">
+            <div class="add-header-btn flex">
+              <el-button
+                v-show="this.subdistrictsChoosed.length > 0"
+                type="danger"
+                class="bg-red-600"
+                @click="handleDeleteSubdistrict()"
+                >Delete</el-button
+              >
               <el-button
                 type="primary"
                 icon="el-icon-plus"
@@ -182,7 +213,12 @@
             v-for="item in subdistricts"
             :key="item.value"
           >
-            <div><el-checkbox :label="item.label"></el-checkbox></div>
+            <div>
+              <el-checkbox
+                :label="item.label"
+                @change="handleChooseSubdistrict(item.value)"
+              ></el-checkbox>
+            </div>
           </div>
         </div>
       </el-col>
@@ -212,11 +248,14 @@ export default {
       isHideCity: true,
       isHideDistrict: true,
       isHideSubdistrict: true,
-      isCountrySelected: false,
+      isCountrySelected: 0,
       isCitySelected: null,
       isDistrictSelected: null,
       isSubdistrictSelected: null,
       countriesChoosed: [],
+      citiesChoosed: [],
+      districtsChoosed: [],
+      subdistrictsChoosed: [],
       countries: [],
       cities: [],
       districts: [],
@@ -252,7 +291,13 @@ export default {
           this.countriesChoosed = [];
           break;
         case "city":
-          this.handleCreateCity(field);
+          console.log(field);
+          if (field.actionType == "CREATED") {
+            this.handleCreateCity(field);
+          } else if (field.actionType == "UPDATED") {
+            this.updateCity(field);
+          }
+          this.citiesChoosed = [];
           break;
         case "district":
           this.handleCreateDistrict(field);
@@ -297,7 +342,7 @@ export default {
 
     handleCreateCity(field) {
       const city = {
-        countryId: field.refId,
+        countryId: this.isCountrySelected,
         name: field.value,
       };
       axios({
@@ -413,7 +458,7 @@ export default {
           this.dialogVisible = true;
           this.addressField = {
             title: "Update City",
-            baseId: item.id,
+            baseId: item.value,
             id: "city",
             refId: this.isCountrySelected,
             classes: "!w-full",
@@ -432,7 +477,7 @@ export default {
           this.dialogVisible = true;
           this.addressField = {
             title: "Update District",
-            baseId: item.id,
+            baseId: item.value,
             id: "district",
             refId: this.isCitySelected,
             classes: "!w-full",
@@ -451,7 +496,7 @@ export default {
           this.dialogVisible = true;
           this.addressField = {
             title: "Update Subdistrict",
-            baseId: item.id,
+            baseId: item.value,
             id: "subdistrict",
             refId: this.isDistrictSelected,
             classes: "!w-full",
@@ -475,13 +520,13 @@ export default {
       this.deleteCountries();
     },
     handleDeleteCity(id) {
-      console.log("handleDeleteCity", id);
+      this.deleteCities();
     },
     handleDeleteDistrict(id) {
-      console.log("handleDeleteDistrict", id);
+      this.deleteDistricts();
     },
     handleDeleteSubdistrict(id) {
-      console.log("handleDeleteSubdistrict", id);
+      this.deleteSubdistricts();
     },
     handleChooseCountry(id) {
       const index = this.countriesChoosed.indexOf(id);
@@ -489,6 +534,30 @@ export default {
         this.countriesChoosed.splice(index, 1);
       } else {
         this.countriesChoosed.push(id);
+      }
+    },
+    handleChooseCity(id) {
+      const index = this.citiesChoosed.indexOf(id);
+      if (index > -1) {
+        this.citiesChoosed.splice(index, 1);
+      } else {
+        this.citiesChoosed.push(id);
+      }
+    },
+    handleChooseDistrict(id) {
+      const index = this.districtsChoosed.indexOf(id);
+      if (index > -1) {
+        this.districtsChoosed.splice(index, 1);
+      } else {
+        this.districtsChoosed.push(id);
+      }
+    },
+    handleChooseSubdistrict(id) {
+      const index = this.subdistrictsChoosed.indexOf(id);
+      if (index > -1) {
+        this.subdistrictsChoosed.splice(index, 1);
+      } else {
+        this.subdistrictsChoosed.push(id);
       }
     },
     isOpenCityTab() {
@@ -583,6 +652,9 @@ export default {
     },
     getCountries() {
       this.loadingTable = true;
+      this.isCitySelected = 0;
+      this.isDistrictSelected = 0;
+      this.isSubdistrictSelected = 0;
       axios
         .get("http://localhost:9090/api/v1/country", {
           headers: { "Access-Control-Allow-Origin": "*" },
@@ -606,6 +678,7 @@ export default {
       this.isHideDistrict = true;
       this.isHideSubdistrict = true;
       this.loadingTable = true;
+      this.isCountrySelected = countryId;
       this.isCitySelected = 0;
       this.isDistrictSelected = 0;
       this.isSubdistrictSelected = 0;
@@ -712,6 +785,38 @@ export default {
         });
     },
 
+    updateCity(field) {
+      const city = {
+        countryId: this.isCountrySelected,
+        id: field.baseId,
+        name: field.value,
+      };
+      axios({
+        method: "put",
+        url: "http://localhost:9090/api/v1/city",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: city,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Updated successfully",
+              type: "success",
+            });
+            this.getCitiesByCountry(this.isCountrySelected);
+            this.dialogVisible = false;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.message,
+            type: "error",
+          });
+        });
+    },
+
     deleteCountries() {
       this.loadingTable = true;
       axios
@@ -728,6 +833,89 @@ export default {
             });
             this.getCountries();
             this.countriesChoosed = [];
+          }
+          this.loadingTable = false;
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
+    deleteCities() {
+      this.loadingTable = true;
+      axios
+        .delete("http://localhost:9090/api/v1/city", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+          params: { id: this.citiesChoosed.toString() },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Deleted successfully",
+              type: "success",
+            });
+            this.getCitiesByCountry(this.isCountrySelected);
+            this.citiesChoosed = [];
+          }
+          this.loadingTable = false;
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
+
+    deleteDistricts() {
+      this.loadingTable = true;
+      axios
+        .delete("http://localhost:9090/api/v1/district", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+          params: { id: this.districtsChoosed.toString() },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Deleted successfully",
+              type: "success",
+            });
+            this.getListDistrictByCity(this.isCitySelected);
+            this.districtsChoosed = [];
+          }
+          this.loadingTable = false;
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
+
+    deleteSubdistricts() {
+      this.loadingTable = true;
+      axios
+        .delete("http://localhost:9090/api/v1/subDistrict", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+          params: { id: this.subdistrictsChoosed.toString() },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Deleted successfully",
+              type: "success",
+            });
+            this.getListSubDistrictByDistrict(this.isDistrictSelected);
+            this.subdistrictsChoosed = [];
           }
           this.loadingTable = false;
         })
