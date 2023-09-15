@@ -4,9 +4,14 @@
       <template slot="links">
         <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel" />
         <sidebar-link to="/icons" name="Icons" icon="ti-pencil-alt2" />
-        <!-- <sidebar-link to="/notifications" name="Notifications" icon="ti-bell" /> -->
-        <sidebar-link to="/warehouse-list" name="WarehouseList" icon="ti-package" />
-        <sidebar-link to="/address" name="AddressList" icon="ti-map" />
+        <sidebar-link to="/warehouse-list" name="Warehouse" icon="ti-home" />
+        <sidebar-link to="/address" name="Address" icon="ti-map" />
+        <sidebar-link to="/product" name="Product" icon="ti-package" />
+        <sidebar-link to="/customer" name="Customer" icon="ti-user" />
+        <sidebar-link to="/contract" name="Contract" icon="ti-pencil-alt" />
+        <sidebar-link to="/category" name="Category" icon="ti-list-ol" />
+        <sidebar-link to="/single-unit" name="Single-Unit" icon="ti-slice" />
+        <sidebar-link to="/staff" name="Staff" icon="ti-headphone-alt" />
       </template>
       <mobile-menu>
         <li class="nav-item">
@@ -15,7 +20,12 @@
             <p>Stats</p>
           </a>
         </li>
-        <drop-down class="nav-item" title="5 Notifications" title-classes="nav-link" icon="ti-bell">
+        <drop-down
+          class="nav-item"
+          title="5 Notifications"
+          title-classes="nav-link"
+          icon="ti-bell"
+        >
           <a class="dropdown-item">Notification 1</a>
           <a class="dropdown-item">Notification 2</a>
           <a class="dropdown-item">Notification 3</a>

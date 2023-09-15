@@ -43,7 +43,7 @@
         style="width: 100%"
         @row-dblclick="goToDetailWarehouse"
         @sort-change="sortChange"
-        height="770"
+        height="800"
       >
         <div slot="append" v-if="warehouses.length == '0'">
           <el-empty :image-size="300"></el-empty>
@@ -86,7 +86,6 @@
         >
         </el-table-column>
         <el-table-column
-          sortable
           sortable
           prop="name"
           label="Warehouse Name"

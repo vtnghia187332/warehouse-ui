@@ -14,6 +14,12 @@ import WarehouseList from "@/pages/warehouse/WarehouseList.vue";
 import WarehouseDetail from "@/pages/warehouse/WarehouseDetail.vue";
 import WarehouseHistory from '@/pages/warehouse/WarehouseHistory';
 import AddressList from '@/pages/address/AddressList.vue';
+import CategoryList from '@/pages/categoryProduct/CategoryList.vue';
+import ProductList from '@/pages/product/ProductList.vue';
+import singleUnitList from '@/pages/singleUnit/SingleUnitList.vue';
+import ContractList from '@/pages/contract/ContractList.vue';
+import CustomerList from '@/pages/customer/CustomerList.vue';
+import StaffList from '@/pages/staff/StaffList.vue';
 
 const routes = [
   {
@@ -75,6 +81,36 @@ const routes = [
         path: "/address",
         name: "address",
         component: AddressList,
+      },
+      {
+        path: "/category",
+        name: "category",
+        component: CategoryList,
+      },
+      {
+        path: "/single-unit",
+        name: "Single-Unit",
+        component: singleUnitList,
+      },
+      {
+        path: "/product",
+        name: "product",
+        component: ProductList,
+      },
+      {
+        path: "/contract",
+        name: "contract",
+        component: ContractList,
+      },
+      {
+        path: "/customer",
+        name: "customer",
+        component: CustomerList,
+      },
+      {
+        path: "/staff",
+        name: "staff",
+        component: StaffList,
       },
     ],
   },

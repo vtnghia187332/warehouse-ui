@@ -1,10 +1,13 @@
 <template>
   <div class="p-3 bg-white">
+    <div class="mb-2 flex justify-end">
+      <el-button class="bg-blue-400" type="primary">Import</el-button>
+    </div>
     <LoadingPage v-show="loadingTable"></LoadingPage>
     <el-row :gutter="5">
       <el-col :span="6" v-show="!loadingTable">
         <div
-          class="address-col grid-content bg-purple h-[896px] shadow-2xl border-2"
+          class="address-col grid-content bg-purple h-[848px] shadow-2xl border-2"
         >
           <div
             class="p-3 item-header border-b-2 flex justify-between items-center"
@@ -62,7 +65,7 @@
         v-show="!loadingTable"
       >
         <div
-          class="address-col grid-content bg-purple h-[896px] shadow-2xl border-2"
+          class="address-col grid-content bg-purple h-[848px] shadow-2xl border-2"
         >
           <div
             class="p-3 item-header border-b-2 flex justify-between items-center"
@@ -120,7 +123,7 @@
         }"
       >
         <div
-          class="address-col grid-content bg-purple h-[896px] shadow-2xl border-2"
+          class="address-col grid-content bg-purple h-[848px] shadow-2xl border-2"
         >
           <div
             class="p-3 item-header border-b-2 flex justify-between items-center"
@@ -180,7 +183,7 @@
         }"
       >
         <div
-          class="address-col grid-content bg-purple h-[896px] shadow-2xl border-2"
+          class="address-col grid-content bg-purple h-[848px] shadow-2xl border-2"
         >
           <div
             class="p-3 item-header border-b-2 flex justify-between items-center"
