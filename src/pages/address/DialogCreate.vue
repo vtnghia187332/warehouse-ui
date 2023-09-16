@@ -16,7 +16,9 @@
           class="bg-blue-700"
           type="primary"
           @click="handleData"
-          >Create</el-button
+          >{{
+            field.actionType == "CREATED" ? "Create" : "Update"
+          }}</el-button
         >
       </span>
     </el-dialog>

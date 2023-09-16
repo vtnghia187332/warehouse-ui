@@ -5,8 +5,18 @@
         <BaseSearch :field="search" @get-value="getBaseSearchVal" />
       </div>
       <div class="flex">
-        <el-button type="danger" class="bg-red-600" @click="">Delete</el-button>
-        <el-button class="bg-blue-400" icon="el-icon-plus" type="primary"
+        <el-button
+          type="danger"
+          class="bg-red-600"
+          v-show="singleUnitSelected.length > 0"
+          @click="handleDeleteSingleUnit"
+          >Delete</el-button
+        >
+        <el-button
+          class="bg-blue-400"
+          icon="el-icon-plus"
+          type="primary"
+          @click="createUnit"
           >Create</el-button
         >
       </div>
@@ -16,8 +26,10 @@
       :data="singleUnits"
       style="width: 100%"
       v-show="!loadingTable"
-      height="800"
+      @row-dblclick="updateUnit"
+      @selection-change="handleSelectionChange"
     >
+      height="800" >
       <div slot="append" v-if="singleUnits.length == '0'">
         <el-empty :image-size="200"></el-empty>
       </div>
@@ -33,16 +45,43 @@
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     />
+    <DialogCreate
+      :field="unitField"
+      v-show="dialogVisible"
+      :dialogVisible.sync="dialogVisible"
+      v-model="unitField.value"
+      @handle-dataAddr="handleDataAddEdit"
+    />
   </div>
 </template>
 <script>
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
+import DialogCreate from "../address/DialogCreate.vue";
+import LoadingPage from "@/components/Cards/LoadingPage";
 import axios from "axios";
 export default {
-  components: { BaseSearch, BasePagination },
+  components: { BaseSearch, BasePagination, DialogCreate, LoadingPage },
   data() {
     return {
+      singleUnitSelected: [],
+      unitField: {
+        title: "",
+        baseId: "",
+        id: "",
+        refId: "",
+        classes: "!w-full",
+        type: "text",
+        label: "",
+        rules: "required",
+        isRequired: "true",
+        value: "",
+        placeholder: "",
+        maxlength: 50,
+        error: "",
+        actionType: "",
+      },
+      dialogVisible: false,
       singleUnits: [],
       loadingTable: false,
       search: {
@@ -59,6 +98,59 @@ export default {
     };
   },
   methods: {
+    handleSelectionChange(val) {
+      this.singleUnitSelected = [];
+      val.forEach((item) => {
+        this.singleUnitSelected.push(item.id);
+      });
+    },
+    handleDataAddEdit(field) {
+      this.dialogVisible = false;
+      if (field.actionType == "CREATED") {
+        this.handleCreateSingleUint(field);
+      } else if (field.actionType == "UPDATED") {
+        this.handleUpdateSingleUint(field);
+      }
+    },
+
+    createUnit() {
+      this.dialogVisible = true;
+      this.unitField = {
+        title: "Create Single Unit",
+        id: "singleUnit",
+        refId: "",
+        baseId: "",
+        classes: "!w-full",
+        type: "text",
+        label: "Single Unit",
+        rules: "required",
+        isRequired: "true",
+        value: "",
+        placeholder: "Typing Single Unit name...",
+        maxlength: 50,
+        error: "",
+        actionType: "CREATED",
+      };
+    },
+    updateUnit(row, col, event) {
+      this.dialogVisible = true;
+      this.unitField = {
+        title: "Update Single Unit",
+        id: "singleUnit",
+        refId: "",
+        baseId: row.id,
+        classes: "!w-full",
+        type: "text",
+        label: "Single Unit",
+        rules: "required",
+        isRequired: "true",
+        value: row.name,
+        placeholder: "Typing Single Unit name...",
+        maxlength: 50,
+        error: "",
+        actionType: "UPDATED",
+      };
+    },
     getBaseSearchVal(param) {
       clearTimeout(this.timer);
       this.timer = setTimeout(
@@ -103,6 +195,88 @@ export default {
             total: response.data.items.totalElements,
           }),
             (me.loadingTable = false);
+        })
+        .catch((error) => {
+          me.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
+    handleCreateSingleUint(field) {
+      const singleUnit = {
+        name: field.value,
+      };
+      axios({
+        method: "post",
+        url: "http://localhost:9090/api/v1/single-unit",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: singleUnit,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Created successfully",
+              type: "success",
+            });
+            this.getSingleUnit();
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.message,
+            type: "error",
+          });
+        });
+    },
+    handleUpdateSingleUint(field) {
+      const singleUnit = {
+        id: field.baseId,
+        name: field.value,
+      };
+      axios({
+        method: "put",
+        url: "http://localhost:9090/api/v1/single-unit",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: singleUnit,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Updated successfully",
+              type: "success",
+            });
+            this.getSingleUnit();
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.message,
+            type: "error",
+          });
+        });
+    },
+    handleDeleteSingleUnit() {
+      axios
+        .delete("http://localhost:9090/api/v1/single-unit", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+          params: { id: this.singleUnitSelected.toString() },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Deleted successfully",
+              type: "success",
+            });
+            this.getSingleUnit();
+            this.singleUnitSelected = [];
+          }
         })
         .catch((error) => {
           this.$message({

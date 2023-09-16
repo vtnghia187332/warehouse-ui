@@ -161,7 +161,7 @@
                 : 'is-not-selected'
             "
           >
-            <div>
+            <div @dblclick="handleUpdateAddress(item, 'district')">
               <el-checkbox
                 :label="item.label"
                 @change="handleChooseDistrict(item.value)"
@@ -216,7 +216,7 @@
             v-for="item in subdistricts"
             :key="item.value"
           >
-            <div>
+            <div @dblclick="handleUpdateAddress(item, 'subdistrict')">
               <el-checkbox
                 :label="item.label"
                 @change="handleChooseSubdistrict(item.value)"
@@ -303,10 +303,18 @@ export default {
           this.citiesChoosed = [];
           break;
         case "district":
-          this.handleCreateDistrict(field);
+          if (field.actionType == "CREATED") {
+            this.handleCreateDistrict(field);
+          } else if (field.actionType == "UPDATED") {
+            this.updateDistrict(field);
+          }
           break;
         case "subdistrict":
-          this.handleCreateSubdistrict(field);
+          if (field.actionType == "CREATED") {
+            this.handleCreateSubdistrict(field);
+          } else if (field.actionType == "UPDATED") {
+            this.updateSubdistrict(field);
+          }
           break;
         default:
           return;
@@ -437,6 +445,7 @@ export default {
     },
 
     handleUpdateAddress(item, type) {
+      console.log(item, type);
       switch (type) {
         case "country":
           this.dialogVisible = true;
@@ -808,6 +817,68 @@ export default {
               type: "success",
             });
             this.getCitiesByCountry(this.isCountrySelected);
+            this.dialogVisible = false;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.message,
+            type: "error",
+          });
+        });
+    },
+    updateDistrict(field) {
+      const district = {
+        cityId: this.isCitySelected,
+        id: field.baseId,
+        name: field.value,
+      };
+      axios({
+        method: "put",
+        url: "http://localhost:9090/api/v1/district",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: district,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Updated successfully",
+              type: "success",
+            });
+            this.getListDistrictByCity(this.isCitySelected);
+            this.dialogVisible = false;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.message,
+            type: "error",
+          });
+        });
+    },
+    updateSubdistrict(field) {
+      const subdistrict = {
+        districtId: this.isDistrictSelected,
+        id: field.baseId,
+        name: field.value,
+      };
+      axios({
+        method: "put",
+        url: "http://localhost:9090/api/v1/subDistrict",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: subdistrict,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Updated successfully",
+              type: "success",
+            });
+            this.getListSubDistrictByDistrict(this.isDistrictSelected);
             this.dialogVisible = false;
           }
         })
