@@ -19,6 +19,7 @@ import ProductList from '@/pages/product/ProductList.vue';
 import singleUnitList from '@/pages/singleUnit/SingleUnitList.vue';
 import ContractList from '@/pages/contract/ContractList.vue';
 import CustomerList from '@/pages/customer/CustomerList.vue';
+import CustomerDetail from '@/pages/customer/CustomerDetail.vue';
 import StaffList from '@/pages/staff/StaffList.vue';
 
 const routes = [
@@ -106,6 +107,11 @@ const routes = [
         path: "/customer",
         name: "customer",
         component: CustomerList,
+      },
+      {
+        path: "/customer-detail",
+        name: "customer-detail",
+        component: CustomerDetail,
       },
       {
         path: "/staff",

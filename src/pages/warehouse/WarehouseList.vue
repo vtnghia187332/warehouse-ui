@@ -32,7 +32,7 @@
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="HandleAddWarehouse"
         >
-          <i class="el-icon-plus ml font-bold"></i> Add
+          <i class="el-icon-plus ml font-bold"></i> Create
         </button>
       </div>
     </div>
