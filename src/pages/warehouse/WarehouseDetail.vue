@@ -350,7 +350,7 @@
               class="bg-blue-400"
               :disabled="invalid"
               type="primary"
-              >Create</el-button
+              >{{ warehouseId != 0 ? "Update" : "Create" }}</el-button
             >
           </div>
         </el-col>

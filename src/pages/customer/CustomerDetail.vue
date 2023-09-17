@@ -102,7 +102,7 @@
               class="bg-blue-400"
               :disabled="invalid"
               type="primary"
-              >Create</el-button
+              >{{ customerPId != 0 ? "Update" : "Create" }}</el-button
             >
           </div>
         </el-col>
@@ -128,6 +128,7 @@ export default {
   },
   data() {
     return {
+      customerPId: 0,
       customer: {
         fullName: {
           id: "fullname",
@@ -309,6 +310,8 @@ export default {
     handleSubmit() {
       const customerDetail = {
         warehouseId: 1,
+        id: this.customerPId,
+        customerId: this.$route.params.data.id,
         countryId: this.customer.country.value,
         cityId: this.customer.city.value,
         districtId: this.customer.district.value,
@@ -317,11 +320,42 @@ export default {
       Object.keys(this.customer).map((key) => {
         customerDetail[key] = this.customer[key].value;
       });
-      this.handleCreateCustomer(customerDetail);
+      if (this.$route.params.data.type === "EDIT") {
+        this.handleEditCustomer(customerDetail);
+      } else {
+        this.handleCreateCustomer(customerDetail);
+      }
     },
     handleCreateCustomer(customerDetail) {
       axios({
         method: "post",
+        url: "http://localhost:9090/api/v1/customer",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: customerDetail,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$router.push({ path: "/customer" });
+            this.$message({
+              showClose: true,
+              message: "Created successfully",
+              type: "success",
+            });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+          this.$refs.observerAdd.setErrors(error.response.data.items);
+        });
+    },
+    handleEditCustomer(customerDetail) {
+      console.log(customerDetail, "customerDetail");
+      axios({
+        method: "put",
         url: "http://localhost:9090/api/v1/customer",
         headers: { "Access-Control-Allow-Origin": "*" },
         data: customerDetail,
@@ -357,6 +391,7 @@ export default {
               Object.keys(this.customer).forEach((key) => {
                 this.customer[key].value = res.data.items[key];
               });
+              this.customerPId = res.data.items.id;
               this.customer.country.value = res.data.items.countryId;
               this.customer.city.value = res.data.items.cityId;
               this.customer.district.value = res.data.items.districtId;
