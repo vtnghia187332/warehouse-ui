@@ -13,6 +13,7 @@
       filterable
       :placeholder="field.placeholder"
       :id="field.id"
+      @change="updateInput($event)"
       :class="
         errors[0] || field.error
           ? `${field.classes} border-error rounded`
@@ -25,7 +26,6 @@
         :key="item.value"
         :label="item.label"
         :value="item.value"
-        @click="updateInput"
       >
       </el-option>
     </el-select>
@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     updateInput(event) {
-      this.$emit("input", event.target.value);
+      this.$emit("getValue", event);
     },
   },
 };

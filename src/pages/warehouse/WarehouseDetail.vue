@@ -313,40 +313,45 @@
                   />
                 </div>
                 <div class="col-span-6">
-                  <BaseSelection :field="address.country" />
+                  <BaseSelection
+                    @getValue="getValueCountry"
+                    v-model="address.country.value"
+                    :field="address.country"
+                  />
                 </div>
                 <div class="col-span-6">
-                  <BaseSelection :field="address.city" />
+                  <BaseSelection
+                    @getValue="getValueCountry"
+                    v-model="address.country.value"
+                    :field="address.city"
+                  />
                 </div>
                 <div class="col-span-6">
-                  <BaseSelection :field="address.district" />
+                  <BaseSelection
+                    @getValue="getValueCountry"
+                    v-model="address.country.value"
+                    :field="address.district"
+                  />
                 </div>
                 <div class="col-span-6">
-                  <BaseSelection :field="address.subdistrict" />
+                  <BaseSelection
+                    @getValue="getValueCountry"
+                    v-model="address.country.value"
+                    :field="address.subdistrict"
+                  />
                 </div>
               </div>
             </template>
           </FormCard>
-
-          <div
-            :class="
-              invalid
-                ? `footer-btn-fixed flex justify-end p-2 no-display`
-                : `footer-btn-fixed flex justify-end p-2`
-            "
-          >
-            <button
-              class="text-gray-500 border border-gray-500 font-bold py-2 px-4 rounded"
-              @click="handleCancelSubmit"
-            >
-              Cancel
-            </button>
-            <button
-              class="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          <div class="footer-btn-fixed flex justify-end p-4">
+            <el-button @click="handleCancelSubmit">Cancel</el-button>
+            <el-button
               @click="handleSubmit"
+              class="bg-blue-400"
+              :disabled="invalid"
+              type="primary"
+              >Create</el-button
             >
-              Create
-            </button>
           </div>
         </el-col>
         <el-col :span="5" class="">
@@ -566,36 +571,30 @@ export default {
       return moment;
     },
   },
-  watch: {
-    "address.country.value": function (newVal, oldVal) {
-      if (newVal) {
-        this.address.city.disabled = "notDisabled";
-        this.getListCityByCountry(newVal);
-        this.address.city.value = "";
-        this.address.district.value = "";
-        this.address.district.disabled = "disabled";
-        this.address.subdistrict.value = "";
-        this.address.subdistrict.disabled = "disabled";
-      }
-    },
-    "address.city.value": function (newVal, oldVal) {
-      if (newVal) {
-        this.address.district.disabled = "notDisabled";
-        this.getListDistrictByCity(newVal);
-        this.address.district.value = "";
-        this.address.subdistrict.value = "";
-        this.address.subdistrict.disabled = "disabled";
-      }
-    },
-    "address.district.value": function (newVal, oldVal) {
-      if (newVal) {
-        this.address.subdistrict.disabled = "notDisabled";
-        this.getListSubDistrictByDistrict(newVal);
-        this.address.subdistrict.value = "";
-      }
-    },
-  },
+  watch: {},
   methods: {
+    getValueCountry(newVal) {
+      this.address.city.disabled = "notDisabled";
+      this.getListCityByCountry(newVal);
+      this.address.city.value = "";
+      this.address.district.value = "";
+      this.address.district.disabled = "disabled";
+      this.address.subdistrict.value = "";
+      this.address.subdistrict.disabled = "disabled";
+    },
+    getValueCity(newVal) {
+      this.address.district.disabled = "notDisabled";
+      this.getListDistrictByCity(newVal);
+      this.address.district.value = "";
+      this.customer.subdistrict.value = "";
+      this.address.subdistrict.disabled = "disabled";
+    },
+    getValueDistrict(newVal) {
+      this.address.subdistrict.disabled = "notDisabled";
+      this.getListSubDistrictByDistrict(newVal);
+      this.address.subdistrict.value = "";
+    },
+    getValueSubdistrict() {},
     handleCancelSubmit() {
       this.$confirm("Are you sure to canncel adding Warehouse")
         .then((_) => {
@@ -783,6 +782,10 @@ export default {
               Object.keys(this.address).forEach((key) => {
                 this.address[key].value = res.data.items[key];
               });
+              this.address.city.disabled = "notDisabled";
+              this.address.district.disabled = "notDisabled";
+              this.address.subdistrict.disabled = "notDisabled";
+
               this.initTimeWorking(res.data.items.openWorkingHour);
               this.initSpecialtime(res.data.items.specialDayTimes);
               this.warehouseChain.data = res.data.items.warehousechainRes;
@@ -813,6 +816,9 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             this.address.country.options = res.data.items.countriesLists;
+            this.address.city.options = res.data.items.citiesLists;
+            this.address.district.options = res.data.items.districtsLists;
+            this.address.subdistrict.options = res.data.items.subdistrictLists;
           }
         })
         .catch((error) => {
@@ -887,8 +893,8 @@ export default {
       this.$router.push({ path: "/warehouse-list" });
       return;
     }
-    this.getWarehouseDetail();
     this.getListAddress();
+    this.getWarehouseDetail();
     this.loadingPageDetail = false;
   },
 };

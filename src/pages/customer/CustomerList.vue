@@ -30,7 +30,7 @@
       <el-table
         :data="customers"
         style="width: 100%"
-        @row-dblclick=""
+        @row-dblclick="updateCustomer"
         @sort-change=""
         height="800"
       >
@@ -129,6 +129,16 @@ export default {
       };
       this.$router.push({
         name: "customer-detail",
+        params: { data },
+      });
+    },
+    updateCustomer(row) {
+      let data = {
+        id: row.customerId,
+        type: "EDIT",
+      };
+      this.$router.push({
+        name: "customer-detail", //use name for router push
         params: { data },
       });
     },
