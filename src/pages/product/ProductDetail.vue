@@ -1,6 +1,6 @@
 <template>
   <ValidationObserver v-slot="{ invalid }" ref="observerAdd">
-    <div>
+    <div class="mb-16">
       <el-row class="pt-4 pl-3 pr-3" :gutter="20">
         <el-col :span="18" class="forms grow">
           <FormCard title="Information" class="mb-3">
@@ -40,7 +40,6 @@
                     />
                   </div>
                 </div>
-                
 
                 <div class="col-span-12 grid grid-cols-12 gap-x-6">
                   <div class="col-span-6">
@@ -62,6 +61,62 @@
             </template>
           </FormCard>
 
+          <FormCard title="Conversation Unit" class="mb-3">
+            <template v-slot:content>
+              <el-table
+                height="448"
+                :data="units"
+                style="width: 100%"
+                @row-dblclick=""
+              >
+                <div slot="append" v-if="units.length == '0'">
+                  <el-empty :image-size="200"></el-empty>
+                </div>
+
+                <el-table-column label="STT" type="index" :index="indexMethod">
+                </el-table-column>
+                <el-table-column label="Date" prop="date">
+                  <template slot-scope="scope">
+                    <!-- {{ moment(scope.row.date).format("DD/MM/YYYY") }} -->
+                  </template>
+                </el-table-column>
+                <el-table-column label="Time" prop="time">
+                  <template slot-scope="scope">
+                    <!-- {{
+                      moment(scope.row.time[0]).format("HH:mm") +
+                      " - " +
+                      moment(scope.row.time[1]).format("HH:mm")
+                    }} -->
+                  </template>
+                </el-table-column>
+                <el-table-column label="Remark" prop="remark">
+                  <template slot-scope="scope">
+                    <!-- {{ scope.row.remark }} -->
+                  </template>
+                </el-table-column>
+                <el-table-column align="right">
+                  <template slot="header" slot-scope="scope">
+                    <el-button
+                      size="mini"
+                      type="primary"
+                      class="bg-blue-300"
+                      @click=""
+                      >Add</el-button
+                    >
+                  </template>
+                  <template slot-scope="scope">
+                    <el-button
+                      size="mini"
+                      type="danger"
+                      class="bg-red-300"
+                      @click=""
+                      >Delete</el-button
+                    >
+                  </template>
+                </el-table-column>
+              </el-table>
+            </template>
+          </FormCard>
           <FormCard title="Barcode" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
@@ -76,7 +131,21 @@
           </FormCard>
         </el-col>
         <el-col :span="6">
+          <FormCard title="Product ID" class="mb-3">
+            <template v-slot:content>
+              <div class="grid grid-cols-12 gap-x-6">
+                <div class="col-span-12"></div>
+              </div>
+            </template>
+          </FormCard>
           <FormCard title="More Information" class="mb-3">
+            <template v-slot:content>
+              <div class="grid grid-cols-12 gap-x-6">
+                <div class="col-span-12"></div>
+              </div>
+            </template>
+          </FormCard>
+          <FormCard title="Category" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12"></div>
@@ -116,6 +185,7 @@ export default {
   data() {
     return {
       productPId: 0,
+      units: [],
       product: {
         name: {
           id: "name",

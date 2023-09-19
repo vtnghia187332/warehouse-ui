@@ -1,6 +1,6 @@
 <template>
   <ValidationObserver v-slot="{ invalid }" ref="observerAdd">
-    <div>
+    <div class="mb-16">
       <el-row class="pt-4 pl-3 pr-3" :gutter="20">
         <el-col :span="18" class="forms grow">
           <FormCard title="Information" class="mb-3">

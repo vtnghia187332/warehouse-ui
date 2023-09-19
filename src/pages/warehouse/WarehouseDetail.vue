@@ -3,7 +3,7 @@
     <loading-page v-show="loadingPageDetail"></loading-page>
     <div
       v-show="!loadingPageDetail"
-      class="bg-page-background overflow-y-auto w-full py-4"
+      class="bg-page-background overflow-y-auto w-full py-4 mb-16"
     >
       <el-row :gutter="20" class="flex gap-x-4 detail w-full">
         <el-col :span="15" class="forms grow">
