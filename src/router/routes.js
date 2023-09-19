@@ -16,6 +16,7 @@ import WarehouseHistory from '@/pages/warehouse/WarehouseHistory';
 import AddressList from '@/pages/address/AddressList.vue';
 import CategoryList from '@/pages/categoryProduct/CategoryList.vue';
 import ProductList from '@/pages/product/ProductList.vue';
+import ProductDetail from '@/pages/product/ProductDetail.vue';
 import singleUnitList from '@/pages/singleUnit/SingleUnitList.vue';
 import ContractList from '@/pages/contract/ContractList.vue';
 import CustomerList from '@/pages/customer/CustomerList.vue';
@@ -97,6 +98,11 @@ const routes = [
         path: "/product",
         name: "product",
         component: ProductList,
+      },
+      {
+        path: "/product-detail",
+        name: "product-detail",
+        component: ProductDetail,
       },
       {
         path: "/contract",
