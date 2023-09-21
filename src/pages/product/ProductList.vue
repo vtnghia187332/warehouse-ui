@@ -36,7 +36,7 @@
       <el-table
         :data="products"
         style="width: 100%"
-        @row-dblclick=""
+        @row-dblclick="updateProduct"
         @sort-change=""
         height="800"
       >
@@ -149,6 +149,17 @@ export default {
     };
   },
   methods: {
+    updateProduct(row) {
+      let data = {
+        id: row.productId,
+        type: "EDIT",
+      };
+      this.$router.push({
+        name: "product-detail", //use name for router push
+        params: { data },
+      });
+    },
+
     addProduct() {
       let data = {
         id: null,
@@ -158,6 +169,15 @@ export default {
         name: "product-detail",
         params: { data },
       });
+    },
+    handleSizeChange(param) {
+      this.paginationPage.pageNo = 1;
+      this.paginationPage.pageSize = param;
+      this.handleGetProducts();
+    },
+    handleCurrentChange(param) {
+      this.paginationPage.pageNo = param;
+      this.handleGetProducts();
     },
     handeDuplicateDetail() {},
     handeDeleteDetail() {},

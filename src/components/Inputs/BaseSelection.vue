@@ -5,7 +5,8 @@
     v-slot="{ errors }"
   >
     <label class="!font-bold block" :for="field.id">
-      <span class="text-danger">*</span>{{ field.label }}
+      <span v-if="field.isRequired == 'true'" class="text-danger">*</span
+      >{{ field.label }}
     </label>
     <el-select
       v-model="field.value"

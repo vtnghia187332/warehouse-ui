@@ -43,9 +43,10 @@
 
                 <div class="col-span-12 grid grid-cols-12 gap-x-6">
                   <div class="col-span-6">
-                    <BaseInput
-                      :field="product.singleUnit"
+                    <BaseSelection
+                      @getValue="handleChangeSingleUnit"
                       v-model="product.singleUnit.value"
+                      :field="product.singleUnit"
                     />
                   </div>
                 </div>
@@ -73,8 +74,7 @@
                   <el-empty :image-size="200"></el-empty>
                 </div>
 
-                <el-table-column label="STT" type="index" :index="indexMethod">
-                </el-table-column>
+                <el-table-column label="STT" type="index"> </el-table-column>
                 <el-table-column label="Date" prop="date">
                   <template slot-scope="scope">
                     <!-- {{ moment(scope.row.date).format("DD/MM/YYYY") }} -->
@@ -148,7 +148,13 @@
           <FormCard title="Category" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
-                <div class="col-span-12"></div>
+                <div class="col-span-12">
+                  <BaseSelection
+                    @getValue="handleChangeCategory"
+                    v-model="category.value"
+                    :field="category"
+                  />
+                </div>
               </div>
             </template>
           </FormCard>
@@ -202,16 +208,17 @@ export default {
         },
         singleUnit: {
           id: "singleUnit",
-          name: "Single Unit",
+          baseId: 0,
+          name: "singleUnit",
           rules: "required",
           classes: "w-full",
-          type: "text",
-          label: "Single Unit",
           isRequired: "true",
-          value: "",
-          placeholder: "Enter Single Unit...",
-          maxlength: 50,
+          placeholder: "Select Single Unit",
           error: "",
+          value: "",
+          disabled: "notDisabled",
+          label: "Single Unit",
+          options: [],
         },
         importPrice: {
           id: "importPrice",
@@ -292,16 +299,137 @@ export default {
           maxlength: 150,
           error: "",
         },
+        photo: {
+          id: "photo",
+          name: "Photo",
+          rules: "",
+          classes: "w-full col-span-6 !h-[64px]",
+          type: "text",
+          label: "Photo",
+          isRequired: "false",
+          value: "",
+          placeholder: "Enter Photo...",
+          maxlength: 150,
+          error: "",
+        },
+      },
+      category: {
+        id: "category",
+        baseId: 0,
+        name: "category",
+        rules: "",
+        classes: "w-full",
+        isRequired: "false",
+        placeholder: "Select Category",
+        error: "",
+        value: "",
+        disabled: "notDisabled",
+        label: "Category",
+        options: [],
       },
     };
   },
   methods: {
-    handleSubmit() {},
-    handleCancelSubmit() {},
-    getProductDetail() {},
+    handleChangeCategory(val) {},
+    handleChangeSingleUnit(val) {},
+    getValueCategory() {
+      axios
+        .get("http://localhost:9090/api/v1/category/list", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.category.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
+    getValueSingleUnit() {
+      axios
+        .get("http://localhost:9090/api/v1/single-unit/all", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.product.singleUnit.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
+    handleSubmit() {
+      const productDetail = {
+        warehouseId: 1,
+        id: this.productPId,
+        productId: this.$route.params.data.id,
+        //TODO
+        singleUnitId: 0,
+        categoryProductId: 0,
+      };
+      Object.keys(this.customer).map((key) => {
+        customerDetail[key] = this.customer[key].value;
+      });
+      if (this.$route.params.data.type === "EDIT") {
+        this.handleEditProduct(customerDetail);
+      } else {
+        this.handleCreateProduct(customerDetail);
+      }
+    },
+    handleEditProduct(customerDetail) {},
+    handleEditProduct(customerDetail) {},
+    handleCreateProduct() {
+      this.$confirm("Are you sure to canncel adding Customer")
+        .then((_) => {
+          this.$router.push({ path: "/product" });
+        })
+        .catch((_) => {});
+    },
+    getProductDetail() {
+      if (this.$route.params.data.id != null) {
+        axios
+          .get(
+            `http://localhost:9090/api/v1/product/detail/${this.$route.params.data.id}`,
+            { headers: { "Access-Control-Allow-Origin": "*" } }
+          )
+          .then((res) => {
+            if (res.status === 200) {
+              Object.keys(this.product).forEach((key) => {
+                this.product[key].value = res.data.items[key];
+                this.category.value = res.data.items.categoryProductRes.name;
+              });
+            }
+          })
+          .catch((error) => {
+            this.$message({
+              showClose: true,
+              message: error,
+              type: "error",
+            });
+          });
+        if (this.$route.params.data.type === "DUPLICATED") {
+        }
+      }
+    },
   },
   mounted() {
+    if (!this.$route.params.data) {
+      this.$router.push({ path: "/product" });
+      return;
+    }
     this.getProductDetail();
+    this.getValueCategory();
+    this.getValueSingleUnit();
   },
 };
 </script>
