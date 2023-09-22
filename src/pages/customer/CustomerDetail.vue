@@ -353,7 +353,6 @@ export default {
         });
     },
     handleEditCustomer(customerDetail) {
-      console.log(customerDetail, "customerDetail");
       axios({
         method: "put",
         url: "http://localhost:9090/api/v1/customer",

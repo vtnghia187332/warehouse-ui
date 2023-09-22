@@ -373,23 +373,74 @@ export default {
         warehouseId: 1,
         id: this.productPId,
         productId: this.$route.params.data.id,
-        //TODO
-        singleUnitId: 0,
-        categoryProductId: 0,
+        singleUnitId: this.product.singleUnit.value,
+        categoryProductId: this.category.value,
       };
-      Object.keys(this.customer).map((key) => {
-        customerDetail[key] = this.customer[key].value;
+      Object.keys(this.product || {}).map((key) => {
+        productDetail[key] = this.product[key].value;
       });
       if (this.$route.params.data.type === "EDIT") {
-        this.handleEditProduct(customerDetail);
+        this.handleEditProduct(productDetail);
       } else {
-        this.handleCreateProduct(customerDetail);
+        this.handleCreateProduct(productDetail);
       }
     },
-    handleEditProduct(customerDetail) {},
-    handleEditProduct(customerDetail) {},
-    handleCreateProduct() {
-      this.$confirm("Are you sure to canncel adding Customer")
+    handleEditProduct(productDetail) {
+      console.log(productDetail,"productDetailedit")
+      axios({
+        method: "put",
+        url: "http://localhost:9090/api/v1/product",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: productDetail,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$router.push({ path: "/product" });
+            this.$message({
+              showClose: true,
+              message: "Updated successfully",
+              type: "success",
+            });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+          this.$refs.observerAdd.setErrors(error.response.data.items);
+        });
+    },
+    async handleCreateProduct(productDetail) {
+      await axios({
+        method: "post",
+        url: "http://localhost:9090/api/v1/product",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: productDetail,
+      })
+        .then((response) => { 
+          if (response.status === 200) {
+            this.$router.push({ path: "/product" });
+            this.$message({
+              showClose: true,
+              message: "Created successfully",
+              type: "success",
+            });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+          console.log(error);
+          this.$refs.observerAdd.setErrors(error.response.data.items);
+        });
+    },
+    handleCancelSubmit() {
+      this.$confirm("Are you sure to canncel adding Product")
         .then((_) => {
           this.$router.push({ path: "/product" });
         })
