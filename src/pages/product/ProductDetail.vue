@@ -330,8 +330,12 @@ export default {
     };
   },
   methods: {
-    handleChangeCategory(val) {},
-    handleChangeSingleUnit(val) {},
+    handleChangeCategory(val) {
+      this.category.baseId = val;
+    },
+    handleChangeSingleUnit(val) {
+      this.product.singleUnit.baseId = val;
+    },
     getValueCategory() {
       axios
         .get("http://localhost:9090/api/v1/category/list", {
@@ -373,8 +377,8 @@ export default {
         warehouseId: 1,
         id: this.productPId,
         productId: this.$route.params.data.id,
-        singleUnitId: this.product.singleUnit.value,
-        categoryProductId: this.category.value,
+        singleUnitId: this.product.singleUnit.baseId,
+        categoryProductId: this.category.baseId,
       };
       Object.keys(this.product || {}).map((key) => {
         productDetail[key] = this.product[key].value;
@@ -386,7 +390,7 @@ export default {
       }
     },
     handleEditProduct(productDetail) {
-      console.log(productDetail,"productDetailedit")
+      console.log(productDetail);
       axios({
         method: "put",
         url: "http://localhost:9090/api/v1/product",
@@ -419,7 +423,7 @@ export default {
         headers: { "Access-Control-Allow-Origin": "*" },
         data: productDetail,
       })
-        .then((response) => { 
+        .then((response) => {
           if (response.status === 200) {
             this.$router.push({ path: "/product" });
             this.$message({
@@ -457,7 +461,11 @@ export default {
             if (res.status === 200) {
               Object.keys(this.product).forEach((key) => {
                 this.product[key].value = res.data.items[key];
+                
                 this.category.value = res.data.items.categoryProductRes.name;
+                this.category.baseId = res.data.items.categoryProductRes.id;
+                this.product.singleUnit.baseId = res.data.items.singleUnit.id;
+                this.product.singleUnit.value = res.data.items.singleUnit.name;
               });
             }
           })
