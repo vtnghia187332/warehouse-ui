@@ -321,22 +321,22 @@
                 </div>
                 <div class="col-span-6">
                   <BaseSelection
-                    @getValue="getValueCountry"
-                    v-model="address.country.value"
+                    @getValue="getValueCity"
+                    v-model="address.city.value"
                     :field="address.city"
                   />
                 </div>
                 <div class="col-span-6">
                   <BaseSelection
-                    @getValue="getValueCountry"
-                    v-model="address.country.value"
+                    @getValue="getValueDistrict"
+                    v-model="address.district.value"
                     :field="address.district"
                   />
                 </div>
                 <div class="col-span-6">
                   <BaseSelection
-                    @getValue="getValueCountry"
-                    v-model="address.country.value"
+                    @getValue="getValueSubdistrict"
+                    v-model="address.subdistrict.value"
                     :field="address.subdistrict"
                   />
                 </div>
@@ -585,8 +585,9 @@ export default {
     getValueCity(newVal) {
       this.address.district.disabled = "notDisabled";
       this.getListDistrictByCity(newVal);
+
       this.address.district.value = "";
-      this.customer.subdistrict.value = "";
+      this.address.subdistrict.value = "";
       this.address.subdistrict.disabled = "disabled";
     },
     getValueDistrict(newVal) {
@@ -819,6 +820,25 @@ export default {
             this.address.city.options = res.data.items.citiesLists;
             this.address.district.options = res.data.items.districtsLists;
             this.address.subdistrict.options = res.data.items.subdistrictLists;
+
+            const countries = res.data.items.countriesLists;
+            const cities = res.data.items.citiesLists;
+            const districts = res.data.items.districtsLists;
+            const subdistricts = res.data.items.subdistrictLists;
+            const countriesRes = countries;
+            const citiesRes = cities.filter(
+              (item) => item.countryRefId == this.address.country.value
+            );
+            const districtsRes = districts.filter(
+              (item) => item.cityRefId == this.address.city.value
+            );
+            const subdistrictsRes = subdistricts.filter(
+              (item) => item.districtRefId == this.address.district.value
+            );
+            this.address.country.options = countriesRes;
+            this.address.city.options = citiesRes;
+            this.address.district.options = districtsRes;
+            this.address.subdistrict.options = subdistrictsRes;
           }
         })
         .catch((error) => {
@@ -893,8 +913,8 @@ export default {
       this.$router.push({ path: "/warehouse-list" });
       return;
     }
-    this.getListAddress();
     this.getWarehouseDetail();
+    this.getListAddress();
     this.loadingPageDetail = false;
   },
 };

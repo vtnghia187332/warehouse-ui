@@ -67,31 +67,33 @@
               <el-table
                 height="448"
                 :data="units"
+                border
                 style="width: 100%"
-                @row-dblclick=""
+                @row-dblclick="handleCalUnitDetail"
               >
                 <div slot="append" v-if="units.length == '0'">
                   <el-empty :image-size="200"></el-empty>
                 </div>
 
                 <el-table-column label="STT" type="index"> </el-table-column>
-                <el-table-column label="Date" prop="date">
+                <el-table-column label="Conversation Unit" prop="">
                   <template slot-scope="scope">
-                    <!-- {{ moment(scope.row.date).format("DD/MM/YYYY") }} -->
+                    {{ scope.row.unitDestinationId }}
                   </template>
                 </el-table-column>
-                <el-table-column label="Time" prop="time">
+                <el-table-column label="Conservation Rate" prop="time">
                   <template slot-scope="scope">
-                    <!-- {{
-                      moment(scope.row.time[0]).format("HH:mm") +
-                      " - " +
-                      moment(scope.row.time[1]).format("HH:mm")
-                    }} -->
+                    {{ scope.row.unitStockDestination }}
                   </template>
                 </el-table-column>
-                <el-table-column label="Remark" prop="remark">
+                <el-table-column label="Caculation" prop="remark">
                   <template slot-scope="scope">
-                    <!-- {{ scope.row.remark }} -->
+                    {{ scope.row.calUnit }}
+                  </template>
+                </el-table-column>
+                <el-table-column label="Description" prop="remark">
+                  <template slot-scope="scope">
+                    {{ scope.row.description }}
                   </template>
                 </el-table-column>
                 <el-table-column align="right">
@@ -100,7 +102,7 @@
                       size="mini"
                       type="primary"
                       class="bg-blue-300"
-                      @click=""
+                      @click="AddConversationUnit"
                       >Add</el-button
                     >
                   </template>
@@ -170,6 +172,12 @@
           </div>
         </el-col>
       </el-row>
+      <ConversationUnitVue
+        :dialogVisibleUnit.sync="dialogVisibleUnit"
+        v-show="dialogVisibleUnit"
+        ref="cal-unit"
+        @handle-data="handleDataCalUnit"
+      />
     </div>
   </ValidationObserver>
 </template>
@@ -177,6 +185,7 @@
 import BaseInput from "./../../components/Inputs/BaseInput.vue";
 import axios from "axios";
 import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
+import ConversationUnitVue from "./ConversationUnit.vue";
 import FormCard from "./../../components/Cards/FormCard.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import { ValidationObserver } from "vee-validate";
@@ -186,10 +195,12 @@ export default {
     FormCard,
     BaseTextArea,
     BaseSelection,
+    ConversationUnitVue,
     ValidationObserver,
   },
   data() {
     return {
+      dialogVisibleUnit: false,
       productPId: 0,
       units: [],
       product: {
@@ -330,6 +341,23 @@ export default {
     };
   },
   methods: {
+    handleDataCalUnit(item) {
+      this.units.push(item);
+    },
+    handleCalUnitDetail(row, col, event) {
+      this.$refs["cal-unit"].initData({ ...row, id: { value: row.index } });
+    },
+    AddConversationUnit() {
+      let valueSingleUnit = "";
+      this.product.singleUnit.options.forEach((item) => {
+        if (item.value === this.product.singleUnit.value) {
+          valueSingleUnit = item.label;
+        }
+      });
+      this.$refs["cal-unit"].conversationUnit.unitOriginId.value =
+        valueSingleUnit;
+      this.dialogVisibleUnit = true;
+    },
     handleChangeCategory(val) {
       this.category.baseId = val;
     },
@@ -461,7 +489,7 @@ export default {
             if (res.status === 200) {
               Object.keys(this.product).forEach((key) => {
                 this.product[key].value = res.data.items[key];
-                
+
                 this.category.value = res.data.items.categoryProductRes.name;
                 this.category.baseId = res.data.items.categoryProductRes.id;
                 this.product.singleUnit.baseId = res.data.items.singleUnit.id;
