@@ -111,7 +111,7 @@
                       size="mini"
                       type="danger"
                       class="bg-red-300"
-                      @click=""
+                      @click="handleDeleteUnit(scope)"
                       >Delete</el-button
                     >
                   </template>
@@ -165,7 +165,6 @@
             <el-button
               @click="handleSubmit"
               class="bg-blue-400"
-              :disabled="invalid"
               type="primary"
               >{{ productPId != 0 ? "Update" : "Create" }}</el-button
             >
@@ -200,6 +199,24 @@ export default {
   },
   data() {
     return {
+      calculations: [
+        {
+          label: "+",
+          value: 0,
+        },
+        {
+          label: "-",
+          value: 1,
+        },
+        {
+          label: "*",
+          value: 2,
+        },
+        {
+          label: "/",
+          value: 3,
+        },
+      ],
       dialogVisibleUnit: false,
       productPId: 0,
       units: [],
@@ -341,7 +358,18 @@ export default {
     };
   },
   methods: {
+    handleDeleteUnit(item) {
+      const index = item.$index;
+      this.units.splice(index, 1);
+    },
     handleDataCalUnit(item) {
+      item.unitDestinationId =
+        this.product.singleUnit.options.find(
+          (opt) => opt.value == item.unitDestinationId
+        ).label || "";
+      item.calUnit =
+        this.calculations.find((opt) => opt.value == item.calUnit).label || "";
+
       this.units.push(item);
     },
     handleCalUnitDetail(row, col, event) {
@@ -401,12 +429,25 @@ export default {
         });
     },
     handleSubmit() {
+      if (this.units.length > 0) {
+        this.units.forEach((item) => {
+          item.unitOriginId =
+            this.product.singleUnit.options.find(
+              (opt) => opt.label == this.product.singleUnit.value
+            ).value || "";
+          item.unitDestinationId =
+            this.product.singleUnit.options.find(
+              (opt) => opt.label == item.unitDestinationId
+            ).value || "";
+        });
+      }
       const productDetail = {
         warehouseId: 1,
         id: this.productPId,
         productId: this.$route.params.data.id,
         singleUnitId: this.product.singleUnit.baseId,
         categoryProductId: this.category.baseId,
+        units: this.units,
       };
       Object.keys(this.product || {}).map((key) => {
         productDetail[key] = this.product[key].value;
@@ -418,7 +459,6 @@ export default {
       }
     },
     handleEditProduct(productDetail) {
-      console.log(productDetail);
       axios({
         method: "put",
         url: "http://localhost:9090/api/v1/product",
@@ -467,7 +507,6 @@ export default {
             message: error.response.data.items,
             type: "error",
           });
-          console.log(error);
           this.$refs.observerAdd.setErrors(error.response.data.items);
         });
     },
@@ -489,13 +528,19 @@ export default {
             if (res.status === 200) {
               Object.keys(this.product).forEach((key) => {
                 this.product[key].value = res.data.items[key];
-
+                this.units = res.data.items.units;
                 this.category.value = res.data.items.categoryProductRes.name;
                 this.category.baseId = res.data.items.categoryProductRes.id;
                 this.product.singleUnit.baseId = res.data.items.singleUnit.id;
                 this.product.singleUnit.value = res.data.items.singleUnit.name;
               });
             }
+            this.units.forEach((item) => {
+              item.unitDestinationId =
+                this.product.singleUnit.options.find(
+                  (opt) => opt.value == item.unitDestinationId
+                ).label || "";
+            });
           })
           .catch((error) => {
             this.$message({
@@ -509,15 +554,17 @@ export default {
       }
     },
   },
-  mounted() {
+  computed: {},
+  created() {
     if (!this.$route.params.data) {
       this.$router.push({ path: "/product" });
       return;
     }
-    this.getProductDetail();
     this.getValueCategory();
     this.getValueSingleUnit();
+    this.getProductDetail();
   },
+  mounted() {},
 };
 </script>
 <style scoped>

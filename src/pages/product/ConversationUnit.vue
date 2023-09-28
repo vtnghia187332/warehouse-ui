@@ -170,10 +170,6 @@ export default {
   methods: {
     handleData() {
       const dataReturn = {};
-      console.log(
-        this.conversationUnit.unitDestinationId,
-        "this.conversationUnit.unitDestinationId"
-      );
       dataReturn.unitOriginId = this.conversationUnit.unitOriginId.value;
       dataReturn.unitDestinationId =
         this.conversationUnit.unitDestinationId.value;
@@ -184,10 +180,11 @@ export default {
       this.handleCloseDialog();
     },
     getCalUnit(item) {},
-    getConversationDes(item) {
-      // console.log(item);
-    },
+    getConversationDes(item) {},
     handleCloseDialog() {
+      this.conversationUnit.unitDestinationId.value = "";
+      this.conversationUnit.unitStockDestination.value = "";
+      this.conversationUnit.calUnit.value = "";
       this.$emit("update:dialogVisibleUnit", false);
     },
     getValueSingleUnit() {
@@ -212,8 +209,18 @@ export default {
       console.log(data);
     },
   },
-  mounted() {
+  created() {
     this.getValueSingleUnit();
+  },
+  mounted() {
+    let validUnits = [];
+    validUnits = this.conversationUnit.unitDestinationId.options.filter(
+      (item) =>
+        item.label === this.conversationUnit.unitOriginId.value ||
+        item.value === this.conversationUnit.unitOriginId.value
+    );
+    console.log(validUnits);
+    this.conversationUnit.unitDestinationId.options = validUnits;
   },
 };
 </script>
