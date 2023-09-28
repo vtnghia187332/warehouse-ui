@@ -298,7 +298,6 @@ export default {
           }
         })
         .catch(function (res) {
-          console.log(res);
         });
     },
     handleSelectedItemChange(val) {
@@ -372,7 +371,6 @@ export default {
           }
         })
         .catch(function (res) {
-          console.log(res);
         });
     },
     handleChange(file) {

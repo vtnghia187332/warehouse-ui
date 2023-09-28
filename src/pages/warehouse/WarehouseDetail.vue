@@ -597,7 +597,7 @@ export default {
     },
     getValueSubdistrict() {},
     handleCancelSubmit() {
-      this.$confirm("Are you sure to canncel adding Warehouse")
+      this.$confirm("Are you sure to cancel adding Warehouse")
         .then((_) => {
           this.$router.push({ path: "/warehouse-list" });
         })

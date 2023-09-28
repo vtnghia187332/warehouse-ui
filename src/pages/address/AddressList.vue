@@ -294,7 +294,6 @@ export default {
           this.countriesChoosed = [];
           break;
         case "city":
-          console.log(field);
           if (field.actionType == "CREATED") {
             this.handleCreateCity(field);
           } else if (field.actionType == "UPDATED") {
@@ -445,7 +444,6 @@ export default {
     },
 
     handleUpdateAddress(item, type) {
-      console.log(item, type);
       switch (type) {
         case "country":
           this.dialogVisible = true;
@@ -766,7 +764,6 @@ export default {
         });
     },
     updateCountry(field) {
-      console.log(field, "fieldfield");
       const country = {
         id: field.baseId,
         name: field.value,

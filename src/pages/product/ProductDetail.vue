@@ -93,7 +93,16 @@
                 </el-table-column>
                 <el-table-column label="Description" prop="remark">
                   <template slot-scope="scope">
-                    {{ scope.row.description }}
+                    {{
+                      "1 " +
+                      scope.row.unitDestinationId +
+                      " = " +
+                      scope.row.unitStockDestination +
+                      " " +
+                      scope.row.calUnit +
+                      " " +
+                      scope.row.unitOriginId
+                    }}
                   </template>
                 </el-table-column>
                 <el-table-column align="right">
@@ -359,17 +368,27 @@ export default {
   },
   methods: {
     handleDeleteUnit(item) {
-      const index = item.$index;
-      this.units.splice(index, 1);
+      this.$confirm("Are you sure to remove this unit?")
+        .then((_) => {
+          const index = item.$index;
+          this.units.splice(index, 1);
+        })
+        .catch((_) => {});
     },
     handleDataCalUnit(item) {
       item.unitDestinationId =
         this.product.singleUnit.options.find(
-          (opt) => opt.value == item.unitDestinationId
+          (opt) =>
+            opt.value == item.unitDestinationId ||
+            opt.label == item.unitDestinationId
+        ).label || "";
+      item.unitOriginId =
+        this.product.singleUnit.options.find(
+          (opt) =>
+            opt.value == item.unitOriginId || opt.label == item.unitOriginId
         ).label || "";
       item.calUnit =
         this.calculations.find((opt) => opt.value == item.calUnit).label || "";
-
       this.units.push(item);
     },
     handleCalUnitDetail(row, col, event) {
@@ -377,13 +396,22 @@ export default {
     },
     AddConversationUnit() {
       let valueSingleUnit = "";
+      let listSingleUnitSelection = [];
       this.product.singleUnit.options.forEach((item) => {
-        if (item.value === this.product.singleUnit.value) {
+        if (
+          item.value === this.product.singleUnit.value ||
+          item.label === this.product.singleUnit.value
+        ) {
           valueSingleUnit = item.label;
         }
       });
       this.$refs["cal-unit"].conversationUnit.unitOriginId.value =
         valueSingleUnit;
+      listSingleUnitSelection = this.product.singleUnit.options.filter(
+        (item) => item.value != valueSingleUnit && item.label != valueSingleUnit
+      );
+      this.$refs["cal-unit"].conversationUnit.unitDestinationId.options =
+        listSingleUnitSelection;
       this.dialogVisibleUnit = true;
     },
     handleChangeCategory(val) {
@@ -433,11 +461,15 @@ export default {
         this.units.forEach((item) => {
           item.unitOriginId =
             this.product.singleUnit.options.find(
-              (opt) => opt.label == this.product.singleUnit.value
+              (opt) =>
+                opt.label == this.product.singleUnit.value ||
+                opt.value == this.product.singleUnit.value
             ).value || "";
           item.unitDestinationId =
             this.product.singleUnit.options.find(
-              (opt) => opt.label == item.unitDestinationId
+              (opt) =>
+                opt.label == item.unitDestinationId ||
+                opt.value == item.unitDestinationId
             ).value || "";
         });
       }
@@ -538,7 +570,15 @@ export default {
             this.units.forEach((item) => {
               item.unitDestinationId =
                 this.product.singleUnit.options.find(
-                  (opt) => opt.value == item.unitDestinationId
+                  (opt) =>
+                    opt.value == item.unitDestinationId ||
+                    opt.label == item.unitDestinationId
+                ).label || "";
+              item.unitOriginId =
+                this.product.singleUnit.options.find(
+                  (opt) =>
+                    opt.value == item.unitOriginId ||
+                    opt.label == item.unitOriginId
                 ).label || "";
             });
           })

@@ -187,41 +187,12 @@ export default {
       this.conversationUnit.calUnit.value = "";
       this.$emit("update:dialogVisibleUnit", false);
     },
-    getValueSingleUnit() {
-      axios
-        .get("http://localhost:9090/api/v1/single-unit/all", {
-          headers: { "Access-Control-Allow-Origin": "*" },
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            this.conversationUnit.unitDestinationId.options = res.data.items;
-          }
-        })
-        .catch((error) => {
-          this.$message({
-            showClose: true,
-            message: error,
-            type: "error",
-          });
-        });
-    },
     initData(data) {
       console.log(data);
     },
   },
-  created() {
-    this.getValueSingleUnit();
-  },
-  mounted() {
-    let validUnits = [];
-    validUnits = this.conversationUnit.unitDestinationId.options.filter(
-      (item) =>
-        item.label === this.conversationUnit.unitOriginId.value ||
-        item.value === this.conversationUnit.unitOriginId.value
-    );
-    console.log(validUnits);
-    this.conversationUnit.unitDestinationId.options = validUnits;
-  },
+  created() {},
+  mounted() {},
 };
 </script>
 <style></style>

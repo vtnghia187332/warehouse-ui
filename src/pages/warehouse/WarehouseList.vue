@@ -217,7 +217,6 @@ export default {
   computed: {},
   methods: {
     sortChange(column, prop, order) {
-      console.log(column);
       if (column.prop.order == null) {
         this.paginationPage = {
           pageNo: 1,
@@ -261,7 +260,6 @@ export default {
           }
         })
         .catch(function (res) {
-          console.log(res);
         });
     },
     goWarehouseHistoryPage() {

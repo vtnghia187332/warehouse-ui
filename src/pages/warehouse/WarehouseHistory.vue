@@ -347,7 +347,6 @@ export default {
         })
         .catch((error) => {
           this.loadingTable = false;
-          console.log(error,"error")
           this.$message({
             showClose: true,
             message: error.response.data.message,
