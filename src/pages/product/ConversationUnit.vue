@@ -80,6 +80,7 @@ export default {
   data() {
     return {
       conversationUnit: {
+        id: { value: null },
         unitOriginId: {
           id: "Single Unit",
           name: "Single Unit",
@@ -176,6 +177,7 @@ export default {
       dataReturn.unitStockDestination =
         this.conversationUnit.unitStockDestination.value;
       dataReturn.calUnit = this.conversationUnit.calUnit.value;
+      dataReturn.id = this.conversationUnit.id.value;
       this.$emit("handle-data", dataReturn);
       this.handleCloseDialog();
     },
@@ -188,7 +190,7 @@ export default {
       this.$emit("update:dialogVisibleUnit", false);
     },
     initData(data) {
-      console.log(data);
+      this.conversationUnit.id.value = data.id.value;
     },
   },
   created() {},

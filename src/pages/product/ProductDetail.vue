@@ -70,12 +70,13 @@
                 border
                 style="width: 100%"
                 @row-dblclick="handleCalUnitDetail"
+                :row-class-name="conversationUnits"
               >
                 <div slot="append" v-if="units.length == '0'">
                   <el-empty :image-size="200"></el-empty>
                 </div>
-
-                <el-table-column label="STT" type="index"> </el-table-column>
+                <el-table-column label="STT" type="index" :index="indexMethod">
+                </el-table-column>
                 <el-table-column label="Conversation Unit" prop="">
                   <template slot-scope="scope">
                     {{ scope.row.unitDestinationId }}
@@ -367,6 +368,12 @@ export default {
     };
   },
   methods: {
+    conversationUnits({ row, rowIndex }) {
+      row.index = rowIndex;
+    },
+    indexMethod(index) {
+      return index + 1;
+    },
     handleDeleteUnit(item) {
       this.$confirm("Are you sure to remove this unit?")
         .then((_) => {
@@ -376,6 +383,7 @@ export default {
         .catch((_) => {});
     },
     handleDataCalUnit(item) {
+      console.log(item);
       item.unitDestinationId =
         this.product.singleUnit.options.find(
           (opt) =>
@@ -388,11 +396,26 @@ export default {
             opt.value == item.unitOriginId || opt.label == item.unitOriginId
         ).label || "";
       item.calUnit =
-        this.calculations.find((opt) => opt.value == item.calUnit).label || "";
-      this.units.push(item);
+        this.calculations.find(
+          (opt) => opt.value == item.calUnit || opt.label == item.calUnit
+        ).label || "";
+      if (item.id || item.id == 0) {
+        this.units = this.units.map((el) => {
+          return el.index == item.id ? { ...item } : el;
+        });
+      } else {
+        this.units.push({ ...item, id: this.units.length });
+      }
     },
     handleCalUnitDetail(row, col, event) {
+      this.AddConversationUnit();
       this.$refs["cal-unit"].initData({ ...row, id: { value: row.index } });
+      this.$refs["cal-unit"].conversationUnit.unitDestinationId.value =
+        row.unitDestinationId;
+      this.$refs["cal-unit"].conversationUnit.unitStockDestination.value =
+        row.unitStockDestination;
+      this.$refs["cal-unit"].conversationUnit.calUnit.value = row.calUnit;
+      this.dialogVisibleUnit = true;
     },
     AddConversationUnit() {
       let valueSingleUnit = "";
@@ -570,15 +593,11 @@ export default {
             this.units.forEach((item) => {
               item.unitDestinationId =
                 this.product.singleUnit.options.find(
-                  (opt) =>
-                    opt.value == item.unitDestinationId ||
-                    opt.label == item.unitDestinationId
+                  (opt) => opt.value == item.unitDestinationId
                 ).label || "";
               item.unitOriginId =
                 this.product.singleUnit.options.find(
-                  (opt) =>
-                    opt.value == item.unitOriginId ||
-                    opt.label == item.unitOriginId
+                  (opt) => opt.value == item.unitOriginId
                 ).label || "";
             });
           })
@@ -602,9 +621,10 @@ export default {
     }
     this.getValueCategory();
     this.getValueSingleUnit();
+  },
+  mounted() {
     this.getProductDetail();
   },
-  mounted() {},
 };
 </script>
 <style scoped>
