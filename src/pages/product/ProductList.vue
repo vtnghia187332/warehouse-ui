@@ -72,14 +72,6 @@
         </el-table-column>
         <el-table-column prop="color" label="Color" width="250">
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="expiredDate"
-          label="Expired Date"
-          width="250"
-        >
-        </el-table-column>
-
         <el-table-column prop="singleUnit" label="Single Unit" width="150">
           <template slot-scope="scope">
             {{ scope.row.singleUnit.name }}

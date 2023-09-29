@@ -49,6 +49,12 @@
                       :field="product.singleUnit"
                     />
                   </div>
+                  <div class="col-span-6">
+                    <BaseInput
+                      :field="product.color"
+                      v-model="product.color.value"
+                    />
+                  </div>
                 </div>
                 <div class="col-span-12">
                   <BaseTextArea
@@ -321,6 +327,19 @@ export default {
           isRequired: "false",
           value: "",
           placeholder: "Enter Code...",
+          maxlength: 50,
+          error: "",
+        },
+        color: {
+          id: "color",
+          name: "Color",
+          rules: "",
+          classes: "w-full",
+          type: "text",
+          label: "Color",
+          isRequired: "false",
+          value: "",
+          placeholder: "Enter Color...",
           maxlength: 50,
           error: "",
         },
