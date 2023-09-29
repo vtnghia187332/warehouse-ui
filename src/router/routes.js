@@ -106,7 +106,7 @@ const routes = [
       },
       {
         path: "/contract",
-        name: "contract",
+        name: "invoice",
         component: ContractList,
       },
       {

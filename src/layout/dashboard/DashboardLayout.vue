@@ -8,7 +8,7 @@
         <sidebar-link to="/address" name="Address" icon="ti-map" />
         <sidebar-link to="/product" name="Product" icon="ti-package" />
         <sidebar-link to="/customer" name="Customer" icon="ti-user" />
-        <sidebar-link to="/contract" name="Contract" icon="ti-pencil-alt" />
+        <sidebar-link to="/contract" name="Invoice" icon="ti-pencil-alt" />
         <sidebar-link to="/category" name="Category" icon="ti-list-ol" />
         <sidebar-link to="/single-unit" name="Single-Unit" icon="ti-slice" />
         <sidebar-link to="/staff" name="Staff" icon="ti-headphone-alt" />
