@@ -123,6 +123,7 @@ export default {
       search: {
         value: "",
         class: "w-96",
+        placeholder: "Search by Name, Code,..",
       },
       loadingTable: false,
       paginationPage: {

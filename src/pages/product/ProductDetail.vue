@@ -56,6 +56,11 @@
                     />
                   </div>
                 </div>
+                <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                  <div class="col-span-6">
+                    <DatePicker :field="product.expiredDate" />
+                  </div>
+                </div>
                 <div class="col-span-12">
                   <BaseTextArea
                     :field="product.description"
@@ -204,6 +209,8 @@ import ConversationUnitVue from "./ConversationUnit.vue";
 import FormCard from "./../../components/Cards/FormCard.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import { ValidationObserver } from "vee-validate";
+import DatePicker from "../../components/Date/DatePicker.vue";
+
 export default {
   components: {
     BaseInput,
@@ -212,6 +219,7 @@ export default {
     BaseSelection,
     ConversationUnitVue,
     ValidationObserver,
+    DatePicker,
   },
   data() {
     return {
@@ -368,6 +376,23 @@ export default {
           placeholder: "Enter Photo...",
           maxlength: 150,
           error: "",
+        },
+        expiredDate: {
+          id: "expiredDate",
+          name: "Expired Date",
+          rules: "",
+          classes: "w-full",
+          type: "text",
+          label: "Expired Date",
+          isRequired: "false",
+          value: "",
+          maxlength: 50,
+          error: "",
+          pickerOptions: {
+            disabledDate(time) {
+              return time.getTime() < Date.now();
+            },
+          },
         },
       },
       category: {

@@ -1,6 +1,6 @@
 <template>
   <el-input
-    placeholder="Please input"
+    :placeholder="field.placeholder ? field.placeholder : 'Please input'"
     v-model="value"
     :class="field.class"
     clearable

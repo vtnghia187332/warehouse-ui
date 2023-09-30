@@ -18,7 +18,7 @@
         </button>
         <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
-          @click=""
+          @click="HandleImportProduct"
         >
           <i class="el-icon-plus ml font-bold"></i> Import
         </button>
@@ -107,6 +107,10 @@
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     />
+    <ProductImportDialogVue
+      v-show="isOpenDialogImport"
+      :isOpenDialogImport.sync="isOpenDialogImport"
+    />
   </div>
 </template>
 <script>
@@ -115,6 +119,7 @@ import axios from "axios";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import LoadingPage from "@/components/Cards/LoadingPage";
+import ProductImportDialogVue from "./ProductImportDialog.vue";
 export default {
   components: {
     BaseSearch,
@@ -122,9 +127,11 @@ export default {
     LoadingPage,
     ValidationObserver,
     ValidationProvider,
+    ProductImportDialogVue,
   },
   data() {
     return {
+      isOpenDialogImport: false,
       products: [],
       search: {
         value: "",
@@ -141,6 +148,9 @@ export default {
     };
   },
   methods: {
+    HandleImportProduct() {
+      this.isOpenDialogImport = true;
+    },
     updateProduct(row) {
       let data = {
         id: row.productId,

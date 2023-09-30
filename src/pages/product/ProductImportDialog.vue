@@ -3,7 +3,7 @@
     <el-dialog
       v-show="this.step === 'IMPORTED'"
       :append-to-body="true"
-      title="Import Warehouse"
+      title="Import Product"
       :before-close="handleCloseDialog"
       :visible="isOpenDialogImport"
     >
@@ -55,15 +55,14 @@
         <div class="text-2xl">
           Select
           <span>
-            Warehouse you want to <span class="underline">override</span></span
+            Product you want to <span class="underline">override</span></span
           >
         </div>
       </div>
       <div class="flex justify-center mt-4 mb-4">
         <div class="text-center w-[403px]">
-          Found 1 item imported Warehouse with the same Code, Name, and Short
-          Name as the current Warehouse. Select new imported Warehouse you want
-          to override
+          Found 1 item imported Product with the same Code, Name as the current
+          Product. Select new imported Product you want to override
         </div>
       </div>
       <div class="mt-4 mb-4">
@@ -82,28 +81,19 @@
             <el-table-column type="selection" width="55"> </el-table-column>
             <el-table-column
               fixed
-              prop="warehouseId"
-              label="Warehouse ID"
+              prop="productId"
+              label="Product ID"
               width="150"
             >
             </el-table-column>
-            <el-table-column
-              prop="warehouseChainInfo"
-              label="Warehouse Chain"
-              width="300"
-            >
-              <template slot-scope="scope">
-                {{ scope.row.warehouseChainInfo.name }}
-              </template>
+            <el-table-column prop="code" label="Product Code" width="250">
             </el-table-column>
-            <el-table-column prop="code" label="Warehouse Code" width="300">
-            </el-table-column>
-            <el-table-column prop="name" label="Warehouse Name" width="300">
+            <el-table-column prop="name" label="Product Name" width="250">
             </el-table-column>
             <el-table-column
-              prop="shortName"
-              label="Warehouse Short Name"
-              width="300"
+              prop="description"
+              label="Product Description"
+              width="250"
             >
             </el-table-column>
             <el-table-column prop="createdAt" label="Create Date" width="250">
@@ -121,9 +111,7 @@
       <span slot="footer" class="dialog-footer">
         <div class="flex justify-end border-spacing-1">
           <el-button @click="handleCancelConfirmDlg">Cancel</el-button>
-          <el-button
-            @click="handleContinueImport"
-            class="bg-blue-400 text-white"
+          <el-button @click="" class="bg-blue-400 text-white"
             >Continue</el-button
           >
         </div>
@@ -133,7 +121,7 @@
     <el-dialog
       v-show="this.step === 'ERROR'"
       :append-to-body="true"
-      title="Import Warehouse"
+      title="Import Product"
       :visible="this.step === 'ERROR'"
     >
       <div class="flex justify-center">
@@ -192,7 +180,7 @@
               </div>
             </div>
             <div class="">
-              <el-button plain @click="downloadErrorFile">Download</el-button>
+              <el-button plain @click="">Download</el-button>
             </div>
           </div>
         </div>
@@ -210,18 +198,23 @@
 </template>
 <script>
 import axios from "axios";
-import BasePagination from "./../Pagination/BasePagination.vue";
+import BasePagination from "./../../components/Pagination/BasePagination.vue";
 import BaseSearch from "@/components/Inputs/BaseSearch";
 import LoadingPage from "@/components/Cards/LoadingPage";
-
 export default {
   components: {
     BasePagination,
     BaseSearch,
     LoadingPage,
   },
+  props: {
+    isOpenDialogImport: {
+      type: Boolean,
+    },
+  },
   data() {
     return {
+      loadingTable: false,
       importError: {
         fileName: [],
         numberErrItem: {
@@ -247,14 +240,13 @@ export default {
         sorting: "createdAt",
         orderBy: "DESC",
       },
+      paginationVal: {},
       multipleSelection: [],
+      dataImporting: null,
+      step: "IMPORTED",
       isOpenDialogErr: false,
       importOverride: {},
       isOpenDialogConfirmed: false,
-      dataImporting: null,
-      step: "IMPORTED",
-      loadingTable: false,
-      paginationVal: {},
       datasOverrided: [],
       continuedImportItems: {
         successId: null,
@@ -265,143 +257,14 @@ export default {
       },
     };
   },
-  props: {
-    isOpenDialogImport: {
-      type: Boolean,
-    },
-  },
   methods: {
-    async downloadErrorFile() {
-      let me = this;
-      // time biến thành tên của file
-      const tempDateTime = new Date();
-      const fileName = `WarehouseError${tempDateTime.getTime()}.xlsx`;
-      //  Khai báo mảng để hứng dữ liệu nguyên vật liệu trả về
-      await axios
-        .get("http://localhost:9090/api/v1/warehouse/export-error", {
-          params: {
-            errorId: me.importError.numberErrItem.errorId,
-          },
-          responseType: "blob",
-          contentType: "application/json-patch+json",
-        })
-        .then(function (res) {
-          if (res) {
-            var url = window.URL.createObjectURL(new Blob([res.data]));
-            var a = document.createElement("a");
-            a.href = url;
-            //Lấy file name mà server trả về -> save file
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-          }
-        })
-        .catch(function (res) {});
-    },
-    handleSelectedItemChange(val) {
-      this.multipleSelection = [];
-      val.map((item) => {
-        this.multipleSelection.push(item.id);
-      });
-    },
-    replaceFromEnd(string1, string2) {
-      if (string2 != null) {
-        return (
-          string1.substr(0, string1.length - string2.toString().length) +
-          string2.toString()
-        );
-      } else {
-        return null;
-      }
-    },
-    reUploadFile() {
-      (this.step = "IMPORTED"), this.clearStateFile();
-    },
-    handleCancelConfirmDlg() {
-      this.$confirm("Are you sure to close Confirm dialog?")
-        .then((_) => {
-          this.step = "IMPORTED";
-        })
-        .catch((_) => {});
-    },
-    handleSizeChange(param) {
-      this.paginationPage.pageNo = 1;
-      this.paginationPage.pageSize = param;
-      this.callApiToGetDataConfirm();
-    },
-    handleCurrentChange(param) {
-      this.paginationPage.pageNo = param;
-      this.callApiToGetDataConfirm();
-    },
-    getBaseSearchVal(param) {
-      // clears the timer on a call so there is always x seconds in between calls
-      clearTimeout(this.timer);
-      // if the timer resets before it hits 150ms it will not run
-      this.timer = setTimeout(
-        function () {
-          this.search.value = param;
-          this.callApiToGetDataConfirm();
-        }.bind(this),
-        300
-      );
-    },
-    async downloadFileTemplate() {
-      let me = this;
-      // time biến thành tên của file
-      const tempDateTime = new Date();
-      const fileName = `WarehouseTemplate${tempDateTime.getTime()}.xlsx`;
-      //  Khai báo mảng để hứng dữ liệu nguyên vật liệu trả về
-      await axios
-        .get("http://localhost:9090/api/v1/warehouse/template", {
-          responseType: "blob",
-          contentType: "application/json-patch+json",
-        })
-        .then(function (res) {
-          if (res) {
-            var url = window.URL.createObjectURL(new Blob([res.data]));
-            var a = document.createElement("a");
-            a.href = url;
-            //Lấy file name mà server trả về -> save file
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-          }
-        })
-        .catch(function (res) {});
-    },
-    handleChange(file) {
-      this.dataImporting = file.raw;
-    },
-    handleCloseDialog() {
-      if (this.dataImporting !== null) {
-        this.$confirm("Are you sure to close import dialog?")
-          .then((_) => {
-            this.clearStateFile();
-            this.step = "";
-            this.$emit("update:isOpenDialogImport", false);
-            this.$router.push({ path: "/warehouse-list" });
-          })
-          .catch((_) => {});
-      } else {
-        this.clearStateFile();
-        this.step = "";
-        this.$emit("update:isOpenDialogImport", false);
-        this.$router.push({ path: "/warehouse-list" });
-      }
-    },
-    clearStateFile() {
-      this.$refs["upload"].clearFiles();
-      this.dataImporting = null;
-    },
     async handleImportFunc() {
       var me = this;
       var bodyFormData = new FormData();
       bodyFormData.append("uploadFiles", me.dataImporting);
       await axios({
         method: "post",
-        url: "http://localhost:9090/api/v1/warehouse/import",
+        url: "http://localhost:9090/api/v1/product/import",
         data: bodyFormData,
         headers: { "Content-Type": "multipart/form-data" },
         headers: { "Access-Control-Allow-Origin": "*" },
@@ -416,42 +279,6 @@ export default {
           me.$message({
             showClose: true,
             message: response.response.data.message,
-            type: "error",
-          });
-        });
-    },
-    async callApiToGetDataConfirm() {
-      var me = this;
-      me.loadingTable = true;
-      await axios
-        .get("http://localhost:9090/api/v1/warehouse/confirm", {
-          headers: { "Access-Control-Allow-Origin": "*" },
-          params: {
-            searchText: me.search.value,
-            pageNo: me.paginationPage.pageNo,
-            pageSize: me.paginationPage.pageSize,
-            sorting: me.paginationPage.sorting,
-            orderBy: me.paginationPage.orderBy,
-            errorId: me.importError.numberOverrideItem.errorId,
-          },
-        })
-        .then(function (response) {
-          if (response.status === 200) {
-            me.datasOverrided = response.data.items.content;
-            (me.paginationVal = {
-              currentPage: response.data.items.pageNum,
-              pageSizeList: [10, 20, 30, 50, 100],
-              currentPage: response.data.items.number + 1,
-              pageSizeval: response.data.items.size,
-              total: response.data.items.totalElements,
-            }),
-              (me.loadingTable = false);
-          }
-        })
-        .catch((error) => {
-          this.$message({
-            showClose: true,
-            message: error,
             type: "error",
           });
         });
@@ -498,6 +325,7 @@ export default {
         this.handleContinueImport();
       }
     },
+    downloadFileTemplate() {},
     async handleContinueImport() {
       var me = this;
       me.clearStateFile();
@@ -510,14 +338,12 @@ export default {
       };
       await axios({
         method: "post",
-        url: "http://localhost:9090/api/v1/warehouse/continue",
+        url: "http://localhost:9090/api/v1/product/continue",
         headers: { "Access-Control-Allow-Origin": "*" },
         data: bodyImport,
       })
         .then(function (response) {
           if (response.status === 200) {
-            me.importError.numberSuccessItem.numItems =
-              response.data.items.numOfSuccess;
             me.step = "ERROR";
           }
         })
@@ -529,14 +355,108 @@ export default {
           });
         });
     },
-  },
-  beforeCreate() {
-    this.$nextTick().then(() => document.body.classList.add("import-dlg"));
+    getBaseSearchVal(param) {
+      // clears the timer on a call so there is always x seconds in between calls
+      clearTimeout(this.timer);
+      // if the timer resets before it hits 150ms it will not run
+      this.timer = setTimeout(
+        function () {
+          this.search.value = param;
+          this.callApiToGetDataConfirm();
+        }.bind(this),
+        300
+      );
+    },
+    handleSizeChange(param) {
+      this.paginationPage.pageNo = 1;
+      this.paginationPage.pageSize = param;
+      this.callApiToGetDataConfirm();
+    },
+    handleCurrentChange(param) {
+      this.paginationPage.pageNo = param;
+      this.callApiToGetDataConfirm();
+    },
+    async callApiToGetDataConfirm() {
+      var me = this;
+      me.loadingTable = true;
+      await axios
+        .get("http://localhost:9090/api/v1/product/confirm", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+          params: {
+            searchText: me.search.value,
+            pageNo: me.paginationPage.pageNo,
+            pageSize: me.paginationPage.pageSize,
+            sorting: me.paginationPage.sorting,
+            orderBy: me.paginationPage.orderBy,
+            errorId: me.importError.numberOverrideItem.errorId,
+          },
+        })
+        .then(function (response) {
+          if (response.status === 200) {
+            me.datasOverrided = response.data.items.content;
+            (me.paginationVal = {
+              currentPage: response.data.items.pageNum,
+              pageSizeList: [10, 20, 30, 50, 100],
+              currentPage: response.data.items.number + 1,
+              pageSizeval: response.data.items.size,
+              total: response.data.items.totalElements,
+            }),
+              (me.loadingTable = false);
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
+    handleCancelConfirmDlg() {
+      this.$confirm("Are you sure to close Confirm dialog?")
+        .then((_) => {
+          this.step = "IMPORTED";
+        })
+        .catch((_) => {});
+    },
+    handleSelectedItemChange(val) {
+      this.multipleSelection = [];
+      val.map((item) => {
+        this.multipleSelection.push(item.id);
+      });
+    },
+    reUploadFile() {
+      (this.step = "IMPORTED"), this.clearStateFile();
+    },
+    handleChange(file) {
+      this.dataImporting = file.raw;
+    },
+    handleCloseDialog() {
+      if (this.dataImporting !== null) {
+        this.$confirm("Are you sure to close import dialog?")
+          .then((_) => {
+            this.clearStateFile();
+            this.step = "";
+            this.$emit("update:isOpenDialogImport", false);
+            this.$router.push({ path: "/product" });
+          })
+          .catch((_) => {});
+      } else {
+        this.clearStateFile();
+        this.step = "";
+        this.$emit("update:isOpenDialogImport", false);
+        this.$router.push({ path: "/product" });
+      }
+    },
+    clearStateFile() {
+      this.$refs["upload"].clearFiles();
+      this.dataImporting = null;
+    },
   },
   mounted() {},
 };
 </script>
-<style>
+<style scoped>
 .el-dialog .el-dialog__header {
   border-bottom: 1px solid rgba(128, 128, 128, 0.322) !important;
 }
