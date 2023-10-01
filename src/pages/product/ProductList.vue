@@ -12,6 +12,12 @@
       <div>
         <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
+          @click="handleGetHistory"
+        >
+          <i class="el-icon-plus ml font-bold"></i> History
+        </button>
+        <button
+          class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click=""
         >
           <i class="el-icon-plus ml font-bold"></i> Export
@@ -148,6 +154,9 @@ export default {
     };
   },
   methods: {
+    handleGetHistory() {
+      this.$router.push({ name: "product history" });
+    },
     HandleImportProduct() {
       this.isOpenDialogImport = true;
     },
@@ -182,7 +191,38 @@ export default {
       this.handleGetProducts();
     },
     handeDuplicateDetail() {},
-    handeDeleteDetail() {},
+    handeDeleteDetail(row) {
+      this.$confirm(`Are you want to delete ${row.productId}?`)
+        .then((_) => {
+          this.handleDeleteProduct(row.productId);
+        })
+        .catch((_) => {});
+    },
+    handleDeleteProduct(productId) {
+      axios({
+        method: "delete",
+        url: "http://localhost:9090/api/v1/product",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        params: { productId },
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Deleted successfully",
+              type: "success",
+            });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        })
+        .finally(() => this.handleGetProducts());
+    },
     getBaseSearchVal(param) {
       // clears the timer on a call so there is always x seconds in between calls
       clearTimeout(this.timer);

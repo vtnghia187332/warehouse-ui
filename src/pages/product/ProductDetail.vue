@@ -632,18 +632,21 @@ export default {
                 this.category.baseId = res.data.items.categoryProductRes.id;
                 this.product.singleUnit.baseId = res.data.items.singleUnit.id;
                 this.product.singleUnit.value = res.data.items.singleUnit.name;
+                this.units = [];
               });
             }
-            this.units.forEach((item) => {
-              item.unitDestinationId =
-                this.product.singleUnit.options.find(
-                  (opt) => opt.value == item.unitDestinationId
-                ).label || "";
-              item.unitOriginId =
-                this.product.singleUnit.options.find(
-                  (opt) => opt.value == item.unitOriginId
-                ).label || "";
-            });
+            if (this.units && this.units.length > 0) {
+              this.units.forEach((item) => {
+                item.unitDestinationId =
+                  this.product.singleUnit.options.find(
+                    (opt) => opt.value == item.unitDestinationId
+                  ).label || "";
+                item.unitOriginId =
+                  this.product.singleUnit.options.find(
+                    (opt) => opt.value == item.unitOriginId
+                  ).label || "";
+              });
+            }
           })
           .catch((error) => {
             this.$message({
