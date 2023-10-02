@@ -18,7 +18,7 @@
         </button>
         <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
-          @click=""
+          @click="handExportProducts"
         >
           <i class="el-icon-plus ml font-bold"></i> Export
         </button>
@@ -190,7 +190,16 @@ export default {
       this.paginationPage.pageNo = param;
       this.handleGetProducts();
     },
-    handeDuplicateDetail() {},
+    handeDuplicateDetail(row) {
+      let data = {
+        id: row.productId,
+        type: "DUPLICATED",
+      };
+      this.$router.push({
+        name: "product-detail", //use name for router push
+        params: { data },
+      });
+    },
     handeDeleteDetail(row) {
       this.$confirm(`Are you want to delete ${row.productId}?`)
         .then((_) => {
@@ -234,6 +243,36 @@ export default {
         }.bind(this),
         300
       );
+    },
+   async handExportProducts(){
+      let me = this;
+      const tempDateTime = new Date();
+      const fileName = `Product${tempDateTime.getTime()}.xlsx`;
+      await axios
+        .get("http://localhost:9090/api/v1/product/export", {
+          responseType: "blob",
+          contentType: "application/json-patch+json",
+          params: {
+            searchText: me.search.value,
+            pageNo: me.paginationPage.pageNo,
+            pageSize: me.paginationPage.pageSize,
+            sorting: me.paginationPage.sorting,
+            orderBy: me.paginationPage.orderBy,
+          },
+        })
+        .then(function (res) {
+          if (res) {
+            var url = window.URL.createObjectURL(new Blob([res.data]));
+            var a = document.createElement("a");
+            a.href = url;
+            //Lấy file name mà server trả về -> save file
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }
+        })
+        .catch(function (res) {});
     },
     handleGetProducts() {
       var me = this;

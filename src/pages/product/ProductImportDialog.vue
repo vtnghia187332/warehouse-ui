@@ -180,7 +180,7 @@
               </div>
             </div>
             <div class="">
-              <el-button plain @click="">Download</el-button>
+              <el-button plain @click="downloadErrorFile">Download</el-button>
             </div>
           </div>
         </div>
@@ -325,7 +325,53 @@ export default {
         this.handleContinueImport();
       }
     },
-    downloadFileTemplate() {},
+    async downloadErrorFile() {
+      let me = this;
+      const tempDateTime = new Date();
+      const fileName = `Product_Error${tempDateTime.getTime()}.xlsx`;
+      await axios
+        .get("http://localhost:9090/api/v1/product/export-error", {
+          params: {
+            errorId: me.importError.numberErrItem.errorId,
+          },
+          responseType: "blob",
+          contentType: "application/json-patch+json",
+        })
+        .then(function (res) {
+          if (res) {
+            var url = window.URL.createObjectURL(new Blob([res.data]));
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }
+        })
+        .catch(function (res) {});
+    },
+    async downloadFileTemplate() {
+      let me = this;
+      const tempDateTime = new Date();
+      const fileName = `Product_Template${tempDateTime.getTime()}.xlsx`;
+      await axios
+        .get("http://localhost:9090/api/v1/product/template", {
+          responseType: "blob",
+          contentType: "application/json-patch+json",
+        })
+        .then(function (res) {
+          if (res) {
+            var url = window.URL.createObjectURL(new Blob([res.data]));
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }
+        })
+        .catch(function (res) {});
+    },
     async handleContinueImport() {
       var me = this;
       me.clearStateFile();

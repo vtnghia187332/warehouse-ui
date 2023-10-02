@@ -240,7 +240,7 @@ export default {
       let me = this;
       // time biến thành tên của file
       const tempDateTime = new Date();
-      const fileName = `WarehouseTemplate${tempDateTime.getTime()}.xlsx`;
+      const fileName = `Warehouse${tempDateTime.getTime()}.xlsx`;
       //  Khai báo mảng để hứng dữ liệu nguyên vật liệu trả về
       await axios
         .get("http://localhost:9090/api/v1/warehouse/template", {

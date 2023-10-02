@@ -626,24 +626,28 @@ export default {
           .then((res) => {
             if (res.status === 200) {
               Object.keys(this.product).forEach((key) => {
+                this.units = [];
                 this.product[key].value = res.data.items[key];
                 this.units = res.data.items.units;
                 this.category.value = res.data.items.categoryProductRes.name;
                 this.category.baseId = res.data.items.categoryProductRes.id;
                 this.product.singleUnit.baseId = res.data.items.singleUnit.id;
                 this.product.singleUnit.value = res.data.items.singleUnit.name;
-                this.units = [];
               });
             }
             if (this.units && this.units.length > 0) {
               this.units.forEach((item) => {
                 item.unitDestinationId =
                   this.product.singleUnit.options.find(
-                    (opt) => opt.value == item.unitDestinationId
+                    (opt) =>
+                      opt.value == item.unitDestinationId ||
+                      opt.label == item.unitDestinationId
                   ).label || "";
                 item.unitOriginId =
                   this.product.singleUnit.options.find(
-                    (opt) => opt.value == item.unitOriginId
+                    (opt) =>
+                      opt.value == item.unitOriginId ||
+                      opt.label == item.unitOriginId
                   ).label || "";
               });
             }
@@ -656,6 +660,8 @@ export default {
             });
           });
         if (this.$route.params.data.type === "DUPLICATED") {
+          this.productId = null;
+          this.productPId = null;
         }
       }
     },
