@@ -26,7 +26,11 @@ export default {
   methods: {
     change(event) {
       this.value = event.target.value;
-      this.$emit("get-value", this.value);
+      if (!event.target.value) {
+        this.$emit("get-value", "");
+      } else {
+        this.$emit("get-value", this.value.trim());
+      }
     },
   },
 };

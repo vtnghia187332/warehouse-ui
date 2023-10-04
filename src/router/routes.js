@@ -23,6 +23,7 @@ import ContractList from '@/pages/contract/ContractList.vue';
 import CustomerList from '@/pages/customer/CustomerList.vue';
 import CustomerDetail from '@/pages/customer/CustomerDetail.vue';
 import StaffList from '@/pages/staff/StaffList.vue';
+import ExportReceiptList from '@/pages/contract/ExportReceiptList.vue';
 
 const routes = [
   {
@@ -114,6 +115,11 @@ const routes = [
         path: "/contract",
         name: "invoice",
         component: ContractList,
+      },
+      {
+        path: "/export-receipt",
+        name: "export-receipt",
+        component: ExportReceiptList,
       },
       {
         path: "/customer",

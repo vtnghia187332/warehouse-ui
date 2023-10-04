@@ -5,13 +5,14 @@
         <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel" />
         <sidebar-link to="/icons" name="Icons" icon="ti-pencil-alt2" />
         <sidebar-link to="/warehouse-list" name="Warehouse" icon="ti-home" />
-        <sidebar-link to="/address" name="Address" icon="ti-map" />
-        <sidebar-link to="/product" name="Product" icon="ti-package" />
         <sidebar-link to="/customer" name="Customer" icon="ti-user" />
         <sidebar-link to="/contract" name="Invoice" icon="ti-pencil-alt" />
+        <sidebar-link to="/export-receipt" name="Export-Receipt" icon="ti-bookmark-alt" />
+        <sidebar-link to="/product" name="Product" icon="ti-package" />
         <sidebar-link to="/category" name="Category" icon="ti-list-ol" />
         <sidebar-link to="/single-unit" name="Single-Unit" icon="ti-slice" />
         <sidebar-link to="/staff" name="Staff" icon="ti-headphone-alt" />
+        <sidebar-link to="/address" name="Address" icon="ti-map" />
       </template>
       <mobile-menu>
         <li class="nav-item">

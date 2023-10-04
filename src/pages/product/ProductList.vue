@@ -244,7 +244,7 @@ export default {
         300
       );
     },
-   async handExportProducts(){
+    async handExportProducts() {
       let me = this;
       const tempDateTime = new Date();
       const fileName = `Product${tempDateTime.getTime()}.xlsx`;
@@ -309,6 +309,13 @@ export default {
     },
   },
   mounted() {
+    (this.paginationPage = {
+      pageNo: 1,
+      pageSize: 30,
+      sorting: "createdAt",
+      orderBy: "DESC",
+    }),
+      (this.search.value = "");
     this.handleGetProducts();
   },
 };

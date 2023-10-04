@@ -1,111 +1,119 @@
 <template>
-  <div class="fix_highted">
-    <div class="flex justify-between px-4 py-2">
-      <div class="flex">
-        <BaseSearch :field="search" @get-value="getBaseSearchVal" />
-        <button
-          class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
-        >
-          <span class="ti-filter"></span> Filter
-        </button>
-      </div>
-      <div>
-        <button
-          class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
-          @click=""
-        >
-          <i class="el-icon-plus ml font-bold"></i> Export
-        </button>
-        <button
-          class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
-          @click=""
-        >
-          <i class="el-icon-plus ml font-bold"></i> Import
-        </button>
-        <button
-          class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
-          @click=""
-        >
-          <i class="el-icon-plus ml font-bold"></i>
-          Create
-        </button>
-      </div>
-    </div>
-    <LoadingPage v-show="loadingTable"></LoadingPage>
-    <div class="table_style px-2" v-show="!loadingTable">
-      <el-table
-        :data="invoices"
-        style="width: 100%"
-        @row-dblclick=""
-        @sort-change=""
-        height="800"
-      >
-        <div slot="append" v-if="invoices.length == '0'">
-          <el-empty :image-size="300"></el-empty>
+  <el-tabs class="tab-invoice" v-model="activeName">
+    <el-tab-pane label="Export" name="first">
+      <div class="">
+        <div class="flex justify-between px-4 py-2">
+          <div class="flex">
+            <BaseSearch :field="search" @get-value="getBaseSearchVal" />
+            <button
+              class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
+            >
+              <span class="ti-filter"></span> Filter
+            </button>
+          </div>
+          <div>
+            <button
+              class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
+              @click=""
+            >
+              <i class="el-icon-plus ml font-bold"></i> Export
+            </button>
+          </div>
         </div>
-        <el-table-column
-          sortable
-          prop="invoiceId"
-          label="Invoice ID"
-          width="150"
-        >
-        </el-table-column>
-        <el-table-column
-          sortable
-          prop="createdAt"
-          label="Created At"
-          width="200"
-        >
-        </el-table-column>
-        <el-table-column
-          sortable
-          prop="editedAt"
-          label="Updated At"
-          width="200"
-        >
-        </el-table-column>
-        <el-table-column sortable prop="name" label="Invoice Name" width="250">
-        </el-table-column>
-        <el-table-column sortable prop="code" label="Invoice Code" width="250">
-        </el-table-column>
-        <el-table-column sortable prop="code" label="Customer Name" width="250">
-          <template slot-scope="scope">
-            {{ scope.row.customer.fullName }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          sortable
-          prop="invoiceStage"
-          label="Invoice's Status"
-          width="150"
-        >
-        </el-table-column>
-        <el-table-column
-          sortable
-          prop="totalNeedPaid"
-          label="Total Payment"
-          width="150"
-        >
-        </el-table-column>
-        <el-table-column
-          sortable
-          prop="typeInvoice"
-          label="Type Invoice"
-          width="150"
-        >
-        </el-table-column>
-      </el-table>
-    </div>
-    <BasePagination
-      v-show="!loadingTable"
-      :field="paginationVal"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-    />
-  </div>
+        <LoadingPage v-show="loadingTable"></LoadingPage>
+        <div class="table_style px-2" v-show="!loadingTable">
+          <el-table
+            :data="invoices"
+            style="width: 100%"
+            @row-dblclick=""
+            @sort-change=""
+            height="765"
+          >
+            <div slot="append" v-if="invoices.length == '0'">
+              <el-empty :image-size="300"></el-empty>
+            </div>
+            <el-table-column
+              sortable
+              prop="invoiceId"
+              label="Invoice ID"
+              width="150"
+            >
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="createdAt"
+              label="Created At"
+              width="200"
+            >
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="editedAt"
+              label="Updated At"
+              width="200"
+            >
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="name"
+              label="Invoice Name"
+              width="250"
+            >
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="code"
+              label="Invoice Code"
+              width="250"
+            >
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="code"
+              label="Customer Name"
+              width="250"
+            >
+              <template slot-scope="scope">
+                {{ scope.row.customer.fullName }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="invoiceStage"
+              label="Invoice's Status"
+              width="200"
+            >
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="totalNeedPaid"
+              label="Total Payment"
+              width="200"
+            >
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="typeInvoice"
+              label="Type Invoice"
+              width="200"
+            >
+            </el-table-column>
+          </el-table>
+        </div>
+        <BasePagination
+          v-show="!loadingTable"
+          :field="paginationVal"
+          @handleSizeChange="handleSizeChange"
+          @handleCurrentChange="handleCurrentChange"
+        />
+      </div>
+    </el-tab-pane>
+    <el-tab-pane label="Receipt" name="second">
+      <div>Tab2</div>
+    </el-tab-pane>
+  </el-tabs>
 </template>
 <script>
-import { ValidationObserver, ValidationProvider } from "vee-validate";
 import axios from "axios";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
@@ -115,11 +123,10 @@ export default {
     BaseSearch,
     BasePagination,
     LoadingPage,
-    ValidationObserver,
-    ValidationProvider,
   },
   data() {
     return {
+      activeName: "first",
       search: {
         value: "",
         class: "w-96",
@@ -197,4 +204,8 @@ export default {
   },
 };
 </script>
-<style></style>
+<style>
+.tab-invoice .el-tabs__header .el-tabs__nav-wrap {
+  padding-left: 15px !important;
+}
+</style>

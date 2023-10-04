@@ -111,7 +111,9 @@
       <span slot="footer" class="dialog-footer">
         <div class="flex justify-end border-spacing-1">
           <el-button @click="handleCancelConfirmDlg">Cancel</el-button>
-          <el-button @click="" class="bg-blue-400 text-white"
+          <el-button
+            @click="handleContinueImport"
+            class="bg-blue-400 text-white"
             >Continue</el-button
           >
         </div>
@@ -155,6 +157,8 @@
             <i class="el-icon-edit-outline text-lg"></i>
             <span class="ml-1 mr-1">{{
               this.importError.numberSuccessItem.numItems
+                ? this.importError.numberSuccessItem.numItems
+                : 0
             }}</span>
             <span>item have been updated</span>
           </div>
@@ -447,8 +451,9 @@ export default {
               pageSizeval: response.data.items.size,
               total: response.data.items.totalElements,
             }),
-              (me.loadingTable = false);
+            (me.loadingTable = false);
           }
+          console.log(me.datasOverrided,"datasOverrided");
         })
         .catch((error) => {
           this.$message({

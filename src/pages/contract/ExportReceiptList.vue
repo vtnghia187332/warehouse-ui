@@ -1,5 +1,5 @@
 <template>
-  <div class="fix_highted">
+  <div class="">
     <div class="flex justify-between px-4 py-2">
       <div class="flex">
         <BaseSearch :field="search" @get-value="getBaseSearchVal" />
@@ -9,75 +9,82 @@
           <span class="ti-filter"></span> Filter
         </button>
       </div>
-      <div></div>
+      <div>
+        <button
+          class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
+          @click=""
+        >
+          <i class="el-icon-plus ml font-bold"></i> Export
+        </button>
+      </div>
     </div>
     <LoadingPage v-show="loadingTable"></LoadingPage>
     <div class="table_style px-2" v-show="!loadingTable">
       <el-table
-        :data="products"
+        :data="invoices"
         style="width: 100%"
         @row-dblclick=""
         @sort-change=""
         height="800"
       >
-        <div slot="append" v-if="products.length == '0'">
+        <div slot="append" v-if="invoices.length == '0'">
           <el-empty :image-size="300"></el-empty>
         </div>
-        <el-table-column fixed prop="productId" label="Product ID" width="150">
+        <el-table-column
+          sortable
+          prop="invoiceId"
+          label="Invoice ID"
+          width="150"
+        >
         </el-table-column>
         <el-table-column
           sortable
           prop="createdAt"
-          label="Create Date"
-          width="250"
+          label="Created At"
+          width="200"
         >
         </el-table-column>
         <el-table-column
           sortable
           prop="editedAt"
-          label="Updated Date"
-          width="250"
+          label="Updated At"
+          width="200"
         >
         </el-table-column>
-        <el-table-column prop="actionType" label="Action" width="150">
+        <el-table-column sortable prop="name" label="Invoice Name" width="250">
+        </el-table-column>
+        <el-table-column sortable prop="code" label="Invoice Code" width="250">
+        </el-table-column>
+        <el-table-column sortable prop="code" label="Customer Name" width="250">
           <template slot-scope="scope">
-            <el-tag
-              :type="scope.row.actionType == 0 ? 'success' : 'primary'"
-              disable-transitions
-              >{{ scope.row.actionType == 0 ? "INSERTED" : "UPDATED" }}</el-tag
-            >
+            {{ scope.row.customer.fullName }}
           </template>
-        </el-table-column>
-        <el-table-column sortable prop="code" label="Code" width="250">
-        </el-table-column>
-        <el-table-column sortable prop="name" label="Name" width="250">
         </el-table-column>
         <el-table-column
           sortable
-          prop="description"
-          label="Description"
-          width="150"
+          prop="invoiceStage"
+          label="Invoice's Status"
+          width="200"
         >
         </el-table-column>
-        <el-table-column prop="color" label="Color" width="250">
+        <el-table-column
+          sortable
+          prop="totalNeedPaid"
+          label="Total Payment"
+          width="200"
+        >
         </el-table-column>
-        <el-table-column prop="singleUnit" label="Single Unit" width="150">
-          <template slot-scope="scope">
-            {{ scope.row.singleUnit.name }}
-          </template>
-        </el-table-column>
-
-        <el-table-column prop="categoryProductRes" label="Category" width="150">
-          <template slot-scope="scope">
-            {{ scope.row.categoryProductRes.name }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="isActive" label="Status" width="100">
+        <el-table-column
+          sortable
+          prop="typeInvoice"
+          label="Type Invoice"
+          width="200"
+        >
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.isActive === 1 ? 'success' : 'danger'"
+              :type="scope.row.actionType == 1 ? 'success' : 'primary'"
               disable-transitions
-              >{{ scope.row.isActive == 1 ? "ACTIVE" : "INACTIVE" }}</el-tag
+              >{{ scope.row.actionType == 1 ? "RECEIPT" : "EXPORT" }}</el-tag
             >
           </template>
         </el-table-column>
@@ -89,10 +96,6 @@
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     />
-    <ProductImportDialogVue
-      v-show="isOpenDialogImport"
-      :isOpenDialogImport.sync="isOpenDialogImport"
-    />
   </div>
 </template>
 <script>
@@ -100,42 +103,32 @@ import axios from "axios";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import LoadingPage from "@/components/Cards/LoadingPage";
-import ProductImportDialogVue from "./ProductImportDialog.vue";
 export default {
   components: {
     BaseSearch,
     BasePagination,
     LoadingPage,
-    ProductImportDialogVue,
   },
   data() {
     return {
-      isOpenDialogImport: false,
-      products: [],
+      activeName: "first",
       search: {
         value: "",
         class: "w-96",
+        placeholder: "Search by Name, Code,..",
       },
       loadingTable: false,
       paginationPage: {
         pageNo: 1,
         pageSize: 30,
-        sorting: "editedAt",
+        sorting: "createdAt",
         orderBy: "DESC",
       },
       paginationVal: {},
+      invoices: [],
     };
   },
   methods: {
-    handleSizeChange(param) {
-      this.paginationPage.pageNo = 1;
-      this.paginationPage.pageSize = param;
-      this.handleGetProducts();
-    },
-    handleCurrentChange(param) {
-      this.paginationPage.pageNo = param;
-      this.handleGetProducts();
-    },
     getBaseSearchVal(param) {
       // clears the timer on a call so there is always x seconds in between calls
       clearTimeout(this.timer);
@@ -143,16 +136,25 @@ export default {
       this.timer = setTimeout(
         function () {
           this.search.value = param;
-          this.handleGetProducts();
+          this.handleGetInvoices();
         }.bind(this),
         300
       );
     },
-    handleGetProducts() {
+    handleSizeChange(param) {
+      this.paginationPage.pageNo = 1;
+      this.paginationPage.pageSize = param;
+      this.handleGetInvoices();
+    },
+    handleCurrentChange(param) {
+      this.paginationPage.pageNo = param;
+      this.handleGetInvoices();
+    },
+    handleGetInvoices() {
       var me = this;
       me.loadingTable = true;
       axios
-        .get("http://localhost:9090/api/v1/product/history", {
+        .get("http://localhost:9090/api/v1/export-receipt/list", {
           headers: { "Access-Control-Allow-Origin": "*" },
           params: {
             searchText: me.search.value,
@@ -163,7 +165,7 @@ export default {
           },
         })
         .then(function (response) {
-          me.products = response.data.items.content;
+          me.invoices = response.data.items.content;
           (me.paginationVal = {
             currentPage: response.data.items.pageNum,
             pageSizeList: [10, 20, 30, 50, 100],
@@ -183,7 +185,7 @@ export default {
     },
   },
   mounted() {
-    this.handleGetProducts();
+    this.handleGetInvoices();
   },
 };
 </script>

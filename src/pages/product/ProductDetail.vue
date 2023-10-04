@@ -83,7 +83,7 @@
                 @row-dblclick="handleCalUnitDetail"
                 :row-class-name="conversationUnits"
               >
-                <div slot="append" v-if="units.length == '0'">
+                <div slot="append" v-if="!units">
                   <el-empty :image-size="200"></el-empty>
                 </div>
                 <el-table-column label="STT" type="index" :index="indexMethod">
@@ -554,8 +554,10 @@ export default {
       if (this.$route.params.data.type === "EDIT") {
         this.handleEditProduct(productDetail);
       } else {
+        productDetail.productId = null;
         this.handleCreateProduct(productDetail);
       }
+      console.log(productDetail);
     },
     handleEditProduct(productDetail) {
       axios({
