@@ -11,10 +11,28 @@
       </div>
       <div>
         <button
+          class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
+          @click="handleHistoryPage"
+        >
+          <i class="el-icon-files font-bold"></i> History
+        </button>
+        <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
-          @click=""
+          @click="HandleImport"
+        >
+          <i class="el-icon-plus ml font-bold"></i> Import
+        </button>
+        <button
+          class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
+          @click="handleExport"
         >
           <i class="el-icon-plus ml font-bold"></i> Export
+        </button>
+        <button
+          class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
+          @click="HandleAdd"
+        >
+          <i class="el-icon-plus ml font-bold"></i> Create
         </button>
       </div>
     </div>
@@ -32,6 +50,7 @@
         </div>
         <el-table-column
           sortable
+          fixed
           prop="invoiceId"
           label="Invoice ID"
           width="150"
@@ -41,19 +60,33 @@
           sortable
           prop="createdAt"
           label="Created At"
-          width="200"
+          width="170"
         >
         </el-table-column>
         <el-table-column
           sortable
           prop="editedAt"
           label="Updated At"
-          width="200"
+          width="170"
         >
         </el-table-column>
         <el-table-column sortable prop="name" label="Invoice Name" width="250">
         </el-table-column>
         <el-table-column sortable prop="code" label="Invoice Code" width="250">
+        </el-table-column>
+        <el-table-column
+          sortable
+          prop="typeInvoice"
+          label="Type Invoice"
+          width="150"
+        >
+          <template slot-scope="scope">
+            <el-tag
+              :type="scope.row.actionType == 1 ? 'success' : 'primary'"
+              disable-transitions
+              >{{ scope.row.actionType == 1 ? "RECEIPT" : "EXPORT" }}</el-tag
+            >
+          </template>
         </el-table-column>
         <el-table-column sortable prop="code" label="Customer Name" width="250">
           <template slot-scope="scope">
@@ -74,20 +107,7 @@
           width="200"
         >
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="typeInvoice"
-          label="Type Invoice"
-          width="200"
-        >
-          <template slot-scope="scope">
-            <el-tag
-              :type="scope.row.actionType == 1 ? 'success' : 'primary'"
-              disable-transitions
-              >{{ scope.row.actionType == 1 ? "RECEIPT" : "EXPORT" }}</el-tag
-            >
-          </template>
-        </el-table-column>
+   
       </el-table>
     </div>
     <BasePagination
@@ -182,6 +202,21 @@ export default {
             type: "error",
           });
         });
+    },
+    handleHistoryPage() {
+      this.$router.push({ name: "export-receipt history" });
+    },
+    HandleImport() {},
+    handleExport() {},
+    HandleAdd() {
+      let data = {
+        id: null,
+        type: "ADD",
+      };
+      this.$router.push({
+        name: "export-receipt detail",
+        params: { data },
+      });
     },
   },
   mounted() {

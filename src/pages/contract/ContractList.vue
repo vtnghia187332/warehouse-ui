@@ -34,6 +34,7 @@
             </div>
             <el-table-column
               sortable
+              fixed
               prop="invoiceId"
               label="Invoice ID"
               width="150"
@@ -91,12 +92,24 @@
               width="200"
             >
             </el-table-column>
-            <el-table-column
-              sortable
-              prop="typeInvoice"
-              label="Type Invoice"
-              width="200"
-            >
+            <el-table-column fixed="right" label="Action" width="80">
+              <template slot-scope="scope">
+                <el-dropdown>
+                  <el-button @click="" type="text" size="small"
+                    ><i class="ti-more !ml-3"></i
+                  ></el-button>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>
+                      <button
+                        class="!bg-[#fdfdfd] text-black"
+                        @click="handeCancel(scope.row)"
+                      >
+                        <i class=""></i> Cancel
+                      </button>
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </template>
             </el-table-column>
           </el-table>
         </div>
@@ -151,7 +164,7 @@ export default {
       this.timer = setTimeout(
         function () {
           this.search.value = param;
-          this.handleGetInvoices();
+          this.handleGetInvoicesEx();
         }.bind(this),
         300
       );
@@ -159,13 +172,16 @@ export default {
     handleSizeChange(param) {
       this.paginationPage.pageNo = 1;
       this.paginationPage.pageSize = param;
-      this.handleGetInvoices();
+      this.handleGetInvoicesEx();
     },
     handleCurrentChange(param) {
       this.paginationPage.pageNo = param;
-      this.handleGetInvoices();
+      this.handleGetInvoicesEx();
     },
-    handleGetInvoices() {
+    handeCancel(row) {
+      console.log(row);
+    },
+    handleGetInvoicesEx() {
       var me = this;
       me.loadingTable = true;
       axios
@@ -177,6 +193,7 @@ export default {
             pageSize: me.paginationPage.pageSize,
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
+            invoiceType: 2,
           },
         })
         .then(function (response) {
@@ -200,12 +217,19 @@ export default {
     },
   },
   mounted() {
-    this.handleGetInvoices();
+    this.handleGetInvoicesEx();
   },
 };
 </script>
 <style>
 .tab-invoice .el-tabs__header .el-tabs__nav-wrap {
   padding-left: 15px !important;
+}
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409eff;
+}
+.el-icon-arrow-down {
+  font-size: 12px;
 }
 </style>
