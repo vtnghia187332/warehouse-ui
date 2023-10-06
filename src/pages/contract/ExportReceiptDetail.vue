@@ -25,33 +25,42 @@
             </template>
           </FormCard>
 
-          <FormCard title="Materials/Products" class="mb-3">
+          <FormCard
+            @handleClickBtn="handleClickBtn"
+            title="Materials/Products"
+            isShowButton="true"
+            class="mb-3"
+          >
             <template v-slot:content>
-              <div class="grid grid-cols-12 gap-x-3">
+              <div
+                v-for="(item, index) in materials"
+                :key="index"
+                class="grid grid-cols-12 gap-x-3"
+              >
                 <div class="col-span-5">
                   <BaseSelection
                     @getValue=""
-                    v-model="order.product.value"
-                    :field="order.product"
+                    v-model="item.product.value"
+                    :field="item.product"
                   />
                 </div>
                 <div class="col-span-2">
                   <BaseInput
-                    :field="order.warrantyDate"
-                    v-model="order.warrantyDate.value"
+                    :field="item.warrantyDate"
+                    v-model="item.warrantyDate.value"
                   />
                 </div>
                 <div class="col-span-2">
                   <BaseSelection
                     @getValue=""
-                    v-model="order.singleUnit.value"
-                    :field="order.singleUnit"
+                    v-model="item.singleUnit.value"
+                    :field="item.singleUnit"
                   />
                 </div>
                 <div class="col-span-2">
                   <BaseInput
-                    :field="order.quantity"
-                    v-model="order.quantity.value"
+                    :field="item.quantity"
+                    v-model="item.quantity.value"
                   />
                 </div>
                 <div class="col-span-1 m-auto">
@@ -59,6 +68,7 @@
                     type="danger"
                     icon="el-icon-delete"
                     class="bg-red-400"
+                    @click="handleDeleteMaterial(item, index)"
                     circle
                   ></el-button>
                 </div>
@@ -85,7 +95,7 @@
                 <div class="col-span-12">
                   <BaseTextArea
                     :field="order.note"
-                    v-model="order.customer.note"
+                    v-model="order.note.value"
                   />
                 </div>
               </div>
@@ -107,6 +117,7 @@
 <script>
 import BaseInput from "./../../components/Inputs/BaseInput.vue";
 import axios from "axios";
+import _ from "lodash";
 import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
 import FormCard from "./../../components/Cards/FormCard.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
@@ -123,6 +134,120 @@ export default {
   },
   data() {
     return {
+      defaultMaterial: {
+        product: {
+          id: "product",
+          baseId: 0,
+          name: "product",
+          rules: "required",
+          classes: "w-full",
+          isRequired: "true",
+          placeholder: "Select Product",
+          error: "",
+          value: "",
+          disabled: "notDisabled",
+          label: "Material/Product",
+          options: [],
+        },
+        warrantyDate: {
+          id: "warrantyDate",
+          baseId: 0,
+          name: "warrantyDate",
+          rules: "required",
+          classes: "w-full",
+          isRequired: "true",
+          placeholder: "Select warrantyDate",
+          error: "",
+          value: "",
+          disabled: "notDisabled",
+          label: "Warranty Date",
+          options: [],
+        },
+        singleUnit: {
+          id: "singleUnit",
+          baseId: 0,
+          name: "singleUnit",
+          rules: "required",
+          classes: "w-full",
+          isRequired: "true",
+          placeholder: "Select Single Unit",
+          error: "",
+          value: "",
+          disabled: "notDisabled",
+          label: "Single Unit",
+          options: [],
+        },
+        quantity: {
+          id: "quantity",
+          name: "Quantity",
+          rules: "required",
+          classes: "w-full",
+          type: "text",
+          label: "Quantity",
+          isRequired: "true",
+          value: "",
+          placeholder: "Enter Quantity...",
+          error: "",
+        },
+      },
+      materials: [
+        {
+          product: {
+            id: "product",
+            baseId: 0,
+            name: "product",
+            rules: "required",
+            classes: "w-full",
+            isRequired: "true",
+            placeholder: "Select Product",
+            error: "",
+            value: "",
+            disabled: "notDisabled",
+            label: "Material/Product",
+            options: [],
+          },
+          warrantyDate: {
+            id: "warrantyDate",
+            baseId: 0,
+            name: "warrantyDate",
+            rules: "required",
+            classes: "w-full",
+            isRequired: "true",
+            placeholder: "Select warrantyDate",
+            error: "",
+            value: "",
+            disabled: "notDisabled",
+            label: "Warranty Date",
+            options: [],
+          },
+          singleUnit: {
+            id: "singleUnit",
+            baseId: 0,
+            name: "singleUnit",
+            rules: "required",
+            classes: "w-full",
+            isRequired: "true",
+            placeholder: "Select Single Unit",
+            error: "",
+            value: "",
+            disabled: "notDisabled",
+            label: "Single Unit",
+            options: [],
+          },
+          quantity: {
+            id: "quantity",
+            name: "Quantity",
+            rules: "required",
+            classes: "w-full",
+            type: "text",
+            label: "Quantity",
+            isRequired: "true",
+            value: "",
+            placeholder: "Enter Quantity...",
+            error: "",
+          },
+        },
+      ],
       order: {
         name: {
           id: "name",
@@ -200,67 +325,25 @@ export default {
           maxlength: 250,
           error: "",
         },
-        product: {
-          id: "product",
-          baseId: 0,
-          name: "product",
-          rules: "required",
-          classes: "w-full",
-          isRequired: "true",
-          placeholder: "Select Product",
-          error: "",
-          value: "",
-          disabled: "notDisabled",
-          label: "Material/Product",
-          options: [],
-        },
-        warrantyDate: {
-          id: "warrantyDate",
-          baseId: 0,
-          name: "warrantyDate",
-          rules: "required",
-          classes: "w-full",
-          isRequired: "true",
-          placeholder: "Select warrantyDate",
-          error: "",
-          value: "",
-          disabled: "notDisabled",
-          label: "Warranty Date",
-          options: [],
-        },
-        singleUnit: {
-          id: "singleUnit",
-          baseId: 0,
-          name: "singleUnit",
-          rules: "required",
-          classes: "w-full",
-          isRequired: "true",
-          placeholder: "Select Single Unit",
-          error: "",
-          value: "",
-          disabled: "notDisabled",
-          label: "Single Unit",
-          options: [],
-        },
-        quantity: {
-          id: "quantity",
-          name: "Quantity",
-          rules: "required",
-          classes: "w-full",
-          type: "text",
-          label: "Quantity",
-          isRequired: "true",
-          value: "",
-          placeholder: "Enter Quantity...",
-          error: "",
-        },
       },
     };
   },
-  methods: {},
+  methods: {
+    handleDeleteMaterial(item, index) {
+      if (index > -1) {
+        this.materials.splice(index, 1);
+      }
+    },
+    handleClickBtn(flag) {
+      if (flag) {
+        this.materials.push(_.cloneDeep(this.defaultMaterial));
+      }
+    },
+  },
   mounted() {},
 };
 </script>
+
 <style scoped>
 .footer-btn-fixed {
   z-index: 99 !important;
