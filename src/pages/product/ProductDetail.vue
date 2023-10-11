@@ -612,7 +612,7 @@ export default {
         });
     },
     handleCancelSubmit() {
-      this.$confirm("Are you sure to canncel adding Product")
+      this.$confirm("Are you sure to cancel")
         .then((_) => {
           this.$router.push({ path: "/product" });
         })

@@ -45,10 +45,7 @@
                   />
                 </div>
                 <div class="col-span-2">
-                  <BaseInput
-                    :field="item.warrantyDate"
-                    v-model="item.warrantyDate.value"
-                  />
+                  <DatePicker :field="item.warrantyDate" />
                 </div>
                 <div class="col-span-2">
                   <BaseSelection
@@ -104,7 +101,7 @@
         </el-col>
         <el-col :span="6">
           <div class="footer-btn-fixed flex justify-end p-4">
-            <el-button @click="">Cancel</el-button>
+            <el-button @click="handleCancelSubmit">Cancel</el-button>
             <el-button class="bg-blue-400" type="primary" @click=""
               >Create</el-button
             >
@@ -153,16 +150,20 @@ export default {
           id: "warrantyDate",
           baseId: 0,
           name: "warrantyDate",
-          rules: "required",
+          rules: "",
           classes: "w-full",
-          isRequired: "true",
+          isRequired: "",
           placeholder: "Select warrantyDate",
           error: "",
           value: "",
           disabled: "notDisabled",
           label: "Warranty Date",
-          options: [],
-        },
+          pickerOptions: {
+            disabledDate(time) {
+              return time.getTime() < Date.now();
+            },
+          },
+        },  
         singleUnit: {
           id: "singleUnit",
           baseId: 0,
@@ -210,15 +211,19 @@ export default {
             id: "warrantyDate",
             baseId: 0,
             name: "warrantyDate",
-            rules: "required",
+            rules: "",
             classes: "w-full",
-            isRequired: "true",
+            isRequired: "",
             placeholder: "Select warrantyDate",
             error: "",
             value: "",
             disabled: "notDisabled",
             label: "Warranty Date",
-            options: [],
+            pickerOptions: {
+            disabledDate(time) {
+              return time.getTime() < Date.now();
+            },
+          },
           },
           singleUnit: {
             id: "singleUnit",
@@ -329,6 +334,13 @@ export default {
     };
   },
   methods: {
+    handleCancelSubmit() {
+      this.$confirm("Are you sure to cancel")
+        .then((_) => {
+          this.$router.push({ path: "/export-receipt" });
+        })
+        .catch((_) => {});
+    },
     handleDeleteMaterial(item, index) {
       if (index > -1) {
         this.materials.splice(index, 1);
@@ -339,8 +351,74 @@ export default {
         this.materials.push(_.cloneDeep(this.defaultMaterial));
       }
     },
+    handleGetSingleUnit() {
+      axios
+        .get("http://localhost:9090/api/v1/single-unit/all", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.defaultMaterial.singleUnit.options = res.data.items;
+            this.materials.forEach((item) => {
+              item.singleUnit.options = res.data.items;
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
+    handleGetProducts() {
+      axios
+        .get("http://localhost:9090/api/v1/product/data-list", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.materials.forEach((item) => {
+              item.product.options = res.data.items;
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
+    handleGetCustomers() {
+      axios
+        .get("http://localhost:9090/api/v1/customer/data-list", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.order.customer.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
   },
-  mounted() {},
+  mounted() {
+    this.handleGetSingleUnit();
+    this.handleGetProducts();
+    this.handleGetCustomers();
+  },
 };
 </script>
 
