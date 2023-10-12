@@ -349,10 +349,11 @@ export default {
       });
     },
     handleSubmit() {
-      const productInvoices = this.materials;
       const order = {
         warehouseId: "WH-1",
-        customer: {},
+        customer: {
+          id: this.order.customer.value,
+        },
         productInvoices: this.getMaterials(),
         code: this.order.code.value,
         name: this.order.name.value,
