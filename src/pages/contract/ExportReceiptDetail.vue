@@ -102,7 +102,7 @@
         <el-col :span="6">
           <div class="footer-btn-fixed flex justify-end p-4">
             <el-button @click="handleCancelSubmit">Cancel</el-button>
-            <el-button class="bg-blue-400" type="primary" @click=""
+            <el-button class="bg-blue-400" type="primary" @click="handleSubmit"
               >Create</el-button
             >
           </div>
@@ -120,6 +120,8 @@ import FormCard from "./../../components/Cards/FormCard.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import { ValidationObserver } from "vee-validate";
 import DatePicker from "../../components/Date/DatePicker.vue";
+import moment from "moment";
+
 export default {
   components: {
     BaseInput,
@@ -163,7 +165,7 @@ export default {
               return time.getTime() < Date.now();
             },
           },
-        },  
+        },
         singleUnit: {
           id: "singleUnit",
           baseId: 0,
@@ -220,10 +222,10 @@ export default {
             disabled: "notDisabled",
             label: "Warranty Date",
             pickerOptions: {
-            disabledDate(time) {
-              return time.getTime() < Date.now();
+              disabledDate(time) {
+                return time.getTime() < Date.now();
+              },
             },
-          },
           },
           singleUnit: {
             id: "singleUnit",
@@ -334,6 +336,31 @@ export default {
     };
   },
   methods: {
+    getMaterials() {
+      return this.materials.map((item) => {
+        const materialItem = {};
+        Object.keys(this.defaultMaterial).map((key) => {
+          materialItem[key] = item[key].value;
+          materialItem.warrantyDate = moment(item["warrantyDate"].value).format(
+            "YYYY-MM-DD HH:mm:ss"
+          );
+        });
+        return materialItem;
+      });
+    },
+    handleSubmit() {
+      const productInvoices = this.materials;
+      const order = {
+        warehouseId: "WH-1",
+        customer: {},
+        productInvoices: this.getMaterials(),
+        code: this.order.code.value,
+        name: this.order.name.value,
+        typeInvoice: this.order.typeInvoice.value,
+        note: this.order.note.value,
+      };
+      console.log(order);
+    },
     handleCancelSubmit() {
       this.$confirm("Are you sure to cancel")
         .then((_) => {
@@ -380,6 +407,7 @@ export default {
         })
         .then((res) => {
           if (res.status === 200) {
+            this.defaultMaterial.product.options = res.data.items;
             this.materials.forEach((item) => {
               item.product.options = res.data.items;
             });
@@ -412,6 +440,33 @@ export default {
             type: "error",
           });
         });
+    },
+    getDetailOrder() {
+      this.loadingPageDetail = true;
+
+      if (this.$route.params.data.id != null) {
+        axios
+          .get(
+            `http://localhost:9090/api/v1/invoice/detail/${this.$route.params.data.id}`,
+            { headers: { "Access-Control-Allow-Origin": "*" } }
+          )
+          .then((res) => {
+            if (res.status === 200) {
+              //log data
+            }
+          })
+          .catch((error) => {
+            this.$message({
+              showClose: true,
+              message: error,
+              type: "error",
+            });
+          })
+          .finally(() => (this.loadingPageDetail = false));
+        if (this.$route.params.data.type === "DUPLICATED") {
+        }
+      } else {
+      }
     },
   },
   mounted() {
