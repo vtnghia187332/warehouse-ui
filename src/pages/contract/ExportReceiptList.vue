@@ -41,7 +41,7 @@
       <el-table
         :data="invoices"
         style="width: 100%"
-        @row-dblclick=""
+        @row-dblclick="goToDetail"
         @sort-change=""
         height="800"
       >
@@ -169,6 +169,16 @@ export default {
     handleCurrentChange(param) {
       this.paginationPage.pageNo = param;
       this.handleGetInvoices();
+    },
+    goToDetail(row){
+      let data = {
+        id: row.invoiceId,
+        type: "EDIT",
+      };
+      this.$router.push({
+        name: "export-receipt detail", //use name for router push
+        params: { data },
+      });
     },
     handleGetInvoices() {
       var me = this;

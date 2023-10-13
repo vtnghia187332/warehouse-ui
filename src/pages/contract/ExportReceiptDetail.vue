@@ -289,11 +289,11 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select Single Unit",
+          placeholder: "Select Type of Invoice",
           error: "",
           value: "",
           disabled: "notDisabled",
-          label: "Type of Unit",
+          label: "Type of Invoice",
           options: [
             {
               value: 1,
@@ -312,7 +312,7 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select Customer",
+          placeholder: "Select Customer / Phone Number",
           error: "",
           value: "",
           disabled: "notDisabled",
@@ -344,6 +344,8 @@ export default {
           materialItem.warrantyDate = moment(item["warrantyDate"].value).format(
             "YYYY-MM-DD HH:mm:ss"
           );
+          materialItem.productId = item["product"].value;
+          delete materialItem["product"];
         });
         return materialItem;
       });
@@ -360,7 +362,43 @@ export default {
         typeInvoice: this.order.typeInvoice.value,
         note: this.order.note.value,
       };
-      console.log(order);
+      if (this.$route.params.data.type === "EDIT") {
+        console.log("Edit time");
+      } else {
+        axios({
+          method: "post",
+          url: "http://localhost:9090/api/v1/export-receipt",
+          headers: { "Access-Control-Allow-Origin": "*" },
+          data: order,
+        })
+          .then((response) => {
+            if (response.status === 200) {
+              this.$router.push({ path: "/export-receipt" });
+              this.$message({
+                showClose: true,
+                message: "Created successfully",
+                type: "success",
+              });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+            if (error.response.data.items) {
+              this.$message({
+                showClose: true,
+                message: error.response.data.items,
+                type: "error",
+              });
+            } else if (error.response.data.message) {
+              this.$message({
+                showClose: true,
+                message: error.response.data.message,
+                type: "error",
+              });
+            }
+            this.$refs.observerAdd.setErrors(error.response.data.items);
+          });
+      }
     },
     handleCancelSubmit() {
       this.$confirm("Are you sure to cancel")
@@ -443,7 +481,7 @@ export default {
         });
     },
     getDetailOrder() {
-      this.loadingPageDetail = true;
+      // this.loadingPageDetail = true;
 
       if (this.$route.params.data.id != null) {
         axios
@@ -453,7 +491,9 @@ export default {
           )
           .then((res) => {
             if (res.status === 200) {
-              //log data
+              Object.keys(this.order).forEach((key) => {
+                this.order[key].value = res.data.items[key];
+              });
             }
           })
           .catch((error) => {
@@ -463,7 +503,7 @@ export default {
               type: "error",
             });
           })
-          .finally(() => (this.loadingPageDetail = false));
+          .finally();
         if (this.$route.params.data.type === "DUPLICATED") {
         }
       } else {
@@ -471,9 +511,14 @@ export default {
     },
   },
   mounted() {
+    if (!this.$route.params.data) {
+      this.$router.push({ path: "/export-receipt" });
+      return;
+    }
     this.handleGetSingleUnit();
     this.handleGetProducts();
     this.handleGetCustomers();
+    this.getDetailOrder();
   },
 };
 </script>
