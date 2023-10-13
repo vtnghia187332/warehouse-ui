@@ -382,21 +382,20 @@ export default {
             }
           })
           .catch((error) => {
-            console.log(error);
-            if (error.response.data.items) {
-              this.$message({
-                showClose: true,
-                message: error.response.data.items,
-                type: "error",
-              });
-            } else if (error.response.data.message) {
+            if (error.response.data.message) {
               this.$message({
                 showClose: true,
                 message: error.response.data.message,
                 type: "error",
               });
+            } else if (error.response.data.items) {
+              this.$message({
+                showClose: true,
+                message: error.response.data.items,
+                type: "error",
+              });
+              this.$refs.observerAdd.setErrors(error.response.data.items);
             }
-            this.$refs.observerAdd.setErrors(error.response.data.items);
           });
       }
     },
@@ -480,6 +479,19 @@ export default {
           });
         });
     },
+    initMaterialsList(data) {
+      const materialAfterBinding = [];
+      data.forEach((x, index) => {
+        let materialTemp = _.cloneDeep(this.defaultMaterial);
+        Object.keys(materialTemp).forEach((key) => {
+          if (materialTemp[key]) {
+            materialTemp[key].value = x[key];
+          }
+        });
+        materialAfterBinding.push(materialTemp);
+      });
+      this.materials = materialAfterBinding.map((x) => x);
+    },
     getDetailOrder() {
       // this.loadingPageDetail = true;
 
@@ -493,7 +505,9 @@ export default {
             if (res.status === 200) {
               Object.keys(this.order).forEach((key) => {
                 this.order[key].value = res.data.items[key];
+                this.order["customer"].value = res.data.items["customer"].id;
               });
+              this.initMaterialsList(res.data.items["productInvoices"]);
             }
           })
           .catch((error) => {
