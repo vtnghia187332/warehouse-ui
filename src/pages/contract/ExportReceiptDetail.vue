@@ -133,6 +133,8 @@ export default {
   },
   data() {
     return {
+      id: null,
+      invoiceId: null,
       defaultMaterial: {
         product: {
           id: "product",
@@ -345,6 +347,24 @@ export default {
             "YYYY-MM-DD HH:mm:ss"
           );
           materialItem.productId = item["product"].value;
+
+          this.defaultMaterial.product.options.forEach((option) => {
+            if (
+              option.value === item["product"].value ||
+              option.label === item["product"].value
+            ) {
+              materialItem.productId = option.value;
+            }
+          });
+          this.defaultMaterial.singleUnit.options.forEach((option) => {
+            if (
+              option.value === item["singleUnit"].value ||
+              option.label === item["singleUnit"].value
+            ) {
+              materialItem.singleUnit = option.value;
+            }
+          });
+
           delete materialItem["product"];
         });
         return materialItem;
@@ -353,6 +373,8 @@ export default {
     handleSubmit() {
       const order = {
         warehouseId: "WH-1",
+        id: this.id,
+        invoiceId: this.invoiceId,
         customer: {
           id: this.order.customer.value,
         },
@@ -362,8 +384,40 @@ export default {
         typeInvoice: this.order.typeInvoice.value,
         note: this.order.note.value,
       };
+      console.log(order, "order");
       if (this.$route.params.data.type === "EDIT") {
-        console.log("Edit time");
+        axios({
+          method: "put",
+          url: "http://localhost:9090/api/v1/export-receipt",
+          headers: { "Access-Control-Allow-Origin": "*" },
+          data: order,
+        })
+          .then((response) => {
+            if (response.status === 200) {
+              this.$router.push({ path: "/export-receipt" });
+              this.$message({
+                showClose: true,
+                message: "Updated successfully",
+                type: "success",
+              });
+            }
+          })
+          .catch((error) => {
+            if (error.response.data.message) {
+              this.$message({
+                showClose: true,
+                message: error.response.data.message,
+                type: "error",
+              });
+            } else if (error.response.data.items) {
+              this.$message({
+                showClose: true,
+                message: error.response.data.items,
+                type: "error",
+              });
+              this.$refs.observerAdd.setErrors(error.response.data.items);
+            }
+          });
       } else {
         axios({
           method: "post",
@@ -508,6 +562,8 @@ export default {
                 this.order["customer"].value = res.data.items["customer"].id;
               });
               this.initMaterialsList(res.data.items["productInvoices"]);
+              this.id = res.data.items.id;
+              this.invoiceId = res.data.items.invoiceId;
             }
           })
           .catch((error) => {
