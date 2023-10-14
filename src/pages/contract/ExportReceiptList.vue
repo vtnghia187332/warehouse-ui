@@ -17,6 +17,12 @@
           <i class="el-icon-files font-bold"></i> History
         </button>
         <button
+          class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
+          @click="testFunc"
+        >
+          <i class="el-icon-files font-bold"></i> Test
+        </button>
+        <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="HandleImport"
         >
@@ -107,7 +113,6 @@
           width="200"
         >
         </el-table-column>
-   
       </el-table>
     </div>
     <BasePagination
@@ -149,6 +154,16 @@ export default {
     };
   },
   methods: {
+    testFunc() {
+      let data = {
+        id: null,
+        type: "Payment-Screen",
+      };
+      this.$router.push({
+        name: "payment",
+        params: { data },
+      });
+    },
     getBaseSearchVal(param) {
       // clears the timer on a call so there is always x seconds in between calls
       clearTimeout(this.timer);
@@ -170,7 +185,7 @@ export default {
       this.paginationPage.pageNo = param;
       this.handleGetInvoices();
     },
-    goToDetail(row){
+    goToDetail(row) {
       let data = {
         id: row.invoiceId,
         type: "EDIT",

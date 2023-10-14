@@ -26,6 +26,7 @@ import StaffList from '@/pages/staff/StaffList.vue';
 import ExportReceiptList from '@/pages/contract/ExportReceiptList.vue';
 import ExportReceiptHistory from '@/pages/contract/ExportReceiptHistory.vue';
 import ExportReceiptDetail from '@/pages/contract/ExportReceiptDetail.vue';
+import Payment from '@/pages/contract/Payment.vue';
 
 const routes = [
   {
@@ -127,6 +128,11 @@ const routes = [
         path: "/export-receipt-detail",
         name: "export-receipt detail",
         component: ExportReceiptDetail,
+      },
+      {
+        path: "/payment",
+        name: "payment",
+        component: Payment,
       },
       {
         path: "/export-receipt-history",
