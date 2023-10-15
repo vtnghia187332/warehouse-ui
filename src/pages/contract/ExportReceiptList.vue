@@ -113,6 +113,25 @@
           width="200"
         >
         </el-table-column>
+        <el-table-column fixed="right" label="Action" width="80">
+          <template slot-scope="scope">
+            <el-dropdown>
+              <el-button @click="" type="text" size="small"
+                ><i class="ti-more !ml-3"></i
+              ></el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>
+                  <button
+                    class="!bg-[#fdfdfd] text-black"
+                    @click="handeCheckOut(scope.row)"
+                  >
+                    <i class=""></i> Check Out
+                  </button>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <BasePagination
@@ -154,6 +173,16 @@ export default {
     };
   },
   methods: {
+    handeCheckOut(row) {
+      let data = {
+        id: row.invoiceId,
+        type: "EDIT",
+      };
+      this.$router.push({
+        name: "payment", //use name for router push
+        params: { data },
+      });
+    },
     testFunc() {
       let data = {
         id: null,

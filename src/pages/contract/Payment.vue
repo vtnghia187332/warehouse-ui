@@ -12,13 +12,13 @@
                 @selection-change=""
                 height="497"
               >
-                <el-table-column prop="product" label="Product" width="400">
+                <el-table-column prop="name" label="Product" width="440">
                 </el-table-column>
                 <el-table-column prop="quantity" label="Quantity" width="80">
                 </el-table-column>
-                <el-table-column prop="total" label="Total" width="150">
+                <el-table-column prop="exportPrice" label="Price" width="150">
                 </el-table-column>
-                <el-table-column align="right">
+                <el-table-column align="right" width="50">
                   <template slot-scope="scope">
                     <el-button
                       type="danger"
@@ -36,20 +36,26 @@
           <div class="!w-72 !mb-1">
             <div class="flex justify-between font-bold text-base">
               <div>Subtotal:</div>
-              <div class="">$1</div>
+              <div class="">${{ subTotal }}</div>
             </div>
             <div class="flex justify-between font-bold text-base">
               <div>Shipping:</div>
-              <div class="">$1</div>
+              <div class="">${{this.shippingFee}}</div>
             </div>
             <div class="flex justify-between font-bold text-base">
               <div>Discount:</div>
-              <div class="">$1</div>
+              <div class="">${{this.discountNumber}}</div>
             </div>
             <div>_____________________________________</div>
             <div class="flex justify-between font-bold text-3xl">
               <div>Total:</div>
-              <div class="">$1</div>
+              <div class="">
+                ${{
+                  this.subTotal +
+                  this.shippingFee -
+                  this.subTotal * this.discountNumber
+                }}
+              </div>
             </div>
           </div>
         </div>
@@ -84,8 +90,8 @@
               </div>
               <div class="col-span-6">
                 <BaseInput
-                  :field="order.phoneNumber"
-                  v-model="order.phoneNumber.value"
+                  :field="order.phoneNumberReceipt"
+                  v-model="order.phoneNumberReceipt.value"
                 />
               </div>
             </div>
@@ -131,6 +137,7 @@
 import FormCard from "./../../components/Cards/FormCard.vue";
 import BaseInput from "./../../components/Inputs/BaseInput.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
+import axios from "axios";
 import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
 export default {
   components: { FormCard, BaseInput, BaseTextArea, BaseSelection },
@@ -151,13 +158,11 @@ export default {
           error: "",
         },
       },
-      materials: [
-        {
-          product: 1,
-          quantity: 12,
-          total: 100,
-        },
-      ],
+      materials: [],
+      subTotal: 0,
+      shippingFee: 0,
+      discountNumber: 0,
+      totalInvoice: 0,
       order: {
         modePayment: {
           id: "modePayment",
@@ -168,9 +173,31 @@ export default {
           type: "text",
           label: "Payment Method",
           isRequired: "",
-          value: "",
+          value: 2,
           placeholder: "",
           error: "",
+          options: [
+            {
+              value: 1,
+              label: "Bank Transfer",
+            },
+            {
+              value: 2,
+              label: "Cash",
+            },
+            {
+              value: 3,
+              label: "Card",
+            },
+            {
+              value: 4,
+              label: "Cheque",
+            },
+            {
+              value: 5,
+              label: "E-Wallet",
+            },
+          ],
         },
         deliveryAddress: {
           id: "deliveryAddress",
@@ -200,8 +227,8 @@ export default {
           placeholder: "",
           error: "",
         },
-        phoneNumber: {
-          id: "phoneNumber",
+        phoneNumberReceipt: {
+          id: "phoneNumberReceipt",
           name: "Phone Number",
           rules: "",
           classes: "w-full col-span-6",
@@ -243,8 +270,56 @@ export default {
       },
     };
   },
-  methods: {},
-  mounted() {},
+  methods: {
+    handleGetDetailInvoice() {
+      let subTotalVal = 0;
+      if (this.$route.params.data.id != null) {
+        axios
+          .get(
+            `http://localhost:9090/api/v1/invoice/detail/${this.$route.params.data.id}`,
+            { headers: { "Access-Control-Allow-Origin": "*" } }
+          )
+          .then((res) => {
+            if (res.status === 200) {
+              this.customer.fullName.value =
+                res.data.items["customer"].fullName;
+              this.order.deliveryAddress.value =
+                res.data.items["customer"].detailAddress +
+                ", " +
+                res.data.items["customer"].country +
+                ", " +
+                res.data.items["customer"].city +
+                ", " +
+                res.data.items["customer"].district +
+                ", " +
+                res.data.items["customer"].subDistrict;
+              this.order.consignee.value = res.data.items["customer"].fullName;
+              this.order.phoneNumberReceipt.value =
+                res.data.items["customer"].mobilePhone;
+              this.materials = res.data.items["productInvoices"];
+              this.materials.forEach((item) => {
+                subTotalVal = item.quantity * item.exportPrice;
+                this.subTotal = this.subTotal + subTotalVal;
+              });
+            }
+          })
+          .catch((error) => {
+            this.$message({
+              showClose: true,
+              message: error,
+              type: "error",
+            });
+          })
+          .finally();
+        if (this.$route.params.data.type === "DUPLICATED") {
+        }
+      } else {
+      }
+    },
+  },
+  mounted() {
+    this.handleGetDetailInvoice();
+  },
 };
 </script>
 <style scoped>
