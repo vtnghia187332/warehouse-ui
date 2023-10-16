@@ -17,12 +17,6 @@
           <i class="el-icon-files font-bold"></i> History
         </button>
         <button
-          class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
-          @click="testFunc"
-        >
-          <i class="el-icon-files font-bold"></i> Test
-        </button>
-        <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="HandleImport"
         >

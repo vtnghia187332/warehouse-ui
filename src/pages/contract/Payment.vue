@@ -12,9 +12,11 @@
                 @selection-change=""
                 height="497"
               >
-                <el-table-column prop="name" label="Product" width="440">
+                <el-table-column prop="name" label="Product" width="350">
                 </el-table-column>
                 <el-table-column prop="quantity" label="Quantity" width="80">
+                </el-table-column>
+                <el-table-column prop="singleUnit" label="Unit" width="100">
                 </el-table-column>
                 <el-table-column prop="exportPrice" label="Price" width="150">
                 </el-table-column>
@@ -32,33 +34,50 @@
             </div>
           </template>
         </FormCard>
-        <div class="bg-white radius-shadow_add p-3 flex justify-end">
-          <div class="!w-72 !mb-1">
-            <div class="flex justify-between font-bold text-base">
-              <div>Subtotal:</div>
-              <div class="">${{ subTotal }}</div>
-            </div>
-            <div class="flex justify-between font-bold text-base">
-              <div>Shipping:</div>
-              <div class="">${{this.shippingFee}}</div>
-            </div>
-            <div class="flex justify-between font-bold text-base">
-              <div>Discount:</div>
-              <div class="">${{this.discountNumber}}</div>
-            </div>
-            <div>_____________________________________</div>
-            <div class="flex justify-between font-bold text-3xl">
-              <div>Total:</div>
-              <div class="">
-                ${{
-                  this.subTotal +
-                  this.shippingFee -
-                  this.subTotal * this.discountNumber
-                }}
+        <el-row :gutter="20">
+          <el-col :span="12"
+            ><div class="">
+              <div
+                class="bg-white radius-shadow_add p-3 flex justify-end !h-[165px]"
+              >
+                <div class="!w-96 !mb-1">
+                  <BaseInput
+                    :field="order.discount"
+                    v-model="order.discount.value"
+                  />
+                </div>
+              </div></div
+          ></el-col>
+          <el-col :span="12">
+            <div class="bg-white radius-shadow_add p-3 flex justify-end">
+              <div class="!w-96 !mb-1">
+                <div class="flex justify-between font-bold text-base">
+                  <div>Subtotal:</div>
+                  <div class="">${{ subTotal }}</div>
+                </div>
+                <div class="flex justify-between font-bold text-base">
+                  <div>Shipping:</div>
+                  <div class="">${{ this.shippingFee }}</div>
+                </div>
+                <div class="flex justify-between font-bold text-base">
+                  <div>Discount:</div>
+                  <div class="">{{ this.order.discount.value }} %</div>
+                </div>
+                <div>___________________________________________</div>
+                <div class="flex justify-between font-bold text-3xl">
+                  <div>Total:</div>
+                  <div class="">
+                    ${{
+                      this.subTotal +
+                      this.shippingFee -
+                      (this.order.discount.value / 100) * this.subTotal
+                    }}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </el-col>
+        </el-row>
       </el-col>
       <el-col :span="12">
         <FormCard title="Customer's Information" class="mb-3">
@@ -141,6 +160,14 @@ import axios from "axios";
 import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
 export default {
   components: { FormCard, BaseInput, BaseTextArea, BaseSelection },
+  watch: {
+    "order.discount.value": function (newVal, oldVal) {
+      if (!newVal) {
+        this.order.discount.value = 0;
+        console.log(this.order.discount.value, "this.order.discount");
+      }
+    },
+  },
   data() {
     return {
       customer: {
@@ -161,7 +188,6 @@ export default {
       materials: [],
       subTotal: 0,
       shippingFee: 0,
-      discountNumber: 0,
       totalInvoice: 0,
       order: {
         modePayment: {
@@ -224,6 +250,19 @@ export default {
           isRequired: "",
           maxlength: 150,
           value: "",
+          placeholder: "",
+          error: "",
+        },
+        discount: {
+          id: "discount",
+          name: "Discount",
+          rules: "",
+          classes: "w-full col-span-6",
+          type: "text",
+          disabled: false,
+          label: "Discount",
+          isRequired: "",
+          value: 0,
           placeholder: "",
           error: "",
         },
@@ -300,7 +339,13 @@ export default {
               this.materials.forEach((item) => {
                 subTotalVal = item.quantity * item.exportPrice;
                 this.subTotal = this.subTotal + subTotalVal;
+                this.singleUnit = item.singleUnit;
               });
+              if (!res.discount) {
+                this.order.discount.value = 0;
+              } else {
+                this.order.discount.value = res.discount;
+              }
             }
           })
           .catch((error) => {
