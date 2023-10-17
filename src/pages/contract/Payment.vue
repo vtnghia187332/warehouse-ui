@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="font-semibold text-2xl pl-3">
+      {{ typeInvoice == 1 ? "Receipt Order" : "Export Order" }}
+    </div>
     <el-row class="pt-4 pl-3 pr-3 !ml-1 !mr-1" :gutter="24">
       <el-col :span="12">
         <FormCard title="Order's Information" class="mb-3">
@@ -18,7 +21,7 @@
                 </el-table-column>
                 <el-table-column prop="singleUnit" label="Unit" width="100">
                 </el-table-column>
-                <el-table-column prop="exportPrice" label="Price" width="150">
+                <el-table-column prop="exportPrice" label="Price($)" width="150">
                 </el-table-column>
                 <el-table-column align="right" width="50">
                   <template slot-scope="scope">
@@ -37,13 +40,17 @@
         <el-row :gutter="20">
           <el-col :span="12"
             ><div class="">
-              <div
-                class="bg-white radius-shadow_add p-3 flex justify-end !h-[165px]"
-              >
-                <div class="!w-96 !mb-1">
+              <div class="bg-white radius-shadow_add p-3 !h-[165px]">
+                <div class="!w-full !mb-1">
                   <BaseInput
                     :field="order.discount"
                     v-model="order.discount.value"
+                  />
+                </div>
+                <div class="!w-full !mb-1">
+                  <BaseInput
+                    :field="order.shippingFee"
+                    v-model="order.shippingFee.value"
                   />
                 </div>
               </div></div
@@ -57,7 +64,7 @@
                 </div>
                 <div class="flex justify-between font-bold text-base">
                   <div>Shipping:</div>
-                  <div class="">${{ this.shippingFee }}</div>
+                  <div class="">${{ this.order.shippingFee.value }}</div>
                 </div>
                 <div class="flex justify-between font-bold text-base">
                   <div>Discount:</div>
@@ -68,9 +75,9 @@
                   <div>Total:</div>
                   <div class="">
                     ${{
-                      this.subTotal +
-                      this.shippingFee -
-                      (this.order.discount.value / 100) * this.subTotal
+                      Number(order.shippingFee.value) +
+                      subTotal -
+                      (order.discount.value / 100) * subTotal
                     }}
                   </div>
                 </div>
@@ -129,14 +136,32 @@
             <div class="col-span-12 grid grid-cols-12 gap-x-6">
               <div class="col-span-6">
                 <BaseInput
-                  :field="order.amountPaid"
-                  v-model="order.amountPaid.value"
+                  :field="order.moneyPaid"
+                  v-model="order.moneyPaid.value"
                 />
               </div>
               <div class="col-span-6">
                 <BaseInput
+                  v-if="
+                    subTotal +
+                      Number(order.shippingFee.value) -
+                      (order.discount.value / 100) * subTotal -
+                      order.moneyPaid.value >=
+                    0
+                  "
                   :field="order.unpaidAmount"
                   v-model="order.unpaidAmount.value"
+                />
+                <BaseInput
+                  v-if="
+                    subTotal +
+                      Number(order.shippingFee.value) -
+                      (order.discount.value / 100) * subTotal -
+                      order.moneyPaid.value <
+                    0
+                  "
+                  :field="order.inChange"
+                  v-model="order.inChange.value"
                 />
               </div>
             </div>
@@ -162,9 +187,80 @@ export default {
   components: { FormCard, BaseInput, BaseTextArea, BaseSelection },
   watch: {
     "order.discount.value": function (newVal, oldVal) {
-      if (!newVal) {
+      if (!newVal && newVal == 0) {
         this.order.discount.value = 0;
-        console.log(this.order.discount.value, "this.order.discount");
+        this.order.unpaidAmount.value =
+          this.subTotal +
+          Number(this.order.shippingFee.value) -
+          (this.order.discount.value / 100) * this.subTotal -
+          this.order.moneyPaid.value;
+      } else if (newVal <= 100) {
+        this.order.discount.value = newVal;
+        let afterChangeMoney =
+          this.subTotal +
+          Number(this.order.shippingFee.value) -
+          (this.order.discount.value / 100) * this.subTotal -
+          this.order.moneyPaid.value;
+        if (afterChangeMoney < 0) {
+          this.order.unpaidAmount.value = 0;
+          this.order.inChange.value = Math.abs(afterChangeMoney);
+        }
+        if (afterChangeMoney >= 0) {
+          this.order.inChange.value = 0;
+
+          this.order.unpaidAmount.value = afterChangeMoney;
+        }
+      }
+    },
+    "order.shippingFee.value": function (newVal, oldVal) {
+      if (!newVal && newVal == 0) {
+        this.order.shippingFee.value = 0;
+        this.order.unpaidAmount.value =
+          this.subTotal +
+          Number(this.order.shippingFee.value) -
+          (this.order.discount.value / 100) * this.subTotal -
+          this.order.moneyPaid.value;
+      } else if (newVal <= 100) {
+        this.order.shippingFee.value = newVal;
+        let afterChangeMoney =
+          this.subTotal +
+          Number(this.order.shippingFee.value) -
+          (this.order.discount.value / 100) * this.subTotal -
+          this.order.moneyPaid.value;
+        if (afterChangeMoney < 0) {
+          this.order.unpaidAmount.value = 0;
+          this.order.inChange.value = Math.abs(afterChangeMoney);
+        }
+        if (afterChangeMoney >= 0) {
+          this.order.inChange.value = 0;
+
+          this.order.unpaidAmount.value = afterChangeMoney;
+        }
+      }
+    },
+    "order.moneyPaid.value": function (newVal, oldVal) {
+      if (newVal == null || newVal == undefined || newVal == 0) {
+        this.order.moneyPaid.value = 0;
+        this.order.unpaidAmount.value =
+          this.subTotal +
+          Number(this.order.shippingFee.value) -
+          (this.order.discount.value / 100) * this.subTotal -
+          this.order.moneyPaid.value;
+      } else {
+        this.order.moneyPaid.value = newVal;
+        let afterChangeMoney =
+          this.subTotal +
+          Number(this.order.shippingFee.value) -
+          (this.order.discount.value / 100) * this.subTotal -
+          this.order.moneyPaid.value;
+        if (afterChangeMoney < 0) {
+          this.order.unpaidAmount.value = 0;
+          this.order.inChange.value = Math.abs(afterChangeMoney);
+        }
+        if (afterChangeMoney >= 0) {
+          this.order.inChange.value = 0;
+          this.order.unpaidAmount.value = afterChangeMoney;
+        }
       }
     },
   },
@@ -186,8 +282,8 @@ export default {
         },
       },
       materials: [],
+      typeInvoice: 0,
       subTotal: 0,
-      shippingFee: 0,
       totalInvoice: 0,
       order: {
         modePayment: {
@@ -257,10 +353,23 @@ export default {
           id: "discount",
           name: "Discount",
           rules: "",
-          classes: "w-full col-span-6",
+          classes: "w-full col-span-6 !h-[35px]",
           type: "text",
           disabled: false,
-          label: "Discount",
+          label: "Discount (%)",
+          isRequired: "",
+          value: 0,
+          placeholder: "",
+          error: "",
+        },
+        shippingFee: {
+          id: "shippingFee",
+          name: "Shipping Fee",
+          rules: "",
+          classes: "w-full col-span-6 !h-[35px]",
+          type: "text",
+          disabled: false,
+          label: "Shipping Fee ($)",
           isRequired: "",
           value: 0,
           placeholder: "",
@@ -280,14 +389,14 @@ export default {
           placeholder: "",
           error: "",
         },
-        amountPaid: {
-          id: "amountPaid",
+        moneyPaid: {
+          id: "moneyPaid",
           name: "Amount Paid",
           rules: "",
           classes: "w-full col-span-6",
           type: "text",
           disabled: false,
-          label: "Amount Paid",
+          label: "Amount Paid ($)",
           isRequired: "",
           value: "",
           placeholder: "",
@@ -300,7 +409,20 @@ export default {
           classes: "w-full col-span-6",
           type: "text",
           disabled: true,
-          label: "Unpaid Amount",
+          label: "Unpaid Amount ($)",
+          isRequired: "",
+          value: "",
+          placeholder: "",
+          error: "",
+        },
+        inChange: {
+          id: "inChange",
+          name: "In Change",
+          rules: "",
+          classes: "w-full col-span-6",
+          type: "text",
+          disabled: true,
+          label: "In Change ($)",
           isRequired: "",
           value: "",
           placeholder: "",
@@ -345,6 +467,11 @@ export default {
                 this.order.discount.value = 0;
               } else {
                 this.order.discount.value = res.discount;
+              }
+              if (!res.moneyPaid) {
+                this.order.moneyPaid.value = 0;
+              } else {
+                this.order.moneyPaid.value = res.moneyPaid;
               }
             }
           })
