@@ -427,7 +427,6 @@ export default {
         .catch((_) => {});
     },
     handleDataCalUnit(item) {
-      console.log(item);
       item.unitDestinationId =
         this.product.singleUnit.options.find(
           (opt) =>

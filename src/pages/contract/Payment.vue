@@ -195,14 +195,14 @@ export default {
       if (!newVal && newVal == 0) {
         this.order.discount.value = 0;
         this.order.unpaidAmount.value =
-          this.subTotal +
+          Number(this.subTotal) +
           Number(this.order.shippingFee.value) -
           (this.order.discount.value / 100) * this.subTotal -
           this.order.moneyPaid.value;
       } else if (newVal <= 100) {
         this.order.discount.value = newVal;
         let afterChangeMoney =
-          this.subTotal +
+          Number(this.subTotal) +
           Number(this.order.shippingFee.value) -
           (this.order.discount.value / 100) * this.subTotal -
           this.order.moneyPaid.value;
@@ -221,14 +221,14 @@ export default {
       if (!newVal && newVal == 0) {
         this.order.shippingFee.value = 0;
         this.order.unpaidAmount.value =
-          this.subTotal +
+          Number(this.subTotal) +
           Number(this.order.shippingFee.value) -
           (this.order.discount.value / 100) * this.subTotal -
           this.order.moneyPaid.value;
       } else if (newVal <= 100) {
         this.order.shippingFee.value = newVal;
         let afterChangeMoney =
-          this.subTotal +
+          Number(this.subTotal) +
           Number(this.order.shippingFee.value) -
           (this.order.discount.value / 100) * this.subTotal -
           this.order.moneyPaid.value;
@@ -238,7 +238,6 @@ export default {
         }
         if (afterChangeMoney >= 0) {
           this.order.inChange.value = 0;
-
           this.order.unpaidAmount.value = afterChangeMoney;
         }
       }
@@ -247,14 +246,14 @@ export default {
       if (newVal == null || newVal == undefined || newVal == 0) {
         this.order.moneyPaid.value = 0;
         this.order.unpaidAmount.value =
-          this.subTotal +
+          Number(this.subTotal) +
           Number(this.order.shippingFee.value) -
           (this.order.discount.value / 100) * this.subTotal -
           this.order.moneyPaid.value;
       } else {
         this.order.moneyPaid.value = newVal;
         let afterChangeMoney =
-          this.subTotal +
+          Number(this.subTotal) +
           Number(this.order.shippingFee.value) -
           (this.order.discount.value / 100) * this.subTotal -
           this.order.moneyPaid.value;
@@ -289,6 +288,7 @@ export default {
         },
       },
       materials: [],
+      singleUnits: [],
       typeInvoice: 0,
       subTotal: 0,
       totalInvoice: 0,
@@ -452,10 +452,57 @@ export default {
         consignee: this.order.consignee.value,
         phoneNumberReceipt: this.order.phoneNumberReceipt.value,
         typeInvoice: this.typeInvoice,
+        modePayment: this.order.modePayment.value,
+        totalPaid:
+          Number(this.subTotal) +
+          Number(this.order.shippingFee.value) -
+          (this.order.discount.value / 100) * this.subTotal -
+          this.order.moneyPaid.valuel,
       };
-      console.log(order, "order");
+      order.modePayment =
+        this.order.modePayment.options.find(
+          (opt) =>
+            opt.value == this.order.modePayment.value ||
+            opt.label == this.order.modePayment.value
+        ).value || "";
+
+      order.productInvoices.forEach((item) => {
+        item.productId = item.id;
+        item.singleUnit =
+          this.singleUnits.find(
+            (opt) =>
+              opt.label == item.singleUnit || opt.value == item.singleUnit
+          ).value || "";
+      });
       if (this.$route.params.data.type === "EDIT") {
+        this.handleCheckOutOder(order);
       }
+    },
+    handleCheckOutOder(order) {
+      axios({
+        method: "put",
+        url: "http://localhost:9090/api/v1/invoice/check-out",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: order,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$router.push({ path: "/export-receipt" });
+            this.$message({
+              showClose: true,
+              message: "Checked out successfully",
+              type: "success",
+            });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+          this.$refs.observerAdd.setErrors(error.response.data.items);
+        });
     },
     handleCancelSubmit() {
       this.$confirm("Are you sure to cancel")
@@ -530,12 +577,32 @@ export default {
       } else {
       }
     },
+    handleGetSingleUnit() {
+      axios
+        .get("http://localhost:9090/api/v1/single-unit/all", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.singleUnits = res.data.items;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
   },
   mounted() {
     if (!this.$route.params.data) {
       this.$router.push({ path: "/export-receipt" });
       return;
     }
+    this.handleGetSingleUnit();
     this.handleGetDetailInvoice();
   },
 };
