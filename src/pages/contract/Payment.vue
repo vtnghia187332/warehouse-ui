@@ -21,7 +21,11 @@
                 </el-table-column>
                 <el-table-column prop="singleUnit" label="Unit" width="100">
                 </el-table-column>
-                <el-table-column prop="exportPrice" label="Price($)" width="150">
+                <el-table-column
+                  prop="exportPrice"
+                  label="Price($)"
+                  width="150"
+                >
                 </el-table-column>
                 <el-table-column align="right" width="50">
                   <template slot-scope="scope">
@@ -29,6 +33,7 @@
                       type="danger"
                       icon="el-icon-delete"
                       class="bg-red-400"
+                      @click="handleDeleteMaterial(scope)"
                       circle
                     ></el-button>
                   </template>
@@ -168,8 +173,8 @@
           </template>
         </FormCard>
         <div class="footer-btn-fixed flex justify-end p-4">
-          <el-button @click="">Cancel</el-button>
-          <el-button @click="" class="bg-blue-400" type="primary"
+          <el-button @click="handleCancelSubmit">Cancel</el-button>
+          <el-button @click="handleSubmit" class="bg-blue-400" type="primary"
             >Submit</el-button
           >
         </div>
@@ -266,6 +271,8 @@ export default {
   },
   data() {
     return {
+      id: null,
+      invoiceId: null,
       customer: {
         fullName: {
           id: "fullname",
@@ -432,6 +439,37 @@ export default {
     };
   },
   methods: {
+    handleSubmit() {
+      const order = {
+        warehouseId: "WH-1",
+        id: this.id,
+        invoiceId: this.invoiceId,
+        productInvoices: this.materials,
+        moneyPaid: this.order.moneyPaid.value,
+        shippingFee: this.order.shippingFee.value,
+        discount: this.order.discount.value,
+        deliveryAddress: this.order.deliveryAddress.value,
+        consignee: this.order.consignee.value,
+        phoneNumberReceipt: this.order.phoneNumberReceipt.value,
+        typeInvoice: this.typeInvoice,
+      };
+      console.log(order, "order");
+      if (this.$route.params.data.type === "EDIT") {
+      }
+    },
+    handleCancelSubmit() {
+      this.$confirm("Are you sure to cancel")
+        .then((_) => {
+          this.$router.push({ path: "/export-receipt" });
+        })
+        .catch((_) => {});
+    },
+    handleDeleteMaterial(item) {
+      const index = item.$index;
+      if (index > -1) {
+        this.materials.splice(index, 1);
+      }
+    },
     handleGetDetailInvoice() {
       let subTotalVal = 0;
       if (this.$route.params.data.id != null) {
@@ -457,12 +495,16 @@ export default {
               this.order.consignee.value = res.data.items["customer"].fullName;
               this.order.phoneNumberReceipt.value =
                 res.data.items["customer"].mobilePhone;
+
               this.materials = res.data.items["productInvoices"];
               this.materials.forEach((item) => {
                 subTotalVal = item.quantity * item.exportPrice;
                 this.subTotal = this.subTotal + subTotalVal;
                 this.singleUnit = item.singleUnit;
               });
+              this.id = res.data.items.id;
+              this.invoiceId = res.data.items.invoiceId;
+              this.typeInvoice = res.data.items.typeInvoice;
               if (!res.discount) {
                 this.order.discount.value = 0;
               } else {
@@ -490,6 +532,10 @@ export default {
     },
   },
   mounted() {
+    if (!this.$route.params.data) {
+      this.$router.push({ path: "/export-receipt" });
+      return;
+    }
     this.handleGetDetailInvoice();
   },
 };

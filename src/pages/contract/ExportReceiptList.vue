@@ -122,6 +122,14 @@
                     <i class=""></i> Check Out
                   </button>
                 </el-dropdown-item>
+                <el-dropdown-item>
+                  <button
+                    class="!bg-[#fdfdfd] !w-full text-black"
+                    @click="handleDelete(scope.row)"
+                  >
+                    <i class=""></i> Delete
+                  </button>
+                </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </template>
@@ -176,6 +184,39 @@ export default {
         name: "payment", //use name for router push
         params: { data },
       });
+    },
+    handleDelete(row) {
+      console.log(row,"row")
+      this.$confirm(`Are you want to delete ${row.invoiceId}?`)
+        .then((_) => {
+          this.handleDeleteInvoice(row.id);
+        })
+        .catch((_) => {});
+    },
+    handleDeleteInvoice(id) {
+      axios({
+        method: "delete",
+        url: "http://localhost:9090/api/v1/export-receipt",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        params: { id },
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Deleted successfully",
+              type: "success",
+            });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        })
+        .finally(() => this.handleGetInvoices());
     },
     testFunc() {
       let data = {
