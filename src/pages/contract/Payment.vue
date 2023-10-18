@@ -440,7 +440,7 @@ export default {
   },
   methods: {
     handleSubmit() {
-      const order = {
+      let order = {
         warehouseId: "WH-1",
         id: this.id,
         invoiceId: this.invoiceId,
@@ -454,11 +454,11 @@ export default {
         typeInvoice: this.typeInvoice,
         modePayment: this.order.modePayment.value,
         totalPaid:
-          Number(this.subTotal) +
-          Number(this.order.shippingFee.value) -
-          (this.order.discount.value / 100) * this.subTotal -
-          this.order.moneyPaid.valuel,
+          this.subTotal +
+          this.order.shippingFee.value -
+          (this.order.discount.value / 100) * this.subTotal,
       };
+
       order.modePayment =
         this.order.modePayment.options.find(
           (opt) =>
