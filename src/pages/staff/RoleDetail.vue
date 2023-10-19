@@ -8,7 +8,8 @@
       :append-to-body="true"
       destroy-on-close
     >
-      <BaseInput :field="field" v-model="field.value" />
+      <BaseInput :field="field.roleName" v-model="field.roleName.value" />
+      <BaseTextArea :field="field.roleDes" v-model="field.roleDes.value" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">Cancel</el-button>
         <el-button
@@ -16,9 +17,7 @@
           class="bg-blue-700"
           type="primary"
           @click="handleData"
-          >{{
-            field.actionType == "CREATED" ? "Create" : "Update"
-          }}</el-button
+          >{{ field.actionType == "CREATED" ? "Create" : "Update" }}</el-button
         >
       </span>
     </el-dialog>
@@ -26,9 +25,10 @@
 </template>
 <script>
 import BaseInput from "@/components/Inputs/BaseInput.vue";
+import BaseTextArea from "@/components/Inputs/BaseTextArea.vue";
 import { ValidationObserver } from "vee-validate";
 export default {
-  components: { BaseInput,ValidationObserver },
+  components: { BaseInput, ValidationObserver, BaseTextArea },
   props: {
     field: {
       type: Object,
@@ -41,7 +41,6 @@ export default {
   data() {
     return {};
   },
-  watch: {},
   methods: {
     handleClose() {
       if (this.field.value != "") {
@@ -55,13 +54,13 @@ export default {
       }
     },
     handleData() {
-      this.$emit("handle-dataAddr", this.field);
+      this.$emit("handle-dataRole", this.field);
       if (this.field.value != "") {
         return;
       }
     },
   },
+  mounted() {},
 };
 </script>
-
 <style></style>
