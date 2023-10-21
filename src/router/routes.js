@@ -23,6 +23,7 @@ import ContractList from '@/pages/contract/ContractList.vue';
 import CustomerList from '@/pages/customer/CustomerList.vue';
 import CustomerDetail from '@/pages/customer/CustomerDetail.vue';
 import StaffList from '@/pages/staff/StaffList.vue';
+import StaffDetail from '@/pages/staff/StaffDetail.vue';
 import ExportReceiptList from '@/pages/contract/ExportReceiptList.vue';
 import ExportReceiptHistory from '@/pages/contract/ExportReceiptHistory.vue';
 import ExportReceiptDetail from '@/pages/contract/ExportReceiptDetail.vue';
@@ -153,6 +154,11 @@ const routes = [
         path: "/staff",
         name: "staff",
         component: StaffList,
+      },
+      {
+        path: "/staff-detail",
+        name: "staff-detail",
+        component: StaffDetail,
       },
     ],
   },

@@ -11,6 +11,21 @@
               <span class="ti-filter"></span> Filter
             </button>
           </div>
+          <div>
+            <button
+              class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
+              @click="handleGetHistoryUser"
+            >
+              <i class="el-icon-plus ml font-bold"></i> History
+            </button>
+            <button
+              class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
+              @click="addUser"
+            >
+              <i class="el-icon-plus ml font-bold"></i>
+              Create
+            </button>
+          </div>
         </div>
         <LoadingPage v-show="loadingTable"></LoadingPage>
         <div class="table_style px-2" v-show="!loadingTable">
@@ -251,6 +266,17 @@ export default {
     };
   },
   methods: {
+    addUser() {
+      let data = {
+        id: null,
+        type: "ADD",
+      };
+      this.$router.push({
+        name: "staff-detail",
+        params: { data },
+      });
+    },
+    handleGetHistoryUser() {},
     updateRole(row, col, event) {
       this.dialogVisibleRole = true;
       this.roleField = {
@@ -332,7 +358,29 @@ export default {
         roleName: field.roleName.value,
         roleDes: field.roleDes.value,
       };
-      console.log(role, "role");
+      axios({
+        method: "post",
+        url: "http://localhost:9090/api/v1/role",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: role,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Created successfully",
+              type: "success",
+            });
+            this.handleGetRoles();
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.message,
+            type: "error",
+          });
+        });
     },
     handleUpdateRole(field) {
       const role = {
@@ -340,7 +388,29 @@ export default {
         roleName: field.roleName.value,
         roleDes: field.roleDes.value,
       };
-      console.log(role, "role");
+      axios({
+        method: "put",
+        url: "http://localhost:9090/api/v1/role",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: role,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Updated successfully",
+              type: "success",
+            });
+            this.handleGetRoles();
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.message,
+            type: "error",
+          });
+        });
     },
     getBaseSearchVal(param) {
       // clears the timer on a call so there is always x seconds in between calls
