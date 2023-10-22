@@ -27,7 +27,10 @@
                 </div>
                 <div class="col-span-12 grid grid-cols-12 gap-x-6">
                   <div class="col-span-6">
-                    <BaseInput :field="user.title" v-model="user.title.value" />
+                    <BaseSelection
+                      :field="user.title"
+                      v-model="user.title.value"
+                    />
                   </div>
                   <div class="col-span-6">
                     <BaseInput
@@ -55,7 +58,7 @@
                     />
                   </div>
                   <div class="col-span-6">
-                    <BaseInput
+                    <DatePicker
                       :field="user.expiredNationalNumber"
                       v-model="user.expiredNationalNumber.value"
                     />
@@ -66,6 +69,12 @@
                     <BaseInput
                       :field="user.salary"
                       v-model="user.salary.value"
+                    />
+                  </div>
+                  <div class="col-span-6">
+                    <DatePicker
+                      :field="user.birthDay"
+                      v-model="user.birthDay.value"
                     />
                   </div>
                 </div>
@@ -121,6 +130,7 @@
             <el-button
               @click="handleSubmitDataUser"
               class="bg-blue-400"
+              :disabled="invalid"
               type="primary"
               >{{ userPrimaryKey.userId != 0 ? "Update" : "Create" }}</el-button
             >
@@ -139,6 +149,7 @@ import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import BaseSelectMul from "../../components/Inputs/BaseSelectMul.vue";
 import { ValidationObserver } from "vee-validate";
 import DatePicker from "../../components/Date/DatePicker.vue";
+import moment from "moment";
 export default {
   components: {
     BaseInput,
@@ -233,6 +244,20 @@ export default {
           placeholder: "Enter Title...",
           maxlength: 50,
           error: "",
+          options: [
+            {
+              value: 1,
+              label: "Mr",
+            },
+            {
+              value: 2,
+              label: "Mrs",
+            },
+            {
+              value: 3,
+              label: "Other",
+            },
+          ],
         },
         mobilePhone: {
           id: "mobilePhone",
@@ -262,29 +287,29 @@ export default {
         },
         expiredNationalNumber: {
           id: "expiredNationalNumber",
-          name: "expiredNationalNumber",
-          rules: "",
-          classes: "w-full",
-          type: "text",
+          name: "Expired National Number",
+          classes: "!w-full",
           label: "Expired National Number",
-          isRequired: "",
+          isRequired: "false",
+          rules: "",
           value: "",
-          placeholder: "Enter Expired National Number...",
-          maxlength: 50,
           error: "",
+          pickerOptions: {},
         },
         birthDay: {
           id: "birthDay",
-          name: "birthDay",
-          rules: "",
-          classes: "w-full",
-          type: "text",
+          name: "Birthday",
+          classes: "!w-full",
           label: "Birthday",
-          isRequired: "",
+          isRequired: "false",
+          rules: "",
           value: "",
-          placeholder: "Enter Birthday...",
-          maxlength: 50,
           error: "",
+          pickerOptions: {
+            disabledDate(time) {
+              return time.getTime() > Date.now();
+            },
+          },
         },
         salary: {
           id: "salary",
@@ -331,7 +356,7 @@ export default {
   },
   methods: {
     handleSubmitDataUser() {
-      const userDetail = {
+      let userDetail = {
         id: this.userPrimaryKey.id,
         userId: this.userPrimaryKey.userId,
         warehouseId: "WH-1",
@@ -339,7 +364,62 @@ export default {
       Object.keys(this.user).map((key) => {
         userDetail[key] = this.user[key].value;
       });
-      console.log(userDetail, "userDetailuserDetail");
+      userDetail.birthDay = moment(this.user.birthDay.value).format(
+        "YYYY-MM-DD HH:mm:ss"
+      );
+      userDetail.expiredNationalNumber = moment(
+        this.user.expiredNationalNumber.value
+      ).format("YYYY-MM-DD HH:mm:ss");
+      console.log(userDetail, "userDetail");
+      if (this.$route.params.data.type === "EDIT") {
+        axios({
+          method: "put",
+          url: "http://localhost:9090/api/v1/user",
+          headers: { "Access-Control-Allow-Origin": "*" },
+          data: userDetail,
+        })
+          .then((response) => {
+            if (response.status === 200) {
+              this.$router.push({ path: "/staff" });
+              this.$message({
+                showClose: true,
+                message: "Updated successfully",
+                type: "success",
+              });
+            }
+          })
+          .catch((error) => {
+            this.$message({
+              showClose: true,
+              message: error,
+              type: "error",
+            });
+          });
+      } else {
+        axios({
+          method: "post",
+          url: "http://localhost:9090/api/v1/user",
+          headers: { "Access-Control-Allow-Origin": "*" },
+          data: userDetail,
+        })
+          .then((response) => {
+            if (response.status === 200) {
+              this.$router.push({ path: "/staff" });
+              this.$message({
+                showClose: true,
+                message: "Created successfully",
+                type: "success",
+              });
+            }
+          })
+          .catch((error) => {
+            this.$message({
+              showClose: true,
+              message: error,
+              type: "error",
+            });
+          });
+      }
     },
     getRolesSel() {
       axios
@@ -359,9 +439,53 @@ export default {
           });
         });
     },
+    getUserDetail() {
+      if (this.$route.params.data.id != null) {
+        axios
+          .get(
+            `http://localhost:9090/api/v1/user/detail/${this.$route.params.data.id}`,
+            { headers: { "Access-Control-Allow-Origin": "*" } }
+          )
+          .then((res) => {
+            if (res.status === 200) {
+              Object.keys(this.user).forEach((key) => {
+                this.user[key].value = res.data.items[key];
+                res.data.items[roles].forEach((item) => {
+                  this.user[roles].value.push(item.id);
+                });
+              });
+              this.userPrimaryKey.id = res.data.items.id;
+              this.userPrimaryKey.userId = res.data.items.userId;
+            }
+          })
+          .catch((error) => {
+            this.$message({
+              showClose: true,
+              message: error,
+              type: "error",
+            });
+          })
+          .finally(() => (this.loadingPageDetail = false));
+        if (this.$route.params.data.type === "DUPLICATED") {
+          this.warehouseId = null;
+          this.warehouseIdTxt = null;
+        }
+      } else {
+      }
+    },
+  },
+  computed: {
+    moment() {
+      return moment;
+    },
   },
   mounted() {
+    if (!this.$route.params.data) {
+      this.$router.push({ path: "/staff" });
+      return;
+    }
     this.getRolesSel();
+    this.getUserDetail();
   },
 };
 </script>

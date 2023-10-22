@@ -32,7 +32,7 @@
           <el-table
             :data="staffs"
             style="width: 100%"
-            @row-dblclick=""
+            @row-dblclick="getUserDetail"
             @sort-change=""
             height="765"
           >
@@ -266,6 +266,16 @@ export default {
     };
   },
   methods: {
+    getUserDetail(row) {
+      let data = {
+        id: row.userId,
+        type: "EDIT",
+      };
+      this.$router.push({
+        name: "staff-detail", //use name for router push
+        params: { data },
+      });
+    },
     addUser() {
       let data = {
         id: null,

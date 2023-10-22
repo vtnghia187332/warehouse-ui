@@ -55,6 +55,7 @@ export default {
   },
   methods: {
     updateInput(event) {
+      this.$emit("input", event);
       this.$emit("getValue", event);
     },
   },
