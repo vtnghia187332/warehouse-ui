@@ -286,7 +286,9 @@ export default {
         params: { data },
       });
     },
-    handleGetHistoryUser() {},
+    handleGetHistoryUser() {
+      this.$router.push({ name: "staff history" });
+    },
     updateRole(row, col, event) {
       this.dialogVisibleRole = true;
       this.roleField = {

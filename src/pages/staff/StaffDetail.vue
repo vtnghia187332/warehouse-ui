@@ -227,6 +227,7 @@ export default {
           type: "text",
           label: "Password",
           isRequired: "true",
+          disabled: true,
           value: "",
           placeholder: "Enter Password...",
           maxlength: 50,
@@ -364,14 +365,22 @@ export default {
       Object.keys(this.user).map((key) => {
         userDetail[key] = this.user[key].value;
       });
+      userDetail.roles = [];
+      this.user.roles.value.forEach((item) => {
+        userDetail.roles.push(
+          this.user.roles.options.find(
+            (opt) => opt.value == item || opt.label == item
+          ).value || ""
+        );
+      });
       userDetail.birthDay = moment(this.user.birthDay.value).format(
         "YYYY-MM-DD HH:mm:ss"
       );
       userDetail.expiredNationalNumber = moment(
         this.user.expiredNationalNumber.value
       ).format("YYYY-MM-DD HH:mm:ss");
-      console.log(userDetail, "userDetail");
       if (this.$route.params.data.type === "EDIT") {
+        this.user.password.value = "";
         axios({
           method: "put",
           url: "http://localhost:9090/api/v1/user",
@@ -428,6 +437,7 @@ export default {
         })
         .then((res) => {
           if (res.status === 200) {
+            this.user.roles.value = [];
             this.user.roles.options = res.data.items;
           }
         })
@@ -450,8 +460,11 @@ export default {
             if (res.status === 200) {
               Object.keys(this.user).forEach((key) => {
                 this.user[key].value = res.data.items[key];
-                res.data.items[roles].forEach((item) => {
-                  this.user[roles].value.push(item.id);
+                this.user.password.value = "*************";
+                this.user.password.disabled = true;
+                this.user.roles.value = [];
+                res.data.items["roles"].forEach((item) => {
+                  this.user.roles.value.push(item.roleName);
                 });
               });
               this.userPrimaryKey.id = res.data.items.id;

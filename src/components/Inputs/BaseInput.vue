@@ -15,7 +15,7 @@
       :type="field.type"
       :value="field.value"
       @input="updateInput"
-      :disabled="field.disabled == true"
+      :disabled="field.disabled === true"
       class="p-2 pl-3 relative border rounded-sm w-full focus:!border-gray-700 focus:!ring-gray-700"
       :class="
         errors[0] || field.error
