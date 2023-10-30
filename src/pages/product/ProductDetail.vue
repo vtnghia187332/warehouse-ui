@@ -169,6 +169,7 @@
                   list-type="picture-card"
                   :auto-upload="false"
                   :on-change="handleAddPhotos"
+                  :file-list="testData"
                 >
                   <i slot="default" class="el-icon-plus"></i>
                   <div slot="file" slot-scope="{ file }">
@@ -255,6 +256,12 @@ export default {
   },
   data() {
     return {
+      testData: [
+        {
+          name: "food.jpg",
+          url: "http://localhost:9090/api/v1/get/image/wallpaperflare.com_wallpaper (3).jpg",
+        },
+      ],
       fileListPhotos: [],
       dialogImageUrl: "",
       dialogVisible: false,
@@ -611,6 +618,7 @@ export default {
       // }
       this.handleUploadImage(this.fileListPhotos[0]);
     },
+
     handleUploadImage(img) {
       const formData = new FormData();
       formData.append("image", img.raw);
