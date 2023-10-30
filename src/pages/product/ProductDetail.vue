@@ -169,11 +169,7 @@
                   list-type="picture-card"
                   :auto-upload="false"
                   :on-change="handleAddPhotos"
-<<<<<<< Updated upstream
-                  :file-list="testData"
-=======
                   :file-list="productPhotos"
->>>>>>> Stashed changes
                 >
                   <i slot="default" class="el-icon-plus"></i>
                   <div slot="file" slot-scope="{ file }">
@@ -260,19 +256,11 @@ export default {
   },
   data() {
     return {
-<<<<<<< Updated upstream
-      testData: [
-        {
-          name: "food.jpg",
-          url: "http://localhost:9090/api/v1/get/image/wallpaperflare.com_wallpaper (3).jpg",
-        },
-=======
       productPhotos: [
         // {
         //   name: "food.jpg",
         //   url: "http://localhost:9090/api/v1/get/image/wallpaperflare.com_wallpaper (3).jpg",
         // },
->>>>>>> Stashed changes
       ],
       fileListPhotos: [],
       dialogImageUrl: "",
@@ -383,11 +371,11 @@ export default {
         code: {
           id: "code",
           name: "Code",
-          rules: "",
+          rules: "required",
           classes: "w-full",
           type: "text",
           label: "Code",
-          isRequired: "false",
+          isRequired: "true",
           value: "",
           placeholder: "Enter Code...",
           maxlength: 50,
@@ -595,65 +583,45 @@ export default {
         });
     },
     handleSubmit() {
-      // if (this.units.length > 0) {
-      //   this.units.forEach((item) => {
-      //     item.unitOriginId =
-      //       this.product.singleUnit.options.find(
-      //         (opt) =>
-      //           opt.label == this.product.singleUnit.value ||
-      //           opt.value == this.product.singleUnit.value
-      //       ).value || "";
-      //     item.unitDestinationId =
-      //       this.product.singleUnit.options.find(
-      //         (opt) =>
-      //           opt.label == item.unitDestinationId ||
-      //           opt.value == item.unitDestinationId
-      //       ).value || "";
-      //   });
-      // }
-      // const productDetail = {
-      //   warehouseId: 1,
-      //   id: this.productPId,
-      //   productId: this.$route.params.data.id,
-      //   singleUnitId: this.product.singleUnit.baseId,
-      //   categoryProductId: this.category.baseId,
-      //   units: this.units,
-      // };
-      // Object.keys(this.product || {}).map((key) => {
-      //   productDetail[key] = this.product[key].value;
-      // });
-      // if (this.$route.params.data.type === "EDIT") {
-      //   this.handleEditProduct(productDetail);
-      // } else {
-      //   productDetail.productId = null;
-      //   this.handleCreateProduct(productDetail);
-      // }
-      this.handleUploadImage(this.fileListPhotos[0]);
-    },
+      if (this.units.length > 0) {
+        this.units.forEach((item) => {
+          item.unitOriginId =
+            this.product.singleUnit.options.find(
+              (opt) =>
+                opt.label == this.product.singleUnit.value ||
+                opt.value == this.product.singleUnit.value
+            ).value || "";
+          item.unitDestinationId =
+            this.product.singleUnit.options.find(
+              (opt) =>
+                opt.label == item.unitDestinationId ||
+                opt.value == item.unitDestinationId
+            ).value || "";
+        });
+      }
+      const productDetail = new FormData();
+      productDetail.append("warehouseId", 1);
 
-    handleUploadImage(img) {
-      const formData = new FormData();
-      formData.append("image", img.raw);
-      formData.append("id", "US-13");
-      formData.append("type", "USER");
-      axios
-        .post(`http://localhost:9090/api/v1/upload/image`, formData, {
-          contentType: "multipart/form-data",
-        })
-        .then((response) => {
-          response.data.files;
-          response.status;
-          console.log(response, "response");
-        })
-        .catch((e) => {});
+      productDetail.append("singleUnitId", this.product.singleUnit.baseId);
+      productDetail.append("categoryProductId", this.category.baseId);
+      productDetail.append("units", this.units);
+      Object.keys(this.product).map((key) => {
+        productDetail.append(key, this.product[key].value);
+      });
+      productDetail.append("image", this.fileListPhotos[0].raw);
+      if (this.$route.params.data.type === "EDIT") {
+        productDetail.append("id", this.productPId);
+        productDetail.append("productId", this.$route.params.data.id);
+        this.handleEditProduct(productDetail);
+      } else {
+        this.handleCreateProduct(productDetail);
+      }
     },
     handleEditProduct(productDetail) {
-      axios({
-        method: "put",
-        url: "http://localhost:9090/api/v1/product",
-        headers: { "Access-Control-Allow-Origin": "*" },
-        data: productDetail,
-      })
+      axios
+        .put(`http://localhost:9090/api/v1/product`, productDetail, {
+          contentType: "multipart/form-data",
+        })
         .then((response) => {
           if (response.status === 200) {
             this.$router.push({ path: "/product" });
@@ -673,13 +641,11 @@ export default {
           this.$refs.observerAdd.setErrors(error.response.data.items);
         });
     },
-    async handleCreateProduct(productDetail) {
-      await axios({
-        method: "post",
-        url: "http://localhost:9090/api/v1/product",
-        headers: { "Access-Control-Allow-Origin": "*" },
-        data: productDetail,
-      })
+    handleCreateProduct(productDetail) {
+      axios
+        .post(`http://localhost:9090/api/v1/product`, productDetail, {
+          contentType: "multipart/form-data",
+        })
         .then((response) => {
           if (response.status === 200) {
             this.$router.push({ path: "/product" });
