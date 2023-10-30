@@ -161,10 +161,42 @@
               </div>
             </template>
           </FormCard>
-          <FormCard title="More Information" class="mb-3">
+          <FormCard title="Photos" class="mb-3">
             <template v-slot:content>
-              <div class="grid grid-cols-12 gap-x-6">
-                <div class="col-span-12"></div>
+              <div class="">
+                <el-upload
+                  action="#"
+                  list-type="picture-card"
+                  :auto-upload="false"
+                  :on-change="handleAddPhotos"
+                >
+                  <i slot="default" class="el-icon-plus"></i>
+                  <div slot="file" slot-scope="{ file }">
+                    <img
+                      class="el-upload-list__item-thumbnail"
+                      :src="file.url"
+                      alt=""
+                    />
+                    <span class="el-upload-list__item-actions">
+                      <span
+                        class="el-upload-list__item-preview"
+                        @click="handlePictureCardPreview(file)"
+                      >
+                        <i class="el-icon-zoom-in"></i>
+                      </span>
+                      <span
+                        v-if="!disabled"
+                        class="el-upload-list__item-delete"
+                        @click="handleRemove(file)"
+                      >
+                        <i class="el-icon-delete"></i>
+                      </span>
+                    </span>
+                  </div>
+                </el-upload>
+                <el-dialog :visible.sync="dialogVisible">
+                  <img width="100%" :src="dialogImageUrl" alt="" />
+                </el-dialog>
               </div>
             </template>
           </FormCard>
@@ -223,6 +255,10 @@ export default {
   },
   data() {
     return {
+      fileListPhotos: [],
+      dialogImageUrl: "",
+      dialogVisible: false,
+      disabled: false,
       calculations: [
         {
           label: "+",
@@ -412,6 +448,23 @@ export default {
     };
   },
   methods: {
+    handleAddPhotos(file, fileList) {
+      this.fileListPhotos = fileList;
+    },
+    handleRemove(file) {
+      this.$confirm("Are you sure to remove this unit?")
+        .then((_) => {
+          const index = this.fileListPhotos.indexOf(file);
+          if (index > -1) {
+            this.fileListPhotos.splice(index, 1);
+          }
+        })
+        .catch((_) => {});
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
     conversationUnits({ row, rowIndex }) {
       row.index = rowIndex;
     },
@@ -523,40 +576,54 @@ export default {
         });
     },
     handleSubmit() {
-      if (this.units.length > 0) {
-        this.units.forEach((item) => {
-          item.unitOriginId =
-            this.product.singleUnit.options.find(
-              (opt) =>
-                opt.label == this.product.singleUnit.value ||
-                opt.value == this.product.singleUnit.value
-            ).value || "";
-          item.unitDestinationId =
-            this.product.singleUnit.options.find(
-              (opt) =>
-                opt.label == item.unitDestinationId ||
-                opt.value == item.unitDestinationId
-            ).value || "";
-        });
-      }
-      const productDetail = {
-        warehouseId: 1,
-        id: this.productPId,
-        productId: this.$route.params.data.id,
-        singleUnitId: this.product.singleUnit.baseId,
-        categoryProductId: this.category.baseId,
-        units: this.units,
-      };
-      Object.keys(this.product || {}).map((key) => {
-        productDetail[key] = this.product[key].value;
-      });
-      if (this.$route.params.data.type === "EDIT") {
-        this.handleEditProduct(productDetail);
-      } else {
-        productDetail.productId = null;
-        this.handleCreateProduct(productDetail);
-      }
-      console.log(productDetail);
+      // if (this.units.length > 0) {
+      //   this.units.forEach((item) => {
+      //     item.unitOriginId =
+      //       this.product.singleUnit.options.find(
+      //         (opt) =>
+      //           opt.label == this.product.singleUnit.value ||
+      //           opt.value == this.product.singleUnit.value
+      //       ).value || "";
+      //     item.unitDestinationId =
+      //       this.product.singleUnit.options.find(
+      //         (opt) =>
+      //           opt.label == item.unitDestinationId ||
+      //           opt.value == item.unitDestinationId
+      //       ).value || "";
+      //   });
+      // }
+      // const productDetail = {
+      //   warehouseId: 1,
+      //   id: this.productPId,
+      //   productId: this.$route.params.data.id,
+      //   singleUnitId: this.product.singleUnit.baseId,
+      //   categoryProductId: this.category.baseId,
+      //   units: this.units,
+      // };
+      // Object.keys(this.product || {}).map((key) => {
+      //   productDetail[key] = this.product[key].value;
+      // });
+      // if (this.$route.params.data.type === "EDIT") {
+      //   this.handleEditProduct(productDetail);
+      // } else {
+      //   productDetail.productId = null;
+      //   this.handleCreateProduct(productDetail);
+      // }
+      this.handleUploadImage(this.fileListPhotos[0]);
+    },
+    handleUploadImage(img) {
+      const formData = new FormData();
+      formData.append("image", img.raw);
+      axios
+        .post(`http://localhost:9090/api/v1/upload/image`, formData, {
+          contentType: "multipart/form-data",
+        })
+        .then((response) => {
+          response.data.files;
+          response.status;
+          console.log(response, "response");
+        })
+        .catch((e) => {});
     },
     handleEditProduct(productDetail) {
       axios({
