@@ -169,7 +169,11 @@
                   list-type="picture-card"
                   :auto-upload="false"
                   :on-change="handleAddPhotos"
+<<<<<<< Updated upstream
                   :file-list="testData"
+=======
+                  :file-list="productPhotos"
+>>>>>>> Stashed changes
                 >
                   <i slot="default" class="el-icon-plus"></i>
                   <div slot="file" slot-scope="{ file }">
@@ -256,11 +260,19 @@ export default {
   },
   data() {
     return {
+<<<<<<< Updated upstream
       testData: [
         {
           name: "food.jpg",
           url: "http://localhost:9090/api/v1/get/image/wallpaperflare.com_wallpaper (3).jpg",
         },
+=======
+      productPhotos: [
+        // {
+        //   name: "food.jpg",
+        //   url: "http://localhost:9090/api/v1/get/image/wallpaperflare.com_wallpaper (3).jpg",
+        // },
+>>>>>>> Stashed changes
       ],
       fileListPhotos: [],
       dialogImageUrl: "",
@@ -622,6 +634,8 @@ export default {
     handleUploadImage(img) {
       const formData = new FormData();
       formData.append("image", img.raw);
+      formData.append("id", "US-13");
+      formData.append("type", "USER");
       axios
         .post(`http://localhost:9090/api/v1/upload/image`, formData, {
           contentType: "multipart/form-data",
