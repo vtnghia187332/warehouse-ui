@@ -223,7 +223,6 @@ export default {
       this.handleGetInvoicesEx();
     },
     handeCancel(row) {
-      console.log(row);
     },
     handleGetInvoicesEx() {
       var me = this;

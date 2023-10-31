@@ -186,7 +186,6 @@ export default {
       });
     },
     handleDelete(row) {
-      console.log(row,"row")
       this.$confirm(`Are you want to delete ${row.invoiceId}?`)
         .then((_) => {
           this.handleDeleteInvoice(row.id);

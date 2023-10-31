@@ -170,6 +170,9 @@
                   :auto-upload="false"
                   :on-change="handleAddPhotos"
                   :file-list="productPhotos"
+                  :limit="1"
+                  :disabled="productPhotos.length === 1"
+                  :append-to-body="true"
                 >
                   <i slot="default" class="el-icon-plus"></i>
                   <div slot="file" slot-scope="{ file }">
@@ -195,7 +198,7 @@
                     </span>
                   </div>
                 </el-upload>
-                <el-dialog :visible.sync="dialogVisible">
+                <el-dialog :append-to-body="true" :visible.sync="dialogVisible">
                   <img width="100%" :src="dialogImageUrl" alt="" />
                 </el-dialog>
               </div>
@@ -243,6 +246,7 @@ import FormCard from "./../../components/Cards/FormCard.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import { ValidationObserver } from "vee-validate";
 import DatePicker from "../../components/Date/DatePicker.vue";
+import moment from "moment";
 
 export default {
   components: {
@@ -262,7 +266,6 @@ export default {
         //   url: "http://localhost:9090/api/v1/get/image/wallpaperflare.com_wallpaper (3).jpg",
         // },
       ],
-      fileListPhotos: [],
       dialogImageUrl: "",
       dialogVisible: false,
       disabled: false,
@@ -407,19 +410,6 @@ export default {
           maxlength: 150,
           error: "",
         },
-        photo: {
-          id: "photo",
-          name: "Photo",
-          rules: "",
-          classes: "w-full col-span-6 !h-[64px]",
-          type: "text",
-          label: "Photo",
-          isRequired: "false",
-          value: "",
-          placeholder: "Enter Photo...",
-          maxlength: 150,
-          error: "",
-        },
         expiredDate: {
           id: "expiredDate",
           name: "Expired Date",
@@ -454,16 +444,21 @@ export default {
       },
     };
   },
+  computed: {
+    moment() {
+      return moment;
+    },
+  },
   methods: {
     handleAddPhotos(file, fileList) {
-      this.fileListPhotos = fileList;
+      this.productPhotos = fileList;
     },
     handleRemove(file) {
       this.$confirm("Are you sure to remove this unit?")
         .then((_) => {
-          const index = this.fileListPhotos.indexOf(file);
+          const index = this.productPhotos.indexOf(file);
           if (index > -1) {
-            this.fileListPhotos.splice(index, 1);
+            this.productPhotos.splice(index, 1);
           }
         })
         .catch((_) => {});
@@ -599,27 +594,66 @@ export default {
             ).value || "";
         });
       }
-      const productDetail = new FormData();
-      productDetail.append("warehouseId", 1);
+      const productDetail = {
+        warehouseId: 1,
+        id: this.productPId,
+        productId: this.$route.params.data.id,
+        singleUnitId: this.product.singleUnit.baseId,
+        categoryProductId: this.category.baseId,
+        units: this.units,
+      };
 
-      productDetail.append("singleUnitId", this.product.singleUnit.baseId);
-      productDetail.append("categoryProductId", this.category.baseId);
-      productDetail.append("units", this.units);
-      Object.keys(this.product).map((key) => {
-        productDetail.append(key, this.product[key].value);
+      Object.keys(this.product || {}).map((key) => {
+        productDetail[key] = this.product[key].value;
+        if (key == "expiredDate") {
+          productDetail["expiredDate"] = moment(
+            productDetail.expiredDate
+          ).format("YYYY-MM-DD HH:mm:ss");
+        }
       });
-      productDetail.append("image", this.fileListPhotos[0].raw);
-      if (this.$route.params.data.type === "EDIT") {
-        productDetail.append("id", this.productPId);
-        productDetail.append("productId", this.$route.params.data.id);
-        this.handleEditProduct(productDetail);
+
+      const productDetailForm = this.transformInToFormObject(productDetail);
+      if (this.productPhotos[0]) {
+        productDetailForm.append("image", this.productPhotos[0].raw);
       } else {
-        this.handleCreateProduct(productDetail);
+        productDetailForm.append("image", "");
       }
+      productDetailForm.append("numberOfImg", this.productPhotos.length);
+      if (this.$route.params.data.type === "EDIT") {
+        productDetailForm.delete("id");
+        productDetailForm.delete("productId");
+        productDetailForm.append("id", this.productPId);
+        productDetailForm.append("productId", this.$route.params.data.id);
+        this.handleEditProduct(productDetailForm);
+      } else {
+        this.handleCreateProduct(productDetailForm);
+      }
+    },
+    transformInToFormObject(data) {
+      let formData = new FormData();
+      for (let key in data) {
+        if (Array.isArray(data[key])) {
+          data[key].forEach((obj, index) => {
+            let keyList = Object.keys(obj);
+            keyList.forEach((keyItem) => {
+              let keyName = [key, "[", index, "]", ".", keyItem].join("");
+              formData.append(keyName, obj[keyItem]);
+            });
+          });
+        } else if (typeof data[key] === "object") {
+          for (let innerKey in data[key]) {
+            formData.append(`${key}.${innerKey}`, data[key][innerKey]);
+          }
+        } else {
+          formData.append(key, data[key]);
+        }
+      }
+      return formData;
     },
     handleEditProduct(productDetail) {
       axios
         .put(`http://localhost:9090/api/v1/product`, productDetail, {
+          headers: { "Access-Control-Allow-Origin": "*" },
           contentType: "multipart/form-data",
         })
         .then((response) => {
@@ -627,7 +661,7 @@ export default {
             this.$router.push({ path: "/product" });
             this.$message({
               showClose: true,
-              message: "Updated successfully",
+              message: "Created successfully",
               type: "success",
             });
           }
@@ -644,6 +678,7 @@ export default {
     handleCreateProduct(productDetail) {
       axios
         .post(`http://localhost:9090/api/v1/product`, productDetail, {
+          headers: { "Access-Control-Allow-Origin": "*" },
           contentType: "multipart/form-data",
         })
         .then((response) => {
@@ -690,6 +725,8 @@ export default {
                 this.product.singleUnit.baseId = res.data.items.singleUnit.id;
                 this.product.singleUnit.value = res.data.items.singleUnit.name;
               });
+              this.productPId = res.data.items.id;
+              this.productPhotos = res.data.items.imageDetailRes;
             }
             if (this.units && this.units.length > 0) {
               this.units.forEach((item) => {
@@ -758,5 +795,11 @@ export default {
 
 .detail .el-col.el-col-5 {
   padding: 0 !important;
+}
+</style>
+
+<style>
+.el-upload-list--picture-card.is-disabled ~ .el-upload--picture-card {
+  display: none !important;
 }
 </style>

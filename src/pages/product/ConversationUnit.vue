@@ -36,9 +36,10 @@
           />
         </div>
         <div class="col-span-2">
-          <BaseInput
-            :field="conversationUnit.description"
-            v-model="conversationUnit.description.value"
+          <label class="!font-bold block"> Description </label>
+          <input
+            :value="description"
+            class="p-2 pl-3 relative border rounded-sm w-full focus:!border-gray-700 focus:!ring-gray-700"
           />
         </div>
       </div>
@@ -60,17 +61,13 @@
 <script>
 import { ValidationObserver } from "vee-validate";
 import BaseInput from "../../components/Inputs/BaseInput.vue";
-import axios from "axios";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
+import axios from "axios";
 export default {
   props: {
     dialogVisibleUnit: {
       type: Boolean,
     },
-    // field: {
-    //   type: Object,
-    //   default: {},
-    // },
   },
   components: {
     ValidationObserver,
@@ -79,6 +76,7 @@ export default {
   },
   data() {
     return {
+      unitsServer: [],
       conversationUnit: {
         id: { value: null },
         unitOriginId: {
@@ -160,13 +158,55 @@ export default {
           type: "text",
           label: "Description",
           isRequired: "false",
-          value: "",
+          value: this.description,
           placeholder: "",
           error: "",
           disabled: true,
         },
       },
     };
+  },
+  computed: {
+    description: function () {
+      if (
+        !this.conversationUnit.unitDestinationId.value ||
+        !this.conversationUnit.unitStockDestination.value ||
+        !this.conversationUnit.calUnit.value ||
+        !this.conversationUnit.unitOriginId.value
+      ) {
+        return "";
+      } else {
+        let unitCal =
+          this.conversationUnit.calUnit.options.find(
+            (opt) =>
+              opt.value == this.conversationUnit.calUnit.value ||
+              opt.label == this.conversationUnit.calUnit.value
+          ).label || "";
+
+        let unitDes =
+          this.unitsServer.find(
+            (opt) =>
+              opt.value == this.conversationUnit.unitDestinationId.value ||
+              opt.label == this.conversationUnit.unitDestinationId.value
+          ).label || "";
+        let unitOri =
+          this.unitsServer.find(
+            (opt) =>
+              opt.value == this.conversationUnit.unitOriginId.value ||
+              opt.label == this.conversationUnit.unitOriginId.value
+          ).label || "";
+        return (
+          "1 " +
+          unitDes +
+          " = " +
+          this.conversationUnit.unitStockDestination.value +
+          " " +
+          unitCal +
+          " " +
+          unitOri
+        );
+      }
+    },
   },
   methods: {
     handleData() {
@@ -192,9 +232,29 @@ export default {
     initData(data) {
       this.conversationUnit.id.value = data.id.value;
     },
+    getValueSingleUnit() {
+      axios
+        .get("http://localhost:9090/api/v1/single-unit/all", {
+          headers: { "Access-Control-Allow-Origin": "*" },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.unitsServer = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.getValueSingleUnit();
+  },
 };
 </script>
 <style></style>

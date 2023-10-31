@@ -588,7 +588,6 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
           this.$message({
             showClose: true,
             message: error,

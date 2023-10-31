@@ -488,12 +488,8 @@ export default {
           });
         });
     },
-    handeDeleteUser(data) {
-      console.log("user", data);
-    },
-    handeDeleteRole(data) {
-      console.log("role", data);
-    },
+    handeDeleteUser(data) {},
+    handeDeleteRole(data) {},
     handleGetRoles() {
       var me = this;
       me.loadingTable = true;
