@@ -260,12 +260,7 @@ export default {
   },
   data() {
     return {
-      productPhotos: [
-        // {
-        //   name: "food.jpg",
-        //   url: "http://localhost:9090/api/v1/get/image/wallpaperflare.com_wallpaper (3).jpg",
-        // },
-      ],
+      productPhotos: [],
       dialogImageUrl: "",
       dialogVisible: false,
       disabled: false,
@@ -289,7 +284,9 @@ export default {
       ],
       dialogVisibleUnit: false,
       productPId: 0,
+      productId: null,
       units: [],
+      unitOptions: [],
       product: {
         name: {
           id: "name",
@@ -483,13 +480,13 @@ export default {
     },
     handleDataCalUnit(item) {
       item.unitDestinationId =
-        this.product.singleUnit.options.find(
+        this.unitOptions.find(
           (opt) =>
             opt.value == item.unitDestinationId ||
             opt.label == item.unitDestinationId
         ).label || "";
       item.unitOriginId =
-        this.product.singleUnit.options.find(
+        this.unitOptions.find(
           (opt) =>
             opt.value == item.unitOriginId || opt.label == item.unitOriginId
         ).label || "";
@@ -518,7 +515,7 @@ export default {
     AddConversationUnit() {
       let valueSingleUnit = "";
       let listSingleUnitSelection = [];
-      this.product.singleUnit.options.forEach((item) => {
+      this.unitOptions.forEach((item) => {
         if (
           item.value === this.product.singleUnit.value ||
           item.label === this.product.singleUnit.value
@@ -528,7 +525,7 @@ export default {
       });
       this.$refs["cal-unit"].conversationUnit.unitOriginId.value =
         valueSingleUnit;
-      listSingleUnitSelection = this.product.singleUnit.options.filter(
+      listSingleUnitSelection = this.unitOptions.filter(
         (item) => item.value != valueSingleUnit && item.label != valueSingleUnit
       );
       this.$refs["cal-unit"].conversationUnit.unitDestinationId.options =
@@ -541,53 +538,52 @@ export default {
     handleChangeSingleUnit(val) {
       this.product.singleUnit.baseId = val;
     },
-    getValueCategory() {
-      axios
-        .get("http://localhost:9090/api/v1/category/list", {
-          headers: { "Access-Control-Allow-Origin": "*" },
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            this.category.options = res.data.items;
+    async getValueCategory() {
+      try {
+        const { data } = await axios.get(
+          "http://localhost:9090/api/v1/category/list",
+          {
+            headers: { "Access-Control-Allow-Origin": "*" },
           }
-        })
-        .catch((error) => {
-          this.$message({
-            showClose: true,
-            message: error,
-            type: "error",
-          });
+        );
+        this.category.options = data.items;
+      } catch (error) {
+        this.$message({
+          showClose: true,
+          message: error,
+          type: "error",
         });
+      }
     },
-    getValueSingleUnit() {
-      axios
-        .get("http://localhost:9090/api/v1/single-unit/all", {
-          headers: { "Access-Control-Allow-Origin": "*" },
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            this.product.singleUnit.options = res.data.items;
+    async getValueSingleUnit() {
+      try {
+        const { data } = await axios.get(
+          "http://localhost:9090/api/v1/single-unit/all",
+          {
+            headers: { "Access-Control-Allow-Origin": "*" },
           }
-        })
-        .catch((error) => {
-          this.$message({
-            showClose: true,
-            message: error,
-            type: "error",
-          });
+        );
+        this.unitOptions = data.items;
+        this.product.singleUnit.options = data.items;
+      } catch (error) {
+        this.$message({
+          showClose: true,
+          message: error,
+          type: "error",
         });
+      }
     },
     handleSubmit() {
       if (this.units.length > 0) {
         this.units.forEach((item) => {
           item.unitOriginId =
-            this.product.singleUnit.options.find(
+            this.unitOptions.find(
               (opt) =>
                 opt.label == this.product.singleUnit.value ||
                 opt.value == this.product.singleUnit.value
             ).value || "";
           item.unitDestinationId =
-            this.product.singleUnit.options.find(
+            this.unitOptions.find(
               (opt) =>
                 opt.label == item.unitDestinationId ||
                 opt.value == item.unitDestinationId
@@ -650,6 +646,7 @@ export default {
       }
       return formData;
     },
+    handlePayment() {},
     handleEditProduct(productDetail) {
       axios
         .put(`http://localhost:9090/api/v1/product`, productDetail, {
@@ -707,9 +704,9 @@ export default {
         })
         .catch((_) => {});
     },
-    getProductDetail() {
+    async getProductDetail() {
       if (this.$route.params.data.id != null) {
-        axios
+        await axios
           .get(
             `http://localhost:9090/api/v1/product/detail/${this.$route.params.data.id}`,
             { headers: { "Access-Control-Allow-Origin": "*" } }
@@ -726,18 +723,24 @@ export default {
                 this.product.singleUnit.value = res.data.items.singleUnit.name;
               });
               this.productPId = res.data.items.id;
-              this.productPhotos = res.data.items.imageDetailRes;
+              if (res.data.items.imageDetailRes) {
+                this.productPhotos = res.data.items.imageDetailRes;
+              } else {
+                this.productPhotos = [];
+              }
             }
+            console.log(this.unitOptions, "this.unitOptions");
+            console.log(this.units, "this.units");
             if (this.units && this.units.length > 0) {
               this.units.forEach((item) => {
                 item.unitDestinationId =
-                  this.product.singleUnit.options.find(
+                  this.unitOptions.find(
                     (opt) =>
                       opt.value == item.unitDestinationId ||
                       opt.label == item.unitDestinationId
                   ).label || "";
                 item.unitOriginId =
-                  this.product.singleUnit.options.find(
+                  this.unitOptions.find(
                     (opt) =>
                       opt.value == item.unitOriginId ||
                       opt.label == item.unitOriginId
@@ -760,16 +763,16 @@ export default {
     },
   },
   computed: {},
-  created() {
+  created() {},
+  async mounted() {
     if (!this.$route.params.data) {
       this.$router.push({ path: "/product" });
       return;
     }
-    this.getValueCategory();
-    this.getValueSingleUnit();
-  },
-  mounted() {
-    this.getProductDetail();
+    //1. get list cate -> list single-unit => product detail (convert to label)
+    await this.getValueCategory();
+    await this.getValueSingleUnit();
+    await this.getProductDetail();
   },
 };
 </script>

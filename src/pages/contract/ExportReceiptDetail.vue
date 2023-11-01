@@ -102,8 +102,17 @@
         <el-col :span="6">
           <div class="footer-btn-fixed flex justify-end p-4">
             <el-button @click="handleCancelSubmit">Cancel</el-button>
-            <el-button class="bg-blue-400" type="primary" @click="handleSubmit"
+            <el-button
+              class="bg-blue-400"
+              type="primary"
+              @click="handleSubmit('CREATED')"
               >Create</el-button
+            >
+            <el-button
+              class="bg-green-400"
+              type="success"
+              @click="handlePayment"
+              >Payment</el-button
             >
           </div>
         </el-col>
@@ -338,6 +347,17 @@ export default {
     };
   },
   methods: {
+    handlePayment() {
+      this.handleSubmit("PAYMENT");
+      let data = {
+        id: this.invoiceId,
+        type: "EDIT",
+      };
+      this.$router.push({
+        name: "payment",
+        params: { data },
+      });
+    },
     getMaterials() {
       return this.materials.map((item) => {
         const materialItem = {};
@@ -370,7 +390,7 @@ export default {
         return materialItem;
       });
     },
-    handleSubmit() {
+    async handleSubmit(type) {
       const order = {
         warehouseId: "WH-1",
         id: this.id,
@@ -385,7 +405,7 @@ export default {
         note: this.order.note.value,
       };
       if (this.$route.params.data.type === "EDIT") {
-        axios({
+        await axios({
           method: "put",
           url: "http://localhost:9090/api/v1/export-receipt",
           headers: { "Access-Control-Allow-Origin": "*" },
@@ -393,7 +413,11 @@ export default {
         })
           .then((response) => {
             if (response.status === 200) {
-              this.$router.push({ path: "/export-receipt" });
+              console.log();
+              this.invoiceId = response.data.items;
+              if (type === "CREATED") {
+                this.$router.push({ path: "/export-receipt" });
+              }
               this.$message({
                 showClose: true,
                 message: "Updated successfully",
@@ -418,7 +442,7 @@ export default {
             }
           });
       } else {
-        axios({
+        await axios({
           method: "post",
           url: "http://localhost:9090/api/v1/export-receipt",
           headers: { "Access-Control-Allow-Origin": "*" },
@@ -426,7 +450,10 @@ export default {
         })
           .then((response) => {
             if (response.status === 200) {
-              this.$router.push({ path: "/export-receipt" });
+              this.invoiceId = response.data.items;
+              if (type === "CREATED") {
+                this.$router.push({ path: "/export-receipt" });
+              }
               this.$message({
                 showClose: true,
                 message: "Created successfully",

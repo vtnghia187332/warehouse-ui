@@ -29,13 +29,13 @@
                 </el-table-column>
                 <el-table-column align="right" width="50">
                   <template slot-scope="scope">
-                    <el-button
+                    <!-- <el-button
                       type="danger"
                       icon="el-icon-delete"
                       class="bg-red-400"
                       @click="handleDeleteMaterial(scope)"
                       circle
-                    ></el-button>
+                    ></el-button> -->
                   </template>
                 </el-table-column>
               </el-table>
