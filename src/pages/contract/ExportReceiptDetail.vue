@@ -347,8 +347,8 @@ export default {
     };
   },
   methods: {
-    handlePayment() {
-      this.handleSubmit("PAYMENT");
+    async handlePayment() {
+      await this.handleSubmit("PAYMENT");
       let data = {
         id: this.invoiceId,
         type: "EDIT",

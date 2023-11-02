@@ -102,7 +102,7 @@
         </el-table-column>
         <el-table-column
           sortable
-          prop="totalNeedPaid"
+          prop="totalPaid"
           label="Total Payment"
           width="200"
         >

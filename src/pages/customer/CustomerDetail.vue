@@ -30,15 +30,15 @@
 
                 <div class="col-span-12 grid grid-cols-12 gap-x-6">
                   <div class="col-span-6">
-                    <BaseInput
+                    <DatePicker
                       :field="customer.birthDay"
                       v-model="customer.birthDay.value"
                     />
                   </div>
                   <div class="col-span-6">
-                    <BaseInput
-                      :field="customer.gender"
-                      v-model="customer.gender.value"
+                    <BaseSelection
+                      :field="customer.title"
+                      v-model="customer.title.value"
                     />
                   </div>
                 </div>
@@ -117,6 +117,7 @@ import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
 import FormCard from "./../../components/Cards/FormCard.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import { ValidationObserver } from "vee-validate";
+import DatePicker from "../../components/Date/DatePicker.vue";
 
 export default {
   components: {
@@ -125,6 +126,7 @@ export default {
     BaseTextArea,
     BaseSelection,
     ValidationObserver,
+    DatePicker,
   },
   data() {
     return {
@@ -171,29 +173,45 @@ export default {
         },
         birthDay: {
           id: "birthDay",
-          name: "BirthDay",
-          rules: "required",
-          classes: "w-full col-span-6",
-          type: "text",
-          label: "BirthDay",
-          isRequired: "true",
+          name: "Birthday",
+          classes: "!w-full",
+          label: "Birthday",
+          isRequired: "false",
+          rules: "",
           value: "",
-          placeholder: "Enter BirthDay...",
-          maxlength: 50,
           error: "",
+          pickerOptions: {
+            disabledDate(time) {
+              return time.getTime() > Date.now();
+            },
+          },
         },
-        gender: {
-          id: "gender",
-          name: "Gender",
+        title: {
+          id: "title",
+          name: "title",
           rules: "required",
-          classes: "w-full col-span-6",
+          classes: "w-full",
           type: "text",
-          label: "Gender",
+          label: "Title",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Gender...",
+          placeholder: "Select Title...",
           maxlength: 50,
           error: "",
+          options: [
+            {
+              value: 1,
+              label: "Mr",
+            },
+            {
+              value: 2,
+              label: "Mrs",
+            },
+            {
+              value: 3,
+              label: "Other",
+            },
+          ],
         },
         detailAddress: {
           id: "detailAddress",
@@ -309,7 +327,7 @@ export default {
     },
     handleSubmit() {
       const customerDetail = {
-        warehouseId: 1,
+        warehouseId: "WH-1",
         id: this.customerPId,
         customerId: this.$route.params.data.id,
         countryId: this.customer.country.value,

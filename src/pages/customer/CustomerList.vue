@@ -60,9 +60,12 @@
         </el-table-column>
         <el-table-column sortable prop="fullName" label="Full Name" width="250">
         </el-table-column>
-        <el-table-column sortable prop="gender" label="Gender" width="250">
+        <el-table-column sortable prop="titleTxt" label="Title" width="100">
         </el-table-column>
-        <el-table-column sortable prop="birthDay" label="Birthday" width="250">
+        <el-table-column sortable prop="birthDay" label="Birthday" width="200">
+          <template slot-scope="scope">
+            {{ moment(scope.row.birthDay.value).format("YYYY-MM-DD HH:mm:ss") }}
+          </template>
         </el-table-column>
         <el-table-column
           sortable
@@ -96,6 +99,7 @@ import axios from "axios";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import LoadingPage from "@/components/Cards/LoadingPage";
+import moment from "moment";
 export default {
   components: {
     BaseSearch,
@@ -103,6 +107,11 @@ export default {
     LoadingPage,
     ValidationObserver,
     ValidationProvider,
+  },
+  computed: {
+    moment() {
+      return moment;
+    },
   },
   data() {
     return {
