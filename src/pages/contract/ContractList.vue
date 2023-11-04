@@ -172,8 +172,13 @@
       :field="canceled"
       v-show="dialogVisibleCancel"
       :dialogVisible.sync="dialogVisibleCancel"
-      v-model="canceled.value"
       @handle-dataAddr="handleDataCancel"
+    />
+    <Acquit
+      :field="acquited"
+      v-show="dialogVisibleAcquited"
+      :dialogVisible.sync="dialogVisibleAcquited"
+      @handle-dataAddr="handleDataAcquit"
     />
   </div>
 </template>
@@ -185,6 +190,7 @@ import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import LoadingPage from "@/components/Cards/LoadingPage";
 import RefundVue from "./Refund.vue";
 import Cancel from "./Cancel.vue";
+import Acquit from "./Acquit.vue";
 export default {
   components: {
     BaseSearch,
@@ -193,9 +199,11 @@ export default {
     LoadingPage,
     RefundVue,
     Cancel,
+    Acquit,
   },
   data() {
     return {
+      dialogVisibleAcquited: false,
       dialogVisible: false,
       dialogVisibleCancel: false,
       activeName: "first",
@@ -211,6 +219,23 @@ export default {
           { label: "Receipt", value: 1 },
           { label: "Export", value: 2 },
         ],
+      },
+      acquited: {
+        title: "Acquit Money",
+        invoiceId: null,
+        moneyPaid: {
+          id: "moneyPaid",
+          name: "Acquit Money",
+          rules: "required",
+          classes: "w-full col-span-6",
+          type: "text",
+          label: "Acquit Money",
+          isRequired: "true",
+          value: "",
+          placeholder: "Enter Acquit Money...",
+          maxlength: 100,
+          error: "",
+        },
       },
       canceled: {
         title: "Cancel",
@@ -390,13 +415,27 @@ export default {
       this.paginationPage.pageNo = param;
       this.handleGetInvoicesEx();
     },
+    handleDataAcquit(field) {
+      const data = {
+        invoiceId: field.invoiceId,
+        typeAction: "ACQUITED",
+        moneyPaid: field.moneyPaid.value,
+      };
+      this.handleUpdateContract(data);
+      this.dialogVisibleAcquited = false;
+    },
+    handleAcquit(row) {
+      this.acquited.invoiceId = row.invoiceId;
+      this.dialogVisibleAcquited = true;
+    },
     handleDataCancel(field) {
       const data = {
         invoiceId: field.invoiceId,
         typeAction: "CANCEL",
         reasonCancel: field.reasonCancel.value,
       };
-      console.log(data, "datadata");
+      this.handleUpdateContract(data);
+      this.dialogVisibleCancel = false;
     },
     handeCancel(row) {
       this.canceled.invoiceId = row.invoiceId;
@@ -410,6 +449,7 @@ export default {
         reason: field.reason.value,
       };
       this.handleUpdateContract(data);
+      this.dialogVisible = false;
     },
     handeRefund(row) {
       this.refund.invoiceId = row.invoiceId;
@@ -421,6 +461,7 @@ export default {
         typeAction: row.typeAction,
         moneyRefund: row.moneyRefund,
         reason: row.reason,
+        reasonCancel: row.reasonCancel,
       };
       axios({
         method: "put",
