@@ -42,6 +42,12 @@
         </el-select>
         <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
+          @click="getInvoiceHistory"
+        >
+          <i class="el-icon-plus ml font-bold"></i> History
+        </button>
+        <button
+          class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="exportInvoiceExport"
         >
           <i class="el-icon-plus ml font-bold"></i> Export
@@ -162,6 +168,13 @@
       :dialogVisible.sync="dialogVisible"
       @handle-dataAddr="handleDataRefund"
     />
+    <Cancel
+      :field="canceled"
+      v-show="dialogVisibleCancel"
+      :dialogVisible.sync="dialogVisibleCancel"
+      v-model="canceled.value"
+      @handle-dataAddr="handleDataCancel"
+    />
   </div>
 </template>
 <script>
@@ -171,6 +184,7 @@ import BasePagination from "../../components/Pagination/BasePagination.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import LoadingPage from "@/components/Cards/LoadingPage";
 import RefundVue from "./Refund.vue";
+import Cancel from "./Cancel.vue";
 export default {
   components: {
     BaseSearch,
@@ -178,10 +192,12 @@ export default {
     BaseSelection,
     LoadingPage,
     RefundVue,
+    Cancel,
   },
   data() {
     return {
       dialogVisible: false,
+      dialogVisibleCancel: false,
       activeName: "first",
       search: {
         value: "",
@@ -195,6 +211,23 @@ export default {
           { label: "Receipt", value: 1 },
           { label: "Export", value: 2 },
         ],
+      },
+      canceled: {
+        title: "Cancel",
+        invoiceId: null,
+        reasonCancel: {
+          id: "reasonCancel",
+          name: "Reason",
+          rules: "required",
+          classes: "w-full col-span-6 !h-[64px]",
+          type: "text",
+          label: "Reason",
+          isRequired: "true",
+          value: "",
+          placeholder: "Enter Reason...",
+          maxlength: 250,
+          error: "",
+        },
       },
       refund: {
         title: "Refund",
@@ -252,8 +285,10 @@ export default {
     };
   },
   methods: {
+    getInvoiceHistory() {
+      this.$router.push({ name: "invoice-history" });
+    },
     handleAcquit(row) {},
-
     getInvoiceByStatus(item) {
       const itemStr =
         this.statusInvoice.options.find(
@@ -355,9 +390,17 @@ export default {
       this.paginationPage.pageNo = param;
       this.handleGetInvoicesEx();
     },
+    handleDataCancel(field) {
+      const data = {
+        invoiceId: field.invoiceId,
+        typeAction: "CANCEL",
+        reasonCancel: field.reasonCancel.value,
+      };
+      console.log(data, "datadata");
+    },
     handeCancel(row) {
-      row.typeAction = "CANCEL";
-      this.handleUpdateContract(row);
+      this.canceled.invoiceId = row.invoiceId;
+      this.dialogVisibleCancel = true;
     },
     handleDataRefund(field) {
       const data = {

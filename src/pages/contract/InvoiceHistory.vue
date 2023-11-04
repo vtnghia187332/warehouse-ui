@@ -125,7 +125,7 @@ export default {
       var me = this;
       me.loadingTable = true;
       axios
-        .get("http://localhost:9090/api/v1/export-receipt/history/list", {
+        .get("http://localhost:9090/api/v1/invoice/history/list", {
           headers: { "Access-Control-Allow-Origin": "*" },
           params: {
             searchText: me.search.value,

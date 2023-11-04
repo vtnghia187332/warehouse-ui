@@ -259,8 +259,7 @@ export default {
             a.remove();
           }
         })
-        .catch(function (res) {
-        });
+        .catch(function (res) {});
     },
     goWarehouseHistoryPage() {
       this.$router.push({ name: "warehouse-history" });
