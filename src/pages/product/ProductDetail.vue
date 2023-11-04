@@ -729,8 +729,6 @@ export default {
                 this.productPhotos = [];
               }
             }
-            console.log(this.unitOptions, "this.unitOptions");
-            console.log(this.units, "this.units");
             if (this.units && this.units.length > 0) {
               this.units.forEach((item) => {
                 item.unitDestinationId =

@@ -454,9 +454,9 @@ export default {
         typeInvoice: this.typeInvoice,
         modePayment: this.order.modePayment.value,
         totalPaid:
-          this.subTotal +
-          this.order.shippingFee.value -
-          (this.order.discount.value / 100) * this.subTotal,
+          Number(this.subTotal) +
+          Number(this.order.shippingFee.value) -
+          Number((this.order.discount.value / 100) * this.subTotal),
       };
 
       order.modePayment =
@@ -596,13 +596,13 @@ export default {
         });
     },
   },
-  mounted() {
+  async mounted() {
     if (!this.$route.params.data) {
       this.$router.push({ path: "/export-receipt" });
       return;
     }
-    this.handleGetSingleUnit();
-    this.handleGetDetailInvoice();
+    await this.handleGetSingleUnit();
+    await this.handleGetDetailInvoice();
   },
 };
 </script>

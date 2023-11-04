@@ -9,7 +9,7 @@
           <span class="ti-filter"></span> Filter
         </button>
       </div>
-      <div class="flex">
+      <div class="flex space-x-1">
         <el-select
           class="w-[180px]"
           v-model="typeInvoice.value"
@@ -19,6 +19,21 @@
         >
           <el-option
             v-for="item in typeInvoice.options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <el-select
+          class="w-[180px]"
+          v-model="statusInvoice.value"
+          placeholder="Select Invoice Status"
+          @change="getInvoiceByStatus($event)"
+          clearable
+        >
+          <el-option
+            v-for="item in statusInvoice.options"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -100,6 +115,30 @@
                 <el-dropdown-item>
                   <button
                     class="!bg-[#fdfdfd] text-black"
+                    @click="handeExportPDF(scope.row)"
+                  >
+                    <i class=""></i>Export PDF
+                  </button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <button
+                    class="!bg-[#fdfdfd] text-black"
+                    @click="handleAcquit(scope.row)"
+                  >
+                    <i class=""></i>Acquit
+                  </button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <button
+                    class="!bg-[#fdfdfd] text-black"
+                    @click="handeRefund(scope.row)"
+                  >
+                    <i class=""></i>Refund
+                  </button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <button
+                    class="!bg-[#fdfdfd] text-black"
                     @click="handeCancel(scope.row)"
                   >
                     <i class=""></i> Cancel
@@ -117,6 +156,12 @@
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     />
+    <RefundVue
+      :field="refund"
+      v-show="dialogVisible"
+      :dialogVisible.sync="dialogVisible"
+      @handle-dataAddr="handleDataRefund"
+    />
   </div>
 </template>
 <script>
@@ -125,15 +170,18 @@ import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import LoadingPage from "@/components/Cards/LoadingPage";
+import RefundVue from "./Refund.vue";
 export default {
   components: {
     BaseSearch,
     BasePagination,
     BaseSelection,
     LoadingPage,
+    RefundVue,
   },
   data() {
     return {
+      dialogVisible: false,
       activeName: "first",
       search: {
         value: "",
@@ -148,22 +196,107 @@ export default {
           { label: "Export", value: 2 },
         ],
       },
+      refund: {
+        title: "Refund",
+        invoiceId: null,
+        moneyRefund: {
+          id: "moneyRefund",
+          name: "Money Refund",
+          rules: "required",
+          classes: "w-full",
+          type: "text",
+          label: "Money Refund",
+          isRequired: "true",
+          value: "",
+          placeholder: "Enter Money Refund...",
+          maxlength: 50,
+          error: "",
+        },
+        reason: {
+          id: "reason",
+          name: "Reason",
+          rules: "required",
+          classes: "w-full col-span-6 !h-[64px]",
+          type: "text",
+          label: "Reason",
+          isRequired: "true",
+          value: "",
+          placeholder: "Enter Reason...",
+          maxlength: 250,
+          error: "",
+        },
+      },
+      statusInvoice: {
+        value: "",
+        options: [
+          { label: "CREATED", value: 0 },
+          { label: "UNPAID", value: 1 },
+          { label: "PAID", value: 2 },
+          { label: "CANCELED", value: 3 },
+          { label: "REFUND_ALL", value: 4 },
+          { label: "REFUND_LITTLE", value: 5 },
+          { label: "IN_DEBT", value: 6 },
+        ],
+      },
       loadingTable: false,
       paginationPage: {
         pageNo: 1,
         pageSize: 30,
         sorting: "createdAt",
         orderBy: "DESC",
-        invoiceType: 0,
+        invoiceType: null,
+        invoiceStatus: null,
       },
       paginationVal: {},
       invoices: [],
     };
   },
   methods: {
+    handleAcquit(row) {},
+
+    getInvoiceByStatus(item) {
+      const itemStr =
+        this.statusInvoice.options.find(
+          (opt) => opt.value == item || opt.label == item
+        ).label || "";
+      if (!itemStr) {
+        this.paginationPage.invoiceStatus = null;
+      } else {
+        this.paginationPage.invoiceStatus = itemStr;
+      }
+      this.handleGetInvoicesEx();
+    },
+    async handeExportPDF(item) {
+      let me = this;
+      // time biến thành tên của file
+      const tempDateTime = new Date();
+      const fileName = `Invoice${tempDateTime.getTime()}.pdf`;
+      //  Khai báo mảng để hứng dữ liệu nguyên vật liệu trả về
+      await axios
+        .get("http://localhost:9090/api/v1/invoice/generate/pdf", {
+          responseType: "blob",
+          params: {
+            invoiceId: item.invoiceId,
+          },
+          contentType: "application/json-patch+json",
+        })
+        .then(function (res) {
+          if (res) {
+            var url = window.URL.createObjectURL(new Blob([res.data]));
+            var a = document.createElement("a");
+            a.href = url;
+            //Lấy file name mà server trả về -> save file
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }
+        })
+        .catch(function (res) {});
+    },
     updateInputType(item) {
       if (!item) {
-        this.paginationPage.invoiceType = 0;
+        this.paginationPage.invoiceType = null;
       } else {
         this.paginationPage.invoiceType = item;
       }
@@ -223,6 +356,61 @@ export default {
       this.handleGetInvoicesEx();
     },
     handeCancel(row) {
+      row.typeAction = "CANCEL";
+      this.handleUpdateContract(row);
+    },
+    handleDataRefund(field) {
+      const data = {
+        invoiceId: field.invoiceId,
+        typeAction: "REFUND",
+        moneyRefund: field.moneyRefund.value,
+        reason: field.reason.value,
+      };
+      this.handleUpdateContract(data);
+    },
+    handeRefund(row) {
+      this.refund.invoiceId = row.invoiceId;
+      this.dialogVisible = true;
+    },
+    handleUpdateContract(row) {
+      const order = {
+        invoiceId: row.invoiceId,
+        typeAction: row.typeAction,
+        moneyRefund: row.moneyRefund,
+        reason: row.reason,
+      };
+      axios({
+        method: "put",
+        url: "http://localhost:9090/api/v1/export-receipt/action",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        data: order,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Updated successfully",
+              type: "success",
+            });
+            this.handleGetInvoicesEx();
+          }
+        })
+        .catch((error) => {
+          if (error.response.data.message) {
+            this.$message({
+              showClose: true,
+              message: error.response.data.message,
+              type: "error",
+            });
+          } else if (error.response.data.items) {
+            this.$message({
+              showClose: true,
+              message: error.response.data.items,
+              type: "error",
+            });
+            this.$refs.observerAdd.setErrors(error.response.data.items);
+          }
+        });
     },
     handleGetInvoicesEx() {
       var me = this;
@@ -237,6 +425,7 @@ export default {
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
             invoiceType: me.paginationPage.invoiceType,
+            invoiceStatus: me.paginationPage.invoiceStatus,
           },
         })
         .then(function (response) {

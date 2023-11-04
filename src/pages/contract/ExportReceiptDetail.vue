@@ -413,7 +413,6 @@ export default {
         })
           .then((response) => {
             if (response.status === 200) {
-              console.log();
               this.invoiceId = response.data.items;
               if (type === "CREATED") {
                 this.$router.push({ path: "/export-receipt" });
