@@ -12,24 +12,25 @@ import Typography from "@/pages/Typography.vue";
 import TableList from "@/pages/TableList.vue";
 import WarehouseList from "@/pages/warehouse/WarehouseList.vue";
 import WarehouseDetail from "@/pages/warehouse/WarehouseDetail.vue";
-import WarehouseHistory from '@/pages/warehouse/WarehouseHistory';
-import AddressList from '@/pages/address/AddressList.vue';
-import CategoryList from '@/pages/categoryProduct/CategoryList.vue';
-import ProductList from '@/pages/product/ProductList.vue';
-import ProductHistory from '@/pages/product/ProductHistory.vue';
-import ProductDetail from '@/pages/product/ProductDetail.vue';
-import singleUnitList from '@/pages/singleUnit/SingleUnitList.vue';
-import ContractList from '@/pages/contract/ContractList.vue';
-import CustomerList from '@/pages/customer/CustomerList.vue';
-import CustomerDetail from '@/pages/customer/CustomerDetail.vue';
-import StaffList from '@/pages/staff/StaffList.vue';
-import StaffHistory from '@/pages/staff/StaffHistory.vue';
-import StaffDetail from '@/pages/staff/StaffDetail.vue';
-import ExportReceiptList from '@/pages/contract/ExportReceiptList.vue';
-import ExportReceiptHistory from '@/pages/contract/ExportReceiptHistory.vue';
-import ExportReceiptDetail from '@/pages/contract/ExportReceiptDetail.vue';
-import Payment from '@/pages/contract/Payment.vue';
-import InvoiceHistory from '@/pages/contract/InvoiceHistory.vue';
+import WarehouseHistory from "@/pages/warehouse/WarehouseHistory";
+import AddressList from "@/pages/address/AddressList.vue";
+import CategoryList from "@/pages/categoryProduct/CategoryList.vue";
+import ProductList from "@/pages/product/ProductList.vue";
+import ProductHistory from "@/pages/product/ProductHistory.vue";
+import ProductDetail from "@/pages/product/ProductDetail.vue";
+import singleUnitList from "@/pages/singleUnit/SingleUnitList.vue";
+import ContractList from "@/pages/contract/ContractList.vue";
+import CustomerList from "@/pages/customer/CustomerList.vue";
+import CustomerDetail from "@/pages/customer/CustomerDetail.vue";
+import StaffList from "@/pages/staff/StaffList.vue";
+import StaffHistory from "@/pages/staff/StaffHistory.vue";
+import StaffDetail from "@/pages/staff/StaffDetail.vue";
+import ExportReceiptList from "@/pages/contract/ExportReceiptList.vue";
+import ExportReceiptHistory from "@/pages/contract/ExportReceiptHistory.vue";
+import ExportReceiptDetail from "@/pages/contract/ExportReceiptDetail.vue";
+import Payment from "@/pages/contract/Payment.vue";
+import InvoiceHistory from "@/pages/contract/InvoiceHistory.vue";
+import Login from "@/pages/authentication/Login.vue";
 
 const routes = [
   {
@@ -171,6 +172,11 @@ const routes = [
         path: "/staff-history",
         name: "staff history",
         component: StaffHistory,
+      },
+      {
+        path: "/login",
+        name: "Login",
+        component: Login,
       },
     ],
   },
