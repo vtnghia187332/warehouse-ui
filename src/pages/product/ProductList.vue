@@ -73,10 +73,24 @@
           sortable
           prop="description"
           label="Description"
-          width="150"
+          width="300"
         >
         </el-table-column>
-        <el-table-column prop="color" label="Color" width="250">
+        <el-table-column
+          sortable
+          prop="importPrice"
+          label="Import Price"
+          width="200"
+        >
+        </el-table-column>
+        <el-table-column
+          sortable
+          prop="exportPrice"
+          label="Export Price"
+          width="200"
+        >
+        </el-table-column>
+        <el-table-column prop="color" label="Color" width="150">
         </el-table-column>
         <el-table-column prop="singleUnit" label="Single Unit" width="150">
           <template slot-scope="scope">
@@ -84,11 +98,28 @@
           </template>
         </el-table-column>
 
+        <el-table-column sortable prop="height" label="Height" width="200">
+        </el-table-column>
+
+        <el-table-column sortable prop="width" label="Width" width="200">
+        </el-table-column>
+
+        <el-table-column sortable prop="length" label="Length" width="200">
+        </el-table-column>
+
         <el-table-column prop="categoryProductRes" label="Category" width="150">
           <template slot-scope="scope">
             {{ scope.row.categoryProductRes.name }}
           </template>
         </el-table-column>
+        <el-table-column
+          sortable
+          prop="expiredDate"
+          label="Expired Date"
+          width="250"
+        >
+        </el-table-column>
+
         <el-table-column fixed="right" label="Operations" width="100">
           <template slot-scope="scope">
             <el-button

@@ -103,10 +103,13 @@
         <el-table-column
           sortable
           prop="totalPaid"
-          label="Total Payment"
+          label="Sub-Total Payment"
           width="200"
         >
         </el-table-column>
+        <el-table-column sortable prop="note" label="Note" width="300">
+        </el-table-column>
+
         <el-table-column fixed="right" label="Action" width="80">
           <template slot-scope="scope">
             <el-dropdown>

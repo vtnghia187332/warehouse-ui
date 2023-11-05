@@ -61,14 +61,51 @@
                     <DatePicker :field="product.expiredDate" />
                   </div>
                 </div>
+                <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                  <div class="col-span-3">
+                    <BaseInput
+                      :field="product.height"
+                      v-model="product.height.value"
+                    />
+                  </div>
+                  <div class="col-span-3">
+                    <BaseInput
+                      :field="product.width"
+                      v-model="product.width.value"
+                    />
+                  </div>
+                  <div class="col-span-3">
+                    <BaseInput
+                      :field="product.length"
+                      v-model="product.length.value"
+                    />
+                  </div>
+                  <div class="col-span-3">
+                    <BaseInput
+                      :field="product.volume"
+                      v-model="product.volume.value"
+                    />
+                  </div>
+                </div>
                 <div class="col-span-12">
                   <BaseTextArea
                     :field="product.description"
                     v-model="product.description.value"
                   />
                 </div>
+              </div>
+            </template>
+          </FormCard>
 
-                <div class="col-span-12 grid grid-cols-12 gap-x-6"></div>
+          <FormCard title="Barcode" class="mb-3">
+            <template v-slot:content>
+              <div class="grid grid-cols-12 gap-x-6">
+                <div class="col-span-12">
+                  <BaseInput
+                    :field="product.code"
+                    v-model="product.code.value"
+                  />
+                </div>
               </div>
             </template>
           </FormCard>
@@ -138,18 +175,6 @@
                   </template>
                 </el-table-column>
               </el-table>
-            </template>
-          </FormCard>
-          <FormCard title="Barcode" class="mb-3">
-            <template v-slot:content>
-              <div class="grid grid-cols-12 gap-x-6">
-                <div class="col-span-12">
-                  <BaseInput
-                    :field="product.code"
-                    v-model="product.code.value"
-                  />
-                </div>
-              </div>
             </template>
           </FormCard>
         </el-col>
@@ -338,7 +363,6 @@ export default {
           isRequired: "true",
           value: "",
           placeholder: "Enter Export Price...",
-          maxlength: 50,
           error: "",
         },
         quantity: {
@@ -351,7 +375,6 @@ export default {
           isRequired: "true",
           value: "",
           placeholder: "Enter Quantity...",
-          maxlength: 50,
           error: "",
         },
         minQuantity: {
@@ -381,6 +404,56 @@ export default {
           maxlength: 50,
           error: "",
         },
+
+        height: {
+          id: "height",
+          name: "Height",
+          rules: "",
+          classes: "w-full",
+          type: "",
+          label: "Height",
+          isRequired: "",
+          value: 0,
+          placeholder: "Enter Height...",
+          error: "",
+        },
+        width: {
+          id: "width",
+          name: "Width",
+          rules: "",
+          classes: "w-full",
+          type: "",
+          label: "Width",
+          isRequired: "",
+          value: 0,
+          placeholder: "Enter Width...",
+          error: "",
+        },
+        length: {
+          id: "length",
+          name: "Length",
+          rules: "",
+          classes: "w-full",
+          type: "",
+          label: "Length",
+          isRequired: "",
+          value: 0,
+          placeholder: "Enter Length...",
+          error: "",
+        },
+        volume: {
+          id: "volume",
+          name: "Volume",
+          rules: "",
+          classes: "w-full",
+          type: "",
+          label: "Volume",
+          isRequired: "",
+          value: 0,
+          placeholder: "Enter Volume...",
+          error: "",
+        },
+
         color: {
           id: "color",
           name: "Color",

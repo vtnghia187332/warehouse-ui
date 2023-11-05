@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-3 pl-80 pr-80">
+  <!-- <div class="pt-3 pl-80 pr-80">
     <div class="pb-2 flex justify-between">
       <div class="flex">
         <BaseSearch :field="search" @get-value="getBaseSearchVal" />
@@ -52,15 +52,26 @@
       v-model="unitField.value"
       @handle-dataAddr="handleDataAddEdit"
     />
+  </div> -->
+  <div>
+    <span>{{ name }}</span>
+    <span>{{ age }}</span>
+    <div>{{ user.email }}</div>
+    <div>{{ user.password }}</div>
+    <button @click="updateProfile">Thay doi ten</button>
   </div>
 </template>
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import DialogCreate from "../address/DialogCreate.vue";
 import LoadingPage from "@/components/Cards/LoadingPage";
 import axios from "axios";
 export default {
+  computed: {
+    ...mapGetters(["name", "age", "user"]),
+  },
   components: { BaseSearch, BasePagination, DialogCreate, LoadingPage },
   data() {
     return {
@@ -98,6 +109,8 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["setName"]),
+    ...mapActions(["updateProfile"]),
     handleSelectionChange(val) {
       this.singleUnitSelected = [];
       val.forEach((item) => {
