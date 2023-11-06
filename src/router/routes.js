@@ -31,6 +31,7 @@ import ExportReceiptDetail from "@/pages/contract/ExportReceiptDetail.vue";
 import Payment from "@/pages/contract/Payment.vue";
 import InvoiceHistory from "@/pages/contract/InvoiceHistory.vue";
 import Login from "@/pages/authentication/Login.vue";
+import Signup from "@/pages/authentication/Signup.vue";
 
 const routes = [
   {
@@ -177,6 +178,11 @@ const routes = [
         path: "/login",
         name: "Login",
         component: Login,
+      },
+      {
+        path: "/signup",
+        name: "Signup",
+        component: Signup,
       },
     ],
   },

@@ -349,7 +349,7 @@ export default {
           this.loadingTable = false;
           this.$message({
             showClose: true,
-            message: error.response.data.message,
+            message: error.response.data.items,
             type: "error",
           });
         });

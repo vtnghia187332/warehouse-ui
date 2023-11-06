@@ -111,6 +111,49 @@
               </div>
             </template>
           </FormCard>
+          <FormCard title="Avatar" class="mb-3">
+            <template v-slot:content>
+              <div class="">
+                <el-upload
+                  action="#"
+                  list-type="picture-card"
+                  :auto-upload="false"
+                  :on-change="handleAddPhotos"
+                  :file-list="staffPhotos"
+                  :limit="1"
+                  :disabled="staffPhotos.length === 1"
+                  :append-to-body="true"
+                >
+                  <i slot="default" class="el-icon-plus"></i>
+                  <div slot="file" slot-scope="{ file }">
+                    <img
+                      class="el-upload-list__item-thumbnail"
+                      :src="file.url"
+                      alt=""
+                    />
+                    <span class="el-upload-list__item-actions">
+                      <span
+                        class="el-upload-list__item-preview"
+                        @click="handlePictureCardPreview(file)"
+                      >
+                        <i class="el-icon-zoom-in"></i>
+                      </span>
+                      <span
+                        v-if="!disabled"
+                        class="el-upload-list__item-delete"
+                        @click="handleRemove(file)"
+                      >
+                        <i class="el-icon-delete"></i>
+                      </span>
+                    </span>
+                  </div>
+                </el-upload>
+                <el-dialog :append-to-body="true" :visible.sync="dialogVisible">
+                  <img width="100%" :src="dialogImageUrl" alt="" />
+                </el-dialog>
+              </div>
+            </template>
+          </FormCard>
           <FormCard title="More Information" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
@@ -162,6 +205,10 @@ export default {
   },
   data() {
     return {
+      disabled: false,
+      dialogVisible: false,
+      dialogImageUrl: "",
+      staffPhotos: [],
       userPrimaryKey: {
         id: 0,
         userId: 0,
@@ -227,7 +274,7 @@ export default {
           type: "text",
           label: "Password",
           isRequired: "true",
-          disabled: true,
+          disabled: false,
           value: "",
           placeholder: "Enter Password...",
           maxlength: 50,
@@ -356,6 +403,19 @@ export default {
     };
   },
   methods: {
+    handleAddPhotos(file, fileList) {
+      this.staffPhotos = fileList;
+    },
+    handleRemove(file) {
+      this.$confirm("Are you sure to remove this unit?")
+        .then((_) => {
+          const index = this.staffPhotos.indexOf(file);
+          if (index > -1) {
+            this.staffPhotos.splice(index, 1);
+          }
+        })
+        .catch((_) => {});
+    },
     handleSubmitDataUser() {
       let userDetail = {
         id: this.userPrimaryKey.id,
@@ -365,28 +425,42 @@ export default {
       Object.keys(this.user).map((key) => {
         userDetail[key] = this.user[key].value;
       });
-      userDetail.roles = [];
-      this.user.roles.value.forEach((item) => {
-        userDetail.roles.push(
-          this.user.roles.options.find(
-            (opt) => opt.value == item || opt.label == item
-          ).value || ""
-        );
-      });
+
       userDetail.birthDay = moment(this.user.birthDay.value).format(
         "YYYY-MM-DD HH:mm:ss"
       );
       userDetail.expiredNationalNumber = moment(
         this.user.expiredNationalNumber.value
       ).format("YYYY-MM-DD HH:mm:ss");
+
+      delete userDetail["roles"];
+
+      const userDetailForm = this.transformInToFormObject(userDetail);
+      if (this.staffPhotos[0]) {
+        userDetailForm.append("image", this.staffPhotos[0].raw);
+      } else {
+        userDetailForm.append("image", "");
+      }
+      userDetailForm.append("numberOfImg", this.staffPhotos.length);
+
+      for (var i = 0; i < this.user.roles.value.length; i++) {
+        userDetailForm.append(
+          "roles[]",
+          this.user.roles.options.find(
+            (opt) =>
+              opt.value == this.user.roles.value[i] ||
+              opt.label == this.user.roles.value[i]
+          ).value || 0
+        );
+      }
+
       if (this.$route.params.data.type === "EDIT") {
         this.user.password.value = "";
-        axios({
-          method: "put",
-          url: "http://localhost:9090/api/v1/user",
-          headers: { "Access-Control-Allow-Origin": "*" },
-          data: userDetail,
-        })
+        axios
+          .put(`http://localhost:9090/api/v1/user`, userDetailForm, {
+            headers: { "Access-Control-Allow-Origin": "*" },
+            contentType: "multipart/form-data",
+          })
           .then((response) => {
             if (response.status === 200) {
               this.$router.push({ path: "/staff" });
@@ -405,12 +479,13 @@ export default {
             });
           });
       } else {
-        axios({
-          method: "post",
-          url: "http://localhost:9090/api/v1/user",
-          headers: { "Access-Control-Allow-Origin": "*" },
-          data: userDetail,
-        })
+        userDetailForm.delete("id");
+        userDetailForm.delete("userId");
+        axios
+          .post(`http://localhost:9090/api/v1/user`, userDetailForm, {
+            headers: { "Access-Control-Allow-Origin": "*" },
+            contentType: "multipart/form-data",
+          })
           .then((response) => {
             if (response.status === 200) {
               this.$router.push({ path: "/staff" });
@@ -429,6 +504,27 @@ export default {
             });
           });
       }
+    },
+    transformInToFormObject(data) {
+      let formData = new FormData();
+      for (let key in data) {
+        if (Array.isArray(data[key])) {
+          data[key].forEach((obj, index) => {
+            let keyList = Object.keys(obj);
+            keyList.forEach((keyItem) => {
+              let keyName = [key, "[", index, "]", ".", keyItem].join("");
+              formData.append(keyName, obj[keyItem]);
+            });
+          });
+        } else if (typeof data[key] === "object") {
+          for (let innerKey in data[key]) {
+            formData.append(`${key}.${innerKey}`, data[key][innerKey]);
+          }
+        } else {
+          formData.append(key, data[key]);
+        }
+      }
+      return formData;
     },
     getRolesSel() {
       axios
@@ -467,6 +563,11 @@ export default {
                   this.user.roles.value.push(item.roleName);
                 });
               });
+              if (res.data.items.imageDetailRes) {
+                this.staffPhotos = res.data.items.imageDetailRes;
+              } else {
+                this.staffPhotos = [];
+              }
               this.userPrimaryKey.id = res.data.items.id;
               this.userPrimaryKey.userId = res.data.items.userId;
             }

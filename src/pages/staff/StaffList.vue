@@ -389,7 +389,7 @@ export default {
         .catch((error) => {
           this.$message({
             showClose: true,
-            message: error.response.data.message,
+            message: error.response.data.items,
             type: "error",
           });
         });
@@ -419,7 +419,7 @@ export default {
         .catch((error) => {
           this.$message({
             showClose: true,
-            message: error.response.data.message,
+            message: error.response.data.items,
             type: "error",
           });
         });
@@ -488,7 +488,38 @@ export default {
           });
         });
     },
-    handeDeleteUser(data) {},
+    handeDeleteUser(row) {
+      this.$confirm(`Are you want to delete ${row.productId}?`)
+        .then((_) => {
+          this.handleDeleteStaff(row.userId);
+        })
+        .catch((_) => {});
+    },
+    handleDeleteStaff(userId) {
+      axios({
+        method: "delete",
+        url: "http://localhost:9090/api/v1/user",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        params: { userId },
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Deleted successfully",
+              type: "success",
+            });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        })
+        .finally(() => this.handleGetUsers());
+    },
     handeDeleteRole(data) {},
     handleGetRoles() {
       var me = this;

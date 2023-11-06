@@ -1,8 +1,11 @@
-export default {
-  name: "Lap trinh vien TV",
-  age: 18,
+export const state = {
   user: {
-    email: "vtnghia110@gmail.com",
-    password: "123456",
+    token: null,
+    userId: null,
+    name: null,
+  },
+  warehouse: {
+    warehouseId: null,
+    name: null,
   },
 };

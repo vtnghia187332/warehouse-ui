@@ -1,5 +1,5 @@
 export default {
-  updateProfile({ commit }) {
-    commit("setName", "Vu Trong Nghia");
+  updateUserDetail({ commit }, data) {
+    commit("setUserDetail", data);
   },
 };
