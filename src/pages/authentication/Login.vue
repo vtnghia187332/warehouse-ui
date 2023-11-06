@@ -49,6 +49,7 @@
             <div>{{ warehouse?.warehouseId }}</div>
             <div>{{ warehouse?.name }}</div>
             <div>Local storage:{{ token }}</div>
+            <div>Random Access Password:{{ randomAccPwd }}</div>
           </el-col>
         </el-row>
       </div>
@@ -69,6 +70,7 @@ export default {
   data() {
     return {
       token: null,
+      randomAccPwd: null,
       defaultUserDetail: {
         token: null,
         userId: null,

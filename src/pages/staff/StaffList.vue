@@ -84,6 +84,12 @@
             <el-table-column fixed="right" label="Operations" width="100">
               <template slot-scope="scope">
                 <el-button
+                  @click="handeRenewPwd(scope.row)"
+                  type="text"
+                  size="small"
+                  ><i class="el-icon-refresh-right text-2xl"></i
+                ></el-button>
+                <el-button
                   @click="handeDeleteUser(scope.row)"
                   type="text"
                   size="small"
@@ -266,6 +272,32 @@ export default {
     };
   },
   methods: {
+    handeRenewPwd(data) {
+      const emailReq = data.email;
+      axios({
+        method: "post",
+        url: "http://localhost:9090/api/v1/user/renew-pwd",
+        headers: { "Access-Control-Allow-Origin": "*" },
+        params: { emailReq: emailReq },
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Reseted successfully",
+              type: "success",
+            });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        })
+        .finally(() => this.handleGetUsers());
+    },
     getUserDetail(row) {
       let data = {
         id: row.userId,
