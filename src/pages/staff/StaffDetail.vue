@@ -1,6 +1,7 @@
 <template>
   <ValidationObserver v-slot="{ invalid }" ref="observerAdd">
-    <div class="mb-16">
+    <loading-page v-show="loadingPageDetail"></loading-page>
+    <div v-show="!loadingPageDetail" class="mb-16">
       <el-row class="pt-4 pl-3 pr-3" :gutter="20">
         <el-col :span="18" class="forms grow">
           <FormCard title="Information" class="mb-3">
@@ -187,6 +188,7 @@ import BaseSelectMul from "../../components/Inputs/BaseSelectMul.vue";
 import { ValidationObserver } from "vee-validate";
 import DatePicker from "../../components/Date/DatePicker.vue";
 import moment from "moment";
+import LoadingPage from "../../components/Cards/LoadingPage.vue";
 export default {
   components: {
     BaseInput,
@@ -196,9 +198,11 @@ export default {
     BaseSelectMul,
     ValidationObserver,
     DatePicker,
+    LoadingPage,
   },
   data() {
     return {
+      loadingPageDetail: false,
       disabled: false,
       dialogVisible: false,
       dialogImageUrl: "",
@@ -436,6 +440,7 @@ export default {
       }
 
       if (this.$route.params.data.type === "EDIT") {
+        this.loadingPageDetail = true;
         axios
           .put(`http://localhost:9090/api/v1/user`, userDetailForm, {
             headers: { "Access-Control-Allow-Origin": "*" },
@@ -449,6 +454,7 @@ export default {
                 message: "Updated successfully",
                 type: "success",
               });
+              this.loadingPageDetail = false;
             }
           })
           .catch((error) => {
@@ -459,6 +465,7 @@ export default {
             });
           });
       } else {
+        this.loadingPageDetail = true;
         userDetailForm.delete("id");
         userDetailForm.delete("userId");
         axios
@@ -474,6 +481,7 @@ export default {
                 message: "Created successfully",
                 type: "success",
               });
+              this.loadingPageDetail = false;
             }
           })
           .catch((error) => {
@@ -527,6 +535,7 @@ export default {
     },
     getUserDetail() {
       if (this.$route.params.data.id != null) {
+        this.loadingPageDetail = true;
         axios
           .get(
             `http://localhost:9090/api/v1/user/detail/${this.$route.params.data.id}`,
@@ -548,6 +557,7 @@ export default {
               }
               this.userPrimaryKey.id = res.data.items.id;
               this.userPrimaryKey.userId = res.data.items.userId;
+              this.loadingPageDetail = false;
             }
           })
           .catch((error) => {
