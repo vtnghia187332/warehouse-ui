@@ -396,9 +396,9 @@ export default {
           this.$refs.observerAdd.setErrors(error.response.data.items);
         });
     },
-    getCustomerDetail() {
+    async getCustomerDetail() {
       if (this.$route.params.data.id != null) {
-        axios
+        await axios
           .get(
             `http://localhost:9090/api/v1/customer/detail/${this.$route.params.data.id}`,
             { headers: { "Access-Control-Allow-Origin": "*" } }
@@ -409,14 +409,49 @@ export default {
                 this.customer[key].value = res.data.items[key];
               });
               this.customerPId = res.data.items.id;
-              this.customer.country.value = res.data.items.countryId;
-              this.customer.city.value = res.data.items.cityId;
-              this.customer.district.value = res.data.items.districtId;
-              this.customer.subdistrict.value = res.data.items.subDistrictId;
 
-              this.customer.city.disabled = "notDisabled";
-              this.customer.district.disabled = "notDisabled";
-              this.customer.subdistrict.disabled = "notDisabled";
+              this.customer.country.value =
+                this.customer.country.options.find(
+                  (opt) =>
+                    opt.value == res.data.items.countryId ||
+                    opt.label == res.data.items.countryId
+                ).label || "";
+              this.customer.city.value =
+                this.customer.city.options.find(
+                  (opt) =>
+                    opt.value == res.data.items.cityId ||
+                    opt.label == res.data.items.cityId
+                ).label || "";
+              this.customer.district.value =
+                this.customer.district.options.find(
+                  (opt) =>
+                    opt.value == res.data.items.districtId ||
+                    opt.label == res.data.items.districtId
+                ).label || "";
+              this.customer.subdistrict.value =
+                this.customer.subdistrict.options.find(
+                  (opt) =>
+                    opt.value == res.data.items.subDistrictId ||
+                    opt.label == res.data.items.subDistrictId
+                ).label || "";
+              const countries = this.customer.country.options;
+              const cities = this.customer.city.options;
+              const districts = this.customer.district.options;
+              const subdistricts = this.customer.subdistrict.options;
+              const countriesRes = countries;
+              const citiesRes = cities.filter(
+                (item) => item.countryRefId == this.customer.country.value
+              );
+              const districtsRes = districts.filter(
+                (item) => item.cityRefId == this.customer.city.value
+              );
+              const subdistrictsRes = subdistricts.filter(
+                (item) => item.districtRefId == this.customer.district.value
+              );
+              this.customer.country.options = countriesRes;
+              this.customer.city.options = citiesRes;
+              this.customer.district.options = districtsRes;
+              this.customer.subdistrict.options = subdistrictsRes;
             }
           })
           .catch((error) => {
@@ -430,31 +465,17 @@ export default {
         }
       }
     },
-    getListAddress() {
-      axios
+    async getListAddress() {
+      await axios
         .get("http://localhost:9090/api/v1/address", {
           headers: { "Access-Control-Allow-Origin": "*" },
         })
         .then((res) => {
           if (res.status === 200) {
-            const countries = res.data.items.countriesLists;
-            const cities = res.data.items.citiesLists;
-            const districts = res.data.items.districtsLists;
-            const subdistricts = res.data.items.subdistrictLists;
-            const countriesRes = countries;
-            const citiesRes = cities.filter(
-              (item) => item.countryRefId == this.customer.country.value
-            );
-            const districtsRes = districts.filter(
-              (item) => item.cityRefId == this.customer.city.value
-            );
-            const subdistrictsRes = subdistricts.filter(
-              (item) => item.districtRefId == this.customer.district.value
-            );
-            this.customer.country.options = countriesRes;
-            this.customer.city.options = citiesRes;
-            this.customer.district.options = districtsRes;
-            this.customer.subdistrict.options = subdistrictsRes;
+            this.customer.country.options = res.data.items.countriesLists;
+            this.customer.city.options = res.data.items.citiesLists;
+            this.customer.district.options = res.data.items.districtsLists;
+            this.customer.subdistrict.options = res.data.items.subdistrictLists;
           }
         })
         .catch((error) => {
@@ -523,14 +544,14 @@ export default {
         });
     },
   },
-  mounted() {},
-  created() {
+  computed: {},
+  async mounted() {
     if (!this.$route.params.data) {
       this.$router.push({ path: "/customer" });
       return;
     }
-    this.getCustomerDetail();
-    this.getListAddress();
+    await this.getListAddress();
+    await this.getCustomerDetail();
   },
 };
 </script>

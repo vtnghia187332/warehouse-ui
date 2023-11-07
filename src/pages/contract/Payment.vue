@@ -27,17 +27,6 @@
                   width="150"
                 >
                 </el-table-column>
-                <el-table-column align="right" width="50">
-                  <template slot-scope="scope">
-                    <!-- <el-button
-                      type="danger"
-                      icon="el-icon-delete"
-                      class="bg-red-400"
-                      @click="handleDeleteMaterial(scope)"
-                      circle
-                    ></el-button> -->
-                  </template>
-                </el-table-column>
               </el-table>
             </div>
           </template>
@@ -476,10 +465,16 @@ export default {
       });
       if (this.$route.params.data.type === "EDIT") {
         this.handleCheckOutOder(order);
+        this.$router.push({ path: "/payment" });
+        this.$message({
+          showClose: true,
+          message: "Purchase was successful",
+          type: "success",
+        });
       }
     },
-    handleCheckOutOder(order) {
-      axios({
+    async handleCheckOutOder(order) {
+      await axios({
         method: "put",
         url: "http://localhost:9090/api/v1/invoice/check-out",
         headers: { "Access-Control-Allow-Origin": "*" },
@@ -487,12 +482,6 @@ export default {
       })
         .then((response) => {
           if (response.status === 200) {
-            this.$router.push({ path: "/export-receipt" });
-            this.$message({
-              showClose: true,
-              message: "Checked out successfully",
-              type: "success",
-            });
           }
         })
         .catch((error) => {

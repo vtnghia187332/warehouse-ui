@@ -111,6 +111,8 @@
           width="200"
         >
         </el-table-column>
+        <el-table-column prop="moneyPaid" label="Money Paid" width="200">
+        </el-table-column>
         <el-table-column fixed="right" label="Action" width="80">
           <template slot-scope="scope">
             <el-dropdown>

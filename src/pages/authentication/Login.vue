@@ -35,6 +35,9 @@
                     class="bg-blue-400 w-full"
                     >Logout</el-button
                   >
+                  <el-button @click="handleChangePwd" class="bg-blue-400 w-full"
+                    >Change Password</el-button
+                  >
                 </div>
                 <div class="mt-3 flex justify-end">
                   <el-link @click="handleForgotPassword" type="primary"
@@ -108,6 +111,9 @@ export default {
     };
   },
   methods: {
+    handleChangePwd() {
+      this.$router.push({ path: "/changepwd" });
+    },
     handleForgotPassword() {},
     ...mapMutations(["setUserDetail"]),
     ...mapActions(["updateUserDetail"]),

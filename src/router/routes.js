@@ -32,6 +32,7 @@ import Payment from "@/pages/contract/Payment.vue";
 import InvoiceHistory from "@/pages/contract/InvoiceHistory.vue";
 import Login from "@/pages/authentication/Login.vue";
 import Signup from "@/pages/authentication/Signup.vue";
+import ChangePwd from "@/pages/authentication/ChangePwd.vue";
 
 const routes = [
   {
@@ -183,6 +184,11 @@ const routes = [
         path: "/signup",
         name: "Signup",
         component: Signup,
+      },
+      {
+        path: "/changepwd",
+        name: "changePwd",
+        component: ChangePwd,
       },
     ],
   },
