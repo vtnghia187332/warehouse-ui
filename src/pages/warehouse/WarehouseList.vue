@@ -340,7 +340,7 @@ export default {
       this.$router.push({
         name: "warehouse-detail", //use name for router push
         params: { data },
-      });
+    });
     },
     handleSizeChange(param) {
       this.paginationPage.pageNo = 1;

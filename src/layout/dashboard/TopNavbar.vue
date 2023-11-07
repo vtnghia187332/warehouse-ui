@@ -1,52 +1,45 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">{{ routeName }}</a>
-      <button
-        class="navbar-toggler navbar-burger"
-        type="button"
-        @click="toggleSidebar"
-        :aria-expanded="$sidebar.showSidebar"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-bar"></span>
-        <span class="navbar-toggler-bar"></span>
-        <span class="navbar-toggler-bar"></span>
-      </button>
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="ti-panel"></i>
-              <p>Stats</p>
-            </a>
-          </li>
-          <drop-down
-            class="nav-item"
-            title="5 Notifications"
-            title-classes="nav-link"
-            icon="ti-bell"
-          >
-            <a class="dropdown-item" href="#">Notification 1</a>
-            <a class="dropdown-item" href="#">Notification 2</a>
-            <a class="dropdown-item" href="#">Notification 3</a>
-            <a class="dropdown-item" href="#">Notification 4</a>
-            <a class="dropdown-item" href="#">Another notification</a>
-          </drop-down>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="ti-settings"></i>
-              <p>Settings</p>
-            </a>
-          </li>
-        </ul>
+      <a class="navbar-brand">{{ routeName }}</a>
+      <div class="flex !space-x-4 mr-4">
+        <div class="m-auto">
+          <div class="demo-type">
+            <el-avatar :size="30" src="https://empty">
+              <img :src="user.avatar" />
+            </el-avatar>
+          </div>
+        </div>
+        <div class="m-auto">{{ user.name }}</div>
+        <div>
+          <el-dropdown>
+            <el-button @click="" type="text" size="small"
+              ><i class="ti-more !ml-3"></i
+            ></el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>
+                <button @click="handleLogout" class="!bg-[#fdfdfd] text-black">
+                  <i class=""></i>Log out
+                </button>
+              </el-dropdown-item>
+              <el-dropdown-item>
+                <button @click="changePwd" class="!bg-[#fdfdfd] text-black">
+                  <i class=""></i>Change password
+                </button>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
       </div>
     </div>
   </nav>
 </template>
 <script>
+import { mapGetters, mapActions } from "vuex";
+import axios from "axios";
 export default {
   computed: {
+    ...mapGetters(["user", "warehouse"]),
     routeName() {
       const { name } = this.$route;
       return this.capitalizeFirstLetter(name);
@@ -54,10 +47,59 @@ export default {
   },
   data() {
     return {
+      defaultUserDetail: {
+        token: null,
+        userId: null,
+        firstname: null,
+        imageDetailRes: [
+          {
+            name: null,
+            url: null,
+          },
+        ],
+        lastname: null,
+        warehouseDetailRes: {
+          warehouseId: null,
+          name: null,
+        },
+      },
       activeNotifications: false,
     };
   },
   methods: {
+    ...mapActions(["updateUserDetail"]),
+    changePwd() {
+      this.$router.push({ path: "/changepwd" });
+    },
+    async handleLogout() {
+      const header = new Headers({
+        Authorization: `Bearer ${this.user.token}`,
+      });
+      await axios
+        .get(`http://localhost:9090/api/v1/auth/logout`, {
+          headers: { header },
+          contentType: "multipart/form-data",
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            localStorage.removeItem("token");
+            this.$message({
+              showClose: true,
+              message: "You have been successfully log out of the system",
+              type: "success",
+            });
+            this.updateUserDetail(this.defaultUserDetail);
+            this.$router.push({ name: "Login" });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
+    },
     capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     },

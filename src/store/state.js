@@ -3,6 +3,7 @@ export const state = {
     token: null,
     userId: null,
     name: null,
+    avatar: null,
   },
   warehouse: {
     warehouseId: null,

@@ -3,6 +3,7 @@ export default {
     state.user.token = data.token;
     state.user.userId = data.userId;
     state.user.name = data.firstname + data.lastname;
+    state.user.avatar = data.imageDetailRes[0].url;
     state.warehouse.warehouseId = data.warehouseDetailRes.warehouseId;
     state.warehouse.name = data.warehouseDetailRes.name;
     localStorage.setItem("token", data.token);

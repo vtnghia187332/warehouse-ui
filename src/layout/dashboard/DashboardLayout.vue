@@ -17,7 +17,6 @@
         <sidebar-link to="/single-unit" name="Single-Unit" icon="ti-slice" />
         <sidebar-link to="/staff" name="Staff" icon="ti-headphone-alt" />
         <sidebar-link to="/address" name="Address" icon="ti-map" />
-        <sidebar-link to="/login" name="Login" icon="ti-map" />
       </template>
       <mobile-menu>
         <li class="nav-item">
@@ -48,20 +47,18 @@
       </mobile-menu>
     </side-bar>
     <div class="main-panel">
-      <top-navbar></top-navbar>
+      <top-navbar> </top-navbar>
 
       <dashboard-content @click.native="toggleSidebar"> </dashboard-content>
-
-      <!-- <content-footer></content-footer> -->
     </div>
   </div>
 </template>
 <style lang="scss"></style>
 <script>
 import TopNavbar from "./TopNavbar.vue";
-// import ContentFooter from "./ContentFooter.vue";
 import DashboardContent from "./Content.vue";
 import MobileMenu from "./MobileMenu";
+
 export default {
   components: {
     TopNavbar,

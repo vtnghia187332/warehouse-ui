@@ -1,4 +1,4 @@
-<template>
+<template class="login-form">
   <ValidationObserver v-slot="{ invalid }" ref="observerAdd">
     <div class="flex h-screen">
       <div class="m-auto">
@@ -29,15 +29,6 @@
                     type="primary"
                     >Submit</el-button
                   >
-                  <el-button
-                    :disabled="!user.token"
-                    @click="handleLogout"
-                    class="bg-blue-400 w-full"
-                    >Logout</el-button
-                  >
-                  <el-button @click="handleChangePwd" class="bg-blue-400 w-full"
-                    >Change Password</el-button
-                  >
                 </div>
                 <div class="mt-3 flex justify-end">
                   <el-link @click="handleForgotPassword" type="primary"
@@ -49,8 +40,10 @@
             <div>{{ user?.token }}</div>
             <div>{{ user?.userId }}</div>
             <div>{{ user?.name }}</div>
+            <div>{{ user?.avatar }}</div>
             <div>{{ warehouse?.warehouseId }}</div>
             <div>{{ warehouse?.name }}</div>
+            <div>Local storage:{{ token }}</div>
             <div>Local storage:{{ token }}</div>
             <div>Random Access Password:{{ randomAccPwd }}</div>
           </el-col>
@@ -78,6 +71,7 @@ export default {
         token: null,
         userId: null,
         firstname: null,
+        avatar: null,
         lastname: null,
         warehouseDetailRes: {
           warehouseId: null,
@@ -153,12 +147,12 @@ export default {
       await axios
         .post(`http://localhost:9090/api/v1/auth/authenticate`, data, {
           headers: { "Access-Control-Allow-Origin": "*" },
-          contentType: "multipart/form-data",
         })
         .then((response) => {
           if (response.status === 200) {
             this.updateUserDetail(response.data.userRes);
             this.token = localStorage.getItem("token");
+            this.$router.push({ path: "/dashboard" });
           }
         })
         .catch((error) => {
@@ -173,4 +167,10 @@ export default {
   mounted() {},
 };
 </script>
-<style scoped></style>
+<style scoped>
+.login-form {
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+}
+</style>

@@ -43,12 +43,6 @@
                   <div class="col-span-6">
                     <BaseInput :field="user.email" v-model="user.email.value" />
                   </div>
-                  <div class="col-span-6">
-                    <BaseInput
-                      :field="user.password"
-                      v-model="user.password.value"
-                    />
-                  </div>
                 </div>
                 <div class="col-span-12 grid grid-cols-12 gap-x-6">
                   <div class="col-span-6">
@@ -266,20 +260,7 @@ export default {
           maxlength: 50,
           error: "",
         },
-        password: {
-          id: "password",
-          name: "password",
-          rules: "required",
-          classes: "w-full",
-          type: "text",
-          label: "Password",
-          isRequired: "true",
-          disabled: false,
-          value: "",
-          placeholder: "Enter Password...",
-          maxlength: 50,
-          error: "",
-        },
+
         title: {
           id: "title",
           name: "title",
@@ -455,7 +436,6 @@ export default {
       }
 
       if (this.$route.params.data.type === "EDIT") {
-        this.user.password.value = "";
         axios
           .put(`http://localhost:9090/api/v1/user`, userDetailForm, {
             headers: { "Access-Control-Allow-Origin": "*" },
@@ -556,8 +536,6 @@ export default {
             if (res.status === 200) {
               Object.keys(this.user).forEach((key) => {
                 this.user[key].value = res.data.items[key];
-                this.user.password.value = "*************";
-                this.user.password.disabled = true;
                 this.user.roles.value = [];
                 res.data.items["roles"].forEach((item) => {
                   this.user.roles.value.push(item.roleName);

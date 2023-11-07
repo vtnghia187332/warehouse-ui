@@ -118,33 +118,24 @@ export default {
       }
     },
     async handleApiToChangePwd(data) {
-      let me = this;
+      var me = this;
       await axios
-        .post("http://localhost:9090/api/v1/user/change-pwd", {
-          responseType: "blob",
-          contentType: "application/json-patch+json",
-          params: {
-            userId: data.userId,
-            oldPwd: data.oldPwd,
-            newPwd: data.newPwd,
-            conNewPwd: data.conNewPwd,
-          },
+        .post(`http://localhost:9090/api/v1/user/change-pwd`, data, {
+          headers: { "Access-Control-Allow-Origin": "*" },
+          contentType: "multipart/form-data",
         })
         .then(function (res) {
           if (res) {
-            this.$message({
+            me.$router.push({ path: "/dashboard" });
+            me.$message({
               showClose: true,
               message: "Updated Successfully",
               type: "success",
             });
           }
         })
-        .catch(function (res) {
-          this.$message({
-            showClose: true,
-            message: error.response.data.items,
-            type: "error",
-          });
+        .catch(function (error) {
+          me.$refs.observerAdd.setErrors(error.response.data.items);
         });
     },
   },
