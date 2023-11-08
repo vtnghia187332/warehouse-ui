@@ -348,7 +348,7 @@ export default {
       axios({
         method: "post",
         url: "http://localhost:9090/api/v1/customer",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: customerDetail,
       })
         .then((response) => {
@@ -374,7 +374,7 @@ export default {
       axios({
         method: "put",
         url: "http://localhost:9090/api/v1/customer",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: customerDetail,
       })
         .then((response) => {
@@ -401,7 +401,11 @@ export default {
         await axios
           .get(
             `http://localhost:9090/api/v1/customer/detail/${this.$route.params.data.id}`,
-            { headers: { "Access-Control-Allow-Origin": "*" } }
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            }
           )
           .then((res) => {
             if (res.status === 200) {
@@ -434,24 +438,26 @@ export default {
                     opt.value == res.data.items.subDistrictId ||
                     opt.label == res.data.items.subDistrictId
                 ).label || "";
-              const countries = this.customer.country.options;
-              const cities = this.customer.city.options;
-              const districts = this.customer.district.options;
-              const subdistricts = this.customer.subdistrict.options;
-              const countriesRes = countries;
-              const citiesRes = cities.filter(
-                (item) => item.countryRefId == this.customer.country.value
+              const countriesRes = this.customer.country.options;
+              const citiesRes = this.customer.city.options.filter(
+                (item) => item.countryRefId == res.data.items.countryId
               );
-              const districtsRes = districts.filter(
-                (item) => item.cityRefId == this.customer.city.value
+              const districtsRes = this.customer.district.options.filter(
+                (item) => item.cityRefId == res.data.items.cityId
               );
-              const subdistrictsRes = subdistricts.filter(
-                (item) => item.districtRefId == this.customer.district.value
+              const subdistrictsRes = this.customer.subdistrict.options.filter(
+                (item) => item.districtRefId == res.data.items.districtId
               );
+              console.log(citiesRes, districtsRes);
+
               this.customer.country.options = countriesRes;
               this.customer.city.options = citiesRes;
               this.customer.district.options = districtsRes;
               this.customer.subdistrict.options = subdistrictsRes;
+              this.customer.country.disabled = "";
+              this.customer.city.disabled = "";
+              this.customer.district.disabled = "";
+              this.customer.subdistrict.disabled = "";
             }
           })
           .catch((error) => {
@@ -468,7 +474,7 @@ export default {
     async getListAddress() {
       await axios
         .get("http://localhost:9090/api/v1/address", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((res) => {
           if (res.status === 200) {
@@ -489,7 +495,7 @@ export default {
     getListCityByCountry(id) {
       axios
         .get("http://localhost:9090/api/v1/city", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: { id: id },
         })
         .then((res) => {
@@ -508,7 +514,7 @@ export default {
     getListDistrictByCity(id) {
       axios
         .get("http://localhost:9090/api/v1/district", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: { id: id },
         })
         .then((res) => {
@@ -527,7 +533,7 @@ export default {
     getListSubDistrictByDistrict(id) {
       axios
         .get("http://localhost:9090/api/v1/subDistrict", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: { id: id },
         })
         .then((res) => {

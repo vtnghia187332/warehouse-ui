@@ -124,6 +124,7 @@ export default {
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
           },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then(function (response) {
           me.staffs = response.data.items.content;

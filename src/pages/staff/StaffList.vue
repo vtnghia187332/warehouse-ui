@@ -277,7 +277,7 @@ export default {
       axios({
         method: "post",
         url: "http://localhost:9090/api/v1/user/renew-pwd",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         params: { emailReq: emailReq },
       })
         .then((response) => {
@@ -405,7 +405,7 @@ export default {
       axios({
         method: "post",
         url: "http://localhost:9090/api/v1/role",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: role,
       })
         .then((response) => {
@@ -435,7 +435,7 @@ export default {
       axios({
         method: "put",
         url: "http://localhost:9090/api/v1/role",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: role,
       })
         .then((response) => {
@@ -492,7 +492,7 @@ export default {
       me.loadingTable = true;
       axios
         .get("http://localhost:9090/api/v1/user/list", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: {
             searchText: me.search.value,
             pageNo: me.paginationPage.pageNo,
@@ -531,7 +531,7 @@ export default {
       axios({
         method: "delete",
         url: "http://localhost:9090/api/v1/user",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         params: { userId },
       })
         .then((response) => {
@@ -558,7 +558,7 @@ export default {
       me.loadingTable = true;
       axios
         .get("http://localhost:9090/api/v1/role/list", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: {
             searchText: me.searchRole.value,
             pageNo: me.paginationPageRole.pageNo,

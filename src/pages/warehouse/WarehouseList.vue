@@ -246,6 +246,7 @@ export default {
         .get("http://localhost:9090/api/v1/warehouse/template", {
           responseType: "blob",
           contentType: "application/json-patch+json",
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then(function (res) {
           if (res) {
@@ -303,7 +304,7 @@ export default {
       axios({
         method: "put",
         url: "http://localhost:9090/api/v1/warehouse/delete",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         params: { ids },
       })
         .then((response) => {
@@ -340,7 +341,7 @@ export default {
       this.$router.push({
         name: "warehouse-detail", //use name for router push
         params: { data },
-    });
+      });
     },
     handleSizeChange(param) {
       this.paginationPage.pageNo = 1;
@@ -356,7 +357,7 @@ export default {
       me.loadingTable = true;
       axios
         .get("http://localhost:9090/api/v1/warehouse/list", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: {
             searchText: me.search.value,
             pageNo: me.paginationPage.pageNo,

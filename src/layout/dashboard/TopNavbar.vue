@@ -72,12 +72,10 @@ export default {
       this.$router.push({ path: "/changepwd" });
     },
     async handleLogout() {
-      const header = new Headers({
-        Authorization: `Bearer ${this.user.token}`,
-      });
+    
       await axios
         .get(`http://localhost:9090/api/v1/auth/logout`, {
-          headers: { header },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           contentType: "multipart/form-data",
         })
         .then((response) => {

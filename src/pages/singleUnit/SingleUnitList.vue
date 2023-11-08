@@ -177,7 +177,7 @@ export default {
       me.loadingTable = true;
       axios
         .get("http://localhost:9090/api/v1/single-unit/list", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: {
             searchText: me.search.value,
             pageNo: me.paginationPage.pageNo,
@@ -205,14 +205,14 @@ export default {
           });
         });
     },
-    handleCreateSingleUint(field) {
+    async handleCreateSingleUint(field) {
       const singleUnit = {
         name: field.value,
       };
-      axios({
+      await axios({
         method: "post",
         url: "http://localhost:9090/api/v1/single-unit",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: singleUnit,
       })
         .then((response) => {
@@ -241,7 +241,7 @@ export default {
       axios({
         method: "put",
         url: "http://localhost:9090/api/v1/single-unit",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: singleUnit,
       })
         .then((response) => {
@@ -265,7 +265,7 @@ export default {
     handleDeleteSingleUnit() {
       axios
         .delete("http://localhost:9090/api/v1/single-unit", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: { id: this.singleUnitSelected.toString() },
         })
         .then((res) => {

@@ -37,7 +37,7 @@
         </div>
         <div class="p-3 bg-gray-100 grid grid-cols-12 gap-x-6">
           <div class="col-span-6">
-            <BaseInput :field="item.title" v-model="item.title.value" />
+            <BaseSelection :field="item.title" v-model="item.title.value" />
           </div>
           <div class="col-span-6"></div>
           <div class="col-span-6">
@@ -62,22 +62,40 @@
 </template>
 <script>
 import BaseInput from "../Inputs/BaseInput.vue";
+import BaseSelection from "../../components/Inputs/BaseSelection.vue";
+
 import _ from "lodash";
 export default {
-  components: { BaseInput },
+  components: { BaseInput, BaseSelection },
   data() {
     return {
       defaultKeyContact: {
         title: {
-          id: "keycontactTitle",
+          id: "title",
+          name: "title",
+          rules: "required",
           classes: "w-full",
           type: "text",
           label: "Title",
-          isRequired: "",
+          isRequired: "true",
           value: "",
-          placeholder: "Enter Keycontact Title",
-          maxlength: 0,
+          placeholder: "Select Title...",
+          maxlength: 50,
           error: "",
+          options: [
+            {
+              value: 1,
+              label: "Mr",
+            },
+            {
+              value: 2,
+              label: "Mrs",
+            },
+            {
+              value: 3,
+              label: "Other",
+            },
+          ],
         },
         firstName: {
           id: "keycontactFirstName",
@@ -127,17 +145,31 @@ export default {
       keyContact: [
         {
           title: {
-            id: "keycontactTitle",
-            name: "keycontactTitle",
+            id: "title",
+            name: "title",
             rules: "required",
             classes: "w-full",
             type: "text",
             label: "Title",
             isRequired: "true",
-            maxlength: 30,
             value: "",
-            placeholder: "Enter Keycontact Title",
+            placeholder: "Select Title...",
+            maxlength: 50,
             error: "",
+            options: [
+              {
+                value: 1,
+                label: "Mr",
+              },
+              {
+                value: 2,
+                label: "Mrs",
+              },
+              {
+                value: 3,
+                label: "Other",
+              },
+            ],
           },
           firstName: {
             id: "keycontactFirstName",
@@ -222,6 +254,12 @@ export default {
         Object.keys(keyContactTemp).forEach((key) => {
           if (keyContactTemp[key]) {
             keyContactTemp[key].value = x[key];
+            if (key == "title") {
+              keyContactTemp[key].value =
+                this.defaultKeyContact.title.options.find(
+                  (opt) => opt.label == x[key] || opt.value == x[key]
+                ).label || "";
+            }
           }
         });
 

@@ -443,7 +443,9 @@ export default {
         this.loadingPageDetail = true;
         axios
           .put(`http://localhost:9090/api/v1/user`, userDetailForm, {
-            headers: { "Access-Control-Allow-Origin": "*" },
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
             contentType: "multipart/form-data",
           })
           .then((response) => {
@@ -470,7 +472,9 @@ export default {
         userDetailForm.delete("userId");
         axios
           .post(`http://localhost:9090/api/v1/user`, userDetailForm, {
-            headers: { "Access-Control-Allow-Origin": "*" },
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
             contentType: "multipart/form-data",
           })
           .then((response) => {
@@ -517,7 +521,7 @@ export default {
     getRolesSel() {
       axios
         .get("http://localhost:9090/api/v1/role/all", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((res) => {
           if (res.status === 200) {
@@ -539,7 +543,11 @@ export default {
         axios
           .get(
             `http://localhost:9090/api/v1/user/detail/${this.$route.params.data.id}`,
-            { headers: { "Access-Control-Allow-Origin": "*" } }
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            }
           )
           .then((res) => {
             if (res.status === 200) {

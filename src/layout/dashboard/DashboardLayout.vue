@@ -3,7 +3,6 @@
     <side-bar>
       <template slot="links">
         <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel" />
-        <sidebar-link to="/icons" name="Icons" icon="ti-pencil-alt2" />
         <sidebar-link to="/warehouse-list" name="Warehouse" icon="ti-home" />
         <sidebar-link to="/customer" name="Customer" icon="ti-user" />
         <sidebar-link to="/contract" name="Invoice" icon="ti-pencil-alt" />

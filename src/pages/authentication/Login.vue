@@ -43,8 +43,6 @@
             <div>{{ user?.avatar }}</div>
             <div>{{ warehouse?.warehouseId }}</div>
             <div>{{ warehouse?.name }}</div>
-            <div>Local storage:{{ token }}</div>
-            <div>Local storage:{{ token }}</div>
             <div>Random Access Password:{{ randomAccPwd }}</div>
           </el-col>
         </el-row>
@@ -65,7 +63,6 @@ export default {
   },
   data() {
     return {
-      token: null,
       randomAccPwd: null,
       defaultUserDetail: {
         token: null,
@@ -119,10 +116,10 @@ export default {
       this.handleApiLogin(data);
     },
     async handleLogout() {
-      const header = new Headers({ Authorization: `Bearer ${this.token}` });
+     
       await axios
         .get(`http://localhost:9090/api/v1/auth/logout`, {
-          headers: { header },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           contentType: "multipart/form-data",
         })
         .then((response) => {
@@ -151,7 +148,7 @@ export default {
         .then((response) => {
           if (response.status === 200) {
             this.updateUserDetail(response.data.userRes);
-            this.token = localStorage.getItem("token");
+            localStorage.setItem("token", response.data.token);
             this.$router.push({ path: "/dashboard" });
           }
         })

@@ -357,7 +357,7 @@
         <el-col :span="5" class="">
           <AssignedModuleVue
             title="Warehouse Chain"
-            :nameKey="'code'"
+            :nameKey="'name'"
             :item="warehouseChain.data"
             :fields="warehouseChain.fields"
             :isShowButton="false"
@@ -403,9 +403,14 @@ export default {
       typeSpecialTime: "",
       dialogVisible: false,
       warehouseChain: {
-        data: null,
+        data: {
+          id: null,
+          code: null,
+          name: null,
+          taxNumber: null,
+        },
         fields: [
-          { text: "warehouse Chain ID", value: "id" },
+          { text: "warehouse Chain Code", value: "code" },
           { text: "Tax ID", value: "taxNumber" },
         ],
       },
@@ -476,6 +481,7 @@ export default {
           rules: "required",
           classes: "col-span-12",
           type: "text",
+          isRequired: "true",
           label: "Short Name",
           value: "",
           placeholder: "Enter Warehouse Short Name",
@@ -485,11 +491,11 @@ export default {
         description: {
           id: "warehouseDescription",
           name: "warehouseDescription",
-          rules: "required",
+          rules: "",
           classes: "col-span-12 !h-[64px]",
           type: "text",
           label: "Description",
-          isRequired: "true",
+          isRequired: "false",
           value: "",
           placeholder: "Enter Warehouse Description",
           maxlength: 150,
@@ -642,7 +648,7 @@ export default {
         axios({
           method: "put",
           url: "http://localhost:9090/api/v1/warehouse",
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           data: warehouseDetail,
         })
           .then((response) => {
@@ -666,7 +672,7 @@ export default {
         axios({
           method: "post",
           url: "http://localhost:9090/api/v1/warehouse",
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           data: warehouseDetail,
         })
           .then((response) => {
@@ -765,14 +771,17 @@ export default {
         }
       });
     },
-    getWarehouseDetail() {
+    async getWarehouseDetail() {
       this.loadingPageDetail = true;
-
       if (this.$route.params.data.id != null) {
-        axios
+        await axios
           .get(
             `http://localhost:9090/api/v1/warehouse/detail/${this.$route.params.data.id}`,
-            { headers: { "Access-Control-Allow-Origin": "*" } }
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            }
           )
           .then((res) => {
             if (res.status === 200) {
@@ -780,12 +789,50 @@ export default {
                 this.warehouse[key].value = res.data.items[key];
               });
               this.initKeyContactForm(res.data.items.keyContactVos);
-              Object.keys(this.address).forEach((key) => {
-                this.address[key].value = res.data.items[key];
-              });
-              this.address.city.disabled = "notDisabled";
-              this.address.district.disabled = "notDisabled";
-              this.address.subdistrict.disabled = "notDisabled";
+
+              this.address.country.value =
+                this.address.country.options.find(
+                  (opt) =>
+                    opt.value == res.data.items.country ||
+                    opt.label == res.data.items.country
+                ).label || "";
+              this.address.city.value =
+                this.address.city.options.find(
+                  (opt) =>
+                    opt.value == res.data.items.city ||
+                    opt.label == res.data.items.city
+                ).label || "";
+              this.address.district.value =
+                this.address.district.options.find(
+                  (opt) =>
+                    opt.value == res.data.items.district ||
+                    opt.label == res.data.items.district
+                ).label || "";
+              this.address.subdistrict.value =
+                this.address.subdistrict.options.find(
+                  (opt) =>
+                    opt.value == res.data.items.subdistrict ||
+                    opt.label == res.data.items.subdistrict
+                ).label || "";
+              const countriesRes = this.address.country.options;
+              const citiesRes = this.address.city.options.filter(
+                (item) => item.countryRefId == res.data.items.country
+              );
+              const districtsRes = this.address.district.options.filter(
+                (item) => item.cityRefId == res.data.items.city
+              );
+              const subdistrictsRes = this.address.subdistrict.options.filter(
+                (item) => item.districtRefId == res.data.items.district
+              );
+              this.address.country.options = countriesRes;
+              this.address.city.options = citiesRes;
+              this.address.district.options = districtsRes;
+              this.address.subdistrict.options = subdistrictsRes;
+
+              this.address.country.disabled = "";
+              this.address.city.disabled = "";
+              this.address.district.disabled = "";
+              this.address.subdistrict.disabled = "";
 
               this.initTimeWorking(res.data.items.openWorkingHour);
               this.initSpecialtime(res.data.items.specialDayTimes);
@@ -809,10 +856,10 @@ export default {
       } else {
       }
     },
-    getListAddress() {
-      axios
+    async getListAddress() {
+      await axios
         .get("http://localhost:9090/api/v1/address", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((res) => {
           if (res.status === 200) {
@@ -820,25 +867,6 @@ export default {
             this.address.city.options = res.data.items.citiesLists;
             this.address.district.options = res.data.items.districtsLists;
             this.address.subdistrict.options = res.data.items.subdistrictLists;
-
-            const countries = res.data.items.countriesLists;
-            const cities = res.data.items.citiesLists;
-            const districts = res.data.items.districtsLists;
-            const subdistricts = res.data.items.subdistrictLists;
-            const countriesRes = countries;
-            const citiesRes = cities.filter(
-              (item) => item.countryRefId == this.address.country.value
-            );
-            const districtsRes = districts.filter(
-              (item) => item.cityRefId == this.address.city.value
-            );
-            const subdistrictsRes = subdistricts.filter(
-              (item) => item.districtRefId == this.address.district.value
-            );
-            this.address.country.options = countriesRes;
-            this.address.city.options = citiesRes;
-            this.address.district.options = districtsRes;
-            this.address.subdistrict.options = subdistrictsRes;
           }
         })
         .catch((error) => {
@@ -852,7 +880,7 @@ export default {
     getListCityByCountry(id) {
       axios
         .get("http://localhost:9090/api/v1/city", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: { id: id },
         })
         .then((res) => {
@@ -871,7 +899,7 @@ export default {
     getListDistrictByCity(id) {
       axios
         .get("http://localhost:9090/api/v1/district", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: { id: id },
         })
         .then((res) => {
@@ -890,7 +918,7 @@ export default {
     getListSubDistrictByDistrict(id) {
       axios
         .get("http://localhost:9090/api/v1/subDistrict", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: { id: id },
         })
         .then((res) => {
@@ -908,13 +936,13 @@ export default {
     },
     initData(data) {},
   },
-  mounted() {
+  async mounted() {
     if (!this.$route.params.data) {
       this.$router.push({ path: "/warehouse-list" });
       return;
     }
-    this.getWarehouseDetail();
-    this.getListAddress();
+    await this.getListAddress();
+    await this.getWarehouseDetail();
     this.loadingPageDetail = false;
   },
 };

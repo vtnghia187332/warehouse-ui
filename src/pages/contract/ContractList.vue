@@ -340,6 +340,7 @@ export default {
           params: {
             invoiceId: item.invoiceId,
           },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           contentType: "application/json-patch+json",
         })
         .then(function (res) {
@@ -373,6 +374,7 @@ export default {
         .get("http://localhost:9090/api/v1/invoice/export", {
           responseType: "blob",
           contentType: "application/json-patch+json",
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: {
             searchText: me.search.value,
             pageNo: me.paginationPage.pageNo,
@@ -468,7 +470,7 @@ export default {
       axios({
         method: "put",
         url: "http://localhost:9090/api/v1/export-receipt/action",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: order,
       })
         .then((response) => {
@@ -503,7 +505,7 @@ export default {
       me.loadingTable = true;
       axios
         .get("http://localhost:9090/api/v1/invoice/list", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: {
             searchText: me.search.value,
             pageNo: me.paginationPage.pageNo,

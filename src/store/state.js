@@ -9,4 +9,5 @@ export const state = {
     warehouseId: null,
     name: null,
   },
+  warehouseChain: {},
 };

@@ -1,174 +1,177 @@
 <template>
   <div>
-    <div class="font-semibold text-2xl pl-3">
-      {{ typeInvoice == 1 ? "Receipt Order" : "Export Order" }}
-    </div>
-    <el-row class="pt-4 pl-3 pr-3 !ml-1 !mr-1" :gutter="24">
-      <el-col :span="12">
-        <FormCard title="Order's Information" class="mb-3">
-          <template v-slot:content>
-            <div class="custom-css">
-              <el-table
-                :data="materials"
-                style="width: 100%"
-                @row-dblclick=""
-                @selection-change=""
-                height="497"
-              >
-                <el-table-column prop="name" label="Product" width="350">
-                </el-table-column>
-                <el-table-column prop="quantity" label="Quantity" width="80">
-                </el-table-column>
-                <el-table-column prop="singleUnit" label="Unit" width="100">
-                </el-table-column>
-                <el-table-column
-                  prop="exportPrice"
-                  label="Price($)"
-                  width="150"
+    <loading-page v-show="loadingPageDetail"></loading-page>
+    <div v-show="!loadingPageDetail">
+      <div class="font-semibold text-2xl pl-3">
+        {{ typeInvoice == 1 ? "Receipt Order" : "Export Order" }}
+      </div>
+      <el-row class="pt-4 pl-3 pr-3 !ml-1 !mr-1" :gutter="24">
+        <el-col :span="12">
+          <FormCard title="Order's Information" class="mb-3">
+            <template v-slot:content>
+              <div class="custom-css">
+                <el-table
+                  :data="materials"
+                  style="width: 100%"
+                  @row-dblclick=""
+                  @selection-change=""
+                  height="497"
                 >
-                </el-table-column>
-              </el-table>
-            </div>
-          </template>
-        </FormCard>
-        <el-row :gutter="20">
-          <el-col :span="12"
-            ><div class="">
-              <div class="bg-white radius-shadow_add p-3 !h-[165px]">
-                <div class="!w-full !mb-1">
-                  <BaseInput
-                    :field="order.discount"
-                    v-model="order.discount.value"
-                  />
-                </div>
-                <div class="!w-full !mb-1">
-                  <BaseInput
-                    :field="order.shippingFee"
-                    v-model="order.shippingFee.value"
-                  />
-                </div>
-              </div></div
-          ></el-col>
-          <el-col :span="12">
-            <div class="bg-white radius-shadow_add p-3 flex justify-end">
-              <div class="!w-96 !mb-1">
-                <div class="flex justify-between font-bold text-base">
-                  <div>Subtotal:</div>
-                  <div class="">${{ subTotal }}</div>
-                </div>
-                <div class="flex justify-between font-bold text-base">
-                  <div>Shipping:</div>
-                  <div class="">${{ this.order.shippingFee.value }}</div>
-                </div>
-                <div class="flex justify-between font-bold text-base">
-                  <div>Discount:</div>
-                  <div class="">{{ this.order.discount.value }} %</div>
-                </div>
-                <div>___________________________________________</div>
-                <div class="flex justify-between font-bold text-3xl">
-                  <div>Total:</div>
-                  <div class="">
-                    ${{
-                      Number(order.shippingFee.value) +
-                      subTotal -
-                      (order.discount.value / 100) * subTotal
-                    }}
+                  <el-table-column prop="name" label="Product" width="350">
+                  </el-table-column>
+                  <el-table-column prop="quantity" label="Quantity" width="80">
+                  </el-table-column>
+                  <el-table-column prop="singleUnit" label="Unit" width="100">
+                  </el-table-column>
+                  <el-table-column
+                    prop="exportPrice"
+                    label="Price($)"
+                    width="150"
+                  >
+                  </el-table-column>
+                </el-table>
+              </div>
+            </template>
+          </FormCard>
+          <el-row :gutter="20">
+            <el-col :span="12"
+              ><div class="">
+                <div class="bg-white radius-shadow_add p-3 !h-[165px]">
+                  <div class="!w-full !mb-1">
+                    <BaseInput
+                      :field="order.discount"
+                      v-model="order.discount.value"
+                    />
+                  </div>
+                  <div class="!w-full !mb-1">
+                    <BaseInput
+                      :field="order.shippingFee"
+                      v-model="order.shippingFee.value"
+                    />
+                  </div>
+                </div></div
+            ></el-col>
+            <el-col :span="12">
+              <div class="bg-white radius-shadow_add p-3 flex justify-end">
+                <div class="!w-96 !mb-1">
+                  <div class="flex justify-between font-bold text-base">
+                    <div>Subtotal:</div>
+                    <div class="">${{ subTotal }}</div>
+                  </div>
+                  <div class="flex justify-between font-bold text-base">
+                    <div>Shipping:</div>
+                    <div class="">${{ this.order.shippingFee.value }}</div>
+                  </div>
+                  <div class="flex justify-between font-bold text-base">
+                    <div>Discount:</div>
+                    <div class="">{{ this.order.discount.value }} %</div>
+                  </div>
+                  <div>___________________________________________</div>
+                  <div class="flex justify-between font-bold text-3xl">
+                    <div>Total:</div>
+                    <div class="">
+                      ${{
+                        Number(order.shippingFee.value) +
+                        subTotal -
+                        (order.discount.value / 100) * subTotal
+                      }}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </el-col>
-        </el-row>
-      </el-col>
-      <el-col :span="12">
-        <FormCard title="Customer's Information" class="mb-3">
-          <template v-slot:content>
-            <div class="grid grid-cols-12 gap-x-6">
+            </el-col>
+          </el-row>
+        </el-col>
+        <el-col :span="12">
+          <FormCard title="Customer's Information" class="mb-3">
+            <template v-slot:content>
+              <div class="grid grid-cols-12 gap-x-6">
+                <div class="col-span-12">
+                  <BaseInput
+                    :field="customer.fullName"
+                    v-model="customer.fullName.value"
+                  />
+                </div>
+              </div>
               <div class="col-span-12">
-                <BaseInput
-                  :field="customer.fullName"
-                  v-model="customer.fullName.value"
+                <BaseSelection
+                  :field="order.modePayment"
+                  v-model="order.modePayment.value"
                 />
               </div>
-            </div>
-            <div class="col-span-12">
-              <BaseSelection
-                :field="order.modePayment"
-                v-model="order.modePayment.value"
-              />
-            </div>
-          </template>
-        </FormCard>
-        <FormCard title="Delivery" class="mb-3">
-          <template v-slot:content>
-            <div class="col-span-12 grid grid-cols-12 gap-x-6">
-              <div class="col-span-6">
-                <BaseInput
-                  :field="order.consignee"
-                  v-model="order.consignee.value"
-                />
+            </template>
+          </FormCard>
+          <FormCard title="Delivery" class="mb-3">
+            <template v-slot:content>
+              <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                <div class="col-span-6">
+                  <BaseInput
+                    :field="order.consignee"
+                    v-model="order.consignee.value"
+                  />
+                </div>
+                <div class="col-span-6">
+                  <BaseInput
+                    :field="order.phoneNumberReceipt"
+                    v-model="order.phoneNumberReceipt.value"
+                  />
+                </div>
               </div>
-              <div class="col-span-6">
-                <BaseInput
-                  :field="order.phoneNumberReceipt"
-                  v-model="order.phoneNumberReceipt.value"
-                />
+              <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                <div class="col-span-12">
+                  <BaseTextArea
+                    :field="order.deliveryAddress"
+                    v-model="order.deliveryAddress.value"
+                  />
+                </div>
               </div>
-            </div>
-            <div class="col-span-12 grid grid-cols-12 gap-x-6">
-              <div class="col-span-12">
-                <BaseTextArea
-                  :field="order.deliveryAddress"
-                  v-model="order.deliveryAddress.value"
-                />
+            </template>
+          </FormCard>
+          <FormCard title="Payment money" class="mb-3">
+            <template v-slot:content>
+              <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                <div class="col-span-6">
+                  <BaseInput
+                    :field="order.moneyPaid"
+                    v-model="order.moneyPaid.value"
+                  />
+                </div>
+                <div class="col-span-6">
+                  <BaseInput
+                    v-if="
+                      subTotal +
+                        Number(order.shippingFee.value) -
+                        (order.discount.value / 100) * subTotal -
+                        order.moneyPaid.value >=
+                      0
+                    "
+                    :field="order.unpaidAmount"
+                    v-model="order.unpaidAmount.value"
+                  />
+                  <BaseInput
+                    v-if="
+                      subTotal +
+                        Number(order.shippingFee.value) -
+                        (order.discount.value / 100) * subTotal -
+                        order.moneyPaid.value <
+                      0
+                    "
+                    :field="order.inChange"
+                    v-model="order.inChange.value"
+                  />
+                </div>
               </div>
-            </div>
-          </template>
-        </FormCard>
-        <FormCard title="Payment money" class="mb-3">
-          <template v-slot:content>
-            <div class="col-span-12 grid grid-cols-12 gap-x-6">
-              <div class="col-span-6">
-                <BaseInput
-                  :field="order.moneyPaid"
-                  v-model="order.moneyPaid.value"
-                />
-              </div>
-              <div class="col-span-6">
-                <BaseInput
-                  v-if="
-                    subTotal +
-                      Number(order.shippingFee.value) -
-                      (order.discount.value / 100) * subTotal -
-                      order.moneyPaid.value >=
-                    0
-                  "
-                  :field="order.unpaidAmount"
-                  v-model="order.unpaidAmount.value"
-                />
-                <BaseInput
-                  v-if="
-                    subTotal +
-                      Number(order.shippingFee.value) -
-                      (order.discount.value / 100) * subTotal -
-                      order.moneyPaid.value <
-                    0
-                  "
-                  :field="order.inChange"
-                  v-model="order.inChange.value"
-                />
-              </div>
-            </div>
-          </template>
-        </FormCard>
-        <div class="footer-btn-fixed flex justify-end p-4">
-          <el-button @click="handleCancelSubmit">Cancel</el-button>
-          <el-button @click="handleSubmit" class="bg-blue-400" type="primary"
-            >Submit</el-button
-          >
-        </div>
-      </el-col>
-    </el-row>
+            </template>
+          </FormCard>
+          <div class="footer-btn-fixed flex justify-end p-4">
+            <el-button @click="handleCancelSubmit">Cancel</el-button>
+            <el-button @click="handleSubmit" class="bg-blue-400" type="primary"
+              >Submit</el-button
+            >
+          </div>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 <script>
@@ -177,12 +180,21 @@ import BaseInput from "./../../components/Inputs/BaseInput.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import axios from "axios";
 import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
+import LoadingPage from "../../components/Cards/LoadingPage.vue";
+import { ValidationObserver } from "vee-validate";
 export default {
-  components: { FormCard, BaseInput, BaseTextArea, BaseSelection },
+  components: {
+    FormCard,
+    BaseInput,
+    BaseTextArea,
+    BaseSelection,
+    LoadingPage,
+    ValidationObserver,
+  },
   watch: {
     "order.discount.value": function (newVal, oldVal) {
       if (!newVal && newVal == 0) {
-        this.order.discount.value = 0;
+        this.order.discount.value = "";
         this.order.unpaidAmount.value =
           Number(this.subTotal) +
           Number(this.order.shippingFee.value) -
@@ -201,7 +213,6 @@ export default {
         }
         if (afterChangeMoney >= 0) {
           this.order.inChange.value = 0;
-
           this.order.unpaidAmount.value = afterChangeMoney;
         }
       }
@@ -233,7 +244,7 @@ export default {
     },
     "order.moneyPaid.value": function (newVal, oldVal) {
       if (newVal == null || newVal == undefined || newVal == 0) {
-        this.order.moneyPaid.value = 0;
+        this.order.moneyPaid.value = "";
         this.order.unpaidAmount.value =
           Number(this.subTotal) +
           Number(this.order.shippingFee.value) -
@@ -259,6 +270,7 @@ export default {
   },
   data() {
     return {
+      loadingPageDetail: false,
       id: null,
       invoiceId: null,
       customer: {
@@ -350,11 +362,11 @@ export default {
           name: "Discount",
           rules: "",
           classes: "w-full col-span-6 !h-[35px]",
-          type: "text",
+          type: "number",
           disabled: false,
           label: "Discount (%)",
           isRequired: "",
-          value: 0,
+          value: "",
           placeholder: "",
           error: "",
         },
@@ -363,11 +375,11 @@ export default {
           name: "Shipping Fee",
           rules: "",
           classes: "w-full col-span-6 !h-[35px]",
-          type: "text",
+          type: "number",
           disabled: false,
           label: "Shipping Fee ($)",
           isRequired: "",
-          value: 0,
+          value: "",
           placeholder: "",
           error: "",
         },
@@ -390,7 +402,7 @@ export default {
           name: "Amount Paid",
           rules: "",
           classes: "w-full col-span-6",
-          type: "text",
+          type: "number",
           disabled: false,
           label: "Amount Paid ($)",
           isRequired: "",
@@ -465,32 +477,34 @@ export default {
       });
       if (this.$route.params.data.type === "EDIT") {
         this.handleCheckOutOder(order);
-        this.$router.push({ path: "/payment" });
-        this.$message({
-          showClose: true,
-          message: "Purchase was successful",
-          type: "success",
-        });
       }
     },
     async handleCheckOutOder(order) {
+      var me = this;
+      me.loadingPageDetail = true;
       await axios({
         method: "put",
         url: "http://localhost:9090/api/v1/invoice/check-out",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: order,
       })
         .then((response) => {
           if (response.status === 200) {
+            me.$message({
+              showClose: true,
+              message: "Purchase was successful",
+              type: "success",
+            });
+            me.$router.push({ name: "invoice" });
+            me.loadingPageDetail = false;
           }
         })
         .catch((error) => {
-          this.$message({
+          me.$message({
             showClose: true,
             message: error.response.data.items,
             type: "error",
           });
-          this.$refs.observerAdd.setErrors(error.response.data.items);
         });
     },
     handleCancelSubmit() {
@@ -506,13 +520,17 @@ export default {
         this.materials.splice(index, 1);
       }
     },
-    handleGetDetailInvoice() {
+    async handleGetDetailInvoice() {
       let subTotalVal = 0;
       if (this.$route.params.data.id != null) {
-        axios
+        await axios
           .get(
             `http://localhost:9090/api/v1/invoice/detail/${this.$route.params.data.id}`,
-            { headers: { "Access-Control-Allow-Origin": "*" } }
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            }
           )
           .then((res) => {
             if (res.status === 200) {
@@ -542,12 +560,12 @@ export default {
               this.invoiceId = res.data.items.invoiceId;
               this.typeInvoice = res.data.items.typeInvoice;
               if (!res.discount) {
-                this.order.discount.value = 0;
+                this.order.discount.value = "";
               } else {
                 this.order.discount.value = res.discount;
               }
               if (!res.moneyPaid) {
-                this.order.moneyPaid.value = 0;
+                this.order.moneyPaid.value = "";
               } else {
                 this.order.moneyPaid.value = res.moneyPaid;
               }
@@ -566,10 +584,10 @@ export default {
       } else {
       }
     },
-    handleGetSingleUnit() {
-      axios
+    async handleGetSingleUnit() {
+      await axios
         .get("http://localhost:9090/api/v1/single-unit/all", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((res) => {
           if (res.status === 200) {
@@ -587,7 +605,7 @@ export default {
   },
   async mounted() {
     if (!this.$route.params.data) {
-      this.$router.push({ path: "/export-receipt" });
+      this.$router.push({ name: "payment" });
       return;
     }
     await this.handleGetSingleUnit();

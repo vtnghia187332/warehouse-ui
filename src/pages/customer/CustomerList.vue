@@ -177,7 +177,7 @@ export default {
       me.loadingTable = true;
       axios
         .get("http://localhost:9090/api/v1/customer/list", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: {
             searchText: me.search.value,
             pageNo: me.paginationPage.pageNo,

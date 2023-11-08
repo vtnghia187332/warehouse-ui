@@ -408,7 +408,7 @@ export default {
         await axios({
           method: "put",
           url: "http://localhost:9090/api/v1/export-receipt",
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           data: order,
         })
           .then((response) => {
@@ -444,7 +444,7 @@ export default {
         await axios({
           method: "post",
           url: "http://localhost:9090/api/v1/export-receipt",
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           data: order,
         })
           .then((response) => {
@@ -498,7 +498,7 @@ export default {
     handleGetSingleUnit() {
       axios
         .get("http://localhost:9090/api/v1/single-unit/all", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((res) => {
           if (res.status === 200) {
@@ -519,7 +519,7 @@ export default {
     handleGetProducts() {
       axios
         .get("http://localhost:9090/api/v1/product/data-list", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((res) => {
           if (res.status === 200) {
@@ -540,7 +540,7 @@ export default {
     handleGetCustomers() {
       axios
         .get("http://localhost:9090/api/v1/customer/data-list", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((res) => {
           if (res.status === 200) {
@@ -575,7 +575,11 @@ export default {
         axios
           .get(
             `http://localhost:9090/api/v1/invoice/detail/${this.$route.params.data.id}`,
-            { headers: { "Access-Control-Allow-Origin": "*" } }
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            }
           )
           .then((res) => {
             if (res.status === 200) {

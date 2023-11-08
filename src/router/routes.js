@@ -36,6 +36,7 @@ import ChangePwd from "@/pages/authentication/ChangePwd.vue";
 
 const routes = [
   {
+    mode: "history",
     path: "/",
     component: DashboardLayout,
     redirect: "/login",

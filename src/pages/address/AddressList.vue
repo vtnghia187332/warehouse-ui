@@ -327,7 +327,7 @@ export default {
       axios({
         method: "post",
         url: "http://localhost:9090/api/v1/country",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: country,
       })
         .then((response) => {
@@ -358,7 +358,7 @@ export default {
       axios({
         method: "post",
         url: "http://localhost:9090/api/v1/city",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: city,
       })
         .then((response) => {
@@ -389,7 +389,7 @@ export default {
       axios({
         method: "post",
         url: "http://localhost:9090/api/v1/district",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: district,
       })
         .then((response) => {
@@ -420,7 +420,7 @@ export default {
       axios({
         method: "post",
         url: "http://localhost:9090/api/v1/subDistrict",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: subdistrict,
       })
         .then((response) => {
@@ -667,7 +667,7 @@ export default {
       this.isSubdistrictSelected = 0;
       axios
         .get("http://localhost:9090/api/v1/country", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((res) => {
           if (res.status === 200) {
@@ -694,7 +694,7 @@ export default {
       this.isSubdistrictSelected = 0;
       axios
         .get("http://localhost:9090/api/v1/city", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: { id: countryId },
         })
         .then((res) => {
@@ -721,7 +721,7 @@ export default {
       this.isHideSubdistrict = true;
       axios
         .get("http://localhost:9090/api/v1/district", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: { id: id },
         })
         .then((res) => {
@@ -745,7 +745,7 @@ export default {
       this.isSubdistrictSelected = 0;
       axios
         .get("http://localhost:9090/api/v1/subDistrict", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: { id: id },
         })
         .then((res) => {
@@ -771,7 +771,7 @@ export default {
       axios({
         method: "put",
         url: "http://localhost:9090/api/v1/country",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: country,
       })
         .then((response) => {
@@ -803,7 +803,7 @@ export default {
       axios({
         method: "put",
         url: "http://localhost:9090/api/v1/city",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: city,
       })
         .then((response) => {
@@ -834,7 +834,7 @@ export default {
       axios({
         method: "put",
         url: "http://localhost:9090/api/v1/district",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: district,
       })
         .then((response) => {
@@ -865,7 +865,7 @@ export default {
       axios({
         method: "put",
         url: "http://localhost:9090/api/v1/subDistrict",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: subdistrict,
       })
         .then((response) => {
@@ -892,7 +892,7 @@ export default {
       this.loadingTable = true;
       axios
         .delete("http://localhost:9090/api/v1/country", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: { id: this.countriesChoosed.toString() },
         })
         .then((res) => {
@@ -919,7 +919,7 @@ export default {
       this.loadingTable = true;
       axios
         .delete("http://localhost:9090/api/v1/city", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: { id: this.citiesChoosed.toString() },
         })
         .then((res) => {
@@ -947,7 +947,7 @@ export default {
       this.loadingTable = true;
       axios
         .delete("http://localhost:9090/api/v1/district", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: { id: this.districtsChoosed.toString() },
         })
         .then((res) => {
@@ -975,7 +975,7 @@ export default {
       this.loadingTable = true;
       axios
         .delete("http://localhost:9090/api/v1/subDistrict", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: { id: this.subdistrictsChoosed.toString() },
         })
         .then((res) => {

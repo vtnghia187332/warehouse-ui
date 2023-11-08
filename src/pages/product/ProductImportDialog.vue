@@ -271,7 +271,7 @@ export default {
         url: "http://localhost:9090/api/v1/product/import",
         data: bodyFormData,
         headers: { "Content-Type": "multipart/form-data" },
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
         .then(function (response) {
           if (response.status === 200) {
@@ -338,6 +338,7 @@ export default {
           params: {
             errorId: me.importError.numberErrItem.errorId,
           },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           responseType: "blob",
           contentType: "application/json-patch+json",
         })
@@ -362,6 +363,7 @@ export default {
         .get("http://localhost:9090/api/v1/product/template", {
           responseType: "blob",
           contentType: "application/json-patch+json",
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then(function (res) {
           if (res) {
@@ -389,7 +391,7 @@ export default {
       await axios({
         method: "post",
         url: "http://localhost:9090/api/v1/product/continue",
-        headers: { "Access-Control-Allow-Origin": "*" },
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: bodyImport,
       })
         .then(function (response) {
@@ -431,7 +433,7 @@ export default {
       me.loadingTable = true;
       await axios
         .get("http://localhost:9090/api/v1/product/confirm", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: {
             searchText: me.search.value,
             pageNo: me.paginationPage.pageNo,
@@ -451,7 +453,7 @@ export default {
               pageSizeval: response.data.items.size,
               total: response.data.items.totalElements,
             }),
-            (me.loadingTable = false);
+              (me.loadingTable = false);
           }
         })
         .catch((error) => {

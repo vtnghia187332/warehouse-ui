@@ -235,7 +235,7 @@ export default {
     getValueSingleUnit() {
       axios
         .get("http://localhost:9090/api/v1/single-unit/all", {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
         .then((res) => {
           if (res.status === 200) {

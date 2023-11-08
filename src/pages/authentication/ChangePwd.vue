@@ -121,7 +121,7 @@ export default {
       var me = this;
       await axios
         .post(`http://localhost:9090/api/v1/user/change-pwd`, data, {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           contentType: "multipart/form-data",
         })
         .then(function (res) {

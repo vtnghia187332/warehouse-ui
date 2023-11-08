@@ -616,7 +616,9 @@ export default {
         const { data } = await axios.get(
           "http://localhost:9090/api/v1/category/list",
           {
-            headers: { "Access-Control-Allow-Origin": "*" },
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
           }
         );
         this.category.options = data.items;
@@ -633,7 +635,9 @@ export default {
         const { data } = await axios.get(
           "http://localhost:9090/api/v1/single-unit/all",
           {
-            headers: { "Access-Control-Allow-Origin": "*" },
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
           }
         );
         this.unitOptions = data.items;
@@ -723,7 +727,7 @@ export default {
     handleEditProduct(productDetail) {
       axios
         .put(`http://localhost:9090/api/v1/product`, productDetail, {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           contentType: "multipart/form-data",
         })
         .then((response) => {
@@ -748,7 +752,7 @@ export default {
     handleCreateProduct(productDetail) {
       axios
         .post(`http://localhost:9090/api/v1/product`, productDetail, {
-          headers: { "Access-Control-Allow-Origin": "*" },
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           contentType: "multipart/form-data",
         })
         .then((response) => {
@@ -782,7 +786,11 @@ export default {
         await axios
           .get(
             `http://localhost:9090/api/v1/product/detail/${this.$route.params.data.id}`,
-            { headers: { "Access-Control-Allow-Origin": "*" } }
+            {
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("token"),
+              },
+            }
           )
           .then((res) => {
             if (res.status === 200) {
