@@ -100,7 +100,9 @@ export default {
     handleChangePwd() {
       this.$router.push({ path: "/changepwd" });
     },
-    handleForgotPassword() {},
+    handleForgotPassword() {
+      this.$router.push({ path: "/forgot-pwd" });
+    },
     ...mapMutations(["setUserDetail"]),
     ...mapActions(["updateUserDetail"]),
     handleSubmit() {

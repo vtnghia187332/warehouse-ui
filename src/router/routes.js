@@ -33,6 +33,7 @@ import InvoiceHistory from "@/pages/contract/InvoiceHistory.vue";
 import Login from "@/pages/authentication/Login.vue";
 import Signup from "@/pages/authentication/Signup.vue";
 import ChangePwd from "@/pages/authentication/ChangePwd.vue";
+import ForgotPassword from "@/pages/authentication/ForgotPassword.vue";
 
 const routes = [
   {
@@ -194,6 +195,11 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login,
+  },
+  {
+    path: "/forgot-pwd",
+    name: "forgot-pwd",
+    component: ForgotPassword,
   },
 ];
 

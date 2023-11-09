@@ -39,7 +39,7 @@
               >
                 <div class="col-span-5">
                   <BaseSelection
-                    @getValue=""
+                    @getValuePrd="handlePrdUnit"
                     v-model="item.product.value"
                     :field="item.product"
                   />
@@ -216,6 +216,7 @@ export default {
             placeholder: "Select Product",
             error: "",
             value: "",
+            unitVal: "",
             disabled: "notDisabled",
             label: "Material/Product",
             options: [],
@@ -347,6 +348,18 @@ export default {
     };
   },
   methods: {
+    handlePrdUnit(data) {
+      const unitVal =
+        data.options.find((opt) => opt.value == data.value).singleUnitId || "";
+      this.materials.forEach((item) => {
+        if ((item.product.value = data.value)) {
+          item.singleUnit.value =
+            this.defaultMaterial.singleUnit.options.find(
+              (opt) => opt.value == unitVal
+            ).label || "";
+        }
+      });
+    },
     async handlePayment() {
       await this.handleSubmit("PAYMENT");
       let data = {
@@ -495,8 +508,8 @@ export default {
         this.materials.push(_.cloneDeep(this.defaultMaterial));
       }
     },
-    handleGetSingleUnit() {
-      axios
+    async handleGetSingleUnit() {
+      await axios
         .get("http://localhost:9090/api/v1/single-unit/all", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
@@ -516,8 +529,8 @@ export default {
           });
         });
     },
-    handleGetProducts() {
-      axios
+    async handleGetProducts() {
+      await axios
         .get("http://localhost:9090/api/v1/product/data-list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
@@ -537,8 +550,8 @@ export default {
           });
         });
     },
-    handleGetCustomers() {
-      axios
+    async handleGetCustomers() {
+      await axios
         .get("http://localhost:9090/api/v1/customer/data-list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
@@ -568,11 +581,10 @@ export default {
       });
       this.materials = materialAfterBinding.map((x) => x);
     },
-    getDetailOrder() {
+    async getDetailOrder() {
       // this.loadingPageDetail = true;
-
       if (this.$route.params.data.id != null) {
-        axios
+        await axios
           .get(
             `http://localhost:9090/api/v1/invoice/detail/${this.$route.params.data.id}`,
             {
@@ -606,15 +618,15 @@ export default {
       }
     },
   },
-  mounted() {
+  async mounted() {
     if (!this.$route.params.data) {
       this.$router.push({ path: "/export-receipt" });
       return;
     }
-    this.handleGetSingleUnit();
-    this.handleGetProducts();
-    this.handleGetCustomers();
-    this.getDetailOrder();
+    await this.handleGetSingleUnit();
+    await this.handleGetProducts();
+    await this.handleGetCustomers();
+    await this.getDetailOrder();
   },
 };
 </script>

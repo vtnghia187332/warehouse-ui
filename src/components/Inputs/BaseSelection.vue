@@ -57,6 +57,7 @@ export default {
     updateInput(event) {
       this.$emit("input", event);
       this.$emit("getValue", event);
+      this.$emit("getValuePrd", this.field);
     },
   },
 };
