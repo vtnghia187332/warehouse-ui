@@ -57,7 +57,8 @@
 import TopNavbar from "./TopNavbar.vue";
 import DashboardContent from "./Content.vue";
 import MobileMenu from "./MobileMenu";
-
+import { mapGetters, mapMutations, mapActions } from "vuex";
+import axios from "axios";
 export default {
   components: {
     TopNavbar,
@@ -65,12 +66,53 @@ export default {
     DashboardContent,
     MobileMenu,
   },
+  computed: {
+    ...mapGetters(["user", "warehouse"]),
+  },
   methods: {
+    ...mapMutations(["setUserDetail"]),
+    ...mapActions(["updateUserDetail"]),
+    async handleAuthenUser() {
+      await axios
+        .get(`http://localhost:9090/api/v1/validating-token`, {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            this.updateUserDetail(response.data.userRes);
+            localStorage.setItem("token", response.data.token);
+            this.$router.push({ path: "/dashboard" });
+          } else {
+            localStorage.removeItem("token");
+            this.$message({
+              showClose: true,
+              message: "Your session has expired. Please login again!",
+              type: "warning",
+            });
+            this.updateUserDetail(this.defaultUserDetail);
+            this.$router.push({ path: "/login" });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: "Your session has expired. Please login again!",
+            type: "error",
+          });
+        });
+    },
     toggleSidebar() {
       if (this.$sidebar.showSidebar) {
         this.$sidebar.displaySidebar(false);
       }
     },
+  },
+  created() {
+    // if (localStorage.getItem("token") !== null) {
+    //   await this.handleAuthenUser();
+    // } else {
+    //   this.$router.push({ path: "/login" });
+    // }
   },
 };
 </script>

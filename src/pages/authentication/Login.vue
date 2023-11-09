@@ -1,54 +1,49 @@
 <template class="login-form">
-  <ValidationObserver v-slot="{ invalid }" ref="observerAdd">
-    <div class="flex h-screen">
-      <div class="m-auto">
-        <el-row class="pt-4 pl-3 pr-3 w-96">
-          <el-col class="forms grow">
-            <FormCard title="Sign In" class="mb-3">
-              <template v-slot:content>
-                <div class="grid grid-cols-12 gap-x-6">
-                  <div class="col-span-12">
-                    <BaseInput
-                      :field="loginInfor.email"
-                      v-model="loginInfor.email.value"
-                    />
+  <div class="full-screen">
+    <ValidationObserver v-slot="{ invalid }" ref="observerAdd">
+      <div class="flex h-screen">
+        <div class="m-auto">
+          <el-row class="pt-4 pl-3 pr-3 w-96">
+            <el-col class="forms grow">
+              <FormCard title="Sign In" class="mb-3">
+                <template v-slot:content>
+                  <div class="grid grid-cols-12 gap-x-6">
+                    <div class="col-span-12">
+                      <BaseInput
+                        :field="loginInfor.email"
+                        v-model="loginInfor.email.value"
+                      />
+                    </div>
+                    <div class="col-span-12 mt-2">
+                      <BaseInput
+                        :field="loginInfor.password"
+                        v-model="loginInfor.password.value"
+                      />
+                    </div>
                   </div>
-                  <div class="col-span-12 mt-2">
-                    <BaseInput
-                      :field="loginInfor.password"
-                      v-model="loginInfor.password.value"
-                    />
-                  </div>
-                </div>
 
-                <div class="mt-3">
-                  <el-button
-                    :disabled="invalid"
-                    @click="handleSubmit"
-                    class="bg-blue-400 w-full"
-                    type="primary"
-                    >Submit</el-button
-                  >
-                </div>
-                <div class="mt-3 flex justify-end">
-                  <el-link @click="handleForgotPassword" type="primary"
-                    >Forgot your password?</el-link
-                  >
-                </div>
-              </template>
-            </FormCard>
-            <div>{{ user?.token }}</div>
-            <div>{{ user?.userId }}</div>
-            <div>{{ user?.name }}</div>
-            <div>{{ user?.avatar }}</div>
-            <div>{{ warehouse?.warehouseId }}</div>
-            <div>{{ warehouse?.name }}</div>
-            <div>Random Access Password:{{ randomAccPwd }}</div>
-          </el-col>
-        </el-row>
+                  <div class="mt-3">
+                    <el-button
+                      :disabled="invalid"
+                      @click="handleSubmit"
+                      class="bg-blue-400 w-full"
+                      type="primary"
+                      >Submit</el-button
+                    >
+                  </div>
+                  <div class="mt-3 flex justify-end">
+                    <el-link @click="handleForgotPassword" type="primary"
+                      >Forgot your password?</el-link
+                    >
+                  </div>
+                </template>
+              </FormCard>
+            </el-col>
+          </el-row>
+        </div>
       </div>
-    </div>
-  </ValidationObserver>
+    </ValidationObserver>
+  </div>
 </template>
 <script>
 import { mapGetters, mapMutations, mapActions } from "vuex";
@@ -116,7 +111,6 @@ export default {
       this.handleApiLogin(data);
     },
     async handleLogout() {
-     
       await axios
         .get(`http://localhost:9090/api/v1/auth/logout`, {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
@@ -130,7 +124,7 @@ export default {
             type: "success",
           });
           this.updateUserDetail(this.defaultUserDetail);
-          this.$router.push({ path: "/product" });
+          this.$router.push({ path: "/login" });
         })
         .catch((error) => {
           this.$message({

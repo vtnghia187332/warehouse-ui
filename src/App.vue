@@ -6,7 +6,68 @@
 </template>
 
 <script>
-export default {};
+import { mapGetters, mapMutations, mapActions } from "vuex";
+import axios from "axios";
+export default {
+  data() {
+    return {
+      defaultUserDetail: {
+        token: null,
+        userId: null,
+        firstname: null,
+        avatar: null,
+        lastname: null,
+        warehouseDetailRes: {
+          warehouseId: null,
+          name: null,
+        },
+      },
+    };
+  },
+  computed: {
+    ...mapGetters(["user", "warehouse"]),
+  },
+  methods: {
+    ...mapMutations(["setUserDetail"]),
+    ...mapActions(["updateUserDetail"]),
+    async handleAuthenUser() {
+      await axios
+        .get(`http://localhost:9090/api/v1/validating-token`, {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            this.updateUserDetail(response.data.userRes);
+            localStorage.setItem("token", response.data.token);
+            this.$router.push({ path: "/dashboard" });
+          } else {
+            localStorage.removeItem("token");
+            this.$message({
+              showClose: true,
+              message: "Your session has expired. Please login again!",
+              type: "warning",
+            });
+            this.updateUserDetail(this.defaultUserDetail);
+            this.$router.push({ path: "/login" });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: "Your session has expired. Please login again!",
+            type: "error",
+          });
+        });
+    },
+  },
+  async mounted() {
+    // if (localStorage.getItem("token") !== null) {
+    //   await this.handleAuthenUser();
+    // } else {
+    //   this.$router.push({ path: "/login" });
+    // }
+  },
+};
 </script>
 
 <style lang="scss">
@@ -43,10 +104,11 @@ export default {};
   }
 }
 
-.el-range-separator{
+.el-range-separator {
   width: 100px !important;
 }
 
 .el-date-picker__time-header {
   display: none !important;
-}</style>
+}
+</style>

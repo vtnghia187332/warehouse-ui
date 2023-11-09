@@ -225,7 +225,7 @@ export default {
           Number(this.order.shippingFee.value) -
           (this.order.discount.value / 100) * this.subTotal -
           this.order.moneyPaid.value;
-      } else if (newVal <= 100) {
+      } else {
         this.order.shippingFee.value = newVal;
         let afterChangeMoney =
           Number(this.subTotal) +
@@ -268,8 +268,11 @@ export default {
       }
     },
   },
+
   data() {
     return {
+      amount: 0,
+      currency: "USD",
       loadingPageDetail: false,
       id: null,
       invoiceId: null,
@@ -362,7 +365,7 @@ export default {
           name: "Discount",
           rules: "",
           classes: "w-full col-span-6 !h-[35px]",
-          type: "number",
+          type: "number, currency",
           disabled: false,
           label: "Discount (%)",
           isRequired: "",
@@ -375,7 +378,7 @@ export default {
           name: "Shipping Fee",
           rules: "",
           classes: "w-full col-span-6 !h-[35px]",
-          type: "number",
+          type: "number, currency",
           disabled: false,
           label: "Shipping Fee ($)",
           isRequired: "",
@@ -402,7 +405,7 @@ export default {
           name: "Amount Paid",
           rules: "",
           classes: "w-full col-span-6",
-          type: "number",
+          type: "number, currency",
           disabled: false,
           label: "Amount Paid ($)",
           isRequired: "",
@@ -440,6 +443,15 @@ export default {
     };
   },
   methods: {
+    formatCurrency(value) {
+      if (!isNaN(parseFloat(value))) {
+        value = parseFloat(value);
+        return value.toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD",
+        });
+      }
+    },
     handleSubmit() {
       let order = {
         warehouseId: "WH-1",

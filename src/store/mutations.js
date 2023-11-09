@@ -6,6 +6,5 @@ export default {
     state.user.avatar = data.imageDetailRes[0].url;
     state.warehouse.warehouseId = data.warehouseDetailRes.warehouseId;
     state.warehouse.name = data.warehouseDetailRes.name;
-    localStorage.setItem("token", data.token);
   },
 };

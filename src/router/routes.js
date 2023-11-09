@@ -176,11 +176,7 @@ const routes = [
         name: "staff history",
         component: StaffHistory,
       },
-      {
-        path: "/login",
-        name: "Login",
-        component: Login,
-      },
+
       {
         path: "/signup",
         name: "Signup",
@@ -194,6 +190,11 @@ const routes = [
     ],
   },
   { path: "*", component: NotFound },
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+  },
 ];
 
 /**
