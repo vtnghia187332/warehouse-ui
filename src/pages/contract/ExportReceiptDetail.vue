@@ -66,6 +66,7 @@
                     icon="el-icon-delete"
                     class="bg-red-400"
                     @click="handleDeleteMaterial(item, index)"
+                    :disabled="materials.length == 1"
                     circle
                   ></el-button>
                 </div>
@@ -187,7 +188,7 @@ export default {
           placeholder: "Select Single Unit",
           error: "",
           value: "",
-          disabled: "notDisabled",
+          disabled: "disabled",
           label: "Single Unit",
           options: [],
         },
@@ -249,7 +250,7 @@ export default {
             placeholder: "Select Single Unit",
             error: "",
             value: "",
-            disabled: "notDisabled",
+            disabled: "disabled",
             label: "Single Unit",
             options: [],
           },
@@ -352,7 +353,7 @@ export default {
       const unitVal =
         data.options.find((opt) => opt.value == data.value).singleUnitId || "";
       this.materials.forEach((item) => {
-        if ((item.product.value = data.value)) {
+        if (item.product.value === data.value) {
           item.singleUnit.value =
             this.defaultMaterial.singleUnit.options.find(
               (opt) => opt.value == unitVal
@@ -499,8 +500,10 @@ export default {
         .catch((_) => {});
     },
     handleDeleteMaterial(item, index) {
-      if (index > -1) {
-        this.materials.splice(index, 1);
+      if (this.materials.length > 1) {
+        if (index > -1) {
+          this.materials.splice(index, 1);
+        }
       }
     },
     handleClickBtn(flag) {

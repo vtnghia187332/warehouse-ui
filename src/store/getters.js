@@ -11,4 +11,7 @@ export default {
   warehouse: function (state) {
     return state.warehouse;
   },
+  warehouseChain: function (state) {
+    return state.warehouseChain;
+  },
 };

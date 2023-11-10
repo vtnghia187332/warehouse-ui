@@ -489,7 +489,6 @@ export default {
           label: "Expired Date",
           isRequired: "false",
           value: "",
-          maxlength: 50,
           error: "",
           pickerOptions: {
             disabledDate(time) {

@@ -62,6 +62,10 @@ export default {
           warehouseId: null,
           name: null,
         },
+        warehouseChainRes: {
+          id: null,
+          name: null,
+        },
       },
       activeNotifications: false,
     };
@@ -72,7 +76,6 @@ export default {
       this.$router.push({ path: "/changepwd" });
     },
     async handleLogout() {
-    
       await axios
         .get(`http://localhost:9090/api/v1/auth/logout`, {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },

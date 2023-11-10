@@ -6,5 +6,7 @@ export default {
     state.user.avatar = data.imageDetailRes[0].url;
     state.warehouse.warehouseId = data.warehouseDetailRes.warehouseId;
     state.warehouse.name = data.warehouseDetailRes.name;
+    state.warehouseChain.id = data.warehouseChainRes.id;
+    state.warehouseChain.name = data.warehouseChainRes.name;
   },
 };

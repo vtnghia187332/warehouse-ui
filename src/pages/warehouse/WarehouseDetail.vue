@@ -17,7 +17,7 @@
                   />
                 </div>
                 <div class="col-span-12">
-                  <BaseTextArea
+                  <BaseInput
                     :field="warehouse.name"
                     v-model="warehouse.name.value"
                   />

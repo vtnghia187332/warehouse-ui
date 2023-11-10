@@ -606,9 +606,6 @@ export default {
 };
 </script>
 <style>
-.tab-invoice .el-tabs__header .el-tabs__nav-wrap {
-  padding-left: 15px !important;
-}
 .el-dropdown-link {
   cursor: pointer;
   color: #409eff;

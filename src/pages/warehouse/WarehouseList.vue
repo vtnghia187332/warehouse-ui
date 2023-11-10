@@ -1,199 +1,369 @@
 <template>
-  <div class="fix_highted">
-    <div class="flex justify-between px-4 py-2">
-      <div class="flex">
-        <BaseSearch :field="search" @get-value="getBaseSearchVal" />
-        <button
-          class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
-        >
-          <span class="ti-filter"></span> Filter
-        </button>
-      </div>
-      <div>
-        <button
-          class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
-          @click="goWarehouseHistoryPage"
-        >
-          <i class="el-icon-files font-bold"></i> History
-        </button>
-        <button
-          class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
-          @click="HandleImportWarehouse"
-        >
-          <i class="el-icon-plus ml font-bold"></i> Import
-        </button>
-        <button
-          class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
-          @click="testFunc"
-        >
-          <i class="el-icon-plus ml font-bold"></i> Export
-        </button>
-        <button
-          class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
-          @click="HandleAddWarehouse"
-        >
-          <i class="el-icon-plus ml font-bold"></i> Create
-        </button>
-      </div>
-    </div>
-    <LoadingPage v-show="loadingTable"></LoadingPage>
-    <div class="table_style px-2" v-show="!loadingTable">
-      <el-table
-        :data="warehouses"
-        style="width: 100%"
-        @row-dblclick="goToDetailWarehouse"
-        @sort-change="sortChange"
-        height="800"
-      >
-        <div slot="append" v-if="warehouses.length == '0'">
-          <el-empty :image-size="300"></el-empty>
+  <el-tabs class="tab-warehouse-chain" v-model="activeName">
+    <el-tab-pane label="Warehouse Chain" name="first">
+      <ValidationObserver v-slot="{ invalid }" ref="observerAdd">
+        <el-row :gutter="20" class="flex gap-x-4 detail w-full">
+          <el-col :span="15" class="forms grow">
+            <FormCard title="Information" class="mb-3">
+              <template v-slot:content>
+                <div class="grid grid-cols-12 gap-x-6">
+                  <div class="col-span-6">
+                    <BaseInput
+                      :field="warehouseChain.code"
+                      v-model="warehouseChain.code.value"
+                    />
+                  </div>
+                  <div class="col-span-12">
+                    <BaseInput
+                      :field="warehouseChain.name"
+                      v-model="warehouseChain.name.value"
+                    />
+                  </div>
+                  <div class="col-span-12">
+                    <BaseInput
+                      :field="warehouseChain.shortName"
+                      v-model="warehouseChain.shortName.value"
+                    />
+                  </div>
+                  <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                    <div class="col-span-6">
+                      <BaseInput
+                        :field="warehouseChain.taxNumber"
+                        v-model="warehouseChain.taxNumber.value"
+                      />
+                    </div>
+                    <div class="col-span-6">
+                      <DatePicker
+                        :field="warehouseChain.taxDeclarationDate"
+                        v-model="warehouseChain.taxDeclarationDate.value"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-span-12">
+                    <BaseTextArea
+                      :field="warehouseChain.description"
+                      v-model="warehouseChain.description.value"
+                    />
+                  </div>
+                </div>
+              </template>
+            </FormCard>
+          </el-col>
+          <el-col :span="5" class="">
+            <FormCard title="More information" class="mb-3"></FormCard>
+            <div class="footer-btn-fixed flex justify-end p-4">
+              <el-button
+                @click="handleSubmitWHC"
+                class="bg-blue-400"
+                :disabled="invalid"
+                type="primary"
+                >Submit</el-button
+              >
+            </div>
+          </el-col>
+        </el-row>
+      </ValidationObserver>
+    </el-tab-pane>
+    <el-tab-pane label="Warehouse" name="second">
+      <div class="fix_highted">
+        <div class="flex justify-between px-4 py-2">
+          <div class="flex">
+            <BaseSearch :field="search" @get-value="getBaseSearchVal" />
+            <button
+              class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
+            >
+              <span class="ti-filter"></span> Filter
+            </button>
+          </div>
+          <div>
+            <button
+              class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
+              @click="goWarehouseHistoryPage"
+            >
+              <i class="el-icon-files font-bold"></i> History
+            </button>
+            <button
+              class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
+              @click="HandleImportWarehouse"
+            >
+              <i class="el-icon-plus ml font-bold"></i> Import
+            </button>
+            <button
+              class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
+              @click="testFunc"
+            >
+              <i class="el-icon-plus ml font-bold"></i> Export
+            </button>
+            <button
+              class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
+              @click="HandleAddWarehouse"
+            >
+              <i class="el-icon-plus ml font-bold"></i> Create
+            </button>
+          </div>
         </div>
-        <el-table-column
-          fixed
-          prop="warehouseId"
-          label="Warehouse ID"
-          width="150"
+        <LoadingPage v-show="loadingTable"></LoadingPage>
+        <div class="table_style px-2" v-show="!loadingTable">
+          <el-table
+            :data="warehouses"
+            style="width: 100%"
+            @row-dblclick="goToDetailWarehouse"
+            @sort-change="sortChange"
+            height="800"
+          >
+            <div slot="append" v-if="warehouses.length == '0'">
+              <el-empty :image-size="300"></el-empty>
+            </div>
+            <el-table-column
+              fixed
+              prop="warehouseId"
+              label="Warehouse ID"
+              width="150"
+            >
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="createdAt"
+              label="Create Date"
+              width="250"
+            >
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="editedAt"
+              label="Updated Date"
+              width="250"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="warehouseChainInfo"
+              label="Warehouse Chain"
+              width="300"
+            >
+              <template slot-scope="scope">
+                {{ scope.row.warehouseChainInfo.name }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="code"
+              label="Warehouse Code"
+              width="300"
+            >
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="name"
+              label="Warehouse Name"
+              width="300"
+            >
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="shortName"
+              label="Warehouse Short Name"
+              width="300"
+            >
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="addressDes"
+              label="Warehouse Address"
+              width="300"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="keyContactVos"
+              label="Contact Title"
+              width="300"
+            >
+              <template slot-scope="scope">
+                {{ scope.row.keyContactVos[0].title }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="keyContactVos"
+              label="Contact First Name"
+              width="300"
+            >
+              <template slot-scope="scope">
+                {{ scope.row.keyContactVos[0].firstName }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="keyContactVos"
+              label="Contact Last Name"
+              width="300"
+            >
+              <template slot-scope="scope">
+                {{ scope.row.keyContactVos[0].lastName }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="keyContactVos"
+              label="Contact Email"
+              width="300"
+            >
+              <template slot-scope="scope">
+                {{ scope.row.keyContactVos[0].email }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="keyContactVos"
+              label="Contact Mobile Phone"
+              width="300"
+            >
+              <template slot-scope="scope">
+                {{ scope.row.keyContactVos[0].mobilePhone }}
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="Operations" width="100">
+              <template slot-scope="scope">
+                <el-button
+                  @click="handeDuplicateDetail(scope.row)"
+                  type="text"
+                  size="small"
+                  ><i class="el-icon-document-copy text-2xl"></i
+                ></el-button>
+                <el-button
+                  @click="handeDeleteDetail(scope.row)"
+                  type="text"
+                  size="small"
+                  ><i class="el-icon-delete text-2xl"></i
+                ></el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <BasePagination
+          v-show="!loadingTable"
+          :field="paginationVal"
+          @handleSizeChange="handleSizeChange"
+          @handleCurrentChange="handleCurrentChange"
+        />
+        <ImportDialog
+          v-show="isOpenDialogImport"
+          :isOpenDialogImport.sync="isOpenDialogImport"
         >
-        </el-table-column>
-        <el-table-column
-          sortable
-          prop="createdAt"
-          label="Create Date"
-          width="250"
-        >
-        </el-table-column>
-        <el-table-column
-          sortable
-          prop="editedAt"
-          label="Updated Date"
-          width="250"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="warehouseChainInfo"
-          label="Warehouse Chain"
-          width="300"
-        >
-          <template slot-scope="scope">
-            {{ scope.row.warehouseChainInfo.name }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          sortable
-          prop="code"
-          label="Warehouse Code"
-          width="300"
-        >
-        </el-table-column>
-        <el-table-column
-          sortable
-          prop="name"
-          label="Warehouse Name"
-          width="300"
-        >
-        </el-table-column>
-        <el-table-column
-          sortable
-          prop="shortName"
-          label="Warehouse Short Name"
-          width="300"
-        >
-        </el-table-column>
-        <el-table-column
-          sortable
-          prop="addressDes"
-          label="Warehouse Address"
-          width="300"
-        >
-        </el-table-column>
-        <el-table-column prop="keyContactVos" label="Contact Title" width="300">
-          <template slot-scope="scope">
-            {{ scope.row.keyContactVos[0].title }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="keyContactVos"
-          label="Contact First Name"
-          width="300"
-        >
-          <template slot-scope="scope">
-            {{ scope.row.keyContactVos[0].firstName }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="keyContactVos"
-          label="Contact Last Name"
-          width="300"
-        >
-          <template slot-scope="scope">
-            {{ scope.row.keyContactVos[0].lastName }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="keyContactVos" label="Contact Email" width="300">
-          <template slot-scope="scope">
-            {{ scope.row.keyContactVos[0].email }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="keyContactVos"
-          label="Contact Mobile Phone"
-          width="300"
-        >
-          <template slot-scope="scope">
-            {{ scope.row.keyContactVos[0].mobilePhone }}
-          </template>
-        </el-table-column>
-        <el-table-column fixed="right" label="Operations" width="100">
-          <template slot-scope="scope">
-            <el-button
-              @click="handeDuplicateDetail(scope.row)"
-              type="text"
-              size="small"
-              ><i class="el-icon-document-copy text-2xl"></i
-            ></el-button>
-            <el-button
-              @click="handeDeleteDetail(scope.row)"
-              type="text"
-              size="small"
-              ><i class="el-icon-delete text-2xl"></i
-            ></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
-    <BasePagination
-      v-show="!loadingTable"
-      :field="paginationVal"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-    />
-    <ImportDialog
-      v-show="isOpenDialogImport"
-      :isOpenDialogImport.sync="isOpenDialogImport"
-    >
-    </ImportDialog>
-  </div>
+        </ImportDialog>
+      </div>
+    </el-tab-pane>
+  </el-tabs>
 </template>
 
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import axios from "axios";
 import ImportDialog from "../../components/OverrideDialog/ImportDialog.vue";
+import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import LoadingPage from "@/components/Cards/LoadingPage";
-
+import FormCard from "./../../components/Cards/FormCard.vue";
+import DatePicker from "../../components/Date/DatePicker.vue";
+import BaseInput from "./../../components/Inputs/BaseInput.vue";
+import moment from "moment";
 export default {
   components: {
     BaseSearch,
+    BaseTextArea,
+    FormCard,
+    BaseInput,
     BasePagination,
     LoadingPage,
     ImportDialog,
     ValidationObserver,
     ValidationProvider,
+    DatePicker,
   },
   data() {
     return {
+      warehouseChainPId: 1,
+      warehouseChain: {
+        code: {
+          id: "code",
+          name: "code",
+          rules: "required",
+          classes: "w-full",
+          type: "text",
+          label: "Code",
+          isRequired: "true",
+          value: "",
+          placeholder: "Enter Code...",
+          maxlength: 50,
+          error: "",
+        },
+        name: {
+          id: "name",
+          name: "name",
+          rules: "required",
+          classes: "w-full",
+          type: "text",
+          label: "Name",
+          isRequired: "true",
+          value: "",
+          placeholder: "Enter Name...",
+          maxlength: 100,
+          error: "",
+        },
+        shortName: {
+          id: "shortName",
+          name: "shortName",
+          rules: "required",
+          classes: "w-full",
+          type: "text",
+          label: "Short Name",
+          isRequired: "true",
+          value: "",
+          placeholder: "Enter short Name...",
+          maxlength: 100,
+          error: "",
+        },
+        description: {
+          id: "description",
+          name: "description",
+          rules: "required",
+          classes: "w-full !h-[64px]",
+          type: "text",
+          label: "Description",
+          isRequired: "true",
+          value: "",
+          placeholder: "Enter Description...",
+          maxlength: 100,
+          error: "",
+        },
+        taxNumber: {
+          id: "taxNumber",
+          name: "taxNumber",
+          rules: "required",
+          classes: "w-full",
+          type: "text",
+          label: "Tax Number",
+          isRequired: "true",
+          value: "",
+          placeholder: "Enter Tax Number...",
+          maxlength: 100,
+          error: "",
+        },
+        taxDeclarationDate: {
+          id: "taxDeclarationDate",
+          name: "taxDeclarationDate",
+          rules: "",
+          classes: "w-full",
+          type: "text",
+          label: "Tax Declaration Date",
+          isRequired: "false",
+          value: "",
+          error: "",
+          pickerOptions: {
+            disabledDate(time) {
+              return time.getTime() > Date.now();
+            },
+          },
+        },
+      },
+      activeName: "first",
       isOpenDialogTest: false,
       isOpenDialogImport: false,
       templateUrl: "",
@@ -214,8 +384,80 @@ export default {
       paginationVal: {},
     };
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["user", "warehouse"]),
+    moment() {
+      return moment;
+    },
+  },
   methods: {
+    handleCancelSubmitWHC() {},
+    handleSubmitWHC() {
+      const warehouseChainDetail = {};
+      Object.keys(this.warehouseChain || {}).map((key) => {
+        warehouseChainDetail[key] = this.warehouseChain[key].value;
+        if (key == "taxDeclarationDate") {
+          warehouseChainDetail["taxDeclarationDate"] = moment(
+            warehouseChainDetail.taxDeclarationDate
+          ).format("YYYY-MM-DD HH:mm:ss");
+        }
+      });
+      if (user.warehouseChain.id !== null) {
+        this.handleCallApiEditWHC(warehouseChainDetail);
+      } else {
+        this.handleCallApiAddWHC(warehouseChainDetail);
+      }
+    },
+    handleCallApiAddWHC(data) {
+      axios({
+        method: "post",
+        url: "http://localhost:9090/api/v1/warehouseChain",
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        data: data,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Created successfully",
+              type: "success",
+            });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+          this.$refs.observerAdd.setErrors(error.response.data.items);
+        });
+    },
+    handleCallApiEditWHC(data) {
+      axios({
+        method: "put",
+        url: "http://localhost:9090/api/v1/warehouseChain",
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        data: data,
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            this.$message({
+              showClose: true,
+              message: "Edited successfully",
+              type: "success",
+            });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+          this.$refs.observerAdd.setErrors(error.response.data.items);
+        });
+    },
     sortChange(column, prop, order) {
       if (column.prop.order == null) {
         this.paginationPage = {
@@ -352,10 +594,10 @@ export default {
       this.paginationPage.pageNo = param;
       this.getWarehouses();
     },
-    getWarehouses() {
+    async getWarehouses() {
       var me = this;
       me.loadingTable = true;
-      axios
+      await axios
         .get("http://localhost:9090/api/v1/warehouse/list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: {
@@ -385,8 +627,34 @@ export default {
           });
         });
     },
+
+    async getWarehouseChain() {
+      await axios
+        .get(
+          `http://localhost:9090/api/v1/warehouseChain/detail/${this.warehouseChainPId}`,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            Object.keys(this.warehouseChain).forEach((key) => {
+              this.warehouseChain[key].value = res.data.items[key];
+            });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
   },
-  mounted() {
+  async mounted() {
     (this.paginationPage = {
       pageNo: 1,
       pageSize: 30,
@@ -394,7 +662,8 @@ export default {
       orderBy: "DESC",
     }),
       (this.search.value = "");
-    this.getWarehouses();
+    await this.getWarehouseChain();
+    await this.getWarehouses();
   },
 };
 </script>
@@ -412,5 +681,15 @@ export default {
 .table_style {
   height: calc(100vh - 185px);
   overflow: auto;
+}
+.footer-btn-fixed {
+  z-index: 99 !important;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  background-color: white !important;
+  margin-top: 12px;
 }
 </style>

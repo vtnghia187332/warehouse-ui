@@ -15,7 +15,7 @@
           <div class="logo-img">
             <img src="@/assets/img/vue-logo.png" alt="" />
           </div>
-          {{ title }}
+          {{ warehouseChain.name }} /  {{ warehouse.name }}
         </a>
       </div>
       <slot> </slot>
@@ -39,6 +39,7 @@
 <script>
 import MovingArrow from "./MovingArrow.vue";
 import SidebarLink from "./SidebarLink";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   props: {
     title: {
@@ -88,6 +89,7 @@ export default {
     SidebarLink,
   },
   computed: {
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
     /**
      * Styles to animate the arrow near the current active sidebar link
      * @returns {{transform: string}}

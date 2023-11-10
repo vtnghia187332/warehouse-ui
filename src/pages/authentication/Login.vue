@@ -54,7 +54,7 @@ import axios from "axios";
 export default {
   components: { BaseInput, FormCard, ValidationObserver },
   computed: {
-    ...mapGetters(["user", "warehouse"]),
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
   },
   data() {
     return {
@@ -67,6 +67,10 @@ export default {
         lastname: null,
         warehouseDetailRes: {
           warehouseId: null,
+          name: null,
+        },
+        warehouseChainRes: {
+          id: null,
           name: null,
         },
       },
