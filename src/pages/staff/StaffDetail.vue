@@ -44,6 +44,13 @@
                   <div class="col-span-6">
                     <BaseInput :field="user.email" v-model="user.email.value" />
                   </div>
+                  <div class="col-span-6">
+                    <BaseSelection
+                      @getValue=""
+                      v-model="user.warehouseId.value"
+                      :field="user.warehouseId"
+                    />
+                  </div>
                 </div>
                 <div class="col-span-12 grid grid-cols-12 gap-x-6">
                   <div class="col-span-6">
@@ -384,6 +391,20 @@ export default {
           label: "Role",
           options: [],
         },
+        warehouseId: {
+          id: "warehouseId",
+          baseId: 0,
+          name: "warehouseId",
+          rules: "required",
+          classes: "w-full",
+          isRequired: "true",
+          placeholder: "Select Warehouse",
+          error: "",
+          value: "",
+          disabled: "notDisabled",
+          label: "Warehouse",
+          options: [],
+        },
       },
     };
   },
@@ -405,12 +426,10 @@ export default {
       let userDetail = {
         id: this.userPrimaryKey.id,
         userId: this.userPrimaryKey.userId,
-        warehouseId: "WH-1",
       };
       Object.keys(this.user).map((key) => {
         userDetail[key] = this.user[key].value;
       });
-
       userDetail.birthDay = moment(this.user.birthDay.value).format(
         "YYYY-MM-DD HH:mm:ss"
       );
@@ -518,8 +537,8 @@ export default {
       }
       return formData;
     },
-    getRolesSel() {
-      axios
+    async getRolesSel() {
+      await axios
         .get("http://localhost:9090/api/v1/role/all", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         })
@@ -537,10 +556,29 @@ export default {
           });
         });
     },
-    getUserDetail() {
+
+    async getWarehouseSel() {
+      await axios
+        .get("http://localhost:9090/api/v1/warehouse/data-list", {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.user.warehouseId.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error,
+            type: "error",
+          });
+        });
+    },
+    async getUserDetail() {
       if (this.$route.params.data.id != null) {
         this.loadingPageDetail = true;
-        axios
+        await axios
           .get(
             `http://localhost:9090/api/v1/user/detail/${this.$route.params.data.id}`,
             {
@@ -566,6 +604,13 @@ export default {
               this.userPrimaryKey.id = res.data.items.id;
               this.userPrimaryKey.userId = res.data.items.userId;
               this.loadingPageDetail = false;
+              this.user.warehouseId.value =
+                this.user.warehouseId.options.find(
+                  (opt) =>
+                    opt.label ==
+                      res.data.items.warehouseDetailRes.warehouseId ||
+                    opt.value == res.data.items.warehouseDetailRes.warehouseId
+                ).value || "";
             }
           })
           .catch((error) => {
@@ -589,13 +634,14 @@ export default {
       return moment;
     },
   },
-  mounted() {
+  async mounted() {
     if (!this.$route.params.data) {
       this.$router.push({ path: "/staff" });
       return;
     }
-    this.getRolesSel();
-    this.getUserDetail();
+    await this.getRolesSel();
+    await this.getWarehouseSel();
+    await this.getUserDetail();
   },
 };
 </script>

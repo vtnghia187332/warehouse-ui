@@ -358,8 +358,8 @@
           <AssignedModuleVue
             title="Warehouse Chain"
             :nameKey="'name'"
-            :item="warehouseChain.data"
-            :fields="warehouseChain.fields"
+            :item="warehouseChainC.data"
+            :fields="warehouseChainC.fields"
             :isShowButton="false"
           />
         </el-col>
@@ -370,6 +370,7 @@
 
 <script>
 import axios from "axios";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import BaseInput from "./../../components/Inputs/BaseInput.vue";
 import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
 import FormCard from "./../../components/Cards/FormCard.vue";
@@ -402,7 +403,7 @@ export default {
       warehouseIdTxt: null,
       typeSpecialTime: "",
       dialogVisible: false,
-      warehouseChain: {
+      warehouseChainC: {
         data: {
           id: null,
           code: null,
@@ -576,6 +577,7 @@ export default {
     moment() {
       return moment;
     },
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
   },
   watch: {},
   methods: {
@@ -620,7 +622,7 @@ export default {
         object.specialCloseDay = object.time[1];
       });
       const warehouseDetail = {
-        warehouseChainId: 1,
+        warehouseChainId: this.warehouseChain.warehouseChainId,
         id: this.warehouseId,
         specialDayTimeReqList: [...this.specialDayOn, ...this.specialDayOff],
         keyContactReqs: keyContactReqs,
@@ -644,6 +646,32 @@ export default {
         warehouseDetail[key + "Id"] = this.address[key].value;
         warehouseDetail[key] = this.address[key].value;
       });
+      warehouseDetail.countryId =
+        this.address.country.options.find(
+          (opt) =>
+            opt.label == warehouseDetail.country ||
+            opt.value == warehouseDetail.country
+        ).value || 0;
+      warehouseDetail.cityId =
+        this.address.city.options.find(
+          (opt) =>
+            opt.label == warehouseDetail.city ||
+            opt.value == warehouseDetail.city
+        ).value || 0;
+      warehouseDetail.districtId =
+        this.address.district.options.find(
+          (opt) =>
+            opt.label == warehouseDetail.district ||
+            opt.value == warehouseDetail.district
+        ).value || 0;
+      warehouseDetail.subdistrictId =
+        this.address.subdistrict.options.find(
+          (opt) =>
+            opt.label == warehouseDetail.subdistrict ||
+            opt.value == warehouseDetail.subdistrict
+        ).value || 0;
+
+      console.log(warehouseDetail, "warehouseDetailwarehouseDetail");
       if (this.$route.params.data.type === "EDIT") {
         axios({
           method: "put",
@@ -836,7 +864,7 @@ export default {
 
               this.initTimeWorking(res.data.items.openWorkingHour);
               this.initSpecialtime(res.data.items.specialDayTimes);
-              this.warehouseChain.data = res.data.items.warehousechainRes;
+              this.warehouseChainC.data = res.data.items.warehousechainRes;
               this.warehouseId = res.data.items.id;
               this.warehouseIdTxt = res.data.items.warehouseId;
             }
