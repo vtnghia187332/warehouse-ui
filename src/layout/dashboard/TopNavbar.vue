@@ -65,6 +65,7 @@ export default {
         warehouseChainRes: {
           id: null,
           name: null,
+          avatar: null,
         },
       },
       activeNotifications: false,

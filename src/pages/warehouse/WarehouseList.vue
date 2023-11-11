@@ -2,55 +2,100 @@
   <el-tabs class="tab-warehouse-chain" v-model="activeName">
     <el-tab-pane label="Warehouse Chain" name="first">
       <ValidationObserver v-slot="{ invalid }" ref="observerAdd">
-        <el-row :gutter="20" class="flex gap-x-4 detail w-full">
-          <el-col :span="15" class="forms grow">
+        <el-row :gutter="20" class="pt-4 pl-3 pr-3">
+          <el-col :span="18" class="forms grow">
             <FormCard title="Information" class="mb-3">
               <template v-slot:content>
                 <div class="grid grid-cols-12 gap-x-6">
                   <div class="col-span-6">
                     <BaseInput
-                      :field="warehouseChain.code"
-                      v-model="warehouseChain.code.value"
+                      :field="warehouseChainD.code"
+                      v-model="warehouseChainD.code.value"
                     />
                   </div>
                   <div class="col-span-12">
                     <BaseInput
-                      :field="warehouseChain.name"
-                      v-model="warehouseChain.name.value"
+                      :field="warehouseChainD.name"
+                      v-model="warehouseChainD.name.value"
                     />
                   </div>
                   <div class="col-span-12">
                     <BaseInput
-                      :field="warehouseChain.shortName"
-                      v-model="warehouseChain.shortName.value"
+                      :field="warehouseChainD.shortName"
+                      v-model="warehouseChainD.shortName.value"
                     />
                   </div>
                   <div class="col-span-12 grid grid-cols-12 gap-x-6">
                     <div class="col-span-6">
                       <BaseInput
-                        :field="warehouseChain.taxNumber"
-                        v-model="warehouseChain.taxNumber.value"
+                        :field="warehouseChainD.taxNumber"
+                        v-model="warehouseChainD.taxNumber.value"
                       />
                     </div>
                     <div class="col-span-6">
                       <DatePicker
-                        :field="warehouseChain.taxDeclarationDate"
-                        v-model="warehouseChain.taxDeclarationDate.value"
+                        :field="warehouseChainD.taxDeclarationDate"
+                        v-model="warehouseChainD.taxDeclarationDate.value"
                       />
                     </div>
                   </div>
                   <div class="col-span-12">
                     <BaseTextArea
-                      :field="warehouseChain.description"
-                      v-model="warehouseChain.description.value"
+                      :field="warehouseChainD.description"
+                      v-model="warehouseChainD.description.value"
                     />
                   </div>
                 </div>
               </template>
             </FormCard>
           </el-col>
-          <el-col :span="5" class="">
-            <FormCard title="More information" class="mb-3"></FormCard>
+          <el-col :span="6" class="">
+            <FormCard title="Photo" class="mb-3">
+              <template v-slot:content>
+                <div class="">
+                  <el-upload
+                    action="#"
+                    list-type="picture-card"
+                    :auto-upload="false"
+                    :on-change="handleAddPhotos"
+                    :file-list="photos"
+                    :limit="1"
+                    :disabled="photos.length == 1"
+                    :append-to-body="true"
+                  >
+                    <i slot="default" class="el-icon-plus"></i>
+                    <div slot="file" slot-scope="{ file }">
+                      <img
+                        class="el-upload-list__item-thumbnail"
+                        :src="file.url"
+                        alt=""
+                      />
+                      <span class="el-upload-list__item-actions">
+                        <span
+                          class="el-upload-list__item-preview"
+                          @click="handlePictureCardPreview(file)"
+                        >
+                          <i class="el-icon-zoom-in"></i>
+                        </span>
+                        <span
+                          v-if="!disabled"
+                          class="el-upload-list__item-delete"
+                          @click="handleRemove(file)"
+                        >
+                          <i class="el-icon-delete"></i>
+                        </span>
+                      </span>
+                    </div>
+                  </el-upload>
+                  <el-dialog
+                    :append-to-body="true"
+                    :visible.sync="dialogVisiblePhoto"
+                  >
+                    <img width="100%" :src="dialogImageUrl" alt="" />
+                  </el-dialog>
+                </div>
+              </template>
+            </FormCard>
             <div class="footer-btn-fixed flex justify-end p-4">
               <el-button
                 @click="handleSubmitWHC"
@@ -279,8 +324,12 @@ export default {
   },
   data() {
     return {
-      warehouseChainPId: 1,
-      warehouseChain: {
+      disabled: false,
+      dialogImageUrl: "",
+      dialogVisiblePhoto: false,
+      photos: [],
+      warehouseChainPId: 0,
+      warehouseChainD: {
         code: {
           id: "code",
           name: "code",
@@ -385,27 +434,69 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["user", "warehouse"]),
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
     moment() {
       return moment;
     },
   },
   methods: {
+    handleRemove(file) {
+      this.$confirm("Are you sure to remove this photo?")
+        .then((_) => {
+          const index = this.photos.indexOf(file);
+          if (index > -1) {
+            this.photos.splice(index, 1);
+          }
+        })
+        .catch((_) => {});
+    },
+    handleAddPhotos(file, fileList) {
+      this.photos = fileList;
+    },
+    transformInToFormObject(data) {
+      let formData = new FormData();
+      for (let key in data) {
+        if (Array.isArray(data[key])) {
+          data[key].forEach((obj, index) => {
+            let keyList = Object.keys(obj);
+            keyList.forEach((keyItem) => {
+              let keyName = [key, "[", index, "]", ".", keyItem].join("");
+              formData.append(keyName, obj[keyItem]);
+            });
+          });
+        } else if (typeof data[key] === "object") {
+          for (let innerKey in data[key]) {
+            formData.append(`${key}.${innerKey}`, data[key][innerKey]);
+          }
+        } else {
+          formData.append(key, data[key]);
+        }
+      }
+      return formData;
+    },
     handleCancelSubmitWHC() {},
     handleSubmitWHC() {
       const warehouseChainDetail = {};
-      Object.keys(this.warehouseChain || {}).map((key) => {
-        warehouseChainDetail[key] = this.warehouseChain[key].value;
+      Object.keys(this.warehouseChainD || {}).map((key) => {
+        warehouseChainDetail[key] = this.warehouseChainD[key].value;
         if (key == "taxDeclarationDate") {
           warehouseChainDetail["taxDeclarationDate"] = moment(
             warehouseChainDetail.taxDeclarationDate
           ).format("YYYY-MM-DD HH:mm:ss");
         }
       });
-      if (user.warehouseChain.id !== null) {
-        this.handleCallApiEditWHC(warehouseChainDetail);
+      const form = this.transformInToFormObject(warehouseChainDetail);
+      if (this.photos[0]) {
+        form.append("image", this.photos[0].raw);
       } else {
-        this.handleCallApiAddWHC(warehouseChainDetail);
+        form.append("image", "");
+      }
+      form.append("numberOfImg", this.photos.length);
+      form.append("warehouseChainId", this.warehouseChain.warehouseChainId);
+      if (this.warehouseChain.warehouseChainId !== null) {
+        this.handleCallApiEditWHC(form);
+      } else {
+        this.handleCallApiAddWHC(form);
       }
     },
     handleCallApiAddWHC(data) {
@@ -413,6 +504,7 @@ export default {
         method: "post",
         url: "http://localhost:9090/api/v1/warehouseChain",
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        contentType: "multipart/form-data",
         data: data,
       })
         .then((response) => {
@@ -422,6 +514,7 @@ export default {
               message: "Created successfully",
               type: "success",
             });
+            this.$router.push({ path: "/dashboard" });
           }
         })
         .catch((error) => {
@@ -438,6 +531,7 @@ export default {
         method: "put",
         url: "http://localhost:9090/api/v1/warehouseChain",
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        contentType: "multipart/form-data",
         data: data,
       })
         .then((response) => {
@@ -447,6 +541,7 @@ export default {
               message: "Edited successfully",
               type: "success",
             });
+            this.$router.push({ path: "/dashboard" });
           }
         })
         .catch((error) => {
@@ -631,7 +726,7 @@ export default {
     async getWarehouseChain() {
       await axios
         .get(
-          `http://localhost:9090/api/v1/warehouseChain/detail/${this.warehouseChainPId}`,
+          `http://localhost:9090/api/v1/warehouseChain/detail/${this.warehouseChain.warehouseChainId}`,
           {
             headers: {
               Authorization: "Bearer " + localStorage.getItem("token"),
@@ -640,9 +735,14 @@ export default {
         )
         .then((res) => {
           if (res.status === 200) {
-            Object.keys(this.warehouseChain).forEach((key) => {
-              this.warehouseChain[key].value = res.data.items[key];
+            Object.keys(this.warehouseChainD).forEach((key) => {
+              this.warehouseChainD[key].value = res.data.items[key];
             });
+            if (res.data.items.imageDetailRes) {
+              this.photos = res.data.items.imageDetailRes;
+            } else {
+              this.photos = [];
+            }
           }
         })
         .catch((error) => {
@@ -662,8 +762,8 @@ export default {
       orderBy: "DESC",
     }),
       (this.search.value = "");
-    await this.getWarehouseChain();
     await this.getWarehouses();
+    await this.getWarehouseChain();
   },
 };
 </script>

@@ -82,23 +82,17 @@ export default {
             this.updateUserDetail(response.data.userRes);
             localStorage.setItem("token", response.data.token);
             this.$router.push({ path: "/dashboard" });
-          } else {
-            localStorage.removeItem("token");
-            this.$message({
-              showClose: true,
-              message: "Your session has expired. Please login again!",
-              type: "warning",
-            });
-            this.updateUserDetail(this.defaultUserDetail);
-            this.$router.push({ path: "/login" });
           }
         })
         .catch((error) => {
+          localStorage.removeItem("token");
           this.$message({
             showClose: true,
             message: "Your session has expired. Please login again!",
-            type: "error",
+            type: "warning",
           });
+          this.updateUserDetail(this.defaultUserDetail);
+          this.$router.push({ path: "/login" });
         });
     },
     toggleSidebar() {
@@ -107,12 +101,12 @@ export default {
       }
     },
   },
-  created() {
-    // if (localStorage.getItem("token") !== null) {
-    //   await this.handleAuthenUser();
-    // } else {
-    //   this.$router.push({ path: "/login" });
-    // }
+  async created() {
+    if (localStorage.getItem("token") != null) {
+      await this.handleAuthenUser();
+    } else {
+      this.$router.push({ path: "/login" });
+    }
   },
 };
 </script>

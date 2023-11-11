@@ -392,7 +392,7 @@ export default {
       this.staffPhotos = fileList;
     },
     handleRemove(file) {
-      this.$confirm("Are you sure to remove this unit?")
+      this.$confirm("Are you sure to remove this photo?")
         .then((_) => {
           const index = this.staffPhotos.indexOf(file);
           if (index > -1) {
