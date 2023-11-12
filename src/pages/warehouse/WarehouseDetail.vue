@@ -467,7 +467,7 @@ export default {
           id: "warehouseName",
           name: "warehouseName",
           rules: "required",
-          classes: "col-span-12 !h-[64px]",
+          classes: "col-span-12",
           type: "text",
           label: "Name",
           isRequired: "true",
@@ -507,13 +507,13 @@ export default {
         addressDes: {
           id: "addressDes",
           name: "addressDes",
-          rules: "required",
-          classes: "w-full",
+          rules: "",
+          classes: "col-span-12 !h-[64px]",
           type: "text",
-          label: "Address",
-          isRequired: "true",
+          label: "Address Detail",
+          isRequired: "false",
           value: "",
-          placeholder: "Enter Adress",
+          placeholder: "Enter Address Detail",
           maxlength: 150,
           error: "",
         },
@@ -861,7 +861,7 @@ export default {
               this.address.city.disabled = "";
               this.address.district.disabled = "";
               this.address.subdistrict.disabled = "";
-
+              this.address.addressDes.value = res.data.items.addressDes;
               this.initTimeWorking(res.data.items.openWorkingHour);
               this.initSpecialtime(res.data.items.specialDayTimes);
               this.warehouseChainC.data = res.data.items.warehousechainRes;
