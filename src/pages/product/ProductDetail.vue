@@ -781,7 +781,7 @@ export default {
         .catch((_) => {});
     },
     async getProductDetail() {
-      if (this.$route.params.data.id != null) {
+      if (this.$route.params.data && this.$route.params.data.id != null) {
         await axios
           .get(
             `http://localhost:9090/api/v1/product/detail/${this.$route.params.data.id}`,

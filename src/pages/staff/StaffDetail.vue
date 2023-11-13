@@ -261,7 +261,7 @@ export default {
         email: {
           id: "email",
           name: "email",
-          rules: "required",
+          rules: "required|email",
           classes: "w-full",
           type: "text",
           label: "Email",
@@ -356,7 +356,8 @@ export default {
           name: "salary",
           rules: "",
           classes: "w-full",
-          type: "text",
+          type: "text|currency",
+
           label: "Salary",
           isRequired: "",
           value: "",
@@ -409,6 +410,16 @@ export default {
     };
   },
   methods: {
+    formatCurrencyCus(e) {
+      let value = e.target.value;
+      value = Number(value.replaceAll(",", ""));
+      if (isNaN(value)) {
+        input.value = 0;
+      } else {
+        const formatValue = value.toLocaleString("ko-KR");
+        input.value = formatValue;
+      }
+    },
     handleAddPhotos(file, fileList) {
       this.staffPhotos = fileList;
     },
@@ -516,6 +527,17 @@ export default {
           });
       }
     },
+    addCommas(nStr) {
+      nStr += "";
+      const x = nStr.split(".");
+      let x1 = x[0];
+      const x2 = x.length > 1 ? "." + x[1] : "";
+      const rgx = /(\d+)(\d{3})/;
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, "$1" + "," + "$2");
+      }
+      return x1 + x2;
+    },
     transformInToFormObject(data) {
       let formData = new FormData();
       for (let key in data) {
@@ -575,6 +597,7 @@ export default {
           });
         });
     },
+
     async getUserDetail() {
       if (this.$route.params.data.id != null) {
         this.loadingPageDetail = true;
@@ -632,6 +655,18 @@ export default {
   computed: {
     moment() {
       return moment;
+    },
+    "user.salary.value": function () {
+      console.log(this.addCommas(this.user.salary.value));
+    },
+  },
+  watch: {
+    "user.salary.value": function (newValue) {
+      const result = newValue
+        .replace(/\D/g, "")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.$nextTick(() => (this.user.salary.value = result));
+      console.log(this.user.salary.value, "this.user.salary.value");
     },
   },
   async mounted() {

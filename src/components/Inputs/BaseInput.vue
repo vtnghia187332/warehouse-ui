@@ -15,7 +15,6 @@
       :type="field.type"
       :value="field.value"
       @input="updateInput"
-      @keyup.enter="handleEnterBtn"
       :disabled="field.disabled === true"
       class="p-2 pl-3 relative border rounded-sm w-full focus:!border-gray-700 focus:!ring-gray-700"
       :class="
@@ -47,6 +46,7 @@ export default {
       type: Object,
       default: {},
     },
+    formater: {},
   },
   watch: {},
   methods: {

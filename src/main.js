@@ -8,6 +8,8 @@ import "element-ui/lib/theme-chalk/index.css";
 import locale from "element-ui/lib/locale/lang/en";
 import { ValidationObserver, ValidationProvider, extend } from "vee-validate";
 import * as rules from "vee-validate/dist/rules";
+import VueECharts from "vue-echarts";
+import "echarts";
 
 // install rules
 Object.keys(rules).forEach((rule) => {
@@ -17,6 +19,7 @@ import App from "./App";
 
 Vue.component("ValidationObserver", ValidationObserver);
 Vue.component("ValidationProvider", ValidationProvider);
+Vue.component("v-chart", VueECharts);
 
 import "./css/index.scss";
 Vue.use(ElementUI, { locale }).use(PaperDashboard).use(Vuex);
@@ -28,5 +31,6 @@ const store = new Vuex.Store(storeConfigs);
 new Vue({
   router,
   store,
+  VueECharts,
   render: (h) => h(App),
 }).$mount("#app");

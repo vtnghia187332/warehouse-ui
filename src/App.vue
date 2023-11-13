@@ -15,11 +15,22 @@ export default {
         token: null,
         userId: null,
         firstname: null,
-        avatar: null,
+        avatar: [
+          {
+            name: null,
+            url: null,
+          },
+        ],
         lastname: null,
         warehouseDetailRes: {
           warehouseId: null,
           name: null,
+          avatar: [
+            {
+              name: null,
+              url: null,
+            },
+          ],
         },
       },
     };

@@ -63,16 +63,26 @@ export default {
         token: null,
         userId: null,
         firstname: null,
-        avatar: null,
+        imageDetailRes: [
+          {
+            name: null,
+            url: null,
+          },
+        ],
         lastname: null,
         warehouseDetailRes: {
           warehouseId: null,
           name: null,
         },
         warehouseChainRes: {
-          id: null,
+          warehouseChainId: null,
           name: null,
-          avatar: null,
+          imageDetailRes: [
+            {
+              name: null,
+              url: null,
+            },
+          ],
         },
       },
       loginInfor: {
@@ -151,6 +161,7 @@ export default {
             this.updateUserDetail(response.data.userRes);
             localStorage.setItem("token", response.data.token);
             this.$router.push({ path: "/dashboard" });
+            console.log(this.user, "avatar");
           }
         })
         .catch((error) => {

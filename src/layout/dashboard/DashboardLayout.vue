@@ -59,6 +59,7 @@ import DashboardContent from "./Content.vue";
 import MobileMenu from "./MobileMenu";
 import { mapGetters, mapMutations, mapActions } from "vuex";
 import axios from "axios";
+
 export default {
   components: {
     TopNavbar,

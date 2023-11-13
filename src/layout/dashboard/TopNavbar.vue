@@ -63,9 +63,14 @@ export default {
           name: null,
         },
         warehouseChainRes: {
-          id: null,
+          warehouseChainId: null,
           name: null,
-          avatar: null,
+          imageDetailRes: [
+            {
+              name: null,
+              url: null,
+            },
+          ],
         },
       },
       activeNotifications: false,

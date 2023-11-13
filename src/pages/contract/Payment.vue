@@ -43,10 +43,14 @@
                       v-model="order.discount.value"
                     />
                   </div>
-                  <div class="!w-full !mb-1">
+                  <div class="!w-full !mb-1 gap-x-2 flex">
                     <BaseInput
                       :field="order.shippingFee"
                       v-model="order.shippingFee.value"
+                    />
+                    <BaseInput
+                      :field="order.taxPercentage"
+                      v-model="order.taxPercentage.value"
                     />
                   </div>
                 </div></div
@@ -64,16 +68,23 @@
                   </div>
                   <div class="flex justify-between font-bold text-base">
                     <div>Discount:</div>
-                    <div class="">{{ this.order.discount.value }} %</div>
+                    <div class="">{{ this.order.discount.value }}%</div>
                   </div>
-                  <div>___________________________________________</div>
-                  <div class="flex justify-between font-bold text-3xl">
+                  <div class="flex justify-between font-bold text-base">
+                    <div>Tax:</div>
+                    <div class="">{{ this.order.taxPercentage.value }}%</div>
+                  </div>
+
+                  <div class="flex justify-between font-bold text-2xl">
                     <div>Total:</div>
                     <div class="">
                       ${{
-                        Number(order.shippingFee.value) +
-                        subTotal -
-                        (order.discount.value / 100) * subTotal
+                        calMoneyPaid(
+                          subTotal,
+                          order.discount.value,
+                          order.shippingFee.value,
+                          order.taxPercentage.value
+                        )
                       }}
                     </div>
                   </div>
@@ -139,23 +150,13 @@
                 <div class="col-span-6">
                   <BaseInput
                     v-if="
-                      subTotal +
-                        Number(order.shippingFee.value) -
-                        (order.discount.value / 100) * subTotal -
-                        order.moneyPaid.value >=
-                      0
+                      order.unpaidAmount.value >= 0 && order.inChange.value == 0
                     "
                     :field="order.unpaidAmount"
                     v-model="order.unpaidAmount.value"
                   />
                   <BaseInput
-                    v-if="
-                      subTotal +
-                        Number(order.shippingFee.value) -
-                        (order.discount.value / 100) * subTotal -
-                        order.moneyPaid.value <
-                      0
-                    "
+                    v-if="order.inChange.value > 0"
                     :field="order.inChange"
                     v-model="order.inChange.value"
                   />
@@ -192,21 +193,52 @@ export default {
     ValidationObserver,
   },
   watch: {
-    "order.discount.value": function (newVal, oldVal) {
+    "order.taxPercentage.value": function (newVal, oldVal) {
+      this.order.moneyPaid.value = 0;
       if (!newVal && newVal == 0) {
-        this.order.discount.value = "";
-        this.order.unpaidAmount.value =
-          Number(this.subTotal) +
-          Number(this.order.shippingFee.value) -
-          (this.order.discount.value / 100) * this.subTotal -
-          this.order.moneyPaid.value;
+        this.order.taxPercentage.value = 0;
+        this.order.unpaidAmount.value = this.calMoneyPaid(
+          this.subTotal,
+          this.order.discount.value,
+          this.order.shippingFee.value,
+          newVal
+        );
+      } else if (newVal <= 100) {
+        this.order.taxPercentage.value = newVal;
+        let afterChangeMoney = this.calMoneyPaid(
+          this.subTotal,
+          this.order.discount.value,
+          this.order.shippingFee.value,
+          newVal
+        );
+        if (afterChangeMoney < 0) {
+          this.order.unpaidAmount.value = 0;
+          this.order.inChange.value = Math.abs(afterChangeMoney);
+        }
+        if (afterChangeMoney >= 0) {
+          this.order.inChange.value = 0;
+          this.order.unpaidAmount.value = afterChangeMoney;
+        }
+      }
+    },
+    "order.discount.value": function (newVal, oldVal) {
+      this.order.moneyPaid.value = 0;
+      if (!newVal && newVal == 0) {
+        this.order.discount.value = 0;
+        this.order.unpaidAmount.value = this.calMoneyPaid(
+          this.subTotal,
+          newVal,
+          this.order.shippingFee.value,
+          this.order.taxPercentage.value
+        );
       } else if (newVal <= 100) {
         this.order.discount.value = newVal;
-        let afterChangeMoney =
-          Number(this.subTotal) +
-          Number(this.order.shippingFee.value) -
-          (this.order.discount.value / 100) * this.subTotal -
-          this.order.moneyPaid.value;
+        let afterChangeMoney = this.calMoneyPaid(
+          this.subTotal,
+          newVal,
+          this.order.shippingFee.value,
+          this.order.taxPercentage.value
+        );
         if (afterChangeMoney < 0) {
           this.order.unpaidAmount.value = 0;
           this.order.inChange.value = Math.abs(afterChangeMoney);
@@ -218,20 +250,23 @@ export default {
       }
     },
     "order.shippingFee.value": function (newVal, oldVal) {
+      this.order.moneyPaid.value = 0;
       if (!newVal && newVal == 0) {
         this.order.shippingFee.value = 0;
-        this.order.unpaidAmount.value =
-          Number(this.subTotal) +
-          Number(this.order.shippingFee.value) -
-          (this.order.discount.value / 100) * this.subTotal -
-          this.order.moneyPaid.value;
+        this.order.unpaidAmount.value = this.calMoneyPaid(
+          this.subTotal,
+          this.order.discount.value,
+          newVal,
+          this.order.taxPercentage.value
+        );
       } else {
         this.order.shippingFee.value = newVal;
-        let afterChangeMoney =
-          Number(this.subTotal) +
-          Number(this.order.shippingFee.value) -
-          (this.order.discount.value / 100) * this.subTotal -
-          this.order.moneyPaid.value;
+        let afterChangeMoney = this.calMoneyPaid(
+          this.subTotal,
+          this.order.discount.value,
+          newVal,
+          this.order.taxPercentage.value
+        );
         if (afterChangeMoney < 0) {
           this.order.unpaidAmount.value = 0;
           this.order.inChange.value = Math.abs(afterChangeMoney);
@@ -244,26 +279,28 @@ export default {
     },
     "order.moneyPaid.value": function (newVal, oldVal) {
       if (newVal == null || newVal == undefined || newVal == 0) {
-        this.order.moneyPaid.value = "";
-        this.order.unpaidAmount.value =
-          Number(this.subTotal) +
-          Number(this.order.shippingFee.value) -
-          (this.order.discount.value / 100) * this.subTotal -
-          this.order.moneyPaid.value;
+        this.order.moneyPaid.value = 0;
+        this.order.unpaidAmount.value = this.calMoneyPaid(
+          this.subTotal,
+          this.order.discount.value,
+          this.order.shippingFee.value,
+          this.order.taxPercentage.value
+        );
       } else {
         this.order.moneyPaid.value = newVal;
         let afterChangeMoney =
-          Number(this.subTotal) +
-          Number(this.order.shippingFee.value) -
-          (this.order.discount.value / 100) * this.subTotal -
-          this.order.moneyPaid.value;
-        if (afterChangeMoney < 0) {
+          this.calMoneyPaid(
+            this.subTotal,
+            this.order.discount.value,
+            this.order.shippingFee.value,
+            this.order.taxPercentage.value
+          ) - Number(newVal);
+        if (Number(afterChangeMoney) < 0) {
           this.order.unpaidAmount.value = 0;
-          this.order.inChange.value = Math.abs(afterChangeMoney);
-        }
-        if (afterChangeMoney >= 0) {
+          this.order.inChange.value = Math.abs(Number(afterChangeMoney));
+        } else if (Number(afterChangeMoney) >= 0) {
           this.order.inChange.value = 0;
-          this.order.unpaidAmount.value = afterChangeMoney;
+          this.order.unpaidAmount.value = Number(afterChangeMoney);
         }
       }
     },
@@ -369,7 +406,7 @@ export default {
           disabled: false,
           label: "Discount (%)",
           isRequired: "",
-          value: "",
+          value: 0,
           placeholder: "",
           error: "",
         },
@@ -382,7 +419,20 @@ export default {
           disabled: false,
           label: "Shipping Fee ($)",
           isRequired: "",
-          value: "",
+          value: 0,
+          placeholder: "",
+          error: "",
+        },
+        taxPercentage: {
+          id: "taxPercentage",
+          name: "VAT Fee",
+          rules: "",
+          classes: "w-full col-span-6 !h-[35px]",
+          type: "number, currency",
+          disabled: false,
+          label: "VAT Fee (%)",
+          isRequired: "",
+          value: 0,
           placeholder: "",
           error: "",
         },
@@ -409,7 +459,7 @@ export default {
           disabled: false,
           label: "Amount Paid ($)",
           isRequired: "",
-          value: "",
+          value: 0,
           placeholder: "",
           error: "",
         },
@@ -422,7 +472,7 @@ export default {
           disabled: true,
           label: "Unpaid Amount ($)",
           isRequired: "",
-          value: "",
+          value: 0,
           placeholder: "",
           error: "",
         },
@@ -435,7 +485,7 @@ export default {
           disabled: true,
           label: "In Change ($)",
           isRequired: "",
-          value: "",
+          value: 0,
           placeholder: "",
           error: "",
         },
@@ -443,6 +493,14 @@ export default {
     };
   },
   methods: {
+    calMoneyPaid(subtotal, discount, shipFee, taxFee) {
+      return (
+        Number(subtotal) +
+        Number(shipFee) +
+        (Number(subtotal) * Number(taxFee)) / 100 -
+        (Number(subtotal) * Number(discount)) / 100
+      );
+    },
     formatCurrency(value) {
       if (!isNaN(parseFloat(value))) {
         value = parseFloat(value);
@@ -487,8 +545,9 @@ export default {
               opt.label == item.singleUnit || opt.value == item.singleUnit
           ).value || "";
       });
+      console.log(order, "orderReq");
       if (this.$route.params.data.type === "EDIT") {
-        this.handleCheckOutOder(order);
+        // this.handleCheckOutOder(order);
       }
     },
     async handleCheckOutOder(order) {
