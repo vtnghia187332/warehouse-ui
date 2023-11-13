@@ -441,6 +441,7 @@ export default {
       Object.keys(this.user).map((key) => {
         userDetail[key] = this.user[key].value;
       });
+      userDetail.salary = Number(userDetail.salary.replace(/[^0-9\.-]+/g, ""));
       userDetail.birthDay = moment(this.user.birthDay.value).format(
         "YYYY-MM-DD HH:mm:ss"
       );
@@ -666,7 +667,10 @@ export default {
         .replace(/\D/g, "")
         .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       this.$nextTick(() => (this.user.salary.value = result));
-      console.log(this.user.salary.value, "this.user.salary.value");
+      console.log(
+        Number(this.user.salary.value.replace(/[^0-9\.-]+/g, "")),
+        "this.user.salary.value"
+      );
     },
   },
   async mounted() {
