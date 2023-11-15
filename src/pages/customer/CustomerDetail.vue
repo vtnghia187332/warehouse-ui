@@ -111,6 +111,7 @@
   </ValidationObserver>
 </template>
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import BaseInput from "./../../components/Inputs/BaseInput.vue";
 import axios from "axios";
 import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
@@ -327,7 +328,7 @@ export default {
     },
     handleSubmit() {
       const customerDetail = {
-        warehouseId: "WH-1",
+        warehouseId: this.warehouse.warehouseId,
         id: this.customerPId,
         customerId: this.$route.params.data.id,
         countryId: this.customer.country.value,
@@ -338,6 +339,31 @@ export default {
       Object.keys(this.customer).map((key) => {
         customerDetail[key] = this.customer[key].value;
       });
+
+      customerDetail.countryId =
+        this.customer.country.options.find(
+          (opt) =>
+            opt.label == customerDetail.country ||
+            opt.value == customerDetail.country
+        ).value || 0;
+      customerDetail.cityId =
+        this.customer.city.options.find(
+          (opt) =>
+            opt.label == customerDetail.city || opt.value == customerDetail.city
+        ).value || 0;
+      customerDetail.districtId =
+        this.customer.district.options.find(
+          (opt) =>
+            opt.label == customerDetail.district ||
+            opt.value == customerDetail.district
+        ).value || 0;
+      customerDetail.subdistrictId =
+        this.customer.subdistrict.options.find(
+          (opt) =>
+            opt.label == customerDetail.subdistrict ||
+            opt.value == customerDetail.subdistrict
+        ).value || 0;
+
       if (this.$route.params.data.type === "EDIT") {
         this.handleEditCustomer(customerDetail);
       } else {
@@ -550,7 +576,9 @@ export default {
         });
     },
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
+  },
   async mounted() {
     if (!this.$route.params.data) {
       this.$router.push({ path: "/customer" });

@@ -671,7 +671,6 @@ export default {
             opt.value == warehouseDetail.subdistrict
         ).value || 0;
 
-      console.log(warehouseDetail, "warehouseDetailwarehouseDetail");
       if (this.$route.params.data.type === "EDIT") {
         axios({
           method: "put",

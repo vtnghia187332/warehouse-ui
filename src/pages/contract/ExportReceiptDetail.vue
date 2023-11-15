@@ -74,7 +74,12 @@
             </template>
           </FormCard>
 
-          <FormCard title="Customer" class="mb-3">
+          <FormCard
+            title="Customer"
+            class="mb-3"
+            @handleClickBtn="handleAddCustomer"
+            isShowButton="true"
+          >
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12">
@@ -119,9 +124,16 @@
         </el-col>
       </el-row>
     </div>
+    <AddCustomerVue
+      v-show="dialogVisible"
+      :dialogVisible.sync="dialogVisible"
+      @addCus="AddCus"
+    />
   </ValidationObserver>
 </template>
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
+import AddCustomerVue from "./AddCustomer.vue";
 import BaseInput from "./../../components/Inputs/BaseInput.vue";
 import axios from "axios";
 import _ from "lodash";
@@ -139,10 +151,15 @@ export default {
     BaseTextArea,
     BaseSelection,
     ValidationObserver,
+    AddCustomerVue,
     DatePicker,
+  },
+  computed: {
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
   },
   data() {
     return {
+      dialogVisible: false,
       id: null,
       invoiceId: null,
       defaultMaterial: {
@@ -349,6 +366,12 @@ export default {
     };
   },
   methods: {
+    AddCus() {
+      this.handleGetCustomers();
+    },
+    handleAddCustomer(data) {
+      this.dialogVisible = true;
+    },
     handlePrdUnit(data) {
       const unitVal =
         data.options.find((opt) => opt.value == data.value).singleUnitId || "";
@@ -406,7 +429,7 @@ export default {
     },
     async handleSubmit(type) {
       const order = {
-        warehouseId: "WH-1",
+        warehouseId: this.warehouse.warehouseId,
         id: this.id,
         invoiceId: this.invoiceId,
         customer: {

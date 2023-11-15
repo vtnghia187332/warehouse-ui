@@ -176,6 +176,7 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import FormCard from "./../../components/Cards/FormCard.vue";
 import BaseInput from "./../../components/Inputs/BaseInput.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
@@ -184,6 +185,9 @@ import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
 import LoadingPage from "../../components/Cards/LoadingPage.vue";
 import { ValidationObserver } from "vee-validate";
 export default {
+  computed: {
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
+  },
   components: {
     FormCard,
     BaseInput,
@@ -512,23 +516,29 @@ export default {
     },
     handleSubmit() {
       let order = {
-        warehouseId: "WH-1",
+        warehouseId: this.warehouse.warehouseId,
         id: this.id,
         invoiceId: this.invoiceId,
         productInvoices: this.materials,
         moneyPaid: this.order.moneyPaid.value,
         shippingFee: this.order.shippingFee.value,
         discount: this.order.discount.value,
+        taxPercentage: this.order.taxPercentage.value,
         deliveryAddress: this.order.deliveryAddress.value,
         consignee: this.order.consignee.value,
         phoneNumberReceipt: this.order.phoneNumberReceipt.value,
         typeInvoice: this.typeInvoice,
         modePayment: this.order.modePayment.value,
-        totalPaid:
-          Number(this.subTotal) +
-          Number(this.order.shippingFee.value) -
-          Number((this.order.discount.value / 100) * this.subTotal),
+        totalPaid: this.calMoneyPaid(
+          this.subTotal,
+          this.order.discount.value,
+          this.order.shippingFee.value,
+          this.order.taxPercentage.value
+        ),
       };
+      if (Number(order.moneyPaid) > Number(order.totalPaid)) {
+        order.moneyPaid = order.totalPaid;
+      }
 
       order.modePayment =
         this.order.modePayment.options.find(
@@ -545,9 +555,8 @@ export default {
               opt.label == item.singleUnit || opt.value == item.singleUnit
           ).value || "";
       });
-      console.log(order, "orderReq");
       if (this.$route.params.data.type === "EDIT") {
-        // this.handleCheckOutOder(order);
+        this.handleCheckOutOder(order);
       }
     },
     async handleCheckOutOder(order) {

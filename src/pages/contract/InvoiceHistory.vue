@@ -47,6 +47,11 @@
         </el-table-column>
         <el-table-column sortable prop="code" label="Invoice Code" width="250">
         </el-table-column>
+        <el-table-column sortable prop="" label="Customer Name" width="250">
+          <template slot-scope="scope">
+            {{ scope.row.customer.fullName }}
+          </template>
+        </el-table-column>
         <el-table-column
           sortable
           prop="typeInvoice"

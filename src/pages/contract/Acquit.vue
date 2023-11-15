@@ -8,6 +8,12 @@
       :append-to-body="true"
       destroy-on-close
     >
+      <label class="!font-bold block"> Need To Pay </label>
+      <input
+        class="p-2 pl-3 relative border rounded-sm w-full focus:!border-gray-700 focus:!ring-gray-700"
+        :value="addCommas(field.needToPay)"
+        disabled="true"
+      />
       <BaseInput :field="field.moneyPaid" v-model="field.moneyPaid.value" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">Cancel</el-button>
@@ -41,6 +47,17 @@ export default {
   },
   watch: {},
   methods: {
+    addCommas(nStr) {
+      nStr += "";
+      const x = nStr.split(".");
+      let x1 = x[0];
+      const x2 = x.length > 1 ? "." + x[1] : "";
+      const rgx = /(\d+)(\d{3})/;
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, "$1" + "," + "$2");
+      }
+      return x1 + x2;
+    },
     handleClose() {
       if (this.field.value != "") {
         this.$confirm("Are you sure to close this dialog?")

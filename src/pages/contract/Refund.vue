@@ -8,6 +8,12 @@
       :append-to-body="true"
       destroy-on-close
     >
+      <label class="!font-bold block"> Total Invoice Paid </label>
+      <input
+        class="p-2 pl-3 relative border rounded-sm w-full focus:!border-gray-700 focus:!ring-gray-700"
+        :value="addCommas(field.totalInvoicePaid)"
+        disabled="true"
+      />
       <BaseInput :field="field.moneyRefund" v-model="field.moneyRefund.value" />
       <BaseTextArea :field="field.reason" v-model="field.reason.value" />
       <span slot="footer" class="dialog-footer">
@@ -43,6 +49,17 @@ export default {
   },
   watch: {},
   methods: {
+    addCommas(nStr) {
+      nStr += "";
+      const x = nStr.split(".");
+      let x1 = x[0];
+      const x2 = x.length > 1 ? "." + x[1] : "";
+      const rgx = /(\d+)(\d{3})/;
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, "$1" + "," + "$2");
+      }
+      return x1 + x2;
+    },
     handleClose() {
       if (this.field.moneyRefund.value && this.field.reason.value) {
         this.$confirm("Are you sure to close this dialog?")
@@ -53,7 +70,6 @@ export default {
       } else {
         this.$emit("update:dialogVisible", false);
       }
-      this.field = {};
     },
     handleData() {
       this.$emit("handle-dataAddr", this.field);

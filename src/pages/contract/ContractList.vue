@@ -92,7 +92,7 @@
         </el-table-column>
         <el-table-column sortable prop="code" label="Invoice Code" width="250">
         </el-table-column>
-        <el-table-column sortable prop="code" label="Customer Name" width="250">
+        <el-table-column sortable prop="" label="Customer Name" width="250">
           <template slot-scope="scope">
             {{ scope.row.customer.fullName }}
           </template>
@@ -112,6 +112,26 @@
         >
         </el-table-column>
         <el-table-column prop="moneyPaid" label="Money Paid" width="200">
+        </el-table-column>
+        <el-table-column prop="consignee" label="Consignee" width="200">
+        </el-table-column>
+        <el-table-column
+          prop="phoneNumberReceipt"
+          label="Phone Number Receipt"
+          width="200"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="deliveryAddress"
+          label="Delivery Address"
+          width="300"
+        >
+        </el-table-column>
+        <el-table-column prop="moneyRefund" label="Money Refund" width="200">
+        </el-table-column>
+        <el-table-column prop="reason" label="Reason Refund" width="300">
+        </el-table-column>
+        <el-table-column prop="reasonCancel" label="Reason Cancel" width="300">
         </el-table-column>
         <el-table-column fixed="right" label="Action" width="80">
           <template slot-scope="scope">
@@ -225,6 +245,7 @@ export default {
       acquited: {
         title: "Acquit Money",
         invoiceId: null,
+        needToPay: 0,
         moneyPaid: {
           id: "moneyPaid",
           name: "Acquit Money",
@@ -259,6 +280,7 @@ export default {
       refund: {
         title: "Refund",
         invoiceId: null,
+        totalInvoicePaid: 0,
         moneyRefund: {
           id: "moneyRefund",
           name: "Money Refund",
@@ -315,7 +337,6 @@ export default {
     getInvoiceHistory() {
       this.$router.push({ name: "invoice-history" });
     },
-    handleAcquit(row) {},
     getInvoiceByStatus(item) {
       const itemStr =
         this.statusInvoice.options.find(
@@ -422,13 +443,15 @@ export default {
     handleDataAcquit(field) {
       const data = {
         invoiceId: field.invoiceId,
-        typeAction: "ACQUITED",
         moneyPaid: field.moneyPaid.value,
+        typeAction: "ACQUITED",
       };
+      console.log(data, "handleDataAcquit");
       this.handleUpdateContract(data);
       this.dialogVisibleAcquited = false;
     },
     handleAcquit(row) {
+      this.acquited.needToPay = Number(row.totalPaid) - Number(row.moneyPaid);
       this.acquited.invoiceId = row.invoiceId;
       this.dialogVisibleAcquited = true;
     },
@@ -457,6 +480,7 @@ export default {
     },
     handeRefund(row) {
       this.refund.invoiceId = row.invoiceId;
+      this.refund.totalInvoicePaid = row.totalPaid;
       this.dialogVisible = true;
     },
     handleUpdateContract(row) {
@@ -464,6 +488,7 @@ export default {
         invoiceId: row.invoiceId,
         typeAction: row.typeAction,
         moneyRefund: row.moneyRefund,
+        moneyPaid: row.moneyPaid,
         reason: row.reason,
         reasonCancel: row.reasonCancel,
       };

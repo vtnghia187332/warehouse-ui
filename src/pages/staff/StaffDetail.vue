@@ -667,10 +667,7 @@ export default {
         .replace(/\D/g, "")
         .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       this.$nextTick(() => (this.user.salary.value = result));
-      console.log(
-        Number(this.user.salary.value.replace(/[^0-9\.-]+/g, "")),
-        "this.user.salary.value"
-      );
+     
     },
   },
   async mounted() {
