@@ -650,7 +650,7 @@ export default {
       }
     },
     handleSubmit() {
-      if (this.units.length > 0) {
+      if (this.units?.length > 0) {
         this.units.forEach((item) => {
           item.unitOriginId =
             this.unitOptions.find(
@@ -690,6 +690,7 @@ export default {
       } else {
         productDetailForm.append("image", "");
       }
+      console.log(this.productPhotos.length, "this.productPhotos.length");
       productDetailForm.append("numberOfImg", this.productPhotos.length);
       if (this.$route.params.data.type === "EDIT") {
         productDetailForm.delete("id");
