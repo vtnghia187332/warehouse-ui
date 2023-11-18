@@ -467,6 +467,11 @@ export default {
           placeholder: "",
           error: "",
         },
+        totalNeedPaid: {
+          id: "totalNeedPaid",
+          value: 0,
+          error: "",
+        },
         unpaidAmount: {
           id: "unpaidAmount",
           name: "Unpaid Amount",
@@ -535,6 +540,7 @@ export default {
           this.order.shippingFee.value,
           this.order.taxPercentage.value
         ),
+        totalNeedPaid: Number(this.subTotal),
       };
       if (Number(order.moneyPaid) > Number(order.totalPaid)) {
         order.moneyPaid = order.totalPaid;
@@ -631,11 +637,20 @@ export default {
                 res.data.items["customer"].mobilePhone;
 
               this.materials = res.data.items["productInvoices"];
-              this.materials.forEach((item) => {
-                subTotalVal = item.quantity * item.exportPrice;
-                this.subTotal = this.subTotal + subTotalVal;
-                this.singleUnit = item.singleUnit;
-              });
+              if (res.data.items["typeInvoice"] == 2) {
+                this.materials.forEach((item) => {
+                  subTotalVal = item.quantity * item.exportPrice;
+                  this.subTotal = this.subTotal + subTotalVal;
+                  this.singleUnit = item.singleUnit;
+                });
+              } else if (res.data.items["typeInvoice"] == 1) {
+                this.materials.forEach((item) => {
+                  subTotalVal = item.quantity * item.importPrice;
+                  this.subTotal = this.subTotal + subTotalVal;
+                  this.singleUnit = item.singleUnit;
+                });
+              }
+
               this.id = res.data.items.id;
               this.invoiceId = res.data.items.invoiceId;
               this.typeInvoice = res.data.items.typeInvoice;

@@ -6,8 +6,8 @@
           <i class="el-icon-money"></i>
         </div>
         <div class="col-span-4">
-          <div class="font-bold text-blue-600/100">Tiền hàng</div>
-          <div>$1000</div>
+          <div class="font-bold text-blue-600/100">Imported Price Product</div>
+          <div>$ {{ addCommas(detail.totalImportPrice) }}</div>
         </div>
       </div>
 
@@ -16,8 +16,8 @@
           <i class="el-icon-money"></i>
         </div>
         <div class="col-span-4">
-          <div class="font-bold text-blue-600/100">Hoàn / Hủy</div>
-          <div>$1000</div>
+          <div class="font-bold text-blue-600/100">Money Refund</div>
+          <div>$ {{ addCommas(detail.totalRefundPrice) }}</div>
         </div>
       </div>
 
@@ -27,7 +27,7 @@
         </div>
         <div class="col-span-4">
           <div class="font-bold text-blue-600/100">Giảm giá</div>
-          <div>$1000</div>
+          <div>$ {{ addCommas(detail.totalDiscountPrice) }}</div>
         </div>
       </div>
 
@@ -36,8 +36,8 @@
           <i class="el-icon-money"></i>
         </div>
         <div class="col-span-4">
-          <div class="font-bold text-blue-600/100">Thuế phí</div>
-          <div>$1000</div>
+          <div class="font-bold text-blue-600/100">Tax Price</div>
+          <div>$ {{ addCommas(detail.totalTaxPrice) }}</div>
         </div>
       </div>
 
@@ -46,8 +46,8 @@
           <i class="el-icon-money"></i>
         </div>
         <div class="col-span-4">
-          <div class="font-bold text-blue-600/100">Doanh thu gồm thuế</div>
-          <div>$1000</div>
+          <div class="font-bold text-blue-600/100">Revenue with tax</div>
+          <div>$ {{ addCommas(detail.totalRevenueWithTax) }}</div>
         </div>
       </div>
     </div>
@@ -56,16 +56,16 @@
       <div class="">
         <el-col :span="8" class="w-full">
           <el-card shadow="always">
-            <div class="font-semibold">Số khách hàng</div>
-            <div>100</div>
+            <div class="font-semibold">Number of Customer</div>
+            <div>{{ detail.numberOfCustomer }}</div>
           </el-card>
         </el-col>
       </div>
       <div class="">
         <el-col :span="8" class="w-full">
           <el-card shadow="always">
-            <div class="font-semibold">Số hóa đơn</div>
-            <div>100</div>
+            <div class="font-semibold">Number of Invoice</div>
+            <div>{{ detail.numberOfInvoicePayment }}</div>
           </el-card>
         </el-col>
       </div>
@@ -73,8 +73,8 @@
       <div class="">
         <el-col :span="8" class="w-full">
           <el-card shadow="always">
-            <div class="font-semibold">Số mặt hàng</div>
-            <div>100</div>
+            <div class="font-semibold">Number of Product</div>
+            <div>{{ detail.numberOfProduct }}</div>
           </el-card>
         </el-col>
       </div>
@@ -82,25 +82,54 @@
       <div class="">
         <el-col :span="8" class="w-full">
           <el-card shadow="always">
-            <div class="font-semibold">Số hóa đơn hủy</div>
-            <div>100</div>
+            <div class="font-semibold">Number of Canceled Invoice</div>
+            <div>{{ detail.numberOfCancelInvoice }}</div>
           </el-card>
         </el-col>
       </div>
     </div>
-    <div style="height: 300px">
-      <v-chart :option="chartOptionsBar"></v-chart>
+    <div style="height: 300px" class="m-auto">
+      <v-chart :option="MoneyPaidByDate"></v-chart>
     </div>
-    <div style="height: 300px">
-      <v-chart :option="option" autoresize></v-chart>
+    <div class="m-3 grid grid-cols-2 gap-x-4">
+      <div>
+        <div class="font-semibold">Payment Methods</div>
+        <el-card shadow="always">
+          <div style="height: 250px">
+            <v-chart :option="paymentMethodsStas" autoresize :key="1"></v-chart>
+          </div>
+        </el-card>
+      </div>
+
+      <div>
+        <div class="font-semibold">In Debt</div>
+        <el-card shadow="always">
+          <div class="grid grid-cols-5 gap-4 border-b-2 border-black-900">
+            <el-col class="col-span-3 font-semibold">Type of Invoice</el-col>
+            <el-col class="font-semibold">Số đơn</el-col>
+            <el-col class="font-semibold">Số tiền</el-col>
+          </div>
+          <div class="grid grid-cols-6 gap-4 mt-2">
+            <el-col class="col-span-4">Export Invoice</el-col>
+            <el-col class="">{{ detail.numberInvoiceInDebtExport }}</el-col>
+            <el-col class="">{{ detail.totalInDebtExport }}</el-col>
+          </div>
+          <div class="grid grid-cols-6 gap-4 mt-2">
+            <el-col class="col-span-4">Receipt Invoice</el-col>
+            <el-col class="">{{ detail.numberInvoiceInDebtReceipt }}</el-col>
+            <el-col class="">{{ detail.totalInDebtReceipt }}</el-col>
+          </div>
+        </el-card>
+      </div>
     </div>
-    <div style="height: 300px">
+    <!-- <div style="height: 300px">
       <v-chart :option="option1" autoresize></v-chart>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
 import { StatsCard, ChartCard } from "@/components/index";
+import axios from "axios";
 export default {
   components: {
     StatsCard,
@@ -108,57 +137,61 @@ export default {
   },
   data() {
     return {
-      chartOptionsBar: {
+      detail: {
+        totalPaidAndDates: [],
+        totalPaidByMethodsPays: [],
+        totalImportPrice: 0,
+        totalRefundPrice: 0,
+        totalDiscountPrice: 0,
+        totalTaxPrice: 0,
+        totalPriceWithTax: 0,
+        numberInvoiceInDebtReceipt: 0,
+        totalInDebtReceipt: 0,
+        totalInDebtExport: 0,
+        numberInvoiceInDebtExport: 0,
+        numberOfCustomer: 0,
+        numberOfInvoicePayment: 0,
+        numberOfProduct: 0,
+        numberOfCancelInvoice: 0,
+      },
+      MoneyPaidByDate: {
         xAxis: {
-          data: ["Latte", "Espresso", "Mocha", "Cappucino"],
+          type: "category",
+          data: [],
         },
         yAxis: {
           type: "value",
         },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow",
+          },
+          formatter: (params) => {
+            return `Money Paid
+                <br />${params[0].value}<br />`;
+          },
+        },
         series: [
           {
             type: "bar",
-            data: [100, 50, 25, 10],
+            data: [],
           },
         ],
       },
 
-      option: {
-        textStyle: {
-          fontFamily: 'Inter, "Helvetica Neue", Arial, sans-serif',
-        },
-        title: {
-          text: "Traffic Sources",
-          left: "center",
-        },
+      paymentMethodsStas: {
         tooltip: {
           trigger: "item",
           formatter: "{a} <br/>{b} : {c} ({d}%)",
         },
-        legend: {
-          orient: "vertical",
-          left: "left",
-          data: [
-            "Direct",
-            "Email",
-            "Ad Networks",
-            "Video Ads",
-            "Search Engines",
-          ],
-        },
         series: [
           {
-            name: "Traffic Sources",
+            name: "Payment Methods",
             type: "pie",
             radius: "55%",
             center: ["50%", "60%"],
-            data: [
-              { value: 335, name: "Direct" },
-              { value: 310, name: "Email" },
-              { value: 234, name: "Ad Networks" },
-              { value: 135, name: "Video Ads" },
-              { value: 1548, name: "Search Engines" },
-            ],
+            data: [],
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,
@@ -190,6 +223,67 @@ export default {
         ],
       },
     };
+  },
+  methods: {
+    addCommas(nStr) {
+      nStr += "";
+      const x = nStr.split(".");
+      let x1 = x[0];
+      const x2 = x.length > 1 ? "." + x[1] : "";
+      const rgx = /(\d+)(\d{3})/;
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, "$1" + "," + "$2");
+      }
+      return x1 + x2;
+    },
+    async handleGetApiDashboard() {
+      var me = this;
+      try {
+        const { data } = await axios.get(
+          "http://localhost:9090/api/v1/dashboard",
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        );
+        me.detail = data.items;
+
+        if (data.items?.totalPaidByMethodsPays) {
+          const tempArr = [];
+          let arrayObj = data.items.totalPaidByMethodsPays;
+          for (const obj of arrayObj) {
+            tempArr.push({ value: obj.totalPaid, name: obj.methods });
+          }
+          me.paymentMethodsStas.series.forEach((item) => {
+            item.data = tempArr;
+          });
+        }
+        if (data.items?.totalPaidAndDates) {
+          let arrayObj = data.items.totalPaidAndDates;
+          const names = [];
+          const values = [];
+          for (const obj of arrayObj) {
+            names.push(obj.date);
+            values.push(obj.totalPaid);
+          }
+          me.MoneyPaidByDate.xAxis.data = names;
+          me.MoneyPaidByDate.series.forEach((item) => {
+            item.data = values;
+          });
+          console.log(me.MoneyPaidByDate, "me.MoneyPaidByDate");
+        }
+      } catch (error) {
+        me.$message({
+          showClose: true,
+          message: error,
+          type: "error",
+        });
+      }
+    },
+  },
+  async created() {
+    await this.handleGetApiDashboard();
   },
 };
 </script>

@@ -92,6 +92,20 @@
         </el-table-column>
         <el-table-column sortable prop="code" label="Invoice Code" width="250">
         </el-table-column>
+        <el-table-column
+          sortable
+          prop="typeInvoice"
+          label="Type Invoice"
+          width="150"
+        >
+          <template slot-scope="scope">
+            <el-tag
+              :type="scope.row.typeInvoice == 1 ? 'success' : 'primary'"
+              disable-transitions
+              >{{ scope.row.typeInvoice == 1 ? "RECEIPT" : "EXPORT" }}</el-tag
+            >
+          </template>
+        </el-table-column>
         <el-table-column sortable prop="" label="Customer Name" width="250">
           <template slot-scope="scope">
             {{ scope.row.customer.fullName }}
