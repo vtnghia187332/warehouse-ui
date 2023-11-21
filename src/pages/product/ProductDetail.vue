@@ -624,7 +624,7 @@ export default {
       } catch (error) {
         this.$message({
           showClose: true,
-          message: error,
+          message: error.response.data.items,
           type: "error",
         });
       }
@@ -644,7 +644,7 @@ export default {
       } catch (error) {
         this.$message({
           showClose: true,
-          message: error,
+          message: error.response.data.items,
           type: "error",
         });
       }
@@ -830,7 +830,7 @@ export default {
           .catch((error) => {
             this.$message({
               showClose: true,
-              message: error,
+              message: error.response.data.items,
               type: "error",
             });
           });

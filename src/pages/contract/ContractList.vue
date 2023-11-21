@@ -166,6 +166,7 @@
                   <button
                     class="!bg-[#fdfdfd] text-black"
                     @click="handleAcquit(scope.row)"
+                    :disabled="scope.row.invoiceStage == 'CANCELED'"
                   >
                     <i class=""></i>Acquit
                   </button>
@@ -174,6 +175,7 @@
                   <button
                     class="!bg-[#fdfdfd] text-black"
                     @click="handeRefund(scope.row)"
+                    :disabled="scope.row.invoiceStage == 'CANCELED'"
                   >
                     <i class=""></i>Refund
                   </button>
@@ -182,6 +184,7 @@
                   <button
                     class="!bg-[#fdfdfd] text-black"
                     @click="handeCancel(scope.row)"
+                    :disabled="scope.row.invoiceStage == 'CANCELED'"
                   >
                     <i class=""></i> Cancel
                   </button>
@@ -467,6 +470,7 @@ export default {
     handleAcquit(row) {
       this.acquited.needToPay = Number(row.totalPaid) - Number(row.moneyPaid);
       this.acquited.invoiceId = row.invoiceId;
+      this.acquited.moneyPaid = 0;
       this.dialogVisibleAcquited = true;
     },
     handleDataCancel(field) {
@@ -480,6 +484,7 @@ export default {
     },
     handeCancel(row) {
       this.canceled.invoiceId = row.invoiceId;
+      this.canceled.reasonCancel = "";
       this.dialogVisibleCancel = true;
     },
     handleDataRefund(field) {
@@ -495,6 +500,7 @@ export default {
     handeRefund(row) {
       this.refund.invoiceId = row.invoiceId;
       this.refund.totalInvoicePaid = row.totalPaid;
+      this.refund.moneyRefund = 0;
       this.dialogVisible = true;
     },
     handleUpdateContract(row) {
@@ -569,7 +575,7 @@ export default {
         .catch((error) => {
           this.$message({
             showClose: true,
-            message: error,
+            message: error.response.data.items,
             type: "error",
           });
         });

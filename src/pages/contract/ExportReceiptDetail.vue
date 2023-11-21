@@ -385,15 +385,26 @@ export default {
       });
     },
     async handlePayment() {
-      await this.handleSubmit("PAYMENT");
-      let data = {
-        id: this.invoiceId,
-        type: "EDIT",
-      };
-      this.$router.push({
-        name: "payment",
-        params: { data },
-      });
+      if (this.$route.params.data.id == null) {
+        await this.handleSubmit("PAYMENT");
+        let data = {
+          id: this.invoiceId,
+          type: "EDIT",
+        };
+        this.$router.push({
+          name: "payment",
+          params: { data },
+        });
+      } else {
+        let data = {
+          id: this.$route.params.data.id,
+          type: "EDIT",
+        };
+        this.$router.push({
+          name: "payment",
+          params: { data },
+        });
+      }
     },
     getMaterials() {
       return this.materials.map((item) => {
@@ -550,7 +561,7 @@ export default {
         .catch((error) => {
           this.$message({
             showClose: true,
-            message: error,
+            message: error.response.data.items,
             type: "error",
           });
         });
@@ -571,7 +582,7 @@ export default {
         .catch((error) => {
           this.$message({
             showClose: true,
-            message: error,
+            message: error.response.data.items,
             type: "error",
           });
         });
@@ -589,7 +600,7 @@ export default {
         .catch((error) => {
           this.$message({
             showClose: true,
-            message: error,
+            message: error.response.data.items,
             type: "error",
           });
         });
@@ -633,7 +644,7 @@ export default {
           .catch((error) => {
             this.$message({
               showClose: true,
-              message: error,
+              message: error.response.data.items,
               type: "error",
             });
           })
