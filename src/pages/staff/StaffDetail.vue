@@ -667,7 +667,6 @@ export default {
         .replace(/\D/g, "")
         .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       this.$nextTick(() => (this.user.salary.value = result));
-     
     },
   },
   async mounted() {

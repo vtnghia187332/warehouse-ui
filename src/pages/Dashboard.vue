@@ -233,16 +233,11 @@ export default {
             type: "shadow",
           },
           formatter: (params) => {
-            return `Money Paid
-                <br />${params[0].value}<br />`;
+            return `Receipt Total <span />${params[0].value}<br />
+                Export Total <span />${params[1].value}<span />`;
           },
         },
-        series: [
-          {
-            type: "bar",
-            data: [],
-          },
-        ],
+        series: [],
       },
 
       paymentMethodsStas: {
@@ -358,7 +353,7 @@ export default {
           }
         );
         me.detail = data.items;
-
+        me.paymentMethodsStas.series.data = [];
         if (data.items?.totalPaidByMethodsPays) {
           const tempArr = [];
           let arrayObj = data.items.totalPaidByMethodsPays;
@@ -369,16 +364,28 @@ export default {
             item.data = tempArr;
           });
         }
-        if (data.items?.totalPaidAndDates) {
-          let arrayObj = data.items.totalPaidAndDates;
+        me.MoneyPaidByDate.series = [];
+        if (data.items?.totalPaidByDates) {
+          let arrayObj = data.items.totalPaidByDates;
           const names = [];
-          const values = [];
+          const valuesRec = [];
+          const valuesEx = [];
           for (const obj of arrayObj) {
             names.push(obj.date);
-            values.push(obj.totalPaid);
+            valuesRec.push(obj.totalPaidRec);
+            valuesEx.push(obj.totalPaidEx);
           }
           me.MoneyPaidByDate.xAxis.data = names;
-          me.MoneyPaidByDate.series[0].data = values;
+          const dataRec = {
+            type: "bar",
+            data: valuesRec,
+          };
+          const dataEx = {
+            type: "bar",
+            data: valuesEx,
+          };
+          me.MoneyPaidByDate.series.push(dataRec);
+          me.MoneyPaidByDate.series.push(dataEx);
         }
       } catch (error) {
         me.$message({

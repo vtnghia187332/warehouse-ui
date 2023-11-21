@@ -119,7 +119,6 @@
           width="250"
         >
         </el-table-column>
-
         <el-table-column fixed="right" label="Operations" width="100">
           <template slot-scope="scope">
             <el-button
@@ -153,6 +152,7 @@
 <script>
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import axios from "axios";
+import moment from "moment";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import LoadingPage from "@/components/Cards/LoadingPage";
@@ -165,6 +165,11 @@ export default {
     ValidationObserver,
     ValidationProvider,
     ProductImportDialogVue,
+  },
+  computed: {
+    moment() {
+      return moment;
+    },
   },
   data() {
     return {
@@ -322,14 +327,7 @@ export default {
         })
         .then(function (response) {
           me.products = response.data.items.content;
-          (me.paginationVal = {
-            currentPage: response.data.items.pageNum,
-            pageSizeList: [10, 20, 30, 50, 100],
-            currentPage: response.data.items.number + 1,
-            pageSizeval: response.data.items.size,
-            total: response.data.items.totalElements,
-          }),
-            (me.loadingTable = false);
+          me.loadingTable = false;
         })
         .catch((error) => {
           this.$message({

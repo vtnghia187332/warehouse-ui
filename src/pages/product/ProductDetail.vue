@@ -678,9 +678,13 @@ export default {
       Object.keys(this.product || {}).map((key) => {
         productDetail[key] = this.product[key].value;
         if (key == "expiredDate") {
-          productDetail["expiredDate"] = moment(
-            productDetail.expiredDate
-          ).format("YYYY-MM-DD HH:mm:ss");
+          if (productDetail["expiredDate"]) {
+            productDetail["expiredDate"] = moment(
+              productDetail.expiredDate
+            ).format("YYYY-MM-DD HH:mm:ss");
+          } else {
+            productDetail["expiredDate"] == null;
+          }
         }
       });
 

@@ -40,6 +40,23 @@
           >
           </el-option>
         </el-select>
+
+        <el-select
+          class="w-[180px]"
+          v-model="warehouse.value"
+          placeholder="Select Warehouse"
+          @change="filterByWarehouse($event)"
+          clearable
+        >
+          <el-option
+            v-for="item in warehouse.options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+
         <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="getInvoiceHistory"
@@ -242,6 +259,18 @@ export default {
   },
   data() {
     return {
+      warehouse: {
+        id: "warehouse",
+        baseId: 0,
+        name: "warehouse",
+        rules: "required",
+        classes: "w-full",
+        isRequired: "true",
+        placeholder: "Select Warehouse",
+        error: "",
+        value: "",
+        options: [],
+      },
       dialogVisibleAcquited: false,
       dialogVisible: false,
       dialogVisibleCancel: false,
@@ -328,7 +357,6 @@ export default {
       statusInvoice: {
         value: "",
         options: [
-          { label: "CREATED", value: 0 },
           { label: "UNPAID", value: 1 },
           { label: "PAID", value: 2 },
           { label: "CANCELED", value: 3 },
@@ -354,17 +382,39 @@ export default {
     getInvoiceHistory() {
       this.$router.push({ name: "invoice-history" });
     },
-    getInvoiceByStatus(item) {
-      const itemStr =
-        this.statusInvoice.options.find(
-          (opt) => opt.value == item || opt.label == item
-        ).label || "";
-      if (!itemStr) {
-        this.paginationPage.invoiceStatus = null;
+    filterByWarehouse(item) {
+      if (!item) {
+        this.warehouse.value = null;
+        this.handleGetInvoicesEx();
       } else {
-        this.paginationPage.invoiceStatus = itemStr;
+        const itemStr =
+          this.warehouse.options.find(
+            (opt) => opt.value == item || opt.label == item
+          ).value || "";
+        if (!itemStr) {
+          this.warehouse.value = null;
+        } else {
+          this.warehouse.value = itemStr;
+        }
+        this.handleGetInvoicesEx();
       }
-      this.handleGetInvoicesEx();
+    },
+    getInvoiceByStatus(item) {
+      if (!item) {
+        this.paginationPage.invoiceStatus = null;
+        this.handleGetInvoicesEx();
+      } else {
+        const itemStr =
+          this.statusInvoice.options.find(
+            (opt) => opt.value == item || opt.label == item
+          ).label || "";
+        if (!itemStr) {
+          this.paginationPage.invoiceStatus = null;
+        } else {
+          this.paginationPage.invoiceStatus = itemStr;
+        }
+        this.handleGetInvoicesEx();
+      }
     },
     async handeExportPDF(item) {
       let me = this;
@@ -545,10 +595,29 @@ export default {
           }
         });
     },
-    handleGetInvoicesEx() {
+    async getWarehouseSel() {
+      await axios
+        .get("http://localhost:9090/api/v1/warehouse/data-list", {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.warehouse.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
+    },
+
+    async handleGetInvoicesEx() {
       var me = this;
       me.loadingTable = true;
-      axios
+      await axios
         .get("http://localhost:9090/api/v1/invoice/list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: {
@@ -559,6 +628,7 @@ export default {
             orderBy: me.paginationPage.orderBy,
             invoiceType: me.paginationPage.invoiceType,
             invoiceStatus: me.paginationPage.invoiceStatus,
+            warehouse: me.warehouse.value,
           },
         })
         .then(function (response) {
@@ -581,8 +651,9 @@ export default {
         });
     },
   },
-  mounted() {
-    this.handleGetInvoicesEx();
+  async mounted() {
+    await this.handleGetInvoicesEx();
+    await this.getWarehouseSel();
   },
 };
 </script>

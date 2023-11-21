@@ -312,6 +312,7 @@ export default {
 
   data() {
     return {
+      warehouseData: {},
       amount: 0,
       currency: "USD",
       loadingPageDetail: false,
@@ -620,30 +621,34 @@ export default {
           )
           .then((res) => {
             if (res.status === 200) {
-              this.customer.fullName.value =
-                res.data.items["customer"].fullName;
-              this.order.deliveryAddress.value =
-                res.data.items["customer"].detailAddress +
-                ", " +
-                res.data.items["customer"].country +
-                ", " +
-                res.data.items["customer"].city +
-                ", " +
-                res.data.items["customer"].district +
-                ", " +
-                res.data.items["customer"].subDistrict;
-              this.order.consignee.value = res.data.items["customer"].fullName;
-              this.order.phoneNumberReceipt.value =
-                res.data.items["customer"].mobilePhone;
-
               this.materials = res.data.items["productInvoices"];
               if (res.data.items["typeInvoice"] == 2) {
+                this.customer.fullName.value =
+                  res.data.items["customer"].fullName;
+                this.order.deliveryAddress.value =
+                  res.data.items["customer"].detailAddress +
+                  ", " +
+                  res.data.items["customer"].country +
+                  ", " +
+                  res.data.items["customer"].city +
+                  ", " +
+                  res.data.items["customer"].district +
+                  ", " +
+                  res.data.items["customer"].subDistrict;
+                this.order.consignee.value =
+                  res.data.items["customer"].fullName;
+                this.order.phoneNumberReceipt.value =
+                  res.data.items["customer"].mobilePhone;
                 this.materials.forEach((item) => {
                   subTotalVal = item.quantity * item.exportPrice;
                   this.subTotal = this.subTotal + subTotalVal;
                   this.singleUnit = item.singleUnit;
                 });
               } else if (res.data.items["typeInvoice"] == 1) {
+                this.customer.fullName.value = "";
+                this.order.deliveryAddress.value = "";
+                this.order.consignee.value = "";
+                this.order.phoneNumberReceipt.value = "";
                 this.materials.forEach((item) => {
                   subTotalVal = item.quantity * item.importPrice;
                   this.subTotal = this.subTotal + subTotalVal;
@@ -679,6 +684,32 @@ export default {
       } else {
       }
     },
+    async handleGetDetailWarehouse() {
+      await axios
+        .get(
+          `http://localhost:9090/api/v1/warehouse/detail/${this.warehouse.warehouseId}`,
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("token"),
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            Object.keys(this.warehouseData).forEach((key) => {
+              this.warehouseData[key].value = res.data.items[key];
+            });
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        })
+        .finally(() => (this.loadingPageDetail = false));
+    },
     async handleGetSingleUnit() {
       await axios
         .get("http://localhost:9090/api/v1/single-unit/all", {
@@ -704,6 +735,7 @@ export default {
       return;
     }
     await this.handleGetSingleUnit();
+    await this.handleGetDetailWarehouse();
     await this.handleGetDetailInvoice();
   },
 };
