@@ -161,7 +161,6 @@ export default {
             this.updateUserDetail(response.data.userRes);
             localStorage.setItem("token", response.data.token);
             this.$router.push({ path: "/dashboard" });
-            console.log(this.user, "avatar");
           }
         })
         .catch((error) => {

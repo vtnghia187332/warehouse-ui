@@ -264,6 +264,7 @@
 </template>
 <script>
 import BaseInput from "./../../components/Inputs/BaseInput.vue";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import axios from "axios";
 import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
 import ConversationUnitVue from "./ConversationUnit.vue";
@@ -283,6 +284,7 @@ export default {
     ValidationObserver,
     DatePicker,
   },
+
   data() {
     return {
       productPhotos: [],
@@ -517,8 +519,11 @@ export default {
     moment() {
       return moment;
     },
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
   },
   methods: {
+    ...mapMutations(["setUserDetail"]),
+    ...mapActions(["updateUserDetail"]),
     handleAddPhotos(file, fileList) {
       this.productPhotos = fileList;
     },
@@ -666,15 +671,16 @@ export default {
             ).value || "";
         });
       }
+
       const productDetail = {
-        warehouseId: 1,
+        warehouseId: this.warehouse?.warehouseId,
         id: this.productPId,
         productId: this.$route.params.data.id,
         singleUnitId: this.product.singleUnit.baseId,
         categoryProductId: this.category.baseId,
         units: this.units,
       };
-
+      console.log(productDetail, "productDetail");
       Object.keys(this.product || {}).map((key) => {
         productDetail[key] = this.product[key].value;
         if (key == "expiredDate") {
@@ -845,7 +851,6 @@ export default {
       }
     },
   },
-  computed: {},
   created() {},
   async mounted() {
     if (!this.$route.params.data) {

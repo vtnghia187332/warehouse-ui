@@ -323,6 +323,7 @@ export default {
             pageSize: me.paginationPage.pageSize,
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
+            warehouse: "WH-1",
           },
         })
         .then(function (response) {

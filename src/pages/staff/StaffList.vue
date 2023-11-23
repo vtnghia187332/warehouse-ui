@@ -11,7 +11,22 @@
               <span class="ti-filter"></span> Filter
             </button>
           </div>
-          <div>
+          <div class="flex space-x-1">
+            <el-select
+              class="w-[180px]"
+              v-model="warehouseData.value"
+              placeholder="Select Warehouse"
+              @change="filterByWarehouse($event)"
+              clearable
+            >
+              <el-option
+                v-for="item in warehouseData.options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
             <button
               class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
               @click="handleGetHistoryUser"
@@ -207,6 +222,18 @@ export default {
   components: { BaseSearch, BasePagination, LoadingPage, RoleDetailVue },
   data() {
     return {
+      warehouseData: {
+        id: "warehouse",
+        baseId: 0,
+        name: "warehouse",
+        rules: "required",
+        classes: "w-full",
+        isRequired: "true",
+        placeholder: "Select Warehouse",
+        error: "",
+        value: "",
+        options: [],
+      },
       activeName: "first",
       staffs: [],
       roles: [],
@@ -272,6 +299,23 @@ export default {
     };
   },
   methods: {
+    filterByWarehouse(item) {
+      if (!item) {
+        this.warehouseData.value = null;
+        this.handleGetUsers();
+      } else {
+        const itemStr =
+          this.warehouseData.options.find(
+            (opt) => opt.value == item || opt.label == item
+          ).value || "";
+        if (!itemStr) {
+          this.warehouseData.value = null;
+        } else {
+          this.warehouseData.value = itemStr;
+        }
+        this.handleGetUsers();
+      }
+    },
     handeRenewPwd(data) {
       const emailReq = data.email;
       axios({
@@ -487,10 +531,10 @@ export default {
       this.paginationPageRole.pageNo = param;
       this.handleGetRoles();
     },
-    handleGetUsers() {
+    async handleGetUsers() {
       var me = this;
       me.loadingTable = true;
-      axios
+      await axios
         .get("http://localhost:9090/api/v1/user/list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: {
@@ -499,6 +543,7 @@ export default {
             pageSize: me.paginationPage.pageSize,
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
+            warehouse: me.warehouseData.value,
           },
         })
         .then(function (response) {
@@ -598,10 +643,29 @@ export default {
         300
       );
     },
+    async getWarehouseSel() {
+      await axios
+        .get("http://localhost:9090/api/v1/warehouse/data-list", {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.warehouseData.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
+    },
   },
-  mounted() {
-    this.handleGetUsers();
-    this.handleGetRoles();
+  async mounted() {
+    await this.getWarehouseSel();
+    await this.handleGetUsers();
+    await this.handleGetRoles();
   },
 };
 </script>
