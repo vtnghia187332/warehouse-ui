@@ -248,6 +248,7 @@ export default {
       }
     },
     initKeyContact(data) {
+      console.log(data, "datas");
       const keyContactAfterBinding = [];
       data.forEach((x, index) => {
         let keyContactTemp = _.cloneDeep(this.defaultKeyContact);

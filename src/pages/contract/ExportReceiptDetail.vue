@@ -452,7 +452,6 @@ export default {
         typeInvoice: this.order.typeInvoice.value,
         note: this.order.note.value,
       };
-      console.log(order, "order");
       if (this.$route.params.data.type === "EDIT") {
         await axios({
           method: "put",

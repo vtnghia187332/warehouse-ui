@@ -8,6 +8,11 @@ export const state = {
   warehouse: {
     warehouseId: null,
     name: null,
+    detailAddress: null,
+    country: null,
+    city: null,
+    district: null,
+    subdistrict: null,
   },
   warehouseChain: {
     warehouseChainId: null,

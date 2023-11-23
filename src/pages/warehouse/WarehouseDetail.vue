@@ -577,7 +577,7 @@ export default {
     moment() {
       return moment;
     },
-    ...mapGetters(["user", "warehouse", "warehouseChain"]),
+    ...mapGetters(["user", "warehouseChain"]),
   },
   watch: {},
   methods: {

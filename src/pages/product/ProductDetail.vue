@@ -857,7 +857,6 @@ export default {
       this.$router.push({ path: "/product" });
       return;
     }
-    //1. get list cate -> list single-unit => product detail (convert to label)
     await this.getValueCategory();
     await this.getValueSingleUnit();
     await this.getProductDetail();

@@ -645,9 +645,18 @@ export default {
                   this.singleUnit = item.singleUnit;
                 });
               } else if (res.data.items["typeInvoice"] == 1) {
-                this.customer.fullName.value = "";
-                this.order.deliveryAddress.value = "";
-                this.order.consignee.value = "";
+                this.customer.fullName.value = this.warehouse.name;
+                this.order.deliveryAddress.value =
+                  this.warehouse.detailAddress +
+                  ", " +
+                  this.warehouse.country +
+                  ", " +
+                  this.warehouse.city +
+                  ", " +
+                  this.warehouse.district +
+                  ", " +
+                  this.warehouse.subdistrict;
+                this.order.consignee.value = this.warehouse.name;
                 this.order.phoneNumberReceipt.value = "";
                 this.materials.forEach((item) => {
                   subTotalVal = item.quantity * item.importPrice;
@@ -735,7 +744,6 @@ export default {
       return;
     }
     await this.handleGetSingleUnit();
-    await this.handleGetDetailWarehouse();
     await this.handleGetDetailInvoice();
   },
 };

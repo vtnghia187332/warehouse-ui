@@ -162,6 +162,7 @@ export default {
             localStorage.setItem("token", response.data.token);
             this.$router.push({ path: "/dashboard" });
           }
+          console.log(this.warehouse, "this.user");
         })
         .catch((error) => {
           this.$message({

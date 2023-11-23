@@ -15,6 +15,11 @@ export default {
       state.warehouse.warehouseId = null;
       state.warehouse.name = null;
     }
+    state.warehouse.detailAddress = data.warehouseDetailRes.addressDes;
+    state.warehouse.country = data.warehouseDetailRes.countryName;
+    state.warehouse.city = data.warehouseDetailRes.cityName;
+    state.warehouse.district = data.warehouseDetailRes.districtName;
+    state.warehouse.subdistrict = data.warehouseDetailRes.subdistrictName;
     if (data.warehouseChainRes) {
       state.warehouseChain.warehouseChainId =
         data.warehouseChainRes.warehouseChainId;
