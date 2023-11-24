@@ -513,14 +513,13 @@ export default {
         moneyPaid: field.moneyPaid.value,
         typeAction: "ACQUITED",
       };
-      console.log(data, "handleDataAcquit");
       this.handleUpdateContract(data);
       this.dialogVisibleAcquited = false;
     },
     handleAcquit(row) {
       this.acquited.needToPay = Number(row.totalPaid) - Number(row.moneyPaid);
       this.acquited.invoiceId = row.invoiceId;
-      this.acquited.moneyPaid = 0;
+      this.acquited.moneyPaid.value = 0;
       this.dialogVisibleAcquited = true;
     },
     handleDataCancel(field) {
@@ -534,7 +533,7 @@ export default {
     },
     handeCancel(row) {
       this.canceled.invoiceId = row.invoiceId;
-      this.canceled.reasonCancel = "";
+      this.canceled.reasonCancel.value = "";
       this.dialogVisibleCancel = true;
     },
     handleDataRefund(field) {
@@ -550,7 +549,7 @@ export default {
     handeRefund(row) {
       this.refund.invoiceId = row.invoiceId;
       this.refund.totalInvoicePaid = row.totalPaid;
-      this.refund.moneyRefund = 0;
+      this.refund.moneyRefund.value = 0;
       this.dialogVisible = true;
     },
     handleUpdateContract(row) {

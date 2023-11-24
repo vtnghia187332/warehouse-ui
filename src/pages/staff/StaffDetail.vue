@@ -186,6 +186,7 @@
   </ValidationObserver>
 </template>
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import BaseInput from "./../../components/Inputs/BaseInput.vue";
 import axios from "axios";
 import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
@@ -462,7 +463,10 @@ export default {
         userDetailForm.append("image", "");
       }
       userDetailForm.append("numberOfImg", this.staffPhotos.length);
-
+      userDetailForm.append(
+        "warehouseChainId",
+        this.warehouseChain.warehouseChainId
+      );
       for (var i = 0; i < this.user.roles.value.length; i++) {
         userDetailForm.append(
           "roles[]",
@@ -664,6 +668,7 @@ export default {
     "user.salary.value": function () {
       console.log(this.addCommas(this.user.salary.value));
     },
+    ...mapGetters(["warehouseChain"]),
   },
   watch: {
     "user.salary.value": function (newValue) {

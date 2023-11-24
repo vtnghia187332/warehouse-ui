@@ -4,8 +4,8 @@
     <div class="ml-4 grid gap-x-2 grid-cols-6">
       <BaseSelection
         @getValue=""
-        v-model="warehouse.value"
-        :field="warehouse"
+        v-model="warehouseData.value"
+        :field="warehouseData"
       />
       <DatePicker :field="dateTo" v-model="dateTo.value" />
       <DatePicker :field="dateFrom" v-model="dateFrom.value" />
@@ -36,7 +36,7 @@
           <i class="el-icon-money"></i>
         </div>
         <div class="col-span-4">
-          <div class="font-bold text-blue-600/100">Giảm giá</div>
+          <div class="font-bold text-blue-600/100">Discount</div>
           <div>$ {{ addCommas(detail.totalDiscountPrice) }}</div>
         </div>
       </div>
@@ -140,6 +140,7 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { StatsCard, ChartCard } from "@/components/index";
 import BaseSelection from "../components/Inputs/BaseSelection.vue";
 import moment from "moment";
@@ -156,13 +157,14 @@ export default {
     moment() {
       return moment;
     },
+    ...mapGetters(["warehouse"]),
   },
   data() {
     return {
-      warehouse: {
-        id: "warehouse",
+      warehouseData: {
+        id: "warehouseData",
         baseId: 0,
-        name: "warehouse",
+        name: "warehouseData",
         rules: "",
         classes: "w-full",
         isRequired: "",
@@ -301,7 +303,7 @@ export default {
       }
       this.handleGetApiDashboard();
     },
-    "warehouse.value": function (newVal, oldVal) {
+    "warehouseData.value": function (newVal, oldVal) {
       this.handleGetApiDashboard();
     },
   },
@@ -324,7 +326,7 @@ export default {
         })
         .then((res) => {
           if (res.status === 200) {
-            this.warehouse.options = res.data.items;
+            this.warehouseData.options = res.data.items;
           }
         })
         .catch((error) => {
@@ -337,7 +339,6 @@ export default {
     },
     async handleGetApiDashboard() {
       var me = this;
-      console.log(me.warehouse.value, me.dateFrom.value, me.dateTo.value);
       try {
         const { data } = await axios.get(
           "http://localhost:9090/api/v1/dashboard",
@@ -346,7 +347,7 @@ export default {
               Authorization: "Bearer " + localStorage.getItem("token"),
             },
             params: {
-              warehouse: me.warehouse.value,
+              warehouse: me.warehouseData.value,
               fromDate: me.dateFrom.value,
               toDate: me.dateTo.value,
             },
@@ -396,9 +397,12 @@ export default {
       }
     },
   },
-  async created() {
+  async mounted() {
     await this.handleGetApiWarehouse();
     await this.handleGetApiDashboard();
+  },
+  async updated() {
+    this.warehouseData.value = this.warehouse?.warehouseId;
   },
 };
 </script>

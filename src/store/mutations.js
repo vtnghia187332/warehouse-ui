@@ -4,32 +4,21 @@ export default {
     state.user.userId = data.userId;
     state.user.name = data.firstname + " " + data.lastname;
     if (data.imageDetailRes) {
-      state.user.avatar = data.imageDetailRes[0].url;
-    } else {
-      state.user.avatar = null;
+      state.user.avatar = data.imageDetailRes[0]?.url;
     }
-    if (data.warehouseDetailRes) {
-      state.warehouse.warehouseId = data.warehouseDetailRes.warehouseId;
-      state.warehouse.name = data.warehouseDetailRes.name;
-    } else {
-      state.warehouse.warehouseId = null;
-      state.warehouse.name = null;
-    }
-    state.warehouse.detailAddress = data.warehouseDetailRes.addressDes;
-    state.warehouse.country = data.warehouseDetailRes.countryName;
-    state.warehouse.city = data.warehouseDetailRes.cityName;
-    state.warehouse.district = data.warehouseDetailRes.districtName;
-    state.warehouse.subdistrict = data.warehouseDetailRes.subdistrictName;
-    if (data.warehouseChainRes) {
-      state.warehouseChain.warehouseChainId =
-        data.warehouseChainRes.warehouseChainId;
-      state.warehouseChain.name = data.warehouseChainRes.name;
+    state.warehouse.warehouseId = data.warehouseDetailRes?.warehouseId;
+    state.warehouse.name = data.warehouseDetailRes?.name;
+    state.warehouse.detailAddress = data.warehouseDetailRes?.addressDes;
+    state.warehouse.country = data.warehouseDetailRes?.countryName;
+    state.warehouse.city = data.warehouseDetailRes?.cityName;
+    state.warehouse.district = data.warehouseDetailRes?.districtName;
+    state.warehouse.subdistrict = data.warehouseDetailRes?.subdistrictName;
+    state.warehouseChain.warehouseChainId =
+      data.warehouseChainRes?.warehouseChainId;
+    state.warehouseChain.name = data.warehouseChainRes?.name;
+    if (data.warehouseChainRes.imageDetailRes) {
       state.warehouseChain.avatar =
-        data.warehouseChainRes.imageDetailRes[0].url;
-    } else {
-      state.warehouseChain.warehouseChainId = null;
-      state.warehouseChain.name = null;
-      state.warehouseChain.avatar = null;
+        data.warehouseChainRes.imageDetailRes[0]?.url;
     }
   },
 };
