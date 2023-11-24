@@ -116,7 +116,6 @@ export default {
       await axios
         .post(`http://localhost:9090/api/v1/user/forgot-pwd`, data, {
           headers: { "Access-Control-Allow-Origin": "*" },
-          contentType: "multipart/form-data",
         })
         .then(function (res) {
           if (res) {
@@ -130,6 +129,7 @@ export default {
           }
         })
         .catch(function (error) {
+          me.loadingPageDetail = false;
           me.$refs.observerAdd.setErrors(error.response.data.items);
         });
     },

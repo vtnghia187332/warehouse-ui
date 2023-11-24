@@ -4,7 +4,7 @@
       <div class="m-auto">
         <el-row class="pt-4 pl-3 pr-3 !w-[500px]">
           <el-col class="forms grow">
-            <FormCard title="Sign In" class="mb-3">
+            <FormCard title="Change Password" class="mb-3">
               <template v-slot:content>
                 <div class="grid grid-cols-12 gap-x-6">
                   <div class="col-span-12">
@@ -100,11 +100,11 @@ export default {
     ...mapMutations(["setUserDetail"]),
     ...mapActions(["updateUserDetail"]),
     handleSubmit() {
-      if (this.userInfor.newPwd.value != this.userInfor.conNewPwd.value) {
-        this.userInfor.newPwd.error =
-          "Password and Confirm Password Field do not match";
-        this.userInfor.conNewPwd.error =
-          "Password and Confirm Password Field do not match";
+      if (this.userInfor.newPwd.value !== this.userInfor.conNewPwd.value) {
+        this.$refs.observerAdd.setErrors({
+          password: "Password and Confirm Password do not match",
+          confPassword: "Password and Confirm Password do not match",
+        });
       } else {
         this.userInfor.newPwd.error = null;
         this.userInfor.conNewPwd.error = null;

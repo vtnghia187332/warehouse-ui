@@ -442,12 +442,16 @@ export default {
         userDetail[key] = this.user[key].value;
       });
       userDetail.salary = Number(userDetail.salary.replace(/[^0-9\.-]+/g, ""));
-      userDetail.birthDay = moment(this.user.birthDay.value).format(
-        "YYYY-MM-DD HH:mm:ss"
-      );
-      userDetail.expiredNationalNumber = moment(
-        this.user.expiredNationalNumber.value
-      ).format("YYYY-MM-DD HH:mm:ss");
+      if (userDetail.birthDay) {
+        userDetail.birthDay = moment(this.user.birthDay.value).format(
+          "YYYY-MM-DD HH:mm:ss"
+        );
+      }
+      if (userDetail.expiredNationalNumber) {
+        userDetail.expiredNationalNumber = moment(
+          this.user.expiredNationalNumber.value
+        ).format("YYYY-MM-DD HH:mm:ss");
+      }
 
       delete userDetail["roles"];
 

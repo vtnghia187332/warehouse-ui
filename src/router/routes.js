@@ -179,11 +179,6 @@ const routes = [
       },
 
       {
-        path: "/signup",
-        name: "Signup",
-        component: Signup,
-      },
-      {
         path: "/changepwd",
         name: "changePwd",
         component: ChangePwd,
@@ -200,6 +195,11 @@ const routes = [
     path: "/forgot-pwd",
     name: "forgot-pwd",
     component: ForgotPassword,
+  },
+  {
+    path: "/signup",
+    name: "Signup",
+    component: Signup,
   },
 ];
 

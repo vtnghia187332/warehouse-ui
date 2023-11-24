@@ -31,7 +31,8 @@
                       >Submit</el-button
                     >
                   </div>
-                  <div class="mt-3 flex justify-end">
+                  <div class="mt-3 flex justify-between">
+                    <el-link @click="handleSignUp">Sign up</el-link>
                     <el-link @click="handleForgotPassword" type="primary"
                       >Forgot your password?</el-link
                     >
@@ -112,6 +113,9 @@ export default {
     };
   },
   methods: {
+    handleSignUp() {
+      this.$router.push({ path: "/signup" });
+    },
     handleChangePwd() {
       this.$router.push({ path: "/changepwd" });
     },

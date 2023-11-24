@@ -9,7 +9,22 @@
           <span class="ti-filter"></span> Filter
         </button>
       </div>
-      <div>
+      <div class="flex space-x-1">
+        <el-select
+          class="w-[180px]"
+          v-model="warehouseData.value"
+          placeholder="Select Warehouse"
+          @change="filterByWarehouse($event)"
+          clearable
+        >
+          <el-option
+            v-for="item in warehouseData.options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
         <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="handleGetHistory"
@@ -173,6 +188,18 @@ export default {
   },
   data() {
     return {
+      warehouseData: {
+        id: "warehouse",
+        baseId: 0,
+        name: "warehouse",
+        rules: "required",
+        classes: "w-full",
+        isRequired: "true",
+        placeholder: "Select Warehouse",
+        error: "",
+        value: "",
+        options: [],
+      },
       isOpenDialogImport: false,
       products: [],
       search: {
@@ -190,6 +217,23 @@ export default {
     };
   },
   methods: {
+    filterByWarehouse(item) {
+      if (!item) {
+        this.warehouseData.value = null;
+        this.handleGetProducts();
+      } else {
+        const itemStr =
+          this.warehouseData.options.find(
+            (opt) => opt.value == item || opt.label == item
+          ).value || "";
+        if (!itemStr) {
+          this.warehouseData.value = null;
+        } else {
+          this.warehouseData.value = itemStr;
+        }
+        this.handleGetProducts();
+      }
+    },
     handleGetHistory() {
       this.$router.push({ name: "product history" });
     },
@@ -323,7 +367,7 @@ export default {
             pageSize: me.paginationPage.pageSize,
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
-            warehouse: "WH-1",
+            warehouse: me.warehouseData.value,
           },
         })
         .then(function (response) {

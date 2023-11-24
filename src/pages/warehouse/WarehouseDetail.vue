@@ -634,12 +634,16 @@ export default {
       });
       Object.keys(this.workingHour).map((key) => {
         if (this.workingHour[key].checked) {
-          warehouseDetail.openWorkingHourReq[key + "Start"] = moment(
-            this.workingHour[key].time[0]
-          ).format("YYYY-MM-DD HH:mm:ss");
-          warehouseDetail.openWorkingHourReq[key + "End"] = moment(
-            this.workingHour[key].time[1]
-          ).format("YYYY-MM-DD HH:mm:ss");
+          if (warehouseDetail.openWorkingHourReq[key + "Start"]) {
+            warehouseDetail.openWorkingHourReq[key + "Start"] = moment(
+              this.workingHour[key].time[0]
+            ).format("YYYY-MM-DD HH:mm:ss");
+          }
+          if (warehouseDetail.openWorkingHourReq[key + "End"]) {
+            warehouseDetail.openWorkingHourReq[key + "End"] = moment(
+              this.workingHour[key].time[1]
+            ).format("YYYY-MM-DD HH:mm:ss");
+          }
         }
       });
       Object.keys(this.address).map((key) => {
