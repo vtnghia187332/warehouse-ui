@@ -55,13 +55,16 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import DialogCreate from "../address/DialogCreate.vue";
 import LoadingPage from "@/components/Cards/LoadingPage";
 import axios from "axios";
 export default {
-  computed: {},
+  computed: {
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
+  },
   components: { BaseSearch, BasePagination, DialogCreate, LoadingPage },
   data() {
     return {
@@ -184,6 +187,7 @@ export default {
             pageSize: me.paginationPage.pageSize,
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
+            warehouseChainId: me.warehouseChain.warehouseChainId,
           },
         })
         .then(function (response) {
@@ -208,6 +212,7 @@ export default {
     async handleCreateSingleUint(field) {
       const singleUnit = {
         name: field.value,
+        warehouseChainId: this.warehouseChain.warehouseChainId,
       };
       await axios({
         method: "post",
@@ -237,6 +242,7 @@ export default {
       const singleUnit = {
         id: field.baseId,
         name: field.value,
+        warehouseChainId: this.warehouseChain.warehouseChainId,
       };
       axios({
         method: "put",

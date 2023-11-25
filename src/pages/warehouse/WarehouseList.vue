@@ -701,6 +701,7 @@ export default {
             pageSize: me.paginationPage.pageSize,
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
+            userId: me.user.userId,
           },
         })
         .then(function (response) {

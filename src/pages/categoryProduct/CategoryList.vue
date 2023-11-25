@@ -55,6 +55,7 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import DialogCreate from "../address/DialogCreate.vue";
@@ -62,6 +63,9 @@ import LoadingPage from "@/components/Cards/LoadingPage";
 import axios from "axios";
 export default {
   components: { BaseSearch, BasePagination, DialogCreate, LoadingPage },
+  computed: {
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
+  },
   data() {
     return {
       cateSelected: [],
@@ -181,18 +185,12 @@ export default {
             pageSize: me.paginationPage.pageSize,
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
+            warehouseChainId: me.warehouseChain.warehouseChainId,
           },
         })
         .then(function (response) {
           me.categories = response.data.items.content;
-          (me.paginationVal = {
-            currentPage: response.data.items.pageNum,
-            pageSizeList: [10, 20, 30, 50, 100],
-            currentPage: response.data.items.number + 1,
-            pageSizeval: response.data.items.size,
-            total: response.data.items.totalElements,
-          }),
-            (me.loadingTable = false);
+          me.loadingTable = false;
         })
         .catch((error) => {
           this.$message({
@@ -205,6 +203,7 @@ export default {
     handleCreateCate(field) {
       const cate = {
         name: field.value,
+        warehouseChainId: this.warehouseChain.warehouseChainId,
       };
       axios({
         method: "post",
@@ -234,6 +233,7 @@ export default {
       const cate = {
         id: field.baseId,
         name: field.value,
+        warehouseChainId: this.warehouseChain.warehouseChainId,
       };
       axios({
         method: "put",

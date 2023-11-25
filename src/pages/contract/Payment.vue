@@ -723,6 +723,7 @@ export default {
       await axios
         .get("http://localhost:9090/api/v1/single-unit/all", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
         })
         .then((res) => {
           if (res.status === 200) {

@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { ValidationObserver } from "vee-validate";
 import BaseInput from "../../components/Inputs/BaseInput.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
@@ -167,6 +168,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
     description: function () {
       if (
         !this.conversationUnit.unitDestinationId.value ||
@@ -236,6 +238,7 @@ export default {
       axios
         .get("http://localhost:9090/api/v1/single-unit/all", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
         })
         .then((res) => {
           if (res.status === 200) {

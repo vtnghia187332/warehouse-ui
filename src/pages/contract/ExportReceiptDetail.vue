@@ -549,6 +549,7 @@ export default {
       await axios
         .get("http://localhost:9090/api/v1/single-unit/all", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
         })
         .then((res) => {
           if (res.status === 200) {
@@ -570,6 +571,7 @@ export default {
       await axios
         .get("http://localhost:9090/api/v1/product/data-list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseId: this.warehouse.warehouseId },
         })
         .then((res) => {
           if (res.status === 200) {
@@ -591,6 +593,7 @@ export default {
       await axios
         .get("http://localhost:9090/api/v1/customer/data-list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
         })
         .then((res) => {
           if (res.status === 200) {

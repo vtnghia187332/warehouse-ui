@@ -623,6 +623,9 @@ export default {
             headers: {
               Authorization: "Bearer " + localStorage.getItem("token"),
             },
+            params: {
+              warehouseChainId: this.warehouseChain.warehouseChainId,
+            },
           }
         );
         this.category.options = data.items;
@@ -638,10 +641,10 @@ export default {
       try {
         const { data } = await axios.get(
           "http://localhost:9090/api/v1/single-unit/all",
-          {
-            headers: {
+          {headers: {
               Authorization: "Bearer " + localStorage.getItem("token"),
             },
+            params: { warehouseChainId: this.warehouseChain.warehouseChainId },
           }
         );
         this.unitOptions = data.items;
