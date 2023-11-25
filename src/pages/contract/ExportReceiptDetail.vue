@@ -579,6 +579,8 @@ export default {
             this.materials.forEach((item) => {
               item.product.options = res.data.items;
             });
+            console.log(this.defaultMaterial, "this.defaultMaterial");
+            console.log(this.materials, "this.materials");
           }
         })
         .catch((error) => {

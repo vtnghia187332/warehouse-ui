@@ -214,12 +214,16 @@
 </template>
 <script>
 import axios from "axios";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import LoadingPage from "@/components/Cards/LoadingPage";
 import RoleDetailVue from "./RoleDetail.vue";
 export default {
   components: { BaseSearch, BasePagination, LoadingPage, RoleDetailVue },
+  computed: {
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
+  },
   data() {
     return {
       warehouseData: {
@@ -647,6 +651,7 @@ export default {
       await axios
         .get("http://localhost:9090/api/v1/warehouse/data-list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
         })
         .then((res) => {
           if (res.status === 200) {

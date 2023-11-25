@@ -94,6 +94,7 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import axios from "axios";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
@@ -112,6 +113,7 @@ export default {
     moment() {
       return moment;
     },
+    ...mapGetters(["warehouseChain"]),
   },
   data() {
     return {
@@ -184,6 +186,7 @@ export default {
             pageSize: me.paginationPage.pageSize,
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
+            warehouseChainId: me.warehouseChain.warehouseChainId,
           },
         })
         .then(function (response) {

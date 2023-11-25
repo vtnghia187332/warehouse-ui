@@ -43,13 +43,13 @@
 
         <el-select
           class="w-[180px]"
-          v-model="warehouse.value"
+          v-model="warehouseData.value"
           placeholder="Select Warehouse"
           @change="filterByWarehouse($event)"
           clearable
         >
           <el-option
-            v-for="item in warehouse.options"
+            v-for="item in warehouseData.options"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -240,6 +240,7 @@
 </template>
 <script>
 import axios from "axios";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
@@ -248,6 +249,9 @@ import RefundVue from "./Refund.vue";
 import Cancel from "./Cancel.vue";
 import Acquit from "./Acquit.vue";
 export default {
+  computed: {
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
+  },
   components: {
     BaseSearch,
     BasePagination,
@@ -259,10 +263,10 @@ export default {
   },
   data() {
     return {
-      warehouse: {
-        id: "warehouse",
+      warehouseData: {
+        id: "warehouseData",
         baseId: 0,
-        name: "warehouse",
+        name: "warehouseData",
         rules: "required",
         classes: "w-full",
         isRequired: "true",
@@ -384,17 +388,17 @@ export default {
     },
     filterByWarehouse(item) {
       if (!item) {
-        this.warehouse.value = null;
+        this.warehouseData.value = null;
         this.handleGetInvoicesEx();
       } else {
         const itemStr =
-          this.warehouse.options.find(
+          this.warehouseData.options.find(
             (opt) => opt.value == item || opt.label == item
           ).value || "";
         if (!itemStr) {
-          this.warehouse.value = null;
+          this.warehouseData.value = null;
         } else {
-          this.warehouse.value = itemStr;
+          this.warehouseData.value = itemStr;
         }
         this.handleGetInvoicesEx();
       }
@@ -598,10 +602,11 @@ export default {
       await axios
         .get("http://localhost:9090/api/v1/warehouse/data-list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
         })
         .then((res) => {
           if (res.status === 200) {
-            this.warehouse.options = res.data.items;
+            this.warehouseData.options = res.data.items;
           }
         })
         .catch((error) => {
@@ -627,7 +632,7 @@ export default {
             orderBy: me.paginationPage.orderBy,
             invoiceType: me.paginationPage.invoiceType,
             invoiceStatus: me.paginationPage.invoiceStatus,
-            warehouse: me.warehouse.value,
+            warehouse: me.warehouseData.value,
           },
         })
         .then(function (response) {

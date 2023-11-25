@@ -1,142 +1,153 @@
 <template>
   <div>
-    <div class="ml-4 font-semibold text-2xl">Filter by</div>
-    <div class="ml-4 grid gap-x-2 grid-cols-6">
-      <BaseSelection
-        @getValue=""
-        v-model="warehouseData.value"
-        :field="warehouseData"
-      />
-      <DatePicker :field="dateTo" v-model="dateTo.value" />
-      <DatePicker :field="dateFrom" v-model="dateFrom.value" />
-    </div>
-    <div class="bg-white rounded-lg shadow-md p-4 m-3 grid grid-cols-5 gap-x-2">
-      <div class="grid grid-cols-5 gap-x-2">
-        <div class="col-span-1 m-auto">
-          <i class="el-icon-money"></i>
-        </div>
-        <div class="col-span-4">
-          <div class="font-bold text-blue-600/100">Imported Price Product</div>
-          <div>$ {{ addCommas(detail.totalImportPrice) }}</div>
-        </div>
+    <loading-page v-show="loadingPageDetail"></loading-page>
+    <div v-show="!loadingPageDetail">
+      <div class="ml-4 font-semibold text-2xl">Filter by</div>
+      <div class="ml-4 grid gap-x-2 grid-cols-6">
+        <BaseSelection
+          @getValue=""
+          v-model="warehouseData.value"
+          :field="warehouseData"
+        />
+        <DatePicker :field="dateTo" v-model="dateTo.value" />
+        <DatePicker :field="dateFrom" v-model="dateFrom.value" />
       </div>
-
-      <div class="grid grid-cols-5 gap-x-2">
-        <div class="col-span-1 m-auto">
-          <i class="el-icon-money"></i>
-        </div>
-        <div class="col-span-4">
-          <div class="font-bold text-blue-600/100">Money Refund</div>
-          <div>$ {{ addCommas(detail.totalRefundPrice) }}</div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-5 gap-x-2">
-        <div class="col-span-1 m-auto">
-          <i class="el-icon-money"></i>
-        </div>
-        <div class="col-span-4">
-          <div class="font-bold text-blue-600/100">Discount</div>
-          <div>$ {{ addCommas(detail.totalDiscountPrice) }}</div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-5 gap-x-2">
-        <div class="col-span-1 m-auto">
-          <i class="el-icon-money"></i>
-        </div>
-        <div class="col-span-4">
-          <div class="font-bold text-blue-600/100">Tax Price</div>
-          <div>$ {{ addCommas(detail.totalTaxPrice) }}</div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-5 gap-x-2">
-        <div class="col-span-1 m-auto">
-          <i class="el-icon-money"></i>
-        </div>
-        <div class="col-span-4">
-          <div class="font-bold text-blue-600/100">Revenue with tax</div>
-          <div>$ {{ addCommas(detail.totalRevenueWithTax) }}</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="m-3 grid grid-cols-4 gap-x-4">
-      <div class="">
-        <el-col :span="8" class="w-full">
-          <el-card shadow="always">
-            <div class="font-semibold">Number of Customer</div>
-            <div>{{ detail.numberOfCustomer }}</div>
-          </el-card>
-        </el-col>
-      </div>
-      <div class="">
-        <el-col :span="8" class="w-full">
-          <el-card shadow="always">
-            <div class="font-semibold">Number of Invoice</div>
-            <div>{{ detail.numberOfInvoicePayment }}</div>
-          </el-card>
-        </el-col>
-      </div>
-
-      <div class="">
-        <el-col :span="8" class="w-full">
-          <el-card shadow="always">
-            <div class="font-semibold">Number of Product</div>
-            <div>{{ detail.numberOfProduct }}</div>
-          </el-card>
-        </el-col>
-      </div>
-
-      <div class="">
-        <el-col :span="8" class="w-full">
-          <el-card shadow="always">
-            <div class="font-semibold">Number of Canceled Invoice</div>
-            <div>{{ detail.numberOfCancelInvoice }}</div>
-          </el-card>
-        </el-col>
-      </div>
-    </div>
-    <div class="ml-4 font-semibold text-2xl">Total Receipt</div>
-
-    <div style="height: 300px" class="m-auto">
-      <v-chart :option="MoneyPaidByDate"></v-chart>
-    </div>
-    <div class="m-3 grid grid-cols-2 gap-x-4">
-      <div>
-        <div class="font-semibold">Payment Methods</div>
-        <el-card shadow="always">
-          <div style="height: 250px">
-            <v-chart :option="paymentMethodsStas" autoresize :key="1"></v-chart>
+      <div
+        class="bg-white rounded-lg shadow-md p-4 m-3 grid grid-cols-5 gap-x-2"
+      >
+        <div class="grid grid-cols-5 gap-x-2">
+          <div class="col-span-1 m-auto">
+            <i class="el-icon-money"></i>
           </div>
-        </el-card>
+          <div class="col-span-4">
+            <div class="font-bold text-blue-600/100">
+              Imported Price Product
+            </div>
+            <div>$ {{ addCommas(detail.totalImportPrice) }}</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-5 gap-x-2">
+          <div class="col-span-1 m-auto">
+            <i class="el-icon-money"></i>
+          </div>
+          <div class="col-span-4">
+            <div class="font-bold text-blue-600/100">Money Refund</div>
+            <div>$ {{ addCommas(detail.totalRefundPrice) }}</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-5 gap-x-2">
+          <div class="col-span-1 m-auto">
+            <i class="el-icon-money"></i>
+          </div>
+          <div class="col-span-4">
+            <div class="font-bold text-blue-600/100">Discount</div>
+            <div>$ {{ addCommas(detail.totalDiscountPrice) }}</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-5 gap-x-2">
+          <div class="col-span-1 m-auto">
+            <i class="el-icon-money"></i>
+          </div>
+          <div class="col-span-4">
+            <div class="font-bold text-blue-600/100">Tax Price</div>
+            <div>$ {{ addCommas(detail.totalTaxPrice) }}</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-5 gap-x-2">
+          <div class="col-span-1 m-auto">
+            <i class="el-icon-money"></i>
+          </div>
+          <div class="col-span-4">
+            <div class="font-bold text-blue-600/100">Revenue with tax</div>
+            <div>$ {{ addCommas(detail.totalRevenueWithTax) }}</div>
+          </div>
+        </div>
       </div>
 
-      <div>
-        <div class="font-semibold">In Debt</div>
-        <el-card shadow="always">
-          <div class="grid grid-cols-5 gap-4 border-b-2 border-black-900">
-            <el-col class="col-span-3 font-semibold">Type of Invoice</el-col>
-            <el-col class="font-semibold">Số đơn</el-col>
-            <el-col class="font-semibold">Số tiền</el-col>
-          </div>
-          <div class="grid grid-cols-6 gap-4 mt-2">
-            <el-col class="col-span-4">Export Invoice</el-col>
-            <el-col class="">{{ detail.numberInvoiceInDebtExport }}</el-col>
-            <el-col class="">{{ detail.totalInDebtExport }}</el-col>
-          </div>
-          <div class="grid grid-cols-6 gap-4 mt-2">
-            <el-col class="col-span-4">Receipt Invoice</el-col>
-            <el-col class="">{{ detail.numberInvoiceInDebtReceipt }}</el-col>
-            <el-col class="">{{ detail.totalInDebtReceipt }}</el-col>
-          </div>
-        </el-card>
+      <div class="m-3 grid grid-cols-4 gap-x-4">
+        <div class="">
+          <el-col :span="8" class="w-full">
+            <el-card shadow="always">
+              <div class="font-semibold">Number of Customer</div>
+              <div>{{ detail.numberOfCustomer }}</div>
+            </el-card>
+          </el-col>
+        </div>
+        <div class="">
+          <el-col :span="8" class="w-full">
+            <el-card shadow="always">
+              <div class="font-semibold">Number of Invoice</div>
+              <div>{{ detail.numberOfInvoicePayment }}</div>
+            </el-card>
+          </el-col>
+        </div>
+
+        <div class="">
+          <el-col :span="8" class="w-full">
+            <el-card shadow="always">
+              <div class="font-semibold">Number of Product</div>
+              <div>{{ detail.numberOfProduct }}</div>
+            </el-card>
+          </el-col>
+        </div>
+
+        <div class="">
+          <el-col :span="8" class="w-full">
+            <el-card shadow="always">
+              <div class="font-semibold">Number of Canceled Invoice</div>
+              <div>{{ detail.numberOfCancelInvoice }}</div>
+            </el-card>
+          </el-col>
+        </div>
       </div>
-    </div>
-    <!-- <div style="height: 300px">
+      <div class="ml-4 font-semibold text-2xl">Total Receipt</div>
+
+      <div style="height: 300px" class="m-auto">
+        <v-chart :option="MoneyPaidByDate"></v-chart>
+      </div>
+      <div class="m-3 grid grid-cols-2 gap-x-4">
+        <div>
+          <div class="font-semibold">Payment Methods</div>
+          <el-card shadow="always">
+            <div style="height: 250px">
+              <v-chart
+                :option="paymentMethodsStas"
+                autoresize
+                :key="1"
+              ></v-chart>
+            </div>
+          </el-card>
+        </div>
+
+        <div>
+          <div class="font-semibold">In Debt</div>
+          <el-card shadow="always">
+            <div class="grid grid-cols-5 gap-4 border-b-2 border-black-900">
+              <el-col class="col-span-3 font-semibold">Type of Invoice</el-col>
+              <el-col class="font-semibold">Số đơn</el-col>
+              <el-col class="font-semibold">Số tiền</el-col>
+            </div>
+            <div class="grid grid-cols-6 gap-4 mt-2">
+              <el-col class="col-span-4">Export Invoice</el-col>
+              <el-col class="">{{ detail.numberInvoiceInDebtExport }}</el-col>
+              <el-col class="">{{ detail.totalInDebtExport }}</el-col>
+            </div>
+            <div class="grid grid-cols-6 gap-4 mt-2">
+              <el-col class="col-span-4">Receipt Invoice</el-col>
+              <el-col class="">{{ detail.numberInvoiceInDebtReceipt }}</el-col>
+              <el-col class="">{{ detail.totalInDebtReceipt }}</el-col>
+            </div>
+          </el-card>
+        </div>
+      </div>
+      <!-- <div style="height: 300px">
       <v-chart :option="option1" autoresize></v-chart>
     </div> -->
+    </div>
   </div>
 </template>
 <script>
@@ -144,6 +155,7 @@ import { mapGetters, mapMutations, mapActions } from "vuex";
 import { StatsCard, ChartCard } from "@/components/index";
 import BaseSelection from "../components/Inputs/BaseSelection.vue";
 import moment from "moment";
+import LoadingPage from "../components/Cards/LoadingPage.vue";
 import DatePicker from "../components/Date/DatePicker.vue";
 import axios from "axios";
 export default {
@@ -152,15 +164,17 @@ export default {
     ChartCard,
     BaseSelection,
     DatePicker,
+    LoadingPage,
   },
   computed: {
     moment() {
       return moment;
     },
-    ...mapGetters(["warehouse"]),
+    ...mapGetters(["warehouse", "warehouseChain"]),
   },
   data() {
     return {
+      loadingPageDetail: false,
       warehouseData: {
         id: "warehouseData",
         baseId: 0,
@@ -323,6 +337,7 @@ export default {
       await axios
         .get("http://localhost:9090/api/v1/warehouse/data-list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
         })
         .then((res) => {
           if (res.status === 200) {
@@ -339,6 +354,7 @@ export default {
     },
     async handleGetApiDashboard() {
       var me = this;
+      me.loadingPageDetail = true;
       try {
         const { data } = await axios.get(
           "http://localhost:9090/api/v1/dashboard",
@@ -388,12 +404,14 @@ export default {
           me.MoneyPaidByDate.series.push(dataRec);
           me.MoneyPaidByDate.series.push(dataEx);
         }
+        me.loadingPageDetail = false;
       } catch (error) {
         me.$message({
           showClose: true,
           message: error.response.data.items,
           type: "error",
         });
+        me.loadingPageDetail = false;
       }
     },
   },
@@ -402,7 +420,7 @@ export default {
     await this.handleGetApiDashboard();
   },
   async updated() {
-    this.warehouseData.value = this.warehouse?.warehouseId;
+    // this.warehouseData.value = this.warehouse?.warehouseId;
   },
 };
 </script>

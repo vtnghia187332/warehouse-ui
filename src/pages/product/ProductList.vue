@@ -357,10 +357,10 @@ export default {
         })
         .catch(function (res) {});
     },
-    handleGetProducts() {
+    async handleGetProducts() {
       var me = this;
       me.loadingTable = true;
-      axios
+      await axios
         .get("http://localhost:9090/api/v1/product/list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: {
@@ -369,7 +369,7 @@ export default {
             pageSize: me.paginationPage.pageSize,
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
-            warehouse: me.warehouse.warehouseId,
+            warehouse: me.warehouseData.value,
           },
         })
         .then(function (response) {
@@ -384,16 +384,29 @@ export default {
           });
         });
     },
+    async getWarehouseSel() {
+      await axios
+        .get("http://localhost:9090/api/v1/warehouse/data-list", {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.warehouseData.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
+    },
   },
-  mounted() {
-    (this.paginationPage = {
-      pageNo: 1,
-      pageSize: 30,
-      sorting: "createdAt",
-      orderBy: "DESC",
-    }),
-      (this.search.value = "");
-    this.handleGetProducts();
+  async mounted() {
+    await this.handleGetProducts();
+    await this.getWarehouseSel();
   },
 };
 </script>
