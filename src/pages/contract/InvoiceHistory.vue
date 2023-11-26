@@ -9,6 +9,23 @@
           <span class="ti-filter"></span> Filter
         </button>
       </div>
+      <div class="flex space-x-1">
+        <el-select
+          class="w-[180px]"
+          v-model="warehouseData.value"
+          placeholder="Select Warehouse"
+          @change="filterByWarehouse($event)"
+          clearable
+        >
+          <el-option
+            v-for="item in warehouseData.options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </div>
     </div>
     <LoadingPage v-show="loadingTable"></LoadingPage>
     <div class="table_style px-2" v-show="!loadingTable">
@@ -96,7 +113,9 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import axios from "axios";
+import moment from "moment";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import LoadingPage from "@/components/Cards/LoadingPage";
@@ -106,8 +125,26 @@ export default {
     BasePagination,
     LoadingPage,
   },
+  computed: {
+    moment() {
+      return moment;
+    },
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
+  },
   data() {
     return {
+      warehouseData: {
+        id: "warehouse",
+        baseId: 0,
+        name: "warehouse",
+        rules: "required",
+        classes: "w-full",
+        isRequired: "true",
+        placeholder: "Select Warehouse",
+        error: "",
+        value: "",
+        options: [],
+      },
       activeName: "first",
       search: {
         value: "",
@@ -126,6 +163,23 @@ export default {
     };
   },
   methods: {
+    filterByWarehouse(item) {
+      if (!item) {
+        this.warehouseData.value = null;
+        this.handleGetInvoices();
+      } else {
+        const itemStr =
+          this.warehouseData.options.find(
+            (opt) => opt.value == item || opt.label == item
+          ).value || "";
+        if (!itemStr) {
+          this.warehouseData.value = null;
+        } else {
+          this.warehouseData.value = itemStr;
+        }
+        this.handleGetInvoices();
+      }
+    },
     handleGetInvoices() {
       var me = this;
       me.loadingTable = true;
@@ -138,18 +192,12 @@ export default {
             pageSize: me.paginationPage.pageSize,
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
+            warehouse: me.warehouseData.value,
           },
         })
         .then(function (response) {
           me.invoices = response.data.items.content;
-          (me.paginationVal = {
-            currentPage: response.data.items.pageNum,
-            pageSizeList: [10, 20, 30, 50, 100],
-            currentPage: response.data.items.number + 1,
-            pageSizeval: response.data.items.size,
-            total: response.data.items.totalElements,
-          }),
-            (me.loadingTable = false);
+          me.loadingTable = false;
         })
         .catch((error) => {
           this.$message({
@@ -180,9 +228,29 @@ export default {
         300
       );
     },
+    async getWarehouseSel() {
+      await axios
+        .get("http://localhost:9090/api/v1/warehouse/data-list", {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.warehouseData.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
+    },
   },
-  mounted() {
-    this.handleGetInvoices();
+  async mounted() {
+    await this.handleGetInvoices();
+    await this.getWarehouseSel();
   },
 };
 </script>

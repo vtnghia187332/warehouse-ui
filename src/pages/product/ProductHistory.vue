@@ -9,7 +9,23 @@
           <span class="ti-filter"></span> Filter
         </button>
       </div>
-      <div></div>
+      <div class="flex space-x-1">
+        <el-select
+          class="w-[180px]"
+          v-model="warehouseData.value"
+          placeholder="Select Warehouse"
+          @change="filterByWarehouse($event)"
+          clearable
+        >
+          <el-option
+            v-for="item in warehouseData.options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </div>
     </div>
     <LoadingPage v-show="loadingTable"></LoadingPage>
     <div class="table_style px-2" v-show="!loadingTable">
@@ -97,6 +113,8 @@
 </template>
 <script>
 import axios from "axios";
+import { mapGetters, mapMutations, mapActions } from "vuex";
+import moment from "moment";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
 import LoadingPage from "@/components/Cards/LoadingPage";
@@ -108,8 +126,26 @@ export default {
     LoadingPage,
     ProductImportDialogVue,
   },
+  computed: {
+    moment() {
+      return moment;
+    },
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
+  },
   data() {
     return {
+      warehouseData: {
+        id: "warehouse",
+        baseId: 0,
+        name: "warehouse",
+        rules: "required",
+        classes: "w-full",
+        isRequired: "true",
+        placeholder: "Select Warehouse",
+        error: "",
+        value: "",
+        options: [],
+      },
       isOpenDialogImport: false,
       products: [],
       search: {
@@ -127,6 +163,23 @@ export default {
     };
   },
   methods: {
+    filterByWarehouse(item) {
+      if (!item) {
+        this.warehouseData.value = null;
+        this.handleGetProducts();
+      } else {
+        const itemStr =
+          this.warehouseData.options.find(
+            (opt) => opt.value == item || opt.label == item
+          ).value || "";
+        if (!itemStr) {
+          this.warehouseData.value = null;
+        } else {
+          this.warehouseData.value = itemStr;
+        }
+        this.handleGetProducts();
+      }
+    },
     handleSizeChange(param) {
       this.paginationPage.pageNo = 1;
       this.paginationPage.pageSize = param;
@@ -148,10 +201,29 @@ export default {
         300
       );
     },
-    handleGetProducts() {
+    async getWarehouseSel() {
+      await axios
+        .get("http://localhost:9090/api/v1/warehouse/data-list", {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.warehouseData.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
+    },
+    async handleGetProducts() {
       var me = this;
       me.loadingTable = true;
-      axios
+      await axios
         .get("http://localhost:9090/api/v1/product/history", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           params: {
@@ -160,6 +232,7 @@ export default {
             pageSize: me.paginationPage.pageSize,
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
+            warehouse: me.warehouseData.value,
           },
         })
         .then(function (response) {
@@ -182,8 +255,9 @@ export default {
         });
     },
   },
-  mounted() {
-    this.handleGetProducts();
+  async mounted() {
+    await this.getWarehouseSel();
+    await this.handleGetProducts();
   },
 };
 </script>
