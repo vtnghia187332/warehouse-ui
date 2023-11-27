@@ -196,7 +196,7 @@
                   :on-change="handleAddPhotos"
                   :file-list="productPhotos"
                   :limit="1"
-                  :disabled="productPhotos.length === 1"
+                  :disabled="productPhotos?.length === 1"
                   :append-to-body="true"
                 >
                   <i slot="default" class="el-icon-plus"></i>
@@ -576,7 +576,7 @@ export default {
           return el.index == item.id ? { ...item } : el;
         });
       } else {
-        this.units.push({ ...item, id: this.units.length });
+        this.units.push({ ...item, id: this.units?.length });
       }
     },
     handleCalUnitDetail(row, col, event) {
@@ -614,6 +614,7 @@ export default {
     },
     handleChangeSingleUnit(val) {
       this.product.singleUnit.baseId = val;
+      this.units = [];
     },
     async getValueCategory() {
       try {
@@ -641,7 +642,8 @@ export default {
       try {
         const { data } = await axios.get(
           "http://localhost:9090/api/v1/single-unit/all",
-          {headers: {
+          {
+            headers: {
               Authorization: "Bearer " + localStorage.getItem("token"),
             },
             params: { warehouseChainId: this.warehouseChain.warehouseChainId },
@@ -683,7 +685,6 @@ export default {
         categoryProductId: this.category.baseId,
         units: this.units,
       };
-      console.log(productDetail, "productDetail");
       Object.keys(this.product || {}).map((key) => {
         productDetail[key] = this.product[key].value;
         if (key == "expiredDate") {
@@ -703,8 +704,7 @@ export default {
       } else {
         productDetailForm.append("image", "");
       }
-      console.log(this.productPhotos.length, "this.productPhotos.length");
-      productDetailForm.append("numberOfImg", this.productPhotos.length);
+      productDetailForm.append("numberOfImg", this.productPhotos?.length);
       if (this.$route.params.data.type === "EDIT") {
         productDetailForm.delete("id");
         productDetailForm.delete("productId");
@@ -823,7 +823,7 @@ export default {
                 this.productPhotos = [];
               }
             }
-            if (this.units && this.units.length > 0) {
+            if (this.units && this.units?.length > 0) {
               this.units.forEach((item) => {
                 item.unitDestinationId =
                   this.unitOptions.find(
