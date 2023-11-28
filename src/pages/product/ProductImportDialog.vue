@@ -202,6 +202,7 @@
 </template>
 <script>
 import axios from "axios";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import BasePagination from "./../../components/Pagination/BasePagination.vue";
 import BaseSearch from "@/components/Inputs/BaseSearch";
 import LoadingPage from "@/components/Cards/LoadingPage";
@@ -210,6 +211,9 @@ export default {
     BasePagination,
     BaseSearch,
     LoadingPage,
+  },
+  computed: {
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
   },
   props: {
     isOpenDialogImport: {
@@ -266,6 +270,11 @@ export default {
       var me = this;
       var bodyFormData = new FormData();
       bodyFormData.append("uploadFiles", me.dataImporting);
+      bodyFormData.append("warehouseId", me.warehouse.warehouseId);
+      bodyFormData.append(
+        "warehouseChainId",
+        me.warehouseChain.warehouseChainId
+      );
       await axios({
         method: "post",
         url: "http://localhost:9090/api/v1/product/import",
@@ -386,6 +395,7 @@ export default {
         errorId: me.importError.numberSuccessItem.errorId,
         confirmId: me.importError.numberOverrideItem.errorId,
         ids: me.multipleSelection,
+        warehouseChainId: me.warehouseChain.warehouseChainId,
         fileNames: [],
       };
       await axios({

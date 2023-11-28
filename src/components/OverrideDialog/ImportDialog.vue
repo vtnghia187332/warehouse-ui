@@ -213,12 +213,16 @@ import axios from "axios";
 import BasePagination from "./../Pagination/BasePagination.vue";
 import BaseSearch from "@/components/Inputs/BaseSearch";
 import LoadingPage from "@/components/Cards/LoadingPage";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   components: {
     BasePagination,
     BaseSearch,
     LoadingPage,
+  },
+  computed: {
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
   },
   data() {
     return {
@@ -401,6 +405,10 @@ export default {
       var me = this;
       var bodyFormData = new FormData();
       bodyFormData.append("uploadFiles", me.dataImporting);
+      bodyFormData.append(
+        "warehouseChainId",
+        me.warehouseChain.warehouseChainId
+      );
       await axios({
         method: "post",
         url: "http://localhost:9090/api/v1/warehouse/import",
@@ -509,6 +517,7 @@ export default {
         confirmId: me.importError.numberOverrideItem.errorId,
         ids: me.multipleSelection,
         fileNames: [],
+        warehouseChainId: me.warehouseChain.warehouseChainId,
       };
       await axios({
         method: "post",
