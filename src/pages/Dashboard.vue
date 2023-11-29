@@ -416,6 +416,7 @@ export default {
     },
   },
   async mounted() {
+    this.warehouseData.value = this.warehouse.warehouseId;
     await this.handleGetApiWarehouse();
     await this.handleGetApiDashboard();
   },

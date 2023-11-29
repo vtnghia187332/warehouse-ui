@@ -669,8 +669,9 @@ export default {
   },
   async mounted() {
     await this.getWarehouseSel();
-    await this.handleGetUsers();
     await this.handleGetRoles();
+    this.warehouseData.value = this.warehouse.warehouseId;
+    await this.handleGetUsers();
   },
 };
 </script>

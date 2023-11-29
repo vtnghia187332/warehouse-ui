@@ -405,6 +405,7 @@ export default {
     },
   },
   async mounted() {
+    this.warehouseData.value = this.warehouse.warehouseId;
     await this.handleGetProducts();
     await this.getWarehouseSel();
   },

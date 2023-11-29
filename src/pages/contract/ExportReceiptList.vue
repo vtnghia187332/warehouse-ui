@@ -379,6 +379,7 @@ export default {
     },
   },
   async mounted() {
+    this.warehouseData.value = this.warehouse.warehouseId;
     await this.handleGetInvoices();
     await this.getWarehouseSel();
   },
