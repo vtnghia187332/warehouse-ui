@@ -425,7 +425,7 @@ export default {
         .catch(function (response) {
           me.$message({
             showClose: true,
-            message: response.response.data.message,
+            message: response.response.data.items,
             type: "error",
           });
         });

@@ -154,7 +154,7 @@
             style="width: 100%"
             @row-dblclick="goToDetailWarehouse"
             @sort-change="sortChange"
-            height="800"
+            height="765"
           >
             <div slot="append" v-if="warehouses.length == '0'">
               <el-empty :image-size="300"></el-empty>
@@ -780,7 +780,6 @@ export default {
 }
 
 .table_style {
-  height: calc(100vh - 185px);
   overflow: auto;
 }
 .footer-btn-fixed {
