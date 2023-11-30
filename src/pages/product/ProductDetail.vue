@@ -81,10 +81,10 @@
                     />
                   </div>
                   <div class="col-span-3">
-                    <BaseInput
+                    <!-- <BaseInput
                       :field="product.volume"
                       v-model="product.volume.value"
-                    />
+                    /> -->
                   </div>
                 </div>
                 <div class="col-span-12">

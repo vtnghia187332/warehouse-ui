@@ -645,7 +645,8 @@ export default {
                   this.singleUnit = item.singleUnit;
                 });
               } else if (res.data.items["typeInvoice"] == 1) {
-                this.customer.fullName.value = this.warehouse.name;
+                this.customer.fullName.value =
+                  res.data.items["customer"].fullName;
                 this.order.deliveryAddress.value =
                   this.warehouse.detailAddress +
                   ", " +

@@ -636,9 +636,7 @@ export default {
         });
     },
     getBaseSearchRole(param) {
-      // clears the timer on a call so there is always x seconds in between calls
       clearTimeout(this.timer);
-      // if the timer resets before it hits 150ms it will not run
       this.timer = setTimeout(
         function () {
           this.searchRole.value = param;

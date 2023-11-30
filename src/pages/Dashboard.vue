@@ -9,8 +9,25 @@
           v-model="warehouseData.value"
           :field="warehouseData"
         />
-        <DatePicker :field="dateTo" v-model="dateTo.value" />
-        <DatePicker :field="dateFrom" v-model="dateFrom.value" />
+        <!-- <DatePicker :field="dateTo" v-model="dateTo.value" />
+        <DatePicker :field="dateFrom" v-model="dateFrom.value" /> -->
+        <div class="mb-2">
+          <label class="!font-bold block"> Date </label>
+          <el-date-picker
+            v-model="dateFromToSearch"
+            type="daterange"
+            align="right"
+            unlink-panels
+            range-separator="To"
+            :default-time="['00:00:00', '23:59:59']"
+            start-placeholder="Start Date"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
+            end-placeholder="End Date"
+            @change="checkDateSearch($event)"
+          >
+          </el-date-picker>
+        </div>
       </div>
       <div
         class="bg-white rounded-lg shadow-md p-4 m-3 grid grid-cols-5 gap-x-2"
@@ -174,6 +191,7 @@ export default {
   },
   data() {
     return {
+      dateFromToSearch: "",
       loadingPageDetail: false,
       warehouseData: {
         id: "warehouseData",
@@ -322,6 +340,11 @@ export default {
     },
   },
   methods: {
+    checkDateSearch(data) {
+      console.log(this.dateFromToSearch);
+
+      this.handleGetApiDashboard();
+    },
     addCommas(nStr) {
       nStr += "";
       const x = nStr.split(".");
@@ -364,8 +387,8 @@ export default {
             },
             params: {
               warehouse: me.warehouseData.value,
-              fromDate: me.dateFrom.value,
-              toDate: me.dateTo.value,
+              fromDate: me.dateFromToSearch[0],
+              toDate: me.dateFromToSearch[1],
             },
           }
         );
