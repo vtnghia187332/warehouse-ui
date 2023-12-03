@@ -4,6 +4,7 @@ export const state = {
     userId: null,
     name: null,
     avatar: null,
+    roles: [],
   },
   warehouse: {
     warehouseId: null,

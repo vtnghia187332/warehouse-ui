@@ -49,7 +49,7 @@
             style="width: 100%"
             @row-dblclick="getUserDetail"
             @sort-change=""
-            height="765"
+            height="730"
           >
             <div slot="append" v-if="staffs.length == '0'">
               <el-empty :image-size="300"></el-empty>
@@ -165,7 +165,7 @@
             </el-table-column>
             <el-table-column
               sortable
-              prop="updatedAt"
+              prop="editedAt"
               label="Updated At"
               width="200"
             >
@@ -548,18 +548,13 @@ export default {
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
             warehouse: me.warehouseData.value,
+            warehouseChainId: me.warehouseChain.warehouseChainId,
+            roleOfUser: me.user.roles.join(),
           },
         })
         .then(function (response) {
           me.staffs = response.data.items.content;
-          (me.paginationVal = {
-            currentPage: response.data.items.pageNum,
-            pageSizeList: [10, 20, 30, 50, 100],
-            currentPage: response.data.items.number + 1,
-            pageSizeval: response.data.items.size,
-            total: response.data.items.totalElements,
-          }),
-            (me.loadingTable = false);
+          me.loadingTable = false;
         })
         .catch((error) => {
           this.$message({
@@ -618,14 +613,7 @@ export default {
         })
         .then(function (response) {
           me.roles = response.data.items.content;
-          (me.paginationValRole = {
-            currentPage: response.data.items.pageNum,
-            pageSizeList: [10, 20, 30, 50, 100],
-            currentPage: response.data.items.number + 1,
-            pageSizeval: response.data.items.size,
-            total: response.data.items.totalElements,
-          }),
-            (me.loadingTable = false);
+          me.loadingTable = false;
         })
         .catch((error) => {
           this.$message({

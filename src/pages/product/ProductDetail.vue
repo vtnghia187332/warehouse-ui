@@ -443,18 +443,18 @@ export default {
           placeholder: "Enter Length...",
           error: "",
         },
-        volume: {
-          id: "volume",
-          name: "Volume",
-          rules: "",
-          classes: "w-full",
-          type: "",
-          label: "Volume",
-          isRequired: "",
-          value: 0,
-          placeholder: "Enter Volume...",
-          error: "",
-        },
+        // volume: {
+        //   id: "volume",
+        //   name: "Volume",
+        //   rules: "",
+        //   classes: "w-full",
+        //   type: "",
+        //   label: "Volume",
+        //   isRequired: "",
+        //   value: 0,
+        //   placeholder: "Enter Volume...",
+        //   error: "",
+        // },
 
         color: {
           id: "color",
@@ -817,7 +817,7 @@ export default {
                 this.product.singleUnit.value = res.data.items.singleUnit.name;
               });
               this.productPId = res.data.items.id;
-              if (res.data.items.imageDetailRes) {
+              if (res.data.items?.imageDetailRes) {
                 this.productPhotos = res.data.items.imageDetailRes;
               } else {
                 this.productPhotos = [];

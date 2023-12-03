@@ -201,7 +201,7 @@ export default {
           name: "password",
           rules: "required",
           classes: "w-full",
-          type: "text",
+          type: "password",
           isRequired: "true",
           value: "",
           label: "Password",
@@ -213,7 +213,7 @@ export default {
           name: "confPassword",
           rules: "required",
           classes: "w-full",
-          type: "text",
+          type: "password",
           isRequired: "true",
           value: "",
           label: "Confirm Password",
@@ -258,7 +258,7 @@ export default {
             me.$router.push({ path: "/login" });
             me.$message({
               showClose: true,
-              message: "Updated Successfully",
+              message: "Created Successfully",
               type: "success",
             });
             me.loadingPageDetail = false;

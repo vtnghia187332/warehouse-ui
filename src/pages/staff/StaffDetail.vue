@@ -397,9 +397,9 @@ export default {
           id: "warehouseId",
           baseId: 0,
           name: "warehouseId",
-          rules: "required",
+          rules: "",
           classes: "w-full",
-          isRequired: "true",
+          isRequired: "",
           placeholder: "Select Warehouse",
           error: "",
           value: "",
@@ -442,7 +442,11 @@ export default {
       Object.keys(this.user).map((key) => {
         userDetail[key] = this.user[key].value;
       });
-      userDetail.salary = Number(userDetail.salary.replace(/[^0-9\.-]+/g, ""));
+      if (userDetail.salary) {
+        userDetail.salary = Number(
+          userDetail.salary.replace(/[^0-9\.-]+/g, "")
+        );
+      }
       if (userDetail.birthDay) {
         userDetail.birthDay = moment(this.user.birthDay.value).format(
           "YYYY-MM-DD HH:mm:ss"
@@ -629,7 +633,7 @@ export default {
                   this.user.roles.value.push(item.roleName);
                 });
               });
-              if (res.data.items.imageDetailRes) {
+              if (res.data.items?.imageDetailRes) {
                 this.staffPhotos = res.data.items.imageDetailRes;
               } else {
                 this.staffPhotos = [];
@@ -637,19 +641,25 @@ export default {
               this.userPrimaryKey.id = res.data.items.id;
               this.userPrimaryKey.userId = res.data.items.userId;
               this.loadingPageDetail = false;
-              this.user.warehouseId.value =
-                this.user.warehouseId.options.find(
-                  (opt) =>
-                    opt.label ==
-                      res.data.items.warehouseDetailRes.warehouseId ||
-                    opt.value == res.data.items.warehouseDetailRes.warehouseId
-                ).value || "";
+              if (
+                this.user.warehouseId?.options.length > 0 &&
+                res.data.items?.warehouseDetailRes !== null
+              ) {
+                this.user.warehouseId.value =
+                  this.user.warehouseId.options?.find(
+                    (opt) =>
+                      opt.label ==
+                        res.data.items.warehouseDetailRes?.warehouseId ||
+                      opt.value ==
+                        res.data.items.warehouseDetailRes?.warehouseId
+                  ).value || "";
+              }
             }
           })
           .catch((error) => {
             this.$message({
               showClose: true,
-              message: error.response.data.items,
+              message: error.response.data?.items,
               type: "error",
             });
           })
@@ -666,17 +676,16 @@ export default {
     moment() {
       return moment;
     },
-    "user.salary.value": function () {
-      console.log(this.addCommas(this.user.salary.value));
-    },
     ...mapGetters(["warehouseChain"]),
   },
   watch: {
     "user.salary.value": function (newValue) {
-      const result = newValue
-        .replace(/\D/g, "")
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      this.$nextTick(() => (this.user.salary.value = result));
+      if (newValue) {
+        const result = newValue
+          .replace(/\D/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        this.$nextTick(() => (this.user.salary.value = result));
+      }
     },
   },
   async mounted() {

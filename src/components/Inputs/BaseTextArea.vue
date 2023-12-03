@@ -26,7 +26,7 @@
     <div class="flex justify-between mt-1">
       <div class="mb-1 text-red-500">{{ errors[0] || field.error }}</div>
       <div v-if="field.maxlength > 0" class="mb-1 text-black-500">
-        {{ field.value.length }}/{{ field.maxlength }}
+        {{ field.value?.length }}/{{ field.maxlength }}
       </div>
     </div>
   </ValidationProvider>

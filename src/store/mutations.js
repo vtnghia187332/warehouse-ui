@@ -2,8 +2,14 @@ export default {
   setUserDetail(state, data) {
     state.user.token = data.token;
     state.user.userId = data.userId;
+    if (data.roles) {
+      state.user.roles = [];
+      data.roles.forEach((item) => {
+        state.user.roles.push(item.roleName);
+      });
+    }
     state.user.name = data.firstname + " " + data.lastname;
-    if (data.imageDetailRes) {
+    if (data?.imageDetailRes) {
       state.user.avatar = data.imageDetailRes[0]?.url;
     }
     state.warehouse.warehouseId = data.warehouseDetailRes?.warehouseId;
@@ -16,7 +22,7 @@ export default {
     state.warehouseChain.warehouseChainId =
       data.warehouseChainRes?.warehouseChainId;
     state.warehouseChain.name = data.warehouseChainRes?.name;
-    if (data.warehouseChainRes.imageDetailRes) {
+    if (data.warehouseChainRes?.imageDetailRes) {
       state.warehouseChain.avatar =
         data.warehouseChainRes.imageDetailRes[0]?.url;
     }

@@ -739,7 +739,7 @@ export default {
             Object.keys(this.warehouseChainD).forEach((key) => {
               this.warehouseChainD[key].value = res.data.items[key];
             });
-            if (res.data.items.imageDetailRes) {
+            if (res.data.items?.imageDetailRes) {
               this.photos = res.data.items.imageDetailRes;
             } else {
               this.photos = [];
@@ -764,7 +764,9 @@ export default {
     }),
       (this.search.value = "");
     await this.getWarehouses();
-    await this.getWarehouseChain();
+    if (this.warehouseChain?.warehouseChainId) {
+      await this.getWarehouseChain();
+    }
   },
 };
 </script>

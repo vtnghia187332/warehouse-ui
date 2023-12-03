@@ -103,7 +103,7 @@ export default {
           name: "Password",
           rules: "required",
           classes: "w-full",
-          type: "text",
+          type: "password",
           isRequired: "true",
           value: "",
           placeholder: "Enter Password...",
