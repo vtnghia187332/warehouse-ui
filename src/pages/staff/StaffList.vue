@@ -93,7 +93,17 @@
             </el-table-column>
             <el-table-column sortable prop="email" label="Email" width="200">
             </el-table-column>
+            <el-table-column
+              sortable
+              prop="nationalNumber"
+              label="National Number"
+              width="150"
+            >
+            </el-table-column>
             <el-table-column sortable prop="role" label="Role" width="200">
+              <template slot-scope="scope">
+                {{ scope.row.roles[0].roleName }}
+              </template>
             </el-table-column>
 
             <el-table-column fixed="right" label="Operations" width="100">
@@ -538,19 +548,25 @@ export default {
     async handleGetUsers() {
       var me = this;
       me.loadingTable = true;
+      let params = {
+        searchText: me.search.value,
+        pageNo: me.paginationPage.pageNo,
+        pageSize: me.paginationPage.pageSize,
+        sorting: me.paginationPage.sorting,
+        orderBy: me.paginationPage.orderBy,
+        warehouse: me.warehouseData.value,
+      };
+      if (!me.warehouseData?.value) {
+        params = {
+          ...params,
+          warehouseChainId: me.warehouseChain.warehouseChainId,
+          roleOfUser: me.user.roles.join(),
+        };
+      }
       await axios
         .get("http://localhost:9090/api/v1/user/list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-          params: {
-            searchText: me.search.value,
-            pageNo: me.paginationPage.pageNo,
-            pageSize: me.paginationPage.pageSize,
-            sorting: me.paginationPage.sorting,
-            orderBy: me.paginationPage.orderBy,
-            warehouse: me.warehouseData.value,
-            warehouseChainId: me.warehouseChain.warehouseChainId,
-            roleOfUser: me.user.roles.join(),
-          },
+          params,
         })
         .then(function (response) {
           me.staffs = response.data.items.content;
@@ -656,7 +672,9 @@ export default {
   async mounted() {
     await this.getWarehouseSel();
     await this.handleGetRoles();
-    this.warehouseData.value = this.warehouse.warehouseId;
+    if (!this.user.roles.includes("ADMIN")) {
+      this.warehouseData.value = this.warehouse.warehouseId;
+    }
     await this.handleGetUsers();
   },
 };

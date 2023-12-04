@@ -12,7 +12,6 @@
             :size="50"
             :src="warehouseChain.avatar"
           ></el-avatar>
-          {{ warehouseChain.name }} / {{ warehouse.name }}
         </a>
       </div>
       <slot> </slot>

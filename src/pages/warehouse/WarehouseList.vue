@@ -702,6 +702,8 @@ export default {
             sorting: me.paginationPage.sorting,
             orderBy: me.paginationPage.orderBy,
             userId: me.user.userId,
+            warehouseChainId: me.warehouseChain.warehouseChainId,
+            roleOfUser: me.user.roles.join(),
           },
         })
         .then(function (response) {

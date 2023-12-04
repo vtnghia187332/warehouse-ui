@@ -55,6 +55,15 @@
           width="250"
         >
         </el-table-column>
+        <el-table-column
+          sortable
+          prop="createdBy"
+          label="Created by"
+          width="250"
+        >
+        </el-table-column>
+        <el-table-column sortable prop="editedBy" label="Edited by" width="250">
+        </el-table-column>
         <el-table-column prop="actionType" label="Action" width="150">
           <template slot-scope="scope">
             <el-tag
@@ -75,7 +84,21 @@
           width="150"
         >
         </el-table-column>
-        <el-table-column prop="color" label="Color" width="250">
+        <el-table-column prop="quantity" label="Quantity" width="150">
+        </el-table-column>
+        <el-table-column prop="importPrice" label="Import Price" width="150">
+        </el-table-column>
+        <el-table-column prop="exportPrice" label="Export Price" width="150">
+        </el-table-column>
+        <el-table-column prop="expiredDate" label="Expired Date" width="250">
+        </el-table-column>
+        <el-table-column prop="color" label="Color" width="150">
+        </el-table-column>
+        <el-table-column prop="height" label="Height" width="150">
+        </el-table-column>
+        <el-table-column prop="width" label="Width" width="150">
+        </el-table-column>
+        <el-table-column prop="length" label="Length" width="150">
         </el-table-column>
         <el-table-column prop="singleUnit" label="Single Unit" width="150">
           <template slot-scope="scope">
@@ -223,28 +246,29 @@ export default {
     async handleGetProducts() {
       var me = this;
       me.loadingTable = true;
+      let params = {
+        searchText: me.search.value,
+        pageNo: me.paginationPage.pageNo,
+        pageSize: me.paginationPage.pageSize,
+        sorting: me.paginationPage.sorting,
+        orderBy: me.paginationPage.orderBy,
+        warehouse: me.warehouseData.value,
+      };
+      if (!me.warehouseData?.value) {
+        params = {
+          ...params,
+          warehouseChainId: me.warehouseChain.warehouseChainId,
+          roleOfUser: me.user.roles.join(),
+        };
+      }
       await axios
         .get("http://localhost:9090/api/v1/product/history", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-          params: {
-            searchText: me.search.value,
-            pageNo: me.paginationPage.pageNo,
-            pageSize: me.paginationPage.pageSize,
-            sorting: me.paginationPage.sorting,
-            orderBy: me.paginationPage.orderBy,
-            warehouse: me.warehouseData.value,
-          },
+          params,
         })
         .then(function (response) {
           me.products = response.data.items.content;
-          (me.paginationVal = {
-            currentPage: response.data.items.pageNum,
-            pageSizeList: [10, 20, 30, 50, 100],
-            currentPage: response.data.items.number + 1,
-            pageSizeval: response.data.items.size,
-            total: response.data.items.totalElements,
-          }),
-            (me.loadingTable = false);
+          me.loadingTable = false;
         })
         .catch((error) => {
           this.$message({
@@ -256,6 +280,10 @@ export default {
     },
   },
   async mounted() {
+    this.warehouseData.value = this.warehouse.warehouseId;
+    if (!this.user.roles.includes("ADMIN")) {
+      this.warehouseData.value = this.warehouse.warehouseId;
+    }
     await this.getWarehouseSel();
     await this.handleGetProducts();
   },

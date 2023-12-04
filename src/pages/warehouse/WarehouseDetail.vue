@@ -354,7 +354,7 @@
             >
           </div>
         </el-col>
-        <el-col :span="5" class="">
+        <!-- <el-col :span="5" class="">
           <AssignedModuleVue
             title="Warehouse Chain"
             :nameKey="'name'"
@@ -362,7 +362,7 @@
             :fields="warehouseChainC.fields"
             :isShowButton="false"
           />
-        </el-col>
+        </el-col> -->
       </el-row>
     </div>
   </ValidationObserver>

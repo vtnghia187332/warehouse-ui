@@ -1,8 +1,11 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light">
+  <nav class="navbar navbar-expand-lg navbar-light !h-12">
     <div class="container-fluid">
       <a class="navbar-brand">{{ routeName }}</a>
       <div class="flex !space-x-4 mr-4">
+        <div class="m-auto">
+          <b> {{ warehouseChain.name }} / {{ warehouse.name }}</b>
+        </div>
         <div class="m-auto">
           <div class="demo-type">
             <el-avatar :size="30" src="https://empty">
@@ -39,7 +42,7 @@ import { mapGetters, mapActions } from "vuex";
 import axios from "axios";
 export default {
   computed: {
-    ...mapGetters(["user", "warehouse"]),
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
     routeName() {
       const { name } = this.$route;
       return this.capitalizeFirstLetter(name);
