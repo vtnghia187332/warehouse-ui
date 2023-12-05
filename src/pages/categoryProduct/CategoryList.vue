@@ -28,7 +28,7 @@
       @row-dblclick="updateCate"
       @selection-change="handleSelectionChange"
       v-show="!loadingTable"
-      height="800"
+      height="780"
     >
       <div slot="append" v-if="categories.length == '0'">
         <el-empty :image-size="200"></el-empty>

@@ -60,6 +60,22 @@
           width="170"
         >
         </el-table-column>
+
+        <el-table-column
+          sortable
+          prop="createdBy"
+          label="Created By"
+          width="170"
+        >
+        </el-table-column>
+        <el-table-column
+          sortable
+          prop="editedBy"
+          label="Updated By"
+          width="170"
+        >
+        </el-table-column>
+
         <el-table-column sortable prop="name" label="Invoice Name" width="250">
         </el-table-column>
         <el-table-column sortable prop="code" label="Invoice Code" width="250">
@@ -83,11 +99,6 @@
             >
           </template>
         </el-table-column>
-        <el-table-column sortable prop="code" label="Customer Name" width="250">
-          <template slot-scope="scope">
-            {{ scope.row.customer.fullName }}
-          </template>
-        </el-table-column>
         <el-table-column
           sortable
           prop="invoiceStage"
@@ -95,12 +106,40 @@
           width="200"
         >
         </el-table-column>
+        <el-table-column sortable prop="code" label="Customer Name" width="250">
+          <template slot-scope="scope">
+            {{ scope.row.customer.fullName }}
+          </template>
+        </el-table-column>
+
         <el-table-column
           sortable
-          prop="totalNeedPaid"
+          prop="totalPaid"
           label="Total Payment"
           width="200"
         >
+        </el-table-column>
+        <el-table-column prop="moneyPaid" label="Money Paid" width="200">
+        </el-table-column>
+        <el-table-column prop="consignee" label="Consignee" width="200">
+        </el-table-column>
+        <el-table-column
+          prop="phoneNumberReceipt"
+          label="Phone Number Receipt"
+          width="200"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="deliveryAddress"
+          label="Delivery Address"
+          width="300"
+        >
+        </el-table-column>
+        <el-table-column prop="moneyRefund" label="Money Refund" width="200">
+        </el-table-column>
+        <el-table-column prop="reason" label="Reason Refund" width="300">
+        </el-table-column>
+        <el-table-column prop="reasonCancel" label="Reason Cancel" width="300">
         </el-table-column>
       </el-table>
     </div>
@@ -180,20 +219,28 @@ export default {
         this.handleGetInvoices();
       }
     },
-    handleGetInvoices() {
+    async handleGetInvoices() {
       var me = this;
       me.loadingTable = true;
-      axios
+      let params = {
+        searchText: me.search.value,
+        pageNo: me.paginationPage.pageNo,
+        pageSize: me.paginationPage.pageSize,
+        sorting: me.paginationPage.sorting,
+        orderBy: me.paginationPage.orderBy,
+        warehouse: me.warehouseData.value,
+      };
+      if (!me.warehouseData?.value) {
+        params = {
+          ...params,
+          warehouseChainId: me.warehouseChain.warehouseChainId,
+          roleOfUser: me.user.roles.join(),
+        };
+      }
+      await axios
         .get("http://localhost:9090/api/v1/invoice/history/list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-          params: {
-            searchText: me.search.value,
-            pageNo: me.paginationPage.pageNo,
-            pageSize: me.paginationPage.pageSize,
-            sorting: me.paginationPage.sorting,
-            orderBy: me.paginationPage.orderBy,
-            warehouse: me.warehouseData.value,
-          },
+          params,
         })
         .then(function (response) {
           me.invoices = response.data.items.content;
@@ -249,6 +296,9 @@ export default {
     },
   },
   async mounted() {
+    if (!this.user.roles.includes("ADMIN")) {
+      this.warehouseData.value = this.warehouse.warehouseId;
+    }
     await this.handleGetInvoices();
     await this.getWarehouseSel();
   },

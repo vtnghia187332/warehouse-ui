@@ -32,7 +32,7 @@
         style="width: 100%"
         @row-dblclick="updateCustomer"
         @sort-change=""
-        height="800"
+        height="780"
       >
         <div slot="append" v-if="customers.length == '0'">
           <el-empty :image-size="300"></el-empty>

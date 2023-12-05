@@ -59,7 +59,7 @@
         style="width: 100%"
         @row-dblclick="updateProduct"
         @sort-change=""
-        height="800"
+        height="780"
       >
         <div slot="append" v-if="products.length == '0'">
           <el-empty :image-size="300"></el-empty>
@@ -326,20 +326,29 @@ export default {
     },
     async handExportProducts() {
       let me = this;
+      let params = {
+        searchText: me.search.value,
+        pageNo: me.paginationPage.pageNo,
+        pageSize: me.paginationPage.pageSize,
+        sorting: me.paginationPage.sorting,
+        orderBy: me.paginationPage.orderBy,
+        warehouse: me.warehouseData.value,
+      };
+      if (!me.warehouseData?.value) {
+        params = {
+          ...params,
+          warehouseChainId: me.warehouseChain.warehouseChainId,
+          roleOfUser: me.user.roles.join(),
+        };
+      }
       const tempDateTime = new Date();
-      const fileName = `Product${tempDateTime.getTime()}.xlsx`;
+      const fileName = `Export_Product_${tempDateTime.getTime()}.xlsx`;
       await axios
         .get("http://localhost:9090/api/v1/product/export", {
           responseType: "blob",
           contentType: "application/json-patch+json",
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-          params: {
-            searchText: me.search.value,
-            pageNo: me.paginationPage.pageNo,
-            pageSize: me.paginationPage.pageSize,
-            sorting: me.paginationPage.sorting,
-            orderBy: me.paginationPage.orderBy,
-          },
+          params,
         })
         .then(function (res) {
           if (res) {
@@ -353,7 +362,13 @@ export default {
             a.remove();
           }
         })
-        .catch(function (res) {});
+        .catch(function (error) {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
     },
     async handleGetProducts() {
       var me = this;

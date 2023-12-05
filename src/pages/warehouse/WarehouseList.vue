@@ -96,7 +96,7 @@
                 </div>
               </template>
             </FormCard>
-            <div class="footer-btn-fixed flex justify-end p-4">
+            <div class="footer-btn-fixed flex justify-end p-2">
               <el-button
                 @click="handleSubmitWHC"
                 class="bg-blue-400"
@@ -154,7 +154,7 @@
             style="width: 100%"
             @row-dblclick="goToDetailWarehouse"
             @sort-change="sortChange"
-            height="765"
+            height="725"
           >
             <div slot="append" v-if="warehouses.length == '0'">
               <el-empty :image-size="300"></el-empty>

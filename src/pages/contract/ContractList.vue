@@ -78,7 +78,7 @@
         style="width: 100%"
         @row-dblclick=""
         @sort-change=""
-        height="800"
+        height="780"
       >
         <div slot="append" v-if="invoices.length == '0'">
           <el-empty :image-size="300"></el-empty>
@@ -459,22 +459,29 @@ export default {
     },
     async exportInvoiceExport() {
       let me = this;
-
+      let params = {
+        searchText: me.search.value,
+        pageNo: me.paginationPage.pageNo,
+        pageSize: me.paginationPage.pageSize,
+        sorting: me.paginationPage.sorting,
+        orderBy: me.paginationPage.orderBy,
+        warehouse: me.warehouseData.value,
+      };
+      if (!me.warehouseData?.value) {
+        params = {
+          ...params,
+          warehouseChainId: me.warehouseChain.warehouseChainId,
+          roleOfUser: me.user.roles.join(),
+        };
+      }
       const tempDateTime = new Date();
-      const fileName = `Invoice${tempDateTime.getTime()}.xlsx`;
+      const fileName = `Export_Invoice_${tempDateTime.getTime()}.xlsx`;
       await axios
         .get("http://localhost:9090/api/v1/invoice/export", {
           responseType: "blob",
           contentType: "application/json-patch+json",
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-          params: {
-            searchText: me.search.value,
-            pageNo: me.paginationPage.pageNo,
-            pageSize: me.paginationPage.pageSize,
-            sorting: me.paginationPage.sorting,
-            orderBy: me.paginationPage.orderBy,
-            invoiceType: me.paginationPage.invoiceType,
-          },
+          params,
         })
         .then(function (res) {
           if (res) {
@@ -488,7 +495,13 @@ export default {
             a.remove();
           }
         })
-        .catch(function (res) {});
+        .catch(function (error) {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
     },
     getBaseSearchVal(param) {
       // clears the timer on a call so there is always x seconds in between calls
@@ -621,21 +634,25 @@ export default {
     async handleGetInvoicesEx() {
       var me = this;
       me.loadingTable = true;
+      let params = {
+        searchText: me.search.value,
+        pageNo: me.paginationPage.pageNo,
+        pageSize: me.paginationPage.pageSize,
+        sorting: me.paginationPage.sorting,
+        orderBy: me.paginationPage.orderBy,
+        warehouse: me.warehouseData.value,
+      };
+      if (!me.warehouseData?.value) {
+        params = {
+          ...params,
+          warehouseChainId: me.warehouseChain.warehouseChainId,
+          roleOfUser: me.user.roles.join(),
+        };
+      }
       await axios
         .get("http://localhost:9090/api/v1/invoice/list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-          params: {
-            searchText: me.search.value,
-            pageNo: me.paginationPage.pageNo,
-            pageSize: me.paginationPage.pageSize,
-            sorting: me.paginationPage.sorting,
-            orderBy: me.paginationPage.orderBy,
-            invoiceType: me.paginationPage.invoiceType,
-            invoiceStatus: me.paginationPage.invoiceStatus,
-            warehouse: me.warehouseData.value,
-            warehouseChainId: me.warehouseChain.warehouseChainId,
-            roleOfUser: me.user.roles.join(),
-          },
+          params,
         })
         .then(function (response) {
           me.invoices = response.data.items.content;
@@ -651,7 +668,9 @@ export default {
     },
   },
   async mounted() {
-    this.warehouseData.value = this.warehouse.warehouseId;
+    if (!this.user.roles.includes("ADMIN")) {
+      this.warehouseData.value = this.warehouse.warehouseId;
+    }
     await this.getWarehouseSel();
     await this.handleGetInvoicesEx();
   },

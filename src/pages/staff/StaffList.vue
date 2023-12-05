@@ -97,7 +97,7 @@
               sortable
               prop="nationalNumber"
               label="National Number"
-              width="150"
+              width="180"
             >
             </el-table-column>
             <el-table-column sortable prop="role" label="Role" width="200">
@@ -159,7 +159,7 @@
             style="width: 100%"
             @row-dblclick="updateRole"
             @sort-change=""
-            height="765"
+            height="735"
           >
             <div slot="append" v-if="roles.length == '0'">
               <el-empty :image-size="300"></el-empty>

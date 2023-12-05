@@ -170,7 +170,7 @@
               </div>
             </template>
           </FormCard>
-          <div class="footer-btn-fixed flex justify-end p-4">
+          <div class="footer-btn-fixed flex justify-end p-2">
             <el-button @click="">Cancel</el-button>
             <el-button
               @click="handleSubmitDataUser"

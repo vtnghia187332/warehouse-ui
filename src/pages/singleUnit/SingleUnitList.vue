@@ -28,8 +28,8 @@
       v-show="!loadingTable"
       @row-dblclick="updateUnit"
       @selection-change="handleSelectionChange"
+      height="780"
     >
-      height="800" >
       <div slot="append" v-if="singleUnits.length == '0'">
         <el-empty :image-size="200"></el-empty>
       </div>
