@@ -19,7 +19,6 @@
             align="right"
             unlink-panels
             range-separator="To"
-            :default-time="['00:00:00', '23:59:59']"
             start-placeholder="Start Date"
             format="yyyy-MM-dd"
             value-format="yyyy-MM-dd"
@@ -187,11 +186,14 @@ export default {
     moment() {
       return moment;
     },
-    ...mapGetters(["warehouse", "warehouseChain"]),
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
   },
   data() {
     return {
-      dateFromToSearch: "",
+      dateFromToSearch: [
+        moment(moment().subtract(30, "days")).format("YYYY-MM-DD"),
+        moment(moment()).format("YYYY-MM-DD"),
+      ],
       loadingPageDetail: false,
       warehouseData: {
         id: "warehouseData",
@@ -341,8 +343,6 @@ export default {
   },
   methods: {
     checkDateSearch(data) {
-      console.log(this.dateFromToSearch);
-
       this.handleGetApiDashboard();
     },
     addCommas(nStr) {
@@ -378,6 +378,18 @@ export default {
     async handleGetApiDashboard() {
       var me = this;
       me.loadingPageDetail = true;
+      let params = {
+        warehouse: me.warehouseData.value,
+        fromDate: me.dateFromToSearch[0],
+        toDate: me.dateFromToSearch[1],
+      };
+      if (!me.warehouseData?.value) {
+        params = {
+          ...params,
+          warehouseChainId: me.warehouseChain.warehouseChainId,
+          roleOfUser: me.user.roles.join(),
+        };
+      }
       try {
         const { data } = await axios.get(
           "http://localhost:9090/api/v1/dashboard",
@@ -385,11 +397,7 @@ export default {
             headers: {
               Authorization: "Bearer " + localStorage.getItem("token"),
             },
-            params: {
-              warehouse: me.warehouseData.value,
-              fromDate: me.dateFromToSearch[0],
-              toDate: me.dateFromToSearch[1],
-            },
+            params,
           }
         );
         me.detail = data.items;
@@ -439,7 +447,9 @@ export default {
     },
   },
   async mounted() {
-    this.warehouseData.value = this.warehouse.warehouseId;
+    if (!this.user.roles.includes("ADMIN")) {
+      this.warehouseData.value = this.warehouse.warehouseId;
+    }
     await this.handleGetApiWarehouse();
     await this.handleGetApiDashboard();
   },
