@@ -45,7 +45,7 @@
 
         <div class="grid grid-cols-5 gap-x-2">
           <div class="col-span-1 m-auto">
-            <i class="el-icon-money"></i>
+            <i class="el-icon-delete-location"></i>
           </div>
           <div class="col-span-4">
             <div class="font-bold text-blue-600/100">Money Refund</div>
@@ -55,7 +55,7 @@
 
         <div class="grid grid-cols-5 gap-x-2">
           <div class="col-span-1 m-auto">
-            <i class="el-icon-money"></i>
+            <i class="el-icon-discount"></i>
           </div>
           <div class="col-span-4">
             <div class="font-bold text-blue-600/100">Discount</div>
@@ -65,7 +65,7 @@
 
         <div class="grid grid-cols-5 gap-x-2">
           <div class="col-span-1 m-auto">
-            <i class="el-icon-money"></i>
+            <i class="el-icon-document"></i>
           </div>
           <div class="col-span-4">
             <div class="font-bold text-blue-600/100">Tax Price</div>
@@ -75,7 +75,7 @@
 
         <div class="grid grid-cols-5 gap-x-2">
           <div class="col-span-1 m-auto">
-            <i class="el-icon-money"></i>
+            <i class="el-icon-wallet"></i>
           </div>
           <div class="col-span-4">
             <div class="font-bold text-blue-600/100">Revenue with tax</div>
@@ -144,8 +144,8 @@
           <el-card shadow="always">
             <div class="grid grid-cols-5 gap-4 border-b-2 border-black-900">
               <el-col class="col-span-3 font-semibold">Type of Invoice</el-col>
-              <el-col class="font-semibold">Số đơn</el-col>
-              <el-col class="font-semibold">Số tiền</el-col>
+              <el-col class="font-semibold">No. of Invoice</el-col>
+              <el-col class="font-semibold">Total money</el-col>
             </div>
             <div class="grid grid-cols-6 gap-4 mt-2">
               <el-col class="col-span-4">Export Invoice</el-col>
@@ -158,11 +158,24 @@
               <el-col class="">{{ detail.totalInDebtReceipt }}</el-col>
             </div>
           </el-card>
+
+          <div class="font-semibold">Top Product Sold</div>
+          <el-card shadow="always">
+            <div class="grid grid-cols-5 gap-4 border-b-2 border-black-900">
+              <el-col class="col-span-4 font-semibold">Product's name</el-col>
+              <el-col class="font-semibold">Quantity</el-col>
+            </div>
+            <div
+              class="grid grid-cols-5 gap-4 mt-2"
+              v-for="(item, index) in highestProductSells"
+              :key="index"
+            >
+              <el-col class="col-span-4 text-ellipsis">{{ item.name }}</el-col>
+              <el-col class="">{{ item.quantity }}</el-col>
+            </div>
+          </el-card>
         </div>
       </div>
-      <!-- <div style="height: 300px">
-      <v-chart :option="option1" autoresize></v-chart>
-    </div> -->
     </div>
   </div>
 </template>
@@ -195,6 +208,7 @@ export default {
         moment(moment()).format("YYYY-MM-DD"),
       ],
       loadingPageDetail: false,
+      highestProductSells: [],
       warehouseData: {
         id: "warehouseData",
         baseId: 0,
@@ -401,6 +415,7 @@ export default {
           }
         );
         me.detail = data.items;
+        me.highestProductSells = data.items.highestProductSells;
         me.paymentMethodsStas.series.data = [];
         if (data.items?.totalPaidByMethodsPays) {
           const tempArr = [];
@@ -453,13 +468,23 @@ export default {
     await this.handleGetApiWarehouse();
     await this.handleGetApiDashboard();
   },
-  async updated() {
-    // this.warehouseData.value = this.warehouse?.warehouseId;
-  },
+  async updated() {},
 };
 </script>
 <style>
 .el-icon-money:before {
+  font-size: xx-large;
+}
+.el-icon-delete-location {
+  font-size: xx-large;
+}
+.el-icon-discount {
+  font-size: xx-large;
+}
+.el-icon-document {
+  font-size: xx-large;
+}
+.el-icon-wallet {
   font-size: xx-large;
 }
 </style>
