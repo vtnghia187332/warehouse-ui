@@ -33,7 +33,7 @@
         :data="invoices"
         style="width: 100%"
         @sort-change=""
-        height="800"
+        height="785"
       >
         <div slot="append" v-if="invoices.length == '0'">
           <el-empty :image-size="300"></el-empty>

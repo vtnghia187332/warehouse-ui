@@ -9,6 +9,23 @@
           <span class="ti-filter"></span> Filter
         </button>
       </div>
+      <div class="flex space-x-1">
+        <el-select
+          class="w-[180px]"
+          v-model="warehouseData.value"
+          placeholder="Select Warehouse"
+          @change="filterByWarehouse($event)"
+          clearable
+        >
+          <el-option
+            v-for="item in warehouseData.options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </div>
     </div>
     <LoadingPage v-show="loadingTable"></LoadingPage>
     <div class="table_style px-2" v-show="!loadingTable">
@@ -16,7 +33,7 @@
         :data="invoices"
         style="width: 100%"
         @sort-change=""
-        height="800"
+        height="785"
       >
         <div slot="append" v-if="invoices.length == '0'">
           <el-empty :image-size="300"></el-empty>
@@ -75,10 +92,12 @@
         </el-table-column>
         <el-table-column
           sortable
-          prop="totalNeedPaid"
+          prop="totalPaid"
           label="Total Payment"
           width="200"
         >
+        </el-table-column>
+        <el-table-column sortable prop="note" label="Note" width="300">
         </el-table-column>
       </el-table>
     </div>
@@ -91,6 +110,7 @@
   </div>
 </template>
 <script>
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import axios from "axios";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import BasePagination from "../../components/Pagination/BasePagination.vue";
@@ -103,6 +123,18 @@ export default {
   },
   data() {
     return {
+      warehouseData: {
+        id: "warehouseData",
+        baseId: 0,
+        name: "warehouseData",
+        rules: "required",
+        classes: "w-full",
+        isRequired: "true",
+        placeholder: "Select Warehouse",
+        error: "",
+        value: "",
+        options: [],
+      },
       activeName: "first",
       search: {
         value: "",
@@ -120,31 +152,53 @@ export default {
       invoices: [],
     };
   },
+  computed: {
+    ...mapGetters(["user", "warehouse", "warehouseChain"]),
+  },
   methods: {
-    handleGetInvoices() {
+    filterByWarehouse(item) {
+      if (!item) {
+        this.warehouseData.value = null;
+        this.handleGetInvoices();
+      } else {
+        const itemStr =
+          this.warehouseData.options.find(
+            (opt) => opt.value == item || opt.label == item
+          ).value || "";
+        if (!itemStr) {
+          this.warehouseData.value = null;
+        } else {
+          this.warehouseData.value = itemStr;
+        }
+        this.handleGetInvoices();
+      }
+    },
+    async handleGetInvoices() {
       var me = this;
       me.loadingTable = true;
-      axios
+      let params = {
+        searchText: me.search.value,
+        pageNo: me.paginationPage.pageNo,
+        pageSize: me.paginationPage.pageSize,
+        sorting: me.paginationPage.sorting,
+        orderBy: me.paginationPage.orderBy,
+        warehouse: me.warehouseData.value,
+      };
+      if (!me.warehouseData?.value) {
+        params = {
+          ...params,
+          warehouseChainId: me.warehouseChain.warehouseChainId,
+          roleOfUser: me.user.roles.join(),
+        };
+      }
+      await axios
         .get("http://localhost:9090/api/v1/export-receipt/history/list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-          params: {
-            searchText: me.search.value,
-            pageNo: me.paginationPage.pageNo,
-            pageSize: me.paginationPage.pageSize,
-            sorting: me.paginationPage.sorting,
-            orderBy: me.paginationPage.orderBy,
-          },
+          params,
         })
         .then(function (response) {
           me.invoices = response.data.items.content;
-          (me.paginationVal = {
-            currentPage: response.data.items.pageNum,
-            pageSizeList: [10, 20, 30, 50, 100],
-            currentPage: response.data.items.number + 1,
-            pageSizeval: response.data.items.size,
-            total: response.data.items.totalElements,
-          }),
-            (me.loadingTable = false);
+          me.loadingTable = false;
         })
         .catch((error) => {
           this.$message({
@@ -163,6 +217,25 @@ export default {
       this.paginationPage.pageNo = param;
       this.handleGetInvoices();
     },
+    async getWarehouseSel() {
+      await axios
+        .get("http://localhost:9090/api/v1/warehouse/data-list", {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.warehouseData.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
+    },
     getBaseSearchVal(param) {
       // clears the timer on a call so there is always x seconds in between calls
       clearTimeout(this.timer);
@@ -176,8 +249,12 @@ export default {
       );
     },
   },
-  mounted() {
-    this.handleGetInvoices();
+  async mounted() {
+    if (!this.user.roles.includes("ADMIN")) {
+      this.warehouseData.value = this.warehouse.warehouseId;
+    }
+    await this.handleGetInvoices();
+    await this.getWarehouseSel();
   },
 };
 </script>

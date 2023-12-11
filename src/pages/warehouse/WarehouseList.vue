@@ -127,24 +127,26 @@
             >
               <i class="el-icon-files font-bold"></i> History
             </button>
-            <button
-              class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
+            <el-button
               @click="HandleImportWarehouse"
+              class="ml-1 !bg-blue-400"
+              type="primary"
+              :disabled="!this.user.roles.includes('ADMIN')"
+              >Import</el-button
             >
-              <i class="el-icon-plus ml font-bold"></i> Import
-            </button>
-            <button
-              class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
+            <el-button
               @click="testFunc"
+              class="ml-1 !bg-blue-400"
+              type="primary"
+              >Export</el-button
             >
-              <i class="el-icon-plus ml font-bold"></i> Export
-            </button>
-            <button
-              class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
+            <el-button
               @click="HandleAddWarehouse"
+              class="ml-1 !bg-blue-400"
+              type="primary"
+              :disabled="!this.user.roles.includes('ADMIN')"
+              >Create</el-button
             >
-              <i class="el-icon-plus ml font-bold"></i> Create
-            </button>
           </div>
         </div>
         <LoadingPage v-show="loadingTable"></LoadingPage>
@@ -795,5 +797,8 @@ export default {
   color: white;
   background-color: white !important;
   margin-top: 12px;
+}
+
+.disable-btn {
 }
 </style>

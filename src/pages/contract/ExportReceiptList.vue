@@ -33,12 +33,6 @@
         </button>
         <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
-          @click="HandleImport"
-        >
-          <i class="el-icon-plus ml font-bold"></i> Import
-        </button>
-        <button
-          class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="handleExport"
         >
           <i class="el-icon-plus ml font-bold"></i> Export
@@ -312,19 +306,25 @@ export default {
     async handleGetInvoices() {
       var me = this;
       me.loadingTable = true;
+      let params = {
+        searchText: me.search.value,
+        pageNo: me.paginationPage.pageNo,
+        pageSize: me.paginationPage.pageSize,
+        sorting: me.paginationPage.sorting,
+        orderBy: me.paginationPage.orderBy,
+        warehouse: me.warehouseData.value,
+      };
+      if (!me.warehouseData?.value) {
+        params = {
+          ...params,
+          warehouseChainId: me.warehouseChain.warehouseChainId,
+          roleOfUser: me.user.roles.join(),
+        };
+      }
       await axios
         .get("http://localhost:9090/api/v1/export-receipt/list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-          params: {
-            searchText: me.search.value,
-            pageNo: me.paginationPage.pageNo,
-            pageSize: me.paginationPage.pageSize,
-            sorting: me.paginationPage.sorting,
-            orderBy: me.paginationPage.orderBy,
-            warehouse: me.warehouseData.value,
-            warehouseChainId: me.warehouseChain.warehouseChainId,
-            roleOfUser: me.user.roles.join(),
-          },
+          params,
         })
         .then(function (response) {
           me.invoices = response.data.items.content;

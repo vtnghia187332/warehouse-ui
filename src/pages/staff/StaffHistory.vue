@@ -77,7 +77,7 @@
           sortable
           prop="nationalNumber"
           label="National Number"
-          width="150"
+          width="180"
         >
         </el-table-column>
         <el-table-column sortable prop="role" label="Role" width="200">
@@ -91,15 +91,6 @@
           label="Mobile Phone"
           width="150"
         >
-        </el-table-column>
-        <el-table-column prop="actionType" label="Action" width="150">
-          <template slot-scope="scope">
-            <el-tag
-              :type="scope.row.actionType == 0 ? 'success' : 'primary'"
-              disable-transitions
-              >{{ scope.row.actionType == 0 ? "INSERTED" : "UPDATED" }}</el-tag
-            >
-          </template>
         </el-table-column>
         <el-table-column prop="isActive" label="Status" width="100">
           <template slot-scope="scope">

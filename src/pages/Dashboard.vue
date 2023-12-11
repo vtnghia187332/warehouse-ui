@@ -216,6 +216,7 @@ export default {
         rules: "",
         classes: "w-full",
         isRequired: "",
+        disabled: "not-disabled",
         label: "Warehouse",
         placeholder: "Select Warehouse",
         error: "",
@@ -464,6 +465,7 @@ export default {
   async mounted() {
     if (!this.user.roles.includes("ADMIN")) {
       this.warehouseData.value = this.warehouse.warehouseId;
+      this.warehouseData.disabled = "disabled";
     }
     await this.handleGetApiWarehouse();
     await this.handleGetApiDashboard();

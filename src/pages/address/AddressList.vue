@@ -1,7 +1,7 @@
 <template>
   <div class="p-3 bg-white">
     <div class="mb-2 flex justify-end">
-      <el-button class="bg-blue-400" type="primary">Import</el-button>
+      <!-- <el-button class="bg-blue-400" type="primary">Import</el-button> -->
     </div>
     <LoadingPage v-show="loadingTable"></LoadingPage>
     <el-row :gutter="5">

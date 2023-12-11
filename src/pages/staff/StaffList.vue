@@ -49,7 +49,7 @@
             style="width: 100%"
             @row-dblclick="getUserDetail"
             @sort-change=""
-            height="730"
+            height="725"
           >
             <div slot="append" v-if="staffs.length == '0'">
               <el-empty :image-size="300"></el-empty>
