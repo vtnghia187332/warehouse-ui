@@ -370,14 +370,12 @@ export default {
         })
         .then(function (response) {
           me.warehouses = response.data.items.content;
-          (me.paginationVal = {
-            currentPage: response.data.items.pageNum,
-            pageSizeList: [10, 20, 30, 50, 100],
-            currentPage: response.data.items.number + 1,
-            pageSizeval: response.data.items.size,
-            total: response.data.items.totalElements,
-          }),
-            (me.loadingTable = false);
+          me.paginationVal.currentPage = response.data.items.pageNum;
+          me.paginationVal.pageSizeList = [10, 20, 30, 50, 100];
+          me.paginationVal.currentPage = response.data.items.number + 1;
+          me.paginationVal.pageSizeval = response.data.items.size;
+          me.paginationVal.total = response.data.items.totalElements;
+          me.loadingTable = false;
         });
     },
   },

@@ -110,7 +110,7 @@
             </template>
           </FormCard>
 
-          <FormCard title="Conversation Unit" class="mb-3">
+          <FormCard title="Conversion Unit" class="mb-3">
             <template v-slot:content>
               <el-table
                 height="448"

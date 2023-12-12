@@ -500,14 +500,14 @@ export default {
             this.clearStateFile();
             this.step = "";
             this.$emit("update:isOpenDialogImport", false);
-            this.$router.push({ path: "/product" });
+            this.$router.push({ name: "product" });
           })
           .catch((_) => {});
       } else {
         this.clearStateFile();
         this.step = "";
         this.$emit("update:isOpenDialogImport", false);
-        this.$router.push({ path: "/product" });
+        this.$router.push({ name: "product" });
       }
     },
     clearStateFile() {

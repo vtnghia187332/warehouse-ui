@@ -180,6 +180,7 @@ export default {
         classes: "w-full",
         isRequired: "true",
         placeholder: "Select Warehouse",
+        disabled:"non-disabled",
         error: "",
         value: "",
         options: [],
@@ -284,6 +285,11 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             this.warehouseData.options = res.data.items;
+            me.paginationVal.currentPage = res.data.items.pageNum;
+            me.paginationVal.pageSizeList = [10, 20, 30, 50, 100];
+            me.paginationVal.currentPage = res.data.items.number + 1;
+            me.paginationVal.pageSizeval = res.data.items.size;
+            me.paginationVal.total = res.data.items.totalElements;
           }
         })
         .catch((error) => {
@@ -298,6 +304,8 @@ export default {
   async mounted() {
     if (!this.user.roles.includes("ADMIN")) {
       this.warehouseData.value = this.warehouse.warehouseId;
+      this.warehouseData.disabled = "disabled";
+
     }
     await this.handleGetInvoices();
     await this.getWarehouseSel();

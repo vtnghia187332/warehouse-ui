@@ -130,6 +130,7 @@ export default {
         rules: "required",
         classes: "w-full",
         isRequired: "true",
+        disabled:"non-disabled",
         placeholder: "Select Warehouse",
         error: "",
         value: "",
@@ -199,6 +200,11 @@ export default {
         .then(function (response) {
           me.invoices = response.data.items.content;
           me.loadingTable = false;
+          me.paginationVal.currentPage = response.data.items.pageNum;
+          me.paginationVal.pageSizeList = [10, 20, 30, 50, 100];
+          me.paginationVal.currentPage = response.data.items.number + 1;
+          me.paginationVal.pageSizeval = response.data.items.size;
+          me.paginationVal.total = response.data.items.totalElements;
         })
         .catch((error) => {
           this.$message({
@@ -252,6 +258,7 @@ export default {
   async mounted() {
     if (!this.user.roles.includes("ADMIN")) {
       this.warehouseData.value = this.warehouse.warehouseId;
+      this.warehouseData.disabled = "disabled";
     }
     await this.handleGetInvoices();
     await this.getWarehouseSel();
