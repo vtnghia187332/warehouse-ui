@@ -165,8 +165,16 @@
             </template>
           </FormCard>
           <div class="footer-btn-fixed flex justify-end p-2">
-            <el-button @click="handleCancelSubmit">Cancel</el-button>
-            <el-button @click="handleSubmit" class="bg-blue-400" type="primary"
+            <el-button
+              :disabled="this.$route.params.data.type === 'VIEW'"
+              @click="handleCancelSubmit"
+              >Cancel</el-button
+            >
+            <el-button
+              :disabled="this.$route.params.data.type === 'VIEW'"
+              @click="handleSubmit"
+              class="bg-blue-400"
+              type="primary"
               >Submit</el-button
             >
           </div>

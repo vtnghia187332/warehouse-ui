@@ -76,7 +76,7 @@
       <el-table
         :data="invoices"
         style="width: 100%"
-        @row-dblclick=""
+        @row-dblclick="goToDetail"
         @sort-change=""
         height="780"
       >
@@ -384,6 +384,16 @@ export default {
     };
   },
   methods: {
+    goToDetail(row) {
+      let data = {
+        id: row.invoiceId,
+        type: "VIEW",
+      };
+      this.$router.push({
+        name: "payment", //use name for router push
+        params: { data },
+      });
+    },
     getInvoiceHistory() {
       this.$router.push({ name: "invoice-history" });
     },
