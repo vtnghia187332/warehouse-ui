@@ -616,11 +616,12 @@ export default {
       }
     },
     async handleGetDetailInvoice() {
+      var me = this;
       let subTotalVal = 0;
       if (this.$route.params.data.id != null) {
         await axios
           .get(
-            `http://localhost:9090/api/v1/invoice/detail/${this.$route.params.data.id}`,
+            `http://localhost:9090/api/v1/invoice/detail/${me.$route.params.data.id}`,
             {
               headers: {
                 Authorization: "Bearer " + localStorage.getItem("token"),
@@ -629,11 +630,11 @@ export default {
           )
           .then((res) => {
             if (res.status === 200) {
-              this.materials = res.data.items["productInvoices"];
+              me.materials = res.data.items["productInvoices"];
               if (res.data.items["typeInvoice"] == 2) {
-                this.customer.fullName.value =
+                me.customer.fullName.value =
                   res.data.items["customer"].fullName;
-                this.order.deliveryAddress.value =
+                me.order.deliveryAddress.value =
                   res.data.items["customer"].detailAddress +
                   ", " +
                   res.data.items["customer"].country +
@@ -643,62 +644,61 @@ export default {
                   res.data.items["customer"].district +
                   ", " +
                   res.data.items["customer"].subDistrict;
-                this.order.consignee.value =
-                  res.data.items["customer"].fullName;
-                this.order.phoneNumberReceipt.value =
+                me.order.consignee.value = res.data.items["customer"].fullName;
+                me.order.phoneNumberReceipt.value =
                   res.data.items["customer"].mobilePhone;
-                this.materials.forEach((item) => {
+                me.materials.forEach((item) => {
                   subTotalVal = item.quantity * item.exportPrice;
-                  this.subTotal = this.subTotal + subTotalVal;
-                  this.singleUnit = item.singleUnit;
+                  me.subTotal = me.subTotal + subTotalVal;
+                  me.singleUnit = item.singleUnit;
                 });
               } else if (res.data.items["typeInvoice"] == 1) {
-                this.customer.fullName.value =
+                me.customer.fullName.value =
                   res.data.items["customer"].fullName;
-                this.order.deliveryAddress.value =
-                  this.warehouse.detailAddress +
+                me.order.deliveryAddress.value =
+                  me.warehouse.detailAddress +
                   ", " +
-                  this.warehouse.country +
+                  me.warehouse.country +
                   ", " +
-                  this.warehouse.city +
+                  me.warehouse.city +
                   ", " +
-                  this.warehouse.district +
+                  me.warehouse.district +
                   ", " +
-                  this.warehouse.subdistrict;
-                this.order.consignee.value = this.warehouse.name;
-                this.order.phoneNumberReceipt.value = "";
-                this.materials.forEach((item) => {
+                  me.warehouse.subdistrict;
+                me.order.consignee.value = me.warehouse.name;
+                me.order.phoneNumberReceipt.value = "";
+                me.materials.forEach((item) => {
                   subTotalVal = item.quantity * item.importPrice;
-                  this.subTotal = this.subTotal + subTotalVal;
-                  this.singleUnit = item.singleUnit;
+                  me.subTotal = me.subTotal + subTotalVal;
+                  me.singleUnit = item.singleUnit;
                 });
               }
 
-              this.id = res.data.items.id;
-              this.invoiceId = res.data.items.invoiceId;
-              this.typeInvoice = res.data.items.typeInvoice;
-              if (!res.discount) {
-                this.order.discount.value = "";
+              me.id = res.data.items.id;
+              me.invoiceId = res.data.items.invoiceId;
+              me.typeInvoice = res.data.items.typeInvoice;
+              if (!res.data.items.discount) {
+                me.order.discount.value = "";
               } else {
-                this.order.discount.value = res.discount;
+                me.order.discount.value = res.data.items.discount;
               }
-              if (!res.moneyPaid) {
-                this.order.moneyPaid.value = "";
+              if (!res.data.items.moneyPaid) {
+                me.order.moneyPaid.value = "";
               } else {
-                this.order.moneyPaid.value = res.moneyPaid;
+                me.order.moneyPaid.value = res.data.items.moneyPaid;
               }
             }
+            console.log(me.order.moneyPaid.value, "this.order");
+            console.log(me.order, "this.order");
           })
           .catch((error) => {
-            this.$message({
+            me.$message({
               showClose: true,
               message: error.response.data.items,
               type: "error",
             });
           })
           .finally();
-        if (this.$route.params.data.type === "DUPLICATED") {
-        }
       } else {
       }
     },

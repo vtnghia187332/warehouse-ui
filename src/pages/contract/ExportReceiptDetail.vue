@@ -387,14 +387,6 @@ export default {
     async handlePayment() {
       if (this.$route.params.data.id == null) {
         await this.handleSubmit("PAYMENT");
-        let data = {
-          id: this.invoiceId,
-          type: "EDIT",
-        };
-        this.$router.push({
-          name: "payment",
-          params: { data },
-        });
       } else {
         let data = {
           id: this.$route.params.data.id,
@@ -464,6 +456,15 @@ export default {
               this.invoiceId = response.data.items;
               if (type === "CREATED") {
                 this.$router.push({ path: "/export-receipt" });
+              } else {
+                let data = {
+                  id: this.invoiceId,
+                  type: "EDIT",
+                };
+                this.$router.push({
+                  name: "payment",
+                  params: { data },
+                });
               }
               this.$message({
                 showClose: true,

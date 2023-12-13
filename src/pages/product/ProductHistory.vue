@@ -105,7 +105,15 @@
             {{ scope.row.singleUnit.name }}
           </template>
         </el-table-column>
-
+        <el-table-column prop="invoiceRes" label="Invoice ID" width="100">
+          <template slot-scope="scope">
+            <el-link
+              @click="handleInvoiceDetail(scope.row?.invoiceRes?.invoiceId)"
+            >
+              {{ scope.row?.invoiceRes?.invoiceId }}</el-link
+            >
+          </template>
+        </el-table-column>
         <el-table-column prop="categoryProductRes" label="Category" width="150">
           <template slot-scope="scope">
             {{ scope.row.categoryProductRes.name }}
@@ -187,6 +195,16 @@ export default {
     };
   },
   methods: {
+    handleInvoiceDetail(item) {
+      let data = {
+        id: item,
+        type: "EDIT",
+      };
+      this.$router.push({
+        name: "payment",
+        params: { data },
+      });
+    },
     filterByWarehouse(item) {
       if (!item) {
         this.warehouseData.value = null;
