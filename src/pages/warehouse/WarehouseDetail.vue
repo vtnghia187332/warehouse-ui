@@ -199,7 +199,7 @@
                     </el-table-column>
                     <el-table-column label="Date" prop="date">
                       <template slot-scope="scope">
-                        {{ moment(scope.row.date).format("DD/MM/YYYY") }}
+                        {{ moment(scope.row.specialDay).format("YYYY-MM-DD") }}
                       </template>
                     </el-table-column>
                     <el-table-column label="Time" prop="time">
@@ -232,7 +232,7 @@
                           size="mini"
                           type="danger"
                           class="bg-red-300"
-                          @click="handleDeleteSpecialDay(scope, 'ON')"
+                          @click="handleDeleteSpecialDay(scope, 'OFF')"
                           >Delete</el-button
                         >
                       </template>
@@ -259,7 +259,7 @@
                     </el-table-column>
                     <el-table-column label="Date" prop="date">
                       <template slot-scope="scope">
-                        {{ moment(scope.row.date).format("DD/MM/YYYY") }}
+                        {{ moment(scope.row.specialDay).format("YYYY-MM-DD") }}
                       </template>
                     </el-table-column>
                     <el-table-column label="Time" prop="time">
@@ -348,7 +348,6 @@
             <el-button
               @click="handleSubmit"
               class="bg-blue-400"
-              :disabled="invalid"
               type="primary"
               >{{ warehouseId != 0 ? "Update" : "Create" }}</el-button
             >
@@ -634,16 +633,12 @@ export default {
       });
       Object.keys(this.workingHour).map((key) => {
         if (this.workingHour[key].checked) {
-          if (warehouseDetail.openWorkingHourReq[key + "Start"]) {
-            warehouseDetail.openWorkingHourReq[key + "Start"] = moment(
-              this.workingHour[key].time[0]
-            ).format("YYYY-MM-DD HH:mm:ss");
-          }
-          if (warehouseDetail.openWorkingHourReq[key + "End"]) {
-            warehouseDetail.openWorkingHourReq[key + "End"] = moment(
-              this.workingHour[key].time[1]
-            ).format("YYYY-MM-DD HH:mm:ss");
-          }
+          warehouseDetail.openWorkingHourReq[key + "Start"] = moment(
+            this.workingHour[key].time[0]
+          ).format("YYYY-MM-DD HH:mm:ss");
+          warehouseDetail.openWorkingHourReq[key + "End"] = moment(
+            this.workingHour[key].time[1]
+          ).format("YYYY-MM-DD HH:mm:ss");
         }
       });
       Object.keys(this.address).map((key) => {
@@ -736,9 +731,9 @@ export default {
     handleDeleteSpecialDay(item, type) {
       const index = item.$index;
       if (index > -1) {
-        if ((type = "ON")) {
+        if (type == "ON") {
           this.specialDayOn.splice(index, 1);
-        } else if ((type = "OFF")) {
+        } else if (type == "OFF") {
           this.specialDayOff.splice(index, 1);
         }
       }
@@ -769,6 +764,7 @@ export default {
           this.specialDayOff.push({ ...param, id: this.specialDayOff.length });
         }
       }
+      console.log(this.specialDayOn, this.specialDayOff);
     },
     initKeyContactForm(data) {
       this.$refs["key-contact"].initKeyContact(data);

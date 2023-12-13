@@ -678,18 +678,16 @@ export default {
               me.invoiceId = res.data.items.invoiceId;
               me.typeInvoice = res.data.items.typeInvoice;
               if (!res.data.items.discount) {
-                me.order.discount.value = "";
+                me.order.discount.value = 0;
               } else {
                 me.order.discount.value = res.data.items.discount;
               }
               if (!res.data.items.moneyPaid) {
-                me.order.moneyPaid.value = "";
+                me.order.moneyPaid.value = 0;
               } else {
                 me.order.moneyPaid.value = res.data.items.moneyPaid;
               }
             }
-            console.log(me.order.moneyPaid.value, "this.order");
-            console.log(me.order, "this.order");
           })
           .catch((error) => {
             me.$message({
