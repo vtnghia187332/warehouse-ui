@@ -60,6 +60,15 @@
           width="170"
         >
         </el-table-column>
+        <el-table-column
+          sortable
+          prop="createdBy"
+          label="Created by"
+          width="250"
+        >
+        </el-table-column>
+        <el-table-column sortable prop="editedBy" label="Edited by" width="250">
+        </el-table-column>
         <el-table-column sortable prop="name" label="Invoice Name" width="250">
         </el-table-column>
         <el-table-column sortable prop="code" label="Invoice Code" width="250">
@@ -130,7 +139,7 @@ export default {
         rules: "required",
         classes: "w-full",
         isRequired: "true",
-        disabled:"non-disabled",
+        disabled: "non-disabled",
         placeholder: "Select Warehouse",
         error: "",
         value: "",

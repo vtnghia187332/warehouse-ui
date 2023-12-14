@@ -331,10 +331,6 @@ export default {
         warehouseId: this.warehouse.warehouseId,
         id: this.customerPId,
         customerId: this.$route.params.data.id,
-        countryId: this.customer.country.value,
-        cityId: this.customer.city.value,
-        districtId: this.customer.district.value,
-        subDistrictId: this.customer.subdistrict.value,
       };
       Object.keys(this.customer).map((key) => {
         customerDetail[key] = this.customer[key].value;
@@ -343,27 +339,27 @@ export default {
       customerDetail.countryId =
         this.customer.country.options.find(
           (opt) =>
-            opt.label == customerDetail.country ||
-            opt.value == customerDetail.country
+            opt.label == this.customer.country.value ||
+            opt.value == this.customer.country.value
         ).value || 0;
       customerDetail.cityId =
         this.customer.city.options.find(
           (opt) =>
-            opt.label == customerDetail.city || opt.value == customerDetail.city
+            opt.label == this.customer.city.value ||
+            opt.value == this.customer.city.value
         ).value || 0;
       customerDetail.districtId =
         this.customer.district.options.find(
           (opt) =>
-            opt.label == customerDetail.district ||
-            opt.value == customerDetail.district
+            opt.label == this.customer.district.value ||
+            opt.value == this.customer.district.value
         ).value || 0;
-      customerDetail.subdistrictId =
+      customerDetail.subDistrictId =
         this.customer.subdistrict.options.find(
           (opt) =>
-            opt.label == customerDetail.subdistrict ||
-            opt.value == customerDetail.subdistrict
+            opt.label == this.customer.subdistrict.value ||
+            opt.value == this.customer.subdistrict.value
         ).value || 0;
-
       if (this.$route.params.data.type === "EDIT") {
         this.handleEditCustomer(customerDetail);
       } else {
@@ -393,7 +389,6 @@ export default {
             message: error.response.data.items,
             type: "error",
           });
-          this.$refs.observerAdd.setErrors(error.response.data.items);
         });
     },
     handleEditCustomer(customerDetail) {
@@ -419,7 +414,6 @@ export default {
             message: error.response.data.items,
             type: "error",
           });
-          this.$refs.observerAdd.setErrors(error.response.data.items);
         });
     },
     async getCustomerDetail() {
@@ -474,7 +468,6 @@ export default {
               const subdistrictsRes = this.customer.subdistrict.options.filter(
                 (item) => item.districtRefId == res.data.items.districtId
               );
-              console.log(citiesRes, districtsRes);
 
               this.customer.country.options = countriesRes;
               this.customer.city.options = citiesRes;
@@ -487,11 +480,12 @@ export default {
             }
           })
           .catch((error) => {
-            this.$message({
-              showClose: true,
-              message: error.response.data.items,
-              type: "error",
-            });
+            console.log(error, "error");
+            // this.$message({
+            //   showClose: true,
+            //   message: error.response.data.items,
+            //   type: "error",
+            // });
           });
         if (this.$route.params.data.type === "DUPLICATED") {
         }

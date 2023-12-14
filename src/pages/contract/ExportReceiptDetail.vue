@@ -403,9 +403,11 @@ export default {
         const materialItem = {};
         Object.keys(this.defaultMaterial).map((key) => {
           materialItem[key] = item[key].value;
-          materialItem.warrantyDate = moment(item["warrantyDate"].value).format(
-            "YYYY-MM-DD HH:mm:ss"
-          );
+          if (item["warrantyDate"].value) {
+            materialItem.warrantyDate = moment(
+              item["warrantyDate"].value
+            ).format("YYYY-MM-DD HH:mm:ss");
+          }
           materialItem.productId = item["product"].value;
 
           this.defaultMaterial.product.options.forEach((option) => {
