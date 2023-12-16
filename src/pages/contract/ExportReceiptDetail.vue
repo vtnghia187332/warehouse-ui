@@ -20,6 +20,13 @@
                       :field="order.typeInvoice"
                     />
                   </div>
+                  <div class="col-span-6">
+                    <BaseSelection
+                      @getValue="getWarehouseDataSel"
+                      v-model="order.warehouseId.value"
+                      :field="order.warehouseId"
+                    />
+                  </div>
                 </div>
               </div>
             </template>
@@ -335,6 +342,20 @@ export default {
             },
           ],
         },
+        warehouseId: {
+          id: "warehouseId",
+          baseId: 0,
+          name: "warehouseId",
+          rules: "",
+          classes: "w-full",
+          isRequired: "",
+          placeholder: "Select Warehouse",
+          error: "",
+          value: "",
+          disabled: "notDisabled",
+          label: "Warehouse",
+          options: [],
+        },
         customer: {
           id: "customer",
           baseId: 0,
@@ -366,6 +387,9 @@ export default {
     };
   },
   methods: {
+    getWarehouseDataSel() {
+      this.handleGetProducts();
+    },
     AddCus() {
       this.handleGetCustomers();
     },
@@ -433,8 +457,19 @@ export default {
       });
     },
     async handleSubmit(type) {
+      let warehouseIdLocal = null;
+      if (this.warehouse?.warehouseId) {
+        warehouseIdLocal = this.warehouse.warehouseId;
+      } else {
+        warehouseIdLocal =
+          this.order.warehouseId.options.find(
+            (opt) =>
+              opt.label == this.order.warehouseId.value ||
+              opt.value == this.order.warehouseId.value
+          ).value || 0;
+      }
       const order = {
-        warehouseId: this.warehouse.warehouseId,
+        warehouseId: warehouseIdLocal,
         id: this.id,
         invoiceId: this.invoiceId,
         customer: {
@@ -529,6 +564,25 @@ export default {
           });
       }
     },
+    async getWarehouseSel() {
+      await axios
+        .get("http://localhost:9090/api/v1/warehouse/data-list", {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.order.warehouseId.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
+    },
     handleCancelSubmit() {
       this.$confirm("Are you sure to cancel")
         .then((_) => {
@@ -571,10 +625,24 @@ export default {
         });
     },
     async handleGetProducts() {
+      let warehouseIdLocal = null;
+      if (this.warehouse?.warehouseId) {
+        warehouseIdLocal = this.warehouse.warehouseId;
+      } else {
+        warehouseIdLocal =
+          this.order.warehouseId.options.find(
+            (opt) =>
+              opt.label == this.order.warehouseId.value ||
+              opt.value == this.order.warehouseId.value
+          ).value || 0;
+      }
+      let params = {
+        warehouseId: warehouseIdLocal,
+      };
       await axios
         .get("http://localhost:9090/api/v1/product/data-list", {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-          params: { warehouseId: this.warehouse.warehouseId },
+          params,
         })
         .then((res) => {
           if (res.status === 200) {
@@ -582,8 +650,6 @@ export default {
             this.materials.forEach((item) => {
               item.product.options = res.data.items;
             });
-            console.log(this.defaultMaterial, "this.defaultMaterial");
-            console.log(this.materials, "this.materials");
           }
         })
         .catch((error) => {
@@ -647,6 +713,19 @@ export default {
               this.initMaterialsList(res.data.items["productInvoices"]);
               this.id = res.data.items.id;
               this.invoiceId = res.data.items.invoiceId;
+              if (
+                this.order.warehouseId?.options.length > 0 &&
+                res.data.items?.warehouseDetailRes !== null
+              ) {
+                this.order.warehouseId.value =
+                  this.order.warehouseId.options?.find(
+                    (opt) =>
+                      opt.label ==
+                        res.data.items.warehouseDetailRes?.warehouseId ||
+                      opt.value ==
+                        res.data.items.warehouseDetailRes?.warehouseId
+                  ).value || "";
+              }
             }
           })
           .catch((error) => {
@@ -666,10 +745,11 @@ export default {
   async mounted() {
     if (!this.$route.params.data) {
       this.$router.push({ path: "/export-receipt" });
+      await this.handleGetProducts();
       return;
     }
     await this.handleGetSingleUnit();
-    await this.handleGetProducts();
+    await this.getWarehouseSel();
     await this.handleGetCustomers();
     await this.getDetailOrder();
   },

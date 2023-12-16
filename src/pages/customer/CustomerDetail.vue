@@ -85,11 +85,20 @@
         <el-col :span="6">
           <FormCard title="More Information" class="mb-3">
             <template v-slot:content>
-              <div class="grid grid-cols-12 gap-x-6">
+              <div class="grid grid-cols-12 gap-x-6 border-b border-gray-200">
                 <div class="col-span-12">
                   <BaseTextArea
                     :field="customer.note"
                     v-model="customer.note.value"
+                  />
+                </div>
+              </div>
+              <div class="grid grid-cols-12 gap-x-6">
+                <div class="col-span-12">
+                  <BaseSelection
+                    @getValue=""
+                    v-model="customer.warehouseId.value"
+                    :field="customer.warehouseId"
                   />
                 </div>
               </div>
@@ -240,6 +249,20 @@ export default {
           maxlength: 50,
           error: "",
         },
+        warehouseId: {
+          id: "warehouseId",
+          baseId: 0,
+          name: "warehouseId",
+          rules: "",
+          classes: "w-full",
+          isRequired: "",
+          placeholder: "Select Warehouse",
+          error: "",
+          value: "",
+          disabled: "notDisabled",
+          label: "Warehouse",
+          options: [],
+        },
         country: {
           id: "country",
           name: "country",
@@ -360,11 +383,36 @@ export default {
             opt.label == this.customer.subdistrict.value ||
             opt.value == this.customer.subdistrict.value
         ).value || 0;
+      customerDetail.warehouseId =
+        this.customer.warehouseId.options.find(
+          (opt) =>
+            opt.label == this.customer.warehouseId.value ||
+            opt.value == this.customer.warehouseId.value
+        ).value || 0;
       if (this.$route.params.data.type === "EDIT") {
         this.handleEditCustomer(customerDetail);
       } else {
         this.handleCreateCustomer(customerDetail);
       }
+    },
+    async getWarehouseSel() {
+      await axios
+        .get("http://localhost:9090/api/v1/warehouse/data-list", {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.customer.warehouseId.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
     },
     handleCreateCustomer(customerDetail) {
       axios({
@@ -477,15 +525,27 @@ export default {
               this.customer.city.disabled = "";
               this.customer.district.disabled = "";
               this.customer.subdistrict.disabled = "";
+              if (
+                this.customer.warehouseId?.options.length > 0 &&
+                res.data.items?.warehouseDetailRes !== null
+              ) {
+                this.customer.warehouseId.value =
+                  this.customer.warehouseId.options?.find(
+                    (opt) =>
+                      opt.label ==
+                        res.data.items.warehouseDetailRes?.warehouseId ||
+                      opt.value ==
+                        res.data.items.warehouseDetailRes?.warehouseId
+                  ).value || "";
+              }
             }
           })
           .catch((error) => {
-            console.log(error, "error");
-            // this.$message({
-            //   showClose: true,
-            //   message: error.response.data.items,
-            //   type: "error",
-            // });
+            this.$message({
+              showClose: true,
+              message: error.response.data.items,
+              type: "error",
+            });
           });
         if (this.$route.params.data.type === "DUPLICATED") {
         }
@@ -579,6 +639,7 @@ export default {
       return;
     }
     await this.getListAddress();
+    await this.getWarehouseSel();
     await this.getCustomerDetail();
   },
 };

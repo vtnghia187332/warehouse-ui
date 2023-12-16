@@ -589,7 +589,7 @@ export default {
             message: error.response.data.items,
             type: "error",
           });
-        });
+    });
     },
 
     async getWarehouseSel() {
@@ -648,7 +648,7 @@ export default {
                 this.user.warehouseId.value =
                   this.user.warehouseId.options?.find(
                     (opt) =>
-                      opt.label ==
+                    opt.label ==
                         res.data.items.warehouseDetailRes?.warehouseId ||
                       opt.value ==
                         res.data.items.warehouseDetailRes?.warehouseId

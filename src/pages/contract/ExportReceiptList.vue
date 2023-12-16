@@ -85,9 +85,9 @@
         >
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.actionType == 1 ? 'success' : 'primary'"
+              :type="scope.row.typeInvoice == 1 ? 'success' : 'primary'"
               disable-transitions
-              >{{ scope.row.actionType == 1 ? "RECEIPT" : "EXPORT" }}</el-tag
+              >{{ scope.row.typeInvoice == 1 ? "RECEIPT" : "EXPORT" }}</el-tag
             >
           </template>
         </el-table-column>

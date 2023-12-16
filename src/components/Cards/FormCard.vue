@@ -23,7 +23,6 @@ export default {
     handleClickBtn() {
       this.$emit("handleClickBtn", true);
     },
-  
   },
 };
 </script>

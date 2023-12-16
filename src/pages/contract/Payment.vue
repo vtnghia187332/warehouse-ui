@@ -655,23 +655,31 @@ export default {
               } else if (res.data.items["typeInvoice"] == 1) {
                 me.customer.fullName.value =
                   res.data.items["customer"].fullName;
-                me.order.deliveryAddress.value =
-                  me.warehouse.detailAddress +
-                  ", " +
-                  me.warehouse.country +
-                  ", " +
-                  me.warehouse.city +
-                  ", " +
-                  me.warehouse.district +
-                  ", " +
-                  me.warehouse.subdistrict;
-                me.order.consignee.value = me.warehouse.name;
+                console.log(res.data.items["deliveryAddress"], "aaa");
+                if (res.data.items["deliveryAddress"]) {
+                  me.order.deliveryAddress.value =
+                    res.data.items["deliveryAddress"];
+                } else {
+                  me.order.deliveryAddress.value =
+                    res.data.items["warehouseDetailRes"].addressDes +
+                    ", " +
+                    res.data.items["warehouseDetailRes"].countryName +
+                    ", " +
+                    res.data.items["warehouseDetailRes"].cityName +
+                    ", " +
+                    res.data.items["warehouseDetailRes"].districtName +
+                    ", " +
+                    res.data.items["warehouseDetailRes"].subdistrictName;
+                }
+
                 me.order.phoneNumberReceipt.value = "";
                 me.materials.forEach((item) => {
                   subTotalVal = item.quantity * item.importPrice;
                   me.subTotal = me.subTotal + subTotalVal;
                   me.singleUnit = item.singleUnit;
                 });
+                me.order.consignee.value =
+                  res.data.items["warehouseDetailRes"].name;
               }
 
               me.id = res.data.items.id;

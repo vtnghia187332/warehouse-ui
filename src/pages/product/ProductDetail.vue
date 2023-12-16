@@ -229,7 +229,20 @@
               </div>
             </template>
           </FormCard>
-          <FormCard title="Category" class="mb-3">
+          <FormCard title="" class="mb-3">
+            <template v-slot:content>
+              <div class="grid grid-cols-12 gap-x-6">
+                <div class="col-span-12">
+                  <BaseSelection
+                    @getValue=""
+                    v-model="product.warehouseId.value"
+                    :field="product.warehouseId"
+                  />
+                </div>
+              </div>
+            </template>
+          </FormCard>
+          <FormCard title="" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12">
@@ -442,6 +455,20 @@ export default {
           value: 0,
           placeholder: "Enter Length...",
           error: "",
+        },
+        warehouseId: {
+          id: "warehouseId",
+          baseId: 0,
+          name: "warehouseId",
+          rules: "",
+          classes: "w-full",
+          isRequired: "",
+          placeholder: "Select Warehouse",
+          error: "",
+          value: "",
+          disabled: "notDisabled",
+          label: "Warehouse",
+          options: [],
         },
         // volume: {
         //   id: "volume",
@@ -659,6 +686,25 @@ export default {
         });
       }
     },
+    async getWarehouseSel() {
+      await axios
+        .get("http://localhost:9090/api/v1/warehouse/data-list", {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.product.warehouseId.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
+    },
     handleSubmit() {
       if (this.units?.length > 0) {
         this.units.forEach((item) => {
@@ -676,7 +722,17 @@ export default {
             ).value || "";
         });
       }
-
+      let warehouseIdLocal = null;
+      if (this.warehouse?.warehouseId) {
+        warehouseIdLocal = this.warehouse.warehouseId;
+      } else {
+        warehouseIdLocal =
+          this.product.warehouseId.options.find(
+            (opt) =>
+              opt.label == this.product.warehouseId.value ||
+              opt.value == this.product.warehouseId.value
+          ).value || 0;
+      }
       const productDetail = {
         warehouseId: this.warehouse?.warehouseId,
         id: this.productPId,
@@ -822,6 +878,19 @@ export default {
               } else {
                 this.productPhotos = [];
               }
+              if (
+                this.product.warehouseId?.options.length > 0 &&
+                res.data.items?.warehouseDetailRes !== null
+              ) {
+                this.product.warehouseId.value =
+                  this.product.warehouseId.options?.find(
+                    (opt) =>
+                      opt.label ==
+                        res.data.items.warehouseDetailRes?.warehouseId ||
+                      opt.value ==
+                        res.data.items.warehouseDetailRes?.warehouseId
+                  ).value || "";
+              }
             }
             if (this.units && this.units?.length > 0) {
               this.units.forEach((item) => {
@@ -862,6 +931,7 @@ export default {
     }
     await this.getValueCategory();
     await this.getValueSingleUnit();
+    await this.getWarehouseSel();
     await this.getProductDetail();
   },
 };
