@@ -929,6 +929,10 @@ export default {
       this.$router.push({ path: "/product" });
       return;
     }
+    if (!this.user?.roles.includes("ADMIN")) {
+      this.product.warehouseId.value = this.warehouse.name;
+      this.product.warehouseId.disabled = "disabled";
+    }
     await this.getValueCategory();
     await this.getValueSingleUnit();
     await this.getWarehouseSel();

@@ -15,6 +15,7 @@
             <el-select
               class="w-[180px]"
               v-model="warehouseData.value"
+              :disabled="warehouseData.disabled === 'disabled'"
               placeholder="Select Warehouse"
               @change="filterByWarehouse($event)"
               clearable
@@ -683,10 +684,11 @@ export default {
   async mounted() {
     await this.getWarehouseSel();
     await this.handleGetRoles();
-    if (!this.user.roles.includes("ADMIN")) {
+    if (!this.user?.roles.includes("ADMIN")) {
       this.warehouseData.value = this.warehouse.warehouseId;
       this.warehouseData.disabled = "disabled";
     }
+    console.log(this.warehouseData, "aaa");
     await this.handleGetUsers();
   },
 };

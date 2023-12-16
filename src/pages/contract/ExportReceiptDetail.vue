@@ -745,8 +745,12 @@ export default {
   async mounted() {
     if (!this.$route.params.data) {
       this.$router.push({ path: "/export-receipt" });
-      await this.handleGetProducts();
       return;
+    }
+    if (!this.user?.roles.includes("ADMIN")) {
+      this.order.warehouseId.value = this.warehouse.name;
+      this.order.warehouseId.disabled = "disabled";
+      await this.handleGetProducts();
     }
     await this.handleGetSingleUnit();
     await this.getWarehouseSel();

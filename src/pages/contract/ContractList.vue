@@ -13,6 +13,7 @@
         <el-select
           class="w-[180px]"
           v-model="typeInvoice.value"
+          :disabled="warehouseData.disabled === 'disabled'"
           placeholder="Select Type Invoice"
           @change="updateInputType($event)"
           clearable

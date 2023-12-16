@@ -638,6 +638,10 @@ export default {
       this.$router.push({ path: "/customer" });
       return;
     }
+    if (!this.user?.roles.includes("ADMIN")) {
+      this.customer.warehouseId.value = this.warehouse.name;
+      this.customer.warehouseId.disabled = "disabled";
+    }
     await this.getListAddress();
     await this.getWarehouseSel();
     await this.getCustomerDetail();

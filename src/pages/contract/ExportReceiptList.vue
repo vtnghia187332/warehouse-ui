@@ -12,6 +12,7 @@
       <div class="flex space-x-1">
         <el-select
           class="w-[180px]"
+          :disabled="warehouseData.disabled === 'disabled'"
           v-model="warehouseData.value"
           placeholder="Select Warehouse"
           @change="filterByWarehouse($event)"

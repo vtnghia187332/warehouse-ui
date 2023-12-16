@@ -13,6 +13,7 @@
         <el-select
           class="w-[180px]"
           v-model="warehouseData.value"
+          :disabled="warehouseData.disabled === 'disabled'"
           placeholder="Select Warehouse"
           @change="filterByWarehouse($event)"
           clearable
