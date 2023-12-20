@@ -60,6 +60,13 @@
         </el-table-column>
         <el-table-column sortable prop="fullName" label="Full Name" width="250">
         </el-table-column>
+        <el-table-column
+          sortable
+          prop="companyName"
+          label="Company's Name"
+          width="250"
+        >
+        </el-table-column>
         <el-table-column sortable prop="titleTxt" label="Title" width="100">
         </el-table-column>
         <el-table-column sortable prop="birthDay" label="Birthday" width="200">
@@ -75,6 +82,13 @@
         >
         </el-table-column>
         <el-table-column sortable prop="email" label="Email" width="250">
+        </el-table-column>
+        <el-table-column
+          sortable
+          prop="taxNumber"
+          label="Tax Number"
+          width="100"
+        >
         </el-table-column>
         <el-table-column
           sortable

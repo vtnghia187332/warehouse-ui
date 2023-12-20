@@ -88,7 +88,7 @@
         <div class="">
           <el-col :span="8" class="w-full">
             <el-card shadow="always">
-              <div class="font-semibold">Number of Customer</div>
+              <div class="font-semibold">Number of Customers</div>
               <div>{{ detail.numberOfCustomer }}</div>
             </el-card>
           </el-col>
@@ -96,7 +96,7 @@
         <div class="">
           <el-col :span="8" class="w-full">
             <el-card shadow="always">
-              <div class="font-semibold">Number of Invoice</div>
+              <div class="font-semibold">Number of Invoices</div>
               <div>{{ detail.numberOfInvoicePayment }}</div>
             </el-card>
           </el-col>
@@ -105,7 +105,7 @@
         <div class="">
           <el-col :span="8" class="w-full">
             <el-card shadow="always">
-              <div class="font-semibold">Number of Product</div>
+              <div class="font-semibold">Number of Products</div>
               <div>{{ detail.numberOfProduct }}</div>
             </el-card>
           </el-col>
@@ -114,13 +114,13 @@
         <div class="">
           <el-col :span="8" class="w-full">
             <el-card shadow="always">
-              <div class="font-semibold">Number of Canceled Invoice</div>
+              <div class="font-semibold">Number of Canceled Invoices</div>
               <div>{{ detail.numberOfCancelInvoice }}</div>
             </el-card>
           </el-col>
         </div>
       </div>
-      <div class="ml-4 font-semibold text-2xl">Total Receipt</div>
+      <div class="ml-4 font-semibold text-2xl">Total Export-Receipt</div>
 
       <div style="height: 300px" class="m-auto">
         <v-chart :option="MoneyPaidByDate"></v-chart>
@@ -284,8 +284,8 @@ export default {
             type: "shadow",
           },
           formatter: (params) => {
-            return `Receipt Total <span />${params[0].value}<br />
-                Export Total <span />${params[1].value}<span />`;
+            return `Receipt Total: $<span />${params[0].value}<br />
+                Export Total: $<span />${params[1].value}<span />`;
           },
         },
         series: [],
@@ -294,7 +294,7 @@ export default {
       paymentMethodsStas: {
         tooltip: {
           trigger: "item",
-          formatter: "{b} : {c} ({d}%)",
+          formatter: "{b} : ${c} - ({d}%)",
         },
         series: [
           {

@@ -109,7 +109,15 @@
           <FormCard title="User ID" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
-                <div class="col-span-12"></div>
+                <div class="col-span-12">
+                  <b>
+                    {{
+                      $route.params.data.id !== null
+                        ? $route.params.data.id
+                        : "US-xxx"
+                    }}
+                  </b>
+                </div>
               </div>
             </template>
           </FormCard>

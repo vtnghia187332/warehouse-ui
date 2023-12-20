@@ -27,6 +27,7 @@
         :key="item.value"
         :label="item.label"
         :value="item.value"
+        :disabled="item.isNotInStock === true"
       >
       </el-option>
     </el-select>

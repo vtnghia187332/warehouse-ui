@@ -114,13 +114,15 @@
           </template>
         </el-table-column>
 
-        <el-table-column sortable prop="height" label="Height" width="200">
+        <el-table-column sortable prop="height" label="Height" width="100">
         </el-table-column>
 
-        <el-table-column sortable prop="width" label="Width" width="200">
+        <el-table-column sortable prop="width" label="Width" width="100">
         </el-table-column>
 
-        <el-table-column sortable prop="length" label="Length" width="200">
+        <el-table-column sortable prop="length" label="Length" width="100">
+        </el-table-column>
+        <el-table-column sortable prop="volume" label="Volume" width="100">
         </el-table-column>
 
         <el-table-column prop="categoryProductRes" label="Category" width="150">

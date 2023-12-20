@@ -6,11 +6,19 @@
           <FormCard title="Information" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
-                <div class="col-span-12">
-                  <BaseInput
-                    :field="customer.fullName"
-                    v-model="customer.fullName.value"
-                  />
+                <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                  <div class="col-span-6">
+                    <BaseInput
+                      :field="customer.fullName"
+                      v-model="customer.fullName.value"
+                    />
+                  </div>
+                  <div class="col-span-6">
+                    <BaseInput
+                      :field="customer.companyName"
+                      v-model="customer.companyName.value"
+                    />
+                  </div>
                 </div>
 
                 <div class="col-span-12 grid grid-cols-12 gap-x-6">
@@ -27,7 +35,14 @@
                     />
                   </div>
                 </div>
-
+                <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                  <div class="col-span-6">
+                    <BaseInput
+                      :field="customer.taxNumber"
+                      v-model="customer.taxNumber.value"
+                    />
+                  </div>
+                </div>
                 <div class="col-span-12 grid grid-cols-12 gap-x-6">
                   <div class="col-span-6">
                     <DatePicker
@@ -83,6 +98,21 @@
           </FormCard>
         </el-col>
         <el-col :span="6">
+          <FormCard title="Customer ID" class="mb-3">
+            <template v-slot:content>
+              <div class="grid grid-cols-12 gap-x-6">
+                <div class="col-span-12">
+                  <b>
+                    {{
+                      $route.params.data.id !== null
+                        ? $route.params.data.id
+                        : "CT-xxx"
+                    }}
+                  </b>
+                </div>
+              </div>
+            </template>
+          </FormCard>
           <FormCard title="More Information" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6 border-b border-gray-200">
@@ -145,14 +175,40 @@ export default {
         fullName: {
           id: "fullname",
           name: "Full Name",
-          rules: "required",
+          rules: "",
           classes: "w-full col-span-6",
           type: "text",
           label: "Full Name",
-          isRequired: "true",
+          isRequired: "",
           value: "",
           placeholder: "Enter Full Name...",
           maxlength: 50,
+          error: "",
+        },
+        companyName: {
+          id: "companyName",
+          name: "Company's name",
+          rules: "",
+          classes: "w-full col-span-6",
+          type: "text",
+          label: "Company's Name",
+          isRequired: "",
+          value: "",
+          placeholder: "Enter Company's Name...",
+          maxlength: 50,
+          error: "",
+        },
+        taxNumber: {
+          id: "taxNumber",
+          name: "Tax Number",
+          rules: "",
+          classes: "w-full col-span-6",
+          type: "text",
+          label: "Tax Number",
+          isRequired: "",
+          value: "",
+          placeholder: "Enter Tax Number...",
+          maxlength: 20,
           error: "",
         },
         mobilePhone: {

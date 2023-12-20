@@ -81,10 +81,10 @@
                     />
                   </div>
                   <div class="col-span-3">
-                    <!-- <BaseInput
+                    <BaseInput
                       :field="product.volume"
                       v-model="product.volume.value"
-                    /> -->
+                    />
                   </div>
                 </div>
                 <div class="col-span-12">
@@ -140,7 +140,7 @@
                     {{ scope.row.calUnit }}
                   </template>
                 </el-table-column>
-                <el-table-column label="Description" prop="remark">
+                <el-table-column label="Description">
                   <template slot-scope="scope">
                     {{
                       "1 " +
@@ -182,7 +182,15 @@
           <FormCard title="Product ID" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
-                <div class="col-span-12"></div>
+                <div class="col-span-12">
+                  <b>
+                    {{
+                      $route.params.data.id !== null
+                        ? $route.params.data.id
+                        : "PD-xxx"
+                    }}
+                  </b>
+                </div>
               </div>
             </template>
           </FormCard>
@@ -470,18 +478,18 @@ export default {
           label: "Warehouse",
           options: [],
         },
-        // volume: {
-        //   id: "volume",
-        //   name: "Volume",
-        //   rules: "",
-        //   classes: "w-full",
-        //   type: "",
-        //   label: "Volume",
-        //   isRequired: "",
-        //   value: 0,
-        //   placeholder: "Enter Volume...",
-        //   error: "",
-        // },
+        volume: {
+          id: "volume",
+          name: "Volume",
+          rules: "",
+          classes: "w-full",
+          type: "",
+          label: "Volume",
+          isRequired: "",
+          value: 0,
+          placeholder: "Enter Volume...",
+          error: "",
+        },
 
         color: {
           id: "color",
@@ -734,7 +742,7 @@ export default {
           ).value || 0;
       }
       const productDetail = {
-        warehouseId: this.warehouse?.warehouseId,
+        warehouseId: warehouseIdLocal,
         id: this.productPId,
         productId: this.$route.params.data.id,
         singleUnitId: this.product.singleUnit.baseId,
@@ -753,7 +761,6 @@ export default {
           }
         }
       });
-
       const productDetailForm = this.transformInToFormObject(productDetail);
       if (this.productPhotos[0]) {
         productDetailForm.append("image", this.productPhotos[0].raw);

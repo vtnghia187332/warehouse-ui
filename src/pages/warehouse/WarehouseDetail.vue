@@ -353,15 +353,23 @@
             >
           </div>
         </el-col>
-        <!-- <el-col :span="5" class="">
-          <AssignedModuleVue
-            title="Warehouse Chain"
-            :nameKey="'name'"
-            :item="warehouseChainC.data"
-            :fields="warehouseChainC.fields"
-            :isShowButton="false"
-          />
-        </el-col> -->
+        <el-col :span="5" class="">
+          <FormCard title="Warehouse ID" class="mb-3">
+            <template v-slot:content>
+              <div class="grid grid-cols-12 gap-x-6">
+                <div class="col-span-12">
+                  <b>
+                    {{
+                      $route.params.data.id !== null
+                        ? $route.params.data.id
+                        : "WH-xxx"
+                    }}
+                  </b>
+                </div>
+              </div>
+            </template>
+          </FormCard>
+        </el-col>
       </el-row>
     </div>
   </ValidationObserver>
