@@ -1,6 +1,6 @@
 <template>
   <el-tabs class="tab-invoice" v-model="activeName">
-    <el-tab-pane label="User" name="first">
+    <el-tab-pane label="Nhân viên" name="first">
       <div class="">
         <div class="flex justify-between px-4 py-2">
           <div class="flex">
@@ -8,7 +8,7 @@
             <button
               class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
             >
-              <span class="ti-filter"></span> Filter
+              <span class="ti-filter"></span> Tìm kiếm
             </button>
           </div>
           <div class="flex space-x-1">
@@ -16,7 +16,7 @@
               class="w-[180px]"
               v-model="warehouseData.value"
               :disabled="warehouseData.disabled === 'disabled'"
-              placeholder="Select Warehouse"
+              placeholder="Chọn cửa hàng"
               @change="filterByWarehouse($event)"
               clearable
             >
@@ -32,14 +32,14 @@
               class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
               @click="handleGetHistoryUser"
             >
-              <i class="el-icon-plus ml font-bold"></i> History
+              <i class="el-icon-plus ml font-bold"></i> Lịch sử
             </button>
             <button
               class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
               @click="addUser"
             >
               <i class="el-icon-plus ml font-bold"></i>
-              Create
+              Thêm mới
             </button>
           </div>
         </div>
@@ -55,40 +55,35 @@
             <div slot="append" v-if="staffs.length == '0'">
               <el-empty :image-size="300"></el-empty>
             </div>
-            <el-table-column sortable prop="userId" label="User ID" width="100">
+            <el-table-column
+              sortable
+              prop="userId"
+              label="ID nhân viên"
+              width="150"
+            >
             </el-table-column>
             <el-table-column
               sortable
               prop="createdAt"
-              label="Created At"
+              label="Ngày tạo"
               width="200"
             >
             </el-table-column>
             <el-table-column
               sortable
               prop="editedAt"
-              label="Edited At"
+              label="Ngày sửa"
               width="200"
             >
             </el-table-column>
-            <el-table-column
-              sortable
-              prop="firstname"
-              label="First Name"
-              width="200"
-            >
+            <el-table-column sortable prop="firstname" label="Tên" width="200">
             </el-table-column>
-            <el-table-column
-              sortable
-              prop="lastname"
-              label="Last Name"
-              width="200"
-            >
+            <el-table-column sortable prop="lastname" label="Họ" width="200">
             </el-table-column>
             <el-table-column
               sortable
               prop="mobilePhone"
-              label="Mobile Phone"
+              label="Số điện thoại"
               width="150"
             >
             </el-table-column>
@@ -97,11 +92,11 @@
             <el-table-column
               sortable
               prop="nationalNumber"
-              label="National Number"
+              label="CMT/CCCD"
               width="180"
             >
             </el-table-column>
-            <el-table-column sortable prop="role" label="Role" width="200">
+            <el-table-column sortable prop="role" label="Chức vụ" width="200">
               <template slot-scope="scope">
                 {{ scope.row.roles[0].roleName }}
               </template>
@@ -133,7 +128,7 @@
         />
       </div>
     </el-tab-pane>
-    <el-tab-pane label="Role" name="second">
+    <el-tab-pane label="Chức vụ" name="second">
       <div class="">
         <div class="flex justify-between px-4 py-2">
           <div class="flex">
@@ -141,7 +136,7 @@
             <button
               class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
             >
-              <span class="ti-filter"></span> Filter
+              <span class="ti-filter"></span> Tìm kiếm
             </button>
           </div>
           <div>
@@ -149,7 +144,7 @@
               class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
               @click="createRole"
             >
-              <i class="el-icon-plus ml font-bold"></i> Create
+              <i class="el-icon-plus ml font-bold"></i> Thêm
             </button>
           </div>
         </div>
@@ -165,37 +160,37 @@
             <div slot="append" v-if="roles.length == '0'">
               <el-empty :image-size="300"></el-empty>
             </div>
-            <el-table-column sortable prop="id" label="Role Id" width="200">
+            <el-table-column sortable prop="id" label="Chức vụ ID" width="200">
             </el-table-column>
             <el-table-column
               sortable
               prop="createdAt"
-              label="Created At"
+              label="Ngày tạo"
               width="200"
             >
             </el-table-column>
             <el-table-column
               sortable
               prop="editedAt"
-              label="Updated At"
+              label="Ngày sửa"
               width="200"
             >
             </el-table-column>
             <el-table-column
               sortable
               prop="roleName"
-              label="Role's Name"
+              label="Chức vụ"
               width="350"
             >
             </el-table-column>
             <el-table-column
               sortable
               prop="roleDes"
-              label="Role's Description"
+              label="Mô tả chức vụ"
               width="500"
             >
             </el-table-column>
-            <el-table-column fixed="right" label="Operations" width="100">
+            <el-table-column fixed="right" label="Hành động" width="100">
               <template slot-scope="scope">
                 <el-button
                   @click="handeDeleteRole(scope.row)"
@@ -245,7 +240,7 @@ export default {
         classes: "w-full",
         isRequired: "true",
         disabled: "not-disabled",
-        placeholder: "Select Warehouse",
+        placeholder: "Chọn cửa hàng",
         error: "",
         value: "",
         options: [],
@@ -257,12 +252,12 @@ export default {
       search: {
         value: "",
         class: "w-96",
-        placeholder: "Search by Name, Code,..",
+        placeholder: "Tìm kiếm bởi tên, mã, ...",
       },
       searchRole: {
         value: "",
         class: "w-96",
-        placeholder: "Search by Name,..",
+        placeholder: "Tìm kiếm bởi tên,..",
       },
 
       paginationPage: {
@@ -364,7 +359,7 @@ export default {
         type: "EDIT",
       };
       this.$router.push({
-        name: "staff-detail", //use name for router push
+        name: "Chi tiết Nhân Viên", //use name for router push
         params: { data },
       });
     },
@@ -374,18 +369,18 @@ export default {
         type: "ADD",
       };
       this.$router.push({
-        name: "staff-detail",
+        name: "Chi tiết Nhân Viên",
         params: { data },
       });
     },
     handleGetHistoryUser() {
-      this.$router.push({ name: "staff history" });
+      this.$router.push({ name: "Lịch sử thay đổi Nhân Viên" });
     },
     updateRole(row, col, event) {
       this.dialogVisibleRole = true;
       this.roleField = {
         id: row.id,
-        title: "User's Role",
+        title: "Chức vụ",
         actionType: "UPDATED",
         roleName: {
           id: "roleName",
@@ -393,10 +388,10 @@ export default {
           rules: "required",
           classes: "col-span-12",
           type: "text",
-          label: "Name",
+          label: "Chức vụ",
           isRequired: "true",
           value: row.roleName,
-          placeholder: "Enter Role's Name",
+          placeholder: "Nhập chức vụ",
           maxlength: 50,
           error: "",
         },
@@ -406,10 +401,10 @@ export default {
           rules: "",
           classes: "col-span-12 !h-[64px]",
           type: "text",
-          label: "Description",
+          label: "Mô tả",
           isRequired: "false",
           value: row.roleDes,
-          placeholder: "Enter Role's Description",
+          placeholder: "Nhập mô tả chức vụ",
           maxlength: 150,
           error: "",
         },
@@ -419,7 +414,7 @@ export default {
       this.dialogVisibleRole = true;
       this.roleField = {
         id: null,
-        title: "User's Role",
+        title: "Thêm mới chức vụ",
         actionType: "CREATED",
         roleName: {
           id: "roleName",
@@ -427,10 +422,10 @@ export default {
           rules: "required",
           classes: "col-span-12",
           type: "text",
-          label: "Name",
+          label: "Chức vụ",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Role's Name",
+          placeholder: "Nhập chức vụ",
           maxlength: 50,
           error: "",
         },
@@ -440,10 +435,10 @@ export default {
           rules: "",
           classes: "col-span-12 !h-[64px]",
           type: "text",
-          label: "Description",
+          label: "Mô tả",
           isRequired: "false",
           value: "",
-          placeholder: "Enter Role's Description",
+          placeholder: "Nhập mô tả chức vụ",
           maxlength: 150,
           error: "",
         },
@@ -472,7 +467,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Created successfully",
+              message: "Thêm mới thành công",
               type: "success",
             });
             this.handleGetRoles();
@@ -502,7 +497,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Updated successfully",
+              message: "Sửa thành công",
               type: "success",
             });
             this.handleGetRoles();
@@ -588,7 +583,7 @@ export default {
         });
     },
     handeDeleteUser(row) {
-      this.$confirm(`Are you want to delete ${row.productId}?`)
+      this.$confirm(`Bạn có muốn xóa ${row.userId}?`)
         .then((_) => {
           this.handleDeleteStaff(row.userId);
         })
@@ -605,7 +600,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Deleted successfully",
+              message: "Xóa thành công",
               type: "success",
             });
           }
@@ -688,7 +683,6 @@ export default {
       this.warehouseData.value = this.warehouse.warehouseId;
       this.warehouseData.disabled = "disabled";
     }
-    console.log(this.warehouseData, "aaa");
     await this.handleGetUsers();
   },
 };

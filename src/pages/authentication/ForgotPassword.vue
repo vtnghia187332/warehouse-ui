@@ -6,7 +6,7 @@
         <div class="m-auto">
           <el-row class="pt-4 pl-3 pr-3 !w-[500px]">
             <el-col class="forms grow">
-              <FormCard title="Forgot password" class="mb-3">
+              <FormCard title="Quên mật khẩu" class="mb-3">
                 <template v-slot:content>
                   <div class="grid grid-cols-12 gap-x-6">
                     <div class="col-span-12">
@@ -34,7 +34,7 @@
                       @click="handleSubmit"
                       class="bg-blue-400 w-full"
                       type="primary"
-                      >Submit</el-button
+                      >Gửi</el-button
                     >
                   </div>
                 </template>
@@ -71,7 +71,7 @@ export default {
           isRequired: "true",
           value: "",
           label: "Email",
-          placeholder: "Enter Email...",
+          placeholder: "Nhập vào email...",
           error: "",
         },
         mobilePhone: {
@@ -82,8 +82,8 @@ export default {
           type: "text",
           isRequired: "true",
           value: "",
-          label: "Mobile Phone",
-          placeholder: "Enter Mobile Phone...",
+          label: "Số điện thoại",
+          placeholder: "Nhập vào số điện thoại...",
           error: "",
         },
         nationalNumber: {
@@ -94,8 +94,8 @@ export default {
           type: "text",
           isRequired: "true",
           value: "",
-          label: "National Number",
-          placeholder: "Enter National Number...",
+          label: "CCCD/CMT",
+          placeholder: "Nhập vào CCCD/CMT...",
           error: "",
         },
       },

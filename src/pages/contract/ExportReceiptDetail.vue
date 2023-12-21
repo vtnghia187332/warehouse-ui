@@ -3,7 +3,7 @@
     <div class="mb-16">
       <el-row class="pt-4 pl-3 pr-3" :gutter="20">
         <el-col :span="24" class="forms grow">
-          <FormCard title="Information" class="mb-3">
+          <FormCard title="Thông tin phiếu thu-chi" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-6">
@@ -34,7 +34,7 @@
 
           <FormCard
             @handleClickBtn="handleClickBtn"
-            title="Materials/Products"
+            title="Nguyên vật liệu"
             isShowButton="true"
             class="mb-3"
           >
@@ -82,7 +82,7 @@
           </FormCard>
 
           <FormCard
-            title="Customer"
+            title="Khách hàng"
             class="mb-3"
             @handleClickBtn="handleAddCustomer"
             isShowButton="true"
@@ -99,7 +99,7 @@
               </div>
             </template>
           </FormCard>
-          <FormCard title="Take Notes" class="mb-3">
+          <FormCard title="Ghi chú" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12">
@@ -114,18 +114,18 @@
         </el-col>
         <el-col :span="6">
           <div class="footer-btn-fixed flex justify-end p-2">
-            <el-button @click="handleCancelSubmit">Cancel</el-button>
+            <el-button @click="handleCancelSubmit">Thoát</el-button>
             <el-button
               class="bg-blue-400"
               type="primary"
               @click="handleSubmit('CREATED')"
-              >Create</el-button
+              >Thêm</el-button
             >
             <el-button
               class="bg-green-400"
               type="success"
               @click="handlePayment"
-              >Payment</el-button
+              >Thanh toán</el-button
             >
           </div>
         </el-col>
@@ -177,11 +177,11 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select Product",
+          placeholder: "Chọn nguyên vật liệu",
           error: "",
           value: "",
           disabled: "notDisabled",
-          label: "Material/Product",
+          label: "Nguyên Vật Liệu",
           options: [],
         },
         warrantyDate: {
@@ -195,7 +195,7 @@ export default {
           error: "",
           value: "",
           disabled: "notDisabled",
-          label: "Warranty Date",
+          label: "Ngày bảo hành",
           pickerOptions: {
             disabledDate(time) {
               return time.getTime() < Date.now();
@@ -209,11 +209,11 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select Single Unit",
+          placeholder: "Chọn đơn vị",
           error: "",
           value: "",
           disabled: "disabled",
-          label: "Single Unit",
+          label: "Đơn vị",
           options: [],
         },
         quantity: {
@@ -222,10 +222,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Quantity",
+          label: "Số lượng",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Quantity...",
+          placeholder: "Nhập số lượng...",
           error: "",
         },
       },
@@ -238,12 +238,12 @@ export default {
             rules: "required",
             classes: "w-full",
             isRequired: "true",
-            placeholder: "Select Product",
+            placeholder: "Chọn Nguyên vật liệu",
             error: "",
             value: "",
             unitVal: "",
             disabled: "notDisabled",
-            label: "Material/Product",
+            label: "Nguyên vật liệu",
             options: [],
           },
           warrantyDate: {
@@ -253,11 +253,11 @@ export default {
             rules: "",
             classes: "w-full",
             isRequired: "",
-            placeholder: "Select warrantyDate",
+            placeholder: "Chọn hạn sử dụng",
             error: "",
             value: "",
             disabled: "notDisabled",
-            label: "Warranty Date",
+            label: "Hạn sử dụng",
             pickerOptions: {
               disabledDate(time) {
                 return time.getTime() < Date.now();
@@ -271,11 +271,11 @@ export default {
             rules: "required",
             classes: "w-full",
             isRequired: "true",
-            placeholder: "Select Single Unit",
+            placeholder: "Chọn đơn vị",
             error: "",
             value: "",
             disabled: "disabled",
-            label: "Single Unit",
+            label: "Đơn vị",
             options: [],
           },
           quantity: {
@@ -284,10 +284,10 @@ export default {
             rules: "required",
             classes: "w-full",
             type: "text",
-            label: "Quantity",
+            label: "Số lượng",
             isRequired: "true",
             value: "",
-            placeholder: "Enter Quantity...",
+            placeholder: "Nhập số lượng...",
             error: "",
           },
         },
@@ -299,10 +299,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Name",
+          label: "Tên hóa đơn",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Name...",
+          placeholder: "Nhập tên hóa đơn...",
           maxlength: 150,
           error: "",
         },
@@ -312,10 +312,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Code",
+          label: "Mã hóa đơn",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Code...",
+          placeholder: "Nhập mã hóa đơn...",
           maxlength: 150,
           error: "",
         },
@@ -326,19 +326,19 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select Type of Invoice",
+          placeholder: "Chọn loại hóa đơn",
           error: "",
           value: "",
           disabled: "notDisabled",
-          label: "Type of Invoice",
+          label: "Loại hóa đơn",
           options: [
             {
               value: 1,
-              label: "Receipt",
+              label: "Nhập hàng",
             },
             {
               value: 2,
-              label: "Export",
+              label: "Bán hàng",
             },
           ],
         },
@@ -349,11 +349,11 @@ export default {
           rules: "",
           classes: "w-full",
           isRequired: "",
-          placeholder: "Select Warehouse",
+          placeholder: "Chọn cửa hàng",
           error: "",
           value: "",
           disabled: "notDisabled",
-          label: "Warehouse",
+          label: "Cửa hàng",
           options: [],
         },
         customer: {
@@ -363,11 +363,11 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select Customer / Phone Number",
+          placeholder: "Khách hàng",
           error: "",
           value: "",
           disabled: "notDisabled",
-          label: "Customer",
+          label: "Khách hàng",
           options: [],
         },
         note: {
@@ -376,10 +376,10 @@ export default {
           rules: "",
           classes: "w-full col-span-6 !h-[64px]",
           type: "text",
-          label: "Note",
+          label: "Ghi chú",
           isRequired: "false",
           value: "",
-          placeholder: "Enter Note...",
+          placeholder: "Nhập ghi chú...",
           maxlength: 250,
           error: "",
         },
@@ -492,7 +492,7 @@ export default {
             if (response.status === 200) {
               this.invoiceId = response.data.items;
               if (type === "CREATED") {
-                this.$router.push({ path: "/export-receipt" });
+                this.$router.push({ name: "Danh sách phiếu thu-chi" });
               } else {
                 let data = {
                   id: this.invoiceId,
@@ -505,7 +505,7 @@ export default {
               }
               this.$message({
                 showClose: true,
-                message: "Updated successfully",
+                message: "Sửa thành công",
                 type: "success",
               });
             }
@@ -537,11 +537,11 @@ export default {
             if (response.status === 200) {
               this.invoiceId = response.data.items;
               if (type === "CREATED") {
-                this.$router.push({ path: "/export-receipt" });
+                this.$router.push({ name: "Danh sách phiếu thu-chi" });
               }
               this.$message({
                 showClose: true,
-                message: "Created successfully",
+                message: "Thêm thành công",
                 type: "success",
               });
             }
@@ -586,7 +586,7 @@ export default {
     handleCancelSubmit() {
       this.$confirm("Are you sure to cancel")
         .then((_) => {
-          this.$router.push({ path: "/export-receipt" });
+          this.$router.push({ name: "Danh sách phiếu thu-chi" });
         })
         .catch((_) => {});
     },
@@ -744,7 +744,7 @@ export default {
   },
   async mounted() {
     if (!this.$route.params.data) {
-      this.$router.push({ path: "/export-receipt" });
+      this.$router.push({ name: "Danh sách phiếu thu-chi" });
       return;
     }
     if (!this.user?.roles.includes("ADMIN")) {

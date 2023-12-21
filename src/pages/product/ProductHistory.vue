@@ -6,14 +6,14 @@
         <button
           class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
         >
-          <span class="ti-filter"></span> Filter
+          <span class="ti-filter"></span> Tìm kiếm
         </button>
       </div>
       <div class="flex space-x-1">
         <el-select
           class="w-[180px]"
           v-model="warehouseData.value"
-          placeholder="Select Warehouse"
+          placeholder="Chọn cửa hàng"
           @change="filterByWarehouse($event)"
           clearable
         >
@@ -34,78 +34,78 @@
         style="width: 100%"
         @row-dblclick=""
         @sort-change=""
-        height="800"
+        height="765"
       >
         <div slot="append" v-if="products.length == '0'">
           <el-empty :image-size="300"></el-empty>
         </div>
-        <el-table-column fixed prop="productId" label="Product ID" width="150">
+        <el-table-column fixed prop="productId" label="ID Nguyên vật liệu" width="150">
         </el-table-column>
         <el-table-column
           sortable
           prop="createdAt"
-          label="Create Date"
+          label="Ngày tạo"
           width="250"
         >
         </el-table-column>
         <el-table-column
           sortable
           prop="editedAt"
-          label="Updated Date"
+          label="Ngày sửa"
           width="250"
         >
         </el-table-column>
         <el-table-column
           sortable
           prop="createdBy"
-          label="Created by"
+          label="Người tạo"
           width="250"
         >
         </el-table-column>
-        <el-table-column sortable prop="editedBy" label="Edited by" width="250">
+        <el-table-column sortable prop="editedBy" label="Người sửa" width="250">
         </el-table-column>
-        <el-table-column prop="actionType" label="Action" width="150">
+        <el-table-column prop="actionType" label="Hành động" width="150">
           <template slot-scope="scope">
             <el-tag
               :type="scope.row.actionType == 0 ? 'success' : 'primary'"
               disable-transitions
-              >{{ scope.row.actionType == 0 ? "INSERTED" : "UPDATED" }}</el-tag
+              >{{ scope.row.actionType == 0 ? "Thêm mới" : "Sửa đổi" }}</el-tag
             >
           </template>
         </el-table-column>
-        <el-table-column sortable prop="code" label="Code" width="250">
+        <el-table-column sortable prop="code" label="Mã Nguyên vật liệu" width="250">
         </el-table-column>
-        <el-table-column sortable prop="name" label="Name" width="250">
+        <el-table-column sortable prop="name" label="Nguyên vật liệu" width="250">
         </el-table-column>
         <el-table-column
           sortable
           prop="description"
-          label="Description"
+          label="Mô tả"
           width="150"
         >
         </el-table-column>
-        <el-table-column prop="quantity" label="Quantity" width="150">
+        <el-table-column prop="quantity" label="Số lượng" width="150">
         </el-table-column>
-        <el-table-column prop="importPrice" label="Import Price" width="150">
+        <el-table-column prop="importPrice" label="Giá nhập" width="150">
         </el-table-column>
-        <el-table-column prop="exportPrice" label="Export Price" width="150">
+        <el-table-column prop="exportPrice" label="Giá bán" width="150">
         </el-table-column>
-        <el-table-column prop="expiredDate" label="Expired Date" width="250">
+        <el-table-column prop="expiredDate" label="Ngày hết hạn" width="250">
         </el-table-column>
-        <el-table-column prop="color" label="Color" width="150">
+        <el-table-column prop="color" label="Màu sắc" width="150">
         </el-table-column>
-        <el-table-column prop="height" label="Height" width="150">
+        <el-table-column prop="height" label="chiều cao" width="150">
         </el-table-column>
-        <el-table-column prop="width" label="Width" width="150">
+        <el-table-column prop="width" label="Chiều rộng" width="150">
         </el-table-column>
-        <el-table-column prop="length" label="Length" width="150">
+        <el-table-column prop="length" label="Chiều dài" width="150">
         </el-table-column>
-        <el-table-column prop="singleUnit" label="Single Unit" width="150">
+        <el-table-column prop="singleUnit" label="Đơn vị" width="150">
           <template slot-scope="scope">
             {{ scope.row.singleUnit.name }}
           </template>
         </el-table-column>
-        <el-table-column prop="invoiceRes" label="Invoice ID" width="100">
+        <el-table-column prop="invoiceRes" label="Hóa đơn ID" width="100">
           <template slot-scope="scope">
             <el-link
               @click="handleInvoiceDetail(scope.row?.invoiceRes?.invoiceId)"
@@ -114,17 +114,17 @@
             >
           </template>
         </el-table-column>
-        <el-table-column prop="categoryProductRes" label="Category" width="150">
+        <el-table-column prop="categoryProductRes" label="Danh mục" width="150">
           <template slot-scope="scope">
             {{ scope.row.categoryProductRes.name }}
           </template>
         </el-table-column>
-        <el-table-column prop="isActive" label="Status" width="100">
+        <el-table-column prop="isActive" label="Trạng thái" width="150">
           <template slot-scope="scope">
             <el-tag
               :type="scope.row.isActive === 1 ? 'success' : 'danger'"
               disable-transitions
-              >{{ scope.row.isActive == 1 ? "ACTIVE" : "INACTIVE" }}</el-tag
+              >{{ scope.row.isActive == 1 ? "Hoạt động" : "Không hoạt động" }}</el-tag
             >
           </template>
         </el-table-column>

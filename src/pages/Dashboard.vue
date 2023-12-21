@@ -2,7 +2,6 @@
   <div>
     <loading-page v-show="loadingPageDetail"></loading-page>
     <div v-show="!loadingPageDetail">
-      <div class="ml-4 font-semibold text-2xl">Filter by</div>
       <div class="ml-4 grid gap-x-2 grid-cols-6">
         <BaseSelection
           @getValue=""
@@ -12,7 +11,7 @@
         <!-- <DatePicker :field="dateTo" v-model="dateTo.value" />
         <DatePicker :field="dateFrom" v-model="dateFrom.value" /> -->
         <div class="mb-2">
-          <label class="!font-bold block"> Date </label>
+          <label class="!font-bold block"> Ngày </label>
           <el-date-picker
             v-model="dateFromToSearch"
             type="daterange"
@@ -37,7 +36,7 @@
           </div>
           <div class="col-span-4">
             <div class="font-bold text-blue-600/100">
-              Imported Price Product
+              Tổng giá nhập Vật Liệu
             </div>
             <div>$ {{ addCommas(detail.totalImportPrice) }}</div>
           </div>
@@ -48,7 +47,7 @@
             <i class="el-icon-delete-location"></i>
           </div>
           <div class="col-span-4">
-            <div class="font-bold text-blue-600/100">Money Refund</div>
+            <div class="font-bold text-blue-600/100">Tổng tiền trả lại</div>
             <div>$ {{ addCommas(detail.totalRefundPrice) }}</div>
           </div>
         </div>
@@ -58,7 +57,7 @@
             <i class="el-icon-discount"></i>
           </div>
           <div class="col-span-4">
-            <div class="font-bold text-blue-600/100">Discount</div>
+            <div class="font-bold text-blue-600/100">Giảm giá</div>
             <div>$ {{ addCommas(detail.totalDiscountPrice) }}</div>
           </div>
         </div>
@@ -68,7 +67,7 @@
             <i class="el-icon-document"></i>
           </div>
           <div class="col-span-4">
-            <div class="font-bold text-blue-600/100">Tax Price</div>
+            <div class="font-bold text-blue-600/100">Tiền thuế</div>
             <div>$ {{ addCommas(detail.totalTaxPrice) }}</div>
           </div>
         </div>
@@ -78,7 +77,7 @@
             <i class="el-icon-wallet"></i>
           </div>
           <div class="col-span-4">
-            <div class="font-bold text-blue-600/100">Revenue with tax</div>
+            <div class="font-bold text-blue-600/100">Doanh thu trước thuế</div>
             <div>$ {{ addCommas(detail.totalRevenueWithTax) }}</div>
           </div>
         </div>
@@ -88,7 +87,7 @@
         <div class="">
           <el-col :span="8" class="w-full">
             <el-card shadow="always">
-              <div class="font-semibold">Number of Customers</div>
+              <div class="font-semibold">Số lượng khách hàng</div>
               <div>{{ detail.numberOfCustomer }}</div>
             </el-card>
           </el-col>
@@ -96,7 +95,7 @@
         <div class="">
           <el-col :span="8" class="w-full">
             <el-card shadow="always">
-              <div class="font-semibold">Number of Invoices</div>
+              <div class="font-semibold">Số lượng hóa đơn</div>
               <div>{{ detail.numberOfInvoicePayment }}</div>
             </el-card>
           </el-col>
@@ -105,7 +104,7 @@
         <div class="">
           <el-col :span="8" class="w-full">
             <el-card shadow="always">
-              <div class="font-semibold">Number of Products</div>
+              <div class="font-semibold">Số lượng sản phẩm</div>
               <div>{{ detail.numberOfProduct }}</div>
             </el-card>
           </el-col>
@@ -114,20 +113,20 @@
         <div class="">
           <el-col :span="8" class="w-full">
             <el-card shadow="always">
-              <div class="font-semibold">Number of Canceled Invoices</div>
+              <div class="font-semibold">Số lượng hóa đơn hủy</div>
               <div>{{ detail.numberOfCancelInvoice }}</div>
             </el-card>
           </el-col>
         </div>
       </div>
-      <div class="ml-4 font-semibold text-2xl">Total Export-Receipt</div>
+      <div class="ml-4 font-semibold text-2xl">Tổng tiền của phiếu thu-chi</div>
 
       <div style="height: 300px" class="m-auto">
         <v-chart :option="MoneyPaidByDate"></v-chart>
       </div>
       <div class="m-3 grid grid-cols-2 gap-x-4">
         <div>
-          <div class="font-semibold">Payment Methods</div>
+          <div class="font-semibold">Phương thức thanh toán</div>
           <el-card shadow="always">
             <div style="height: 250px">
               <v-chart
@@ -140,30 +139,30 @@
         </div>
 
         <div>
-          <div class="font-semibold">In Debt</div>
+          <div class="font-semibold">Số tiền ghi nợ</div>
           <el-card shadow="always">
             <div class="grid grid-cols-5 gap-4 border-b-2 border-black-900">
-              <el-col class="col-span-3 font-semibold">Type of Invoice</el-col>
-              <el-col class="font-semibold">No. of Invoice</el-col>
-              <el-col class="font-semibold">Total money</el-col>
+              <el-col class="col-span-3 font-semibold">Loại hóa đơn</el-col>
+              <el-col class="font-semibold">SL. hóa đơn</el-col>
+              <el-col class="font-semibold">Tổng tiền</el-col>
             </div>
             <div class="grid grid-cols-6 gap-4 mt-2">
-              <el-col class="col-span-4">Export Invoice</el-col>
+              <el-col class="col-span-4">Hóa đơn xuất</el-col>
               <el-col class="">{{ detail.numberInvoiceInDebtExport }}</el-col>
               <el-col class="">{{ detail.totalInDebtExport }}</el-col>
             </div>
             <div class="grid grid-cols-6 gap-4 mt-2">
-              <el-col class="col-span-4">Receipt Invoice</el-col>
+              <el-col class="col-span-4">Hóa đơn nhập</el-col>
               <el-col class="">{{ detail.numberInvoiceInDebtReceipt }}</el-col>
               <el-col class="">{{ detail.totalInDebtReceipt }}</el-col>
             </div>
           </el-card>
 
-          <div class="font-semibold">Top Product Sold</div>
+          <div class="font-semibold">Nguyên vật liệu bán chạy</div>
           <el-card shadow="always">
             <div class="grid grid-cols-5 gap-4 border-b-2 border-black-900">
-              <el-col class="col-span-4 font-semibold">Product's name</el-col>
-              <el-col class="font-semibold">Quantity</el-col>
+              <el-col class="col-span-4 font-semibold">Tên Nguyên vật liệu</el-col>
+              <el-col class="font-semibold">Số lượng</el-col>
             </div>
             <div
               class="grid grid-cols-5 gap-4 mt-2"
@@ -217,8 +216,8 @@ export default {
         classes: "w-full",
         isRequired: "",
         disabled: "not-disabled",
-        label: "Warehouse",
-        placeholder: "Select Warehouse",
+        label: "Cửa hàng",
+        placeholder: "Chọn cửa hàng",
         error: "",
         value: "",
         options: [],

@@ -6,14 +6,14 @@
         <button
           class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
         >
-          <span class="ti-filter"></span> Filter
+          <span class="ti-filter"></span> Tìm kiếm
         </button>
       </div>
       <div class="flex space-x-1">
         <el-select
           class="w-[180px]"
           v-model="warehouseData.value"
-          placeholder="Select Warehouse"
+          placeholder="Chọn cửa hàng"
           @change="filterByWarehouse($event)"
           clearable
         >
@@ -33,7 +33,7 @@
         :data="invoices"
         style="width: 100%"
         @sort-change=""
-        height="785"
+        height="765"
       >
         <div slot="append" v-if="invoices.length == '0'">
           <el-empty :image-size="300"></el-empty>
@@ -42,52 +42,44 @@
           sortable
           fixed
           prop="invoiceId"
-          label="Invoice ID"
+          label="Hóa đơn ID"
           width="150"
         >
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="createdAt"
-          label="Created At"
-          width="170"
-        >
+        <el-table-column sortable prop="createdAt" label="Ngày tạo" width="170">
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="editedAt"
-          label="Updated At"
-          width="170"
-        >
+        <el-table-column sortable prop="editedAt" label="Ngày sửa" width="170">
         </el-table-column>
         <el-table-column
           sortable
           prop="createdBy"
-          label="Created by"
+          label="Người tạo"
           width="250"
         >
         </el-table-column>
-        <el-table-column sortable prop="editedBy" label="Edited by" width="250">
+        <el-table-column sortable prop="editedBy" label="Người sửa" width="250">
         </el-table-column>
-        <el-table-column sortable prop="name" label="Invoice Name" width="250">
+        <el-table-column sortable prop="name" label="Tên hóa đơn" width="250">
         </el-table-column>
-        <el-table-column sortable prop="code" label="Invoice Code" width="250">
+        <el-table-column sortable prop="code" label="Mã hóa đơn" width="250">
         </el-table-column>
         <el-table-column
           sortable
           prop="typeInvoice"
-          label="Type Invoice"
+          label="Loại hóa đơn"
           width="150"
         >
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.actionType == 1 ? 'success' : 'primary'"
+              :type="scope.row.typeInvoice == 1 ? 'success' : 'primary'"
               disable-transitions
-              >{{ scope.row.actionType == 1 ? "RECEIPT" : "EXPORT" }}</el-tag
+              >{{
+                scope.row.typeInvoice == 1 ? "Nhập hàng" : "Bán hàng"
+              }}</el-tag
             >
           </template>
         </el-table-column>
-        <el-table-column sortable prop="code" label="Customer Name" width="250">
+        <el-table-column sortable prop="code" label="Khách hàng" width="250">
           <template slot-scope="scope">
             {{ scope.row.customer.fullName }}
           </template>
@@ -95,18 +87,18 @@
         <el-table-column
           sortable
           prop="invoiceStage"
-          label="Invoice's Status"
+          label="Trạng thái"
           width="200"
         >
         </el-table-column>
         <el-table-column
           sortable
           prop="totalPaid"
-          label="Total Payment"
+          label="Tổng tiền hóa đơn"
           width="200"
         >
         </el-table-column>
-        <el-table-column sortable prop="note" label="Note" width="300">
+        <el-table-column sortable prop="note" label="Ghi chú" width="300">
         </el-table-column>
       </el-table>
     </div>
@@ -140,7 +132,7 @@ export default {
         classes: "w-full",
         isRequired: "true",
         disabled: "non-disabled",
-        placeholder: "Select Warehouse",
+        placeholder: "Chọn cửa hàng",
         error: "",
         value: "",
         options: [],
@@ -149,7 +141,7 @@ export default {
       search: {
         value: "",
         class: "w-96",
-        placeholder: "Search by Name, Code,..",
+        placeholder: "Tìm kiếm với tên, mã, ..",
       },
       loadingTable: false,
       paginationPage: {

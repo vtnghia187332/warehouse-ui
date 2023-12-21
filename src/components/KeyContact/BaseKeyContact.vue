@@ -1,20 +1,20 @@
 <template>
   <div class="pt-3 mb-3 bg-white radius-shadow_add">
-    <div class="px-3 text-primary-85 font-bold text-base">Key Contact</div>
+    <div class="px-3 text-primary-85 font-bold text-base">
+      Thông tin liên lạc
+    </div>
     <div
       class="mt-3 px-[15px] border-t border-b border-divider content-rate-card"
     >
       <div class="flex justify-between py-3">
-        <span class="text-sm font-bold flex items-center"
-          >Key Contact Person
-        </span>
+        <span class="text-sm font-bold flex items-center">Người liên hệ </span>
         <el-button
           class="bg-blue-500 text-white font-bold"
           type="primary"
           @click="handleAddKeyContact"
           :disabled="this.keyContact.length >= 3"
         >
-          Add
+          Thêm
         </el-button>
       </div>
       <div
@@ -24,14 +24,14 @@
       >
         <div class="flex justify-between border-b p-3 bg-gray-100">
           <span class="text-sm font-bold flex items-center"
-            >Key Contact Person {{ index + 1 }}
+            >Người liên hệ {{ index + 1 }}
           </span>
           <div class="cursor-pointer">
             <button
               class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               @click="handleDeleteKeyContact(index)"
             >
-              Delete
+              Xóa
             </button>
           </div>
         </div>
@@ -76,24 +76,24 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Title",
+          label: "Giới tính",
           isRequired: "true",
           value: "",
-          placeholder: "Select Title...",
+          placeholder: "Chọn giới tính...",
           maxlength: 50,
           error: "",
           options: [
             {
               value: 1,
-              label: "Mr",
+              label: "Nam",
             },
             {
               value: 2,
-              label: "Mrs",
+              label: "Nữ",
             },
             {
               value: 3,
-              label: "Other",
+              label: "Khác",
             },
           ],
         },
@@ -101,10 +101,10 @@ export default {
           id: "keycontactFirstName",
           classes: "w-full",
           type: "text",
-          label: "Frist Name",
+          label: "Tên",
           isRequired: "",
           value: "",
-          placeholder: "Enter Keycontact FristName",
+          placeholder: "Nhập tên ",
           maxlength: 30,
           error: "",
         },
@@ -112,10 +112,10 @@ export default {
           id: "keycontactLastName",
           classes: "w-full",
           type: "text",
-          label: "Last Name",
+          label: "Họ",
           isRequired: "",
           value: "",
-          placeholder: "Enter Keycontact LastName",
+          placeholder: "Enter họ ",
           maxlength: 30,
           error: "",
         },
@@ -126,7 +126,7 @@ export default {
           label: "Email",
           isRequired: "",
           value: "",
-          placeholder: "Enter Keycontact Email",
+          placeholder: "Nhập email ",
           maxlength: 150,
           error: "",
         },
@@ -134,10 +134,10 @@ export default {
           id: "keycontactPhoneNo",
           classes: "w-full",
           type: "text",
-          label: "Phone Number",
+          label: "Số điện thoại",
           isRequired: "F",
           value: "",
-          placeholder: "Enter Keycontact Phone Number",
+          placeholder: "Nhập số điện thoại",
           maxlength: 150,
           error: "",
         },
@@ -150,24 +150,24 @@ export default {
             rules: "required",
             classes: "w-full",
             type: "text",
-            label: "Title",
+            label: "Giới tính",
             isRequired: "true",
             value: "",
-            placeholder: "Select Title...",
+            placeholder: "Chọn giới tính...",
             maxlength: 50,
             error: "",
             options: [
               {
                 value: 1,
-                label: "Mr",
+                label: "Nam",
               },
               {
                 value: 2,
-                label: "Mrs",
+                label: "Nữ",
               },
               {
                 value: 3,
-                label: "Other",
+                label: "Khác",
               },
             ],
           },
@@ -177,10 +177,10 @@ export default {
             rules: "required",
             classes: "w-full",
             type: "text",
-            label: "Frist Name",
+            label: "Tên",
             isRequired: "true",
             value: "",
-            placeholder: "Enter Keycontact FristName",
+            placeholder: "Nhập tên...",
             maxlength: 30,
             error: "",
           },
@@ -190,10 +190,10 @@ export default {
             rules: "required",
             classes: "w-full",
             type: "text",
-            label: "Last Name",
+            label: "Họ",
             isRequired: "true",
             value: "",
-            placeholder: "Enter Keycontact LastName",
+            placeholder: "Nhập họ...",
             maxlength: 30,
             error: "",
           },
@@ -206,7 +206,7 @@ export default {
             label: "Email",
             isRequired: "true",
             value: "",
-            placeholder: "Enter Keycontact Email",
+            placeholder: "Nhập email...",
             maxlength: 150,
             error: "",
           },
@@ -216,10 +216,10 @@ export default {
             rules: "required",
             classes: "w-full",
             type: "text",
-            label: "Phone Number",
+            label: "Số điện thoại",
             isRequired: "true",
             value: "",
-            placeholder: "Enter Keycontact Phone Number",
+            placeholder: "Nhập số điện thoại...",
             maxlength: 150,
             error: "",
           },

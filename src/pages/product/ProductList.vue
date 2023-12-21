@@ -6,7 +6,7 @@
         <button
           class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
         >
-          <span class="ti-filter"></span> Filter
+          <span class="ti-filter"></span> Tìm kiếm
         </button>
       </div>
       <div class="flex space-x-1">
@@ -14,7 +14,7 @@
           class="w-[180px]"
           v-model="warehouseData.value"
           :disabled="warehouseData.disabled === 'disabled'"
-          placeholder="Select Warehouse"
+          placeholder="Chọn cửa hàng"
           @change="filterByWarehouse($event)"
           clearable
         >
@@ -30,26 +30,26 @@
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="handleGetHistory"
         >
-          <i class="el-icon-plus ml font-bold"></i> History
+          <i class="el-icon-plus ml font-bold"></i> Lịch sử
         </button>
         <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="handExportProducts"
         >
-          <i class="el-icon-plus ml font-bold"></i> Export
+          <i class="el-icon-plus ml font-bold"></i> Xuất khẩu
         </button>
         <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="HandleImportProduct"
         >
-          <i class="el-icon-plus ml font-bold"></i> Import
+          <i class="el-icon-plus ml font-bold"></i> Nhập khẩu
         </button>
         <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="addProduct"
         >
           <i class="el-icon-plus ml font-bold"></i>
-          Create
+          Thêm
         </button>
       </div>
     </div>
@@ -65,67 +65,62 @@
         <div slot="append" v-if="products.length == '0'">
           <el-empty :image-size="300"></el-empty>
         </div>
-        <el-table-column fixed prop="productId" label="Product ID" width="150">
+        <el-table-column fixed prop="productId" label="ID Sản phẩm" width="150">
+        </el-table-column>
+        <el-table-column sortable prop="createdAt" label="Ngày tạo" width="250">
+        </el-table-column>
+        <el-table-column sortable prop="editedAt" label="Ngày sửa" width="250">
         </el-table-column>
         <el-table-column
           sortable
-          prop="createdAt"
-          label="Create Date"
+          prop="code"
+          label="Mã nguyên vật liệu"
           width="250"
         >
         </el-table-column>
         <el-table-column
           sortable
-          prop="editedAt"
-          label="Updated Date"
+          prop="name"
+          label="Tên nguyên vật liệu"
           width="250"
         >
         </el-table-column>
-        <el-table-column sortable prop="code" label="Code" width="250">
-        </el-table-column>
-        <el-table-column sortable prop="name" label="Name" width="250">
-        </el-table-column>
-        <el-table-column
-          sortable
-          prop="description"
-          label="Description"
-          width="300"
-        >
+        <el-table-column sortable prop="description" label="Mô tả" width="300">
         </el-table-column>
         <el-table-column
           sortable
           prop="importPrice"
-          label="Import Price"
+          label="Giá nhập"
           width="200"
         >
         </el-table-column>
         <el-table-column
           sortable
           prop="exportPrice"
-          label="Export Price"
+          label="Giá bán"
           width="200"
         >
         </el-table-column>
-        <el-table-column prop="color" label="Color" width="150">
+        <el-table-column prop="color" label="Màu sắc" width="150">
         </el-table-column>
-        <el-table-column prop="singleUnit" label="Single Unit" width="150">
+        <el-table-column prop="singleUnit" label="Đơn vị" width="150">
           <template slot-scope="scope">
             {{ scope.row.singleUnit.name }}
           </template>
         </el-table-column>
 
-        <el-table-column sortable prop="height" label="Height" width="100">
+        <el-table-column sortable prop="height" label="Chiều cao" width="150">
         </el-table-column>
 
-        <el-table-column sortable prop="width" label="Width" width="100">
+        <el-table-column sortable prop="width" label="Chiều rộng" width="150">
         </el-table-column>
 
-        <el-table-column sortable prop="length" label="Length" width="100">
+        <el-table-column sortable prop="length" label="Chiều dài" width="150">
         </el-table-column>
-        <el-table-column sortable prop="volume" label="Volume" width="100">
+        <el-table-column sortable prop="volume" label="Thể tích" width="150">
         </el-table-column>
 
-        <el-table-column prop="categoryProductRes" label="Category" width="150">
+        <el-table-column prop="categoryProductRes" label="Danh mục" width="150">
           <template slot-scope="scope">
             {{ scope.row.categoryProductRes.name }}
           </template>
@@ -133,11 +128,11 @@
         <el-table-column
           sortable
           prop="expiredDate"
-          label="Expired Date"
+          label="Ngày hết hạn"
           width="250"
         >
         </el-table-column>
-        <el-table-column fixed="right" label="Operations" width="100">
+        <el-table-column fixed="right" label="Hành động" width="100">
           <template slot-scope="scope">
             <el-button
               @click="handeDuplicateDetail(scope.row)"
@@ -201,7 +196,7 @@ export default {
         classes: "w-full",
         isRequired: "true",
         disabled: "not-disabled",
-        placeholder: "Select Warehouse",
+        placeholder: "Chọn cửa hàng",
         error: "",
         value: "",
         options: [],
@@ -241,7 +236,7 @@ export default {
       }
     },
     handleGetHistory() {
-      this.$router.push({ name: "product history" });
+      this.$router.push({ name: "Lịch sử thay đổi Nguyên Vật Liệu" });
     },
     HandleImportProduct() {
       this.isOpenDialogImport = true;
@@ -252,7 +247,7 @@ export default {
         type: "EDIT",
       };
       this.$router.push({
-        name: "product-detail", //use name for router push
+        name: "Chi tiết Nguyên Vật Liệu", //use name for router push
         params: { data },
       });
     },
@@ -263,7 +258,7 @@ export default {
         type: "ADD",
       };
       this.$router.push({
-        name: "product-detail",
+        name: "Chi tiết Nguyên Vật Liệu",
         params: { data },
       });
     },
@@ -282,12 +277,12 @@ export default {
         type: "DUPLICATED",
       };
       this.$router.push({
-        name: "product-detail", //use name for router push
+        name: "Chi tiết Nguyên Vật Liệu", //use name for router push
         params: { data },
       });
     },
     handeDeleteDetail(row) {
-      this.$confirm(`Are you want to delete ${row.productId}?`)
+      this.$confirm(`Bạn có muốn xóa ${row.productId}?`)
         .then((_) => {
           this.handleDeleteProduct(row.productId);
         })
@@ -304,7 +299,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Deleted successfully",
+              message: "Xóa thành công",
               type: "success",
             });
           }

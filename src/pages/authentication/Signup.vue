@@ -4,9 +4,54 @@
     <ValidationObserver v-slot="{ invalid }" ref="observerAdd">
       <div v-show="!loadingPageDetail" class="flex h-screen">
         <div class="m-auto">
-          <el-row class="pt-4 pl-3 pr-3 !w-[800px]">
-            <el-col class="forms grow">
-              <FormCard title="Sign up" class="mb-3">
+          <el-row class="pt-4 pl-3 pr-3">
+            <div class="text-5xl mb-3">Đăng ký</div>
+            <el-col class="forms grow flex gap-x-4">
+              <FormCard title="Thông tin chuỗi cửa hàng" class="mb-3 w-full">
+                <template v-slot:content>
+                  <div class="grid grid-cols-12 gap-x-6">
+                    <div class="col-span-6">
+                      <BaseInput
+                        :field="warehouseChainD.wcode"
+                        v-model="warehouseChainD.wcode.value"
+                      />
+                    </div>
+                    <div class="col-span-12">
+                      <BaseInput
+                        :field="warehouseChainD.wname"
+                        v-model="warehouseChainD.wname.value"
+                      />
+                    </div>
+                    <div class="col-span-12">
+                      <BaseInput
+                        :field="warehouseChainD.wshortName"
+                        v-model="warehouseChainD.wshortName.value"
+                      />
+                    </div>
+                    <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                      <div class="col-span-6">
+                        <BaseInput
+                          :field="warehouseChainD.wtaxNumber"
+                          v-model="warehouseChainD.wtaxNumber.value"
+                        />
+                      </div>
+                      <div class="col-span-6">
+                        <DatePicker
+                          :field="warehouseChainD.wtaxDeclarationDate"
+                          v-model="warehouseChainD.wtaxDeclarationDate.value"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-span-12">
+                      <BaseTextArea
+                        :field="warehouseChainD.wdescription"
+                        v-model="warehouseChainD.wdescription.value"
+                      />
+                    </div>
+                  </div>
+                </template>
+              </FormCard>
+              <FormCard title="User Information" class="mb-3 w-full">
                 <template v-slot:content>
                   <div class="grid grid-cols-12 gap-x-6">
                     <div class="col-span-12 grid grid-cols-12 gap-x-6">
@@ -66,18 +111,29 @@
                       </div>
                     </div>
                   </div>
-                  <div class="mt-3">
-                    <el-button
-                      :disabled="invalid"
-                      @click="handleSubmit"
-                      class="bg-blue-400 w-full"
-                      type="primary"
-                      >Submit</el-button
-                    >
-                  </div>
                 </template>
               </FormCard>
             </el-col>
+            <div class="flex justify-end p-2">
+              <el-button @click="">Thoát</el-button>
+              <el-button
+                :disabled="invalid"
+                @click="handleSubmit"
+                class="bg-blue-400"
+                type="primary"
+              >
+                Xác nhận
+              </el-button>
+            </div>
+            <!-- <div class="mt-3">
+              <el-button
+                :disablemd="invalid"
+                @click="handleSubmit"
+                class="bg-blue-400 w-full"
+                type="primary"
+                >Submit</el-button
+              >
+            </div> -->
           </el-row>
         </div>
       </div>
@@ -90,7 +146,11 @@ import BaseInput from "./../../components/Inputs/BaseInput.vue";
 import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import FormCard from "./../../components/Cards/FormCard.vue";
 import { ValidationObserver } from "vee-validate";
-import LoadingPage from "../../components/Cards/LoadingPage.vue";
+import DatePicker from "./../../components/Date/DatePicker.vue";
+import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
+import LoadingPage from "@/components/Cards/LoadingPage";
+import moment from "moment";
+
 import axios from "axios";
 export default {
   components: {
@@ -99,10 +159,100 @@ export default {
     BaseSelection,
     ValidationObserver,
     LoadingPage,
+    BaseTextArea,
+    DatePicker,
+  },
+  computed: {
+    moment() {
+      return moment;
+    },
   },
   data() {
     return {
       loadingPageDetail: false,
+      warehouseChainD: {
+        wcode: {
+          id: "code",
+          name: "code",
+          rules: "required",
+          classes: "w-full",
+          type: "text",
+          label: "Mã chuỗi cửa hàng",
+          isRequired: "true",
+          value: "",
+          placeholder: "Nhập Mã chuỗi cửa hàng...",
+          maxlength: 50,
+          error: "",
+        },
+        wname: {
+          id: "name",
+          name: "name",
+          rules: "required",
+          classes: "w-full",
+          type: "text",
+          label: "Tên chuỗi",
+          isRequired: "true",
+          value: "",
+          placeholder: "Nhập Tên chuỗi...",
+          maxlength: 100,
+          error: "",
+        },
+        wshortName: {
+          id: "shortName",
+          name: "shortName",
+          rules: "required",
+          classes: "w-full",
+          type: "text",
+          label: "Tên viết tắt",
+          isRequired: "true",
+          value: "",
+          placeholder: "Nhập Tên viết tắt...",
+          maxlength: 100,
+          error: "",
+        },
+        wdescription: {
+          id: "description",
+          name: "description",
+          rules: "",
+          classes: "w-full !h-[64px]",
+          type: "text",
+          label: "Mô tả",
+          isRequired: "",
+          value: "",
+          placeholder: "Nhập mô tả...",
+          maxlength: 100,
+          error: "",
+        },
+        wtaxNumber: {
+          id: "taxNumber",
+          name: "taxNumber",
+          rules: "required",
+          classes: "w-full",
+          type: "text",
+          label: "Mã số thuế",
+          isRequired: "true",
+          value: "",
+          placeholder: "Nhập mã số thuế...",
+          maxlength: 100,
+          error: "",
+        },
+        wtaxDeclarationDate: {
+          id: "taxDeclarationDate",
+          name: "taxDeclarationDate",
+          rules: "",
+          classes: "w-full",
+          type: "text",
+          label: "Ngày đăng ký MST",
+          isRequired: "false",
+          value: "",
+          error: "",
+          pickerOptions: {
+            disabledDate(time) {
+              return time.getTime() > Date.now();
+            },
+          },
+        },
+      },
       userInfor: {
         code: {
           id: "code",
@@ -110,10 +260,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Code",
+          label: "Mã nhân viên",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Code...",
+          placeholder: "Nhập Mã nhân viên...",
           maxlength: 50,
           error: "",
         },
@@ -123,10 +273,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "First Name",
+          label: "Tên nhân niên",
           isRequired: "true",
           value: "",
-          placeholder: "Enter First Name...",
+          placeholder: "Nhập vào Tên nhân niên...",
           maxlength: 50,
           error: "",
         },
@@ -136,10 +286,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Last Name",
+          label: "Họ nhân niên",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Last Name...",
+          placeholder: "Nhập vào Họ nhân niên...",
           maxlength: 50,
           error: "",
         },
@@ -149,24 +299,24 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Title",
+          label: "Giới tính",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Title...",
+          placeholder: "Chọn giới tính...",
           maxlength: 50,
           error: "",
           options: [
             {
               value: 1,
-              label: "Mr",
+              label: "Nam",
             },
             {
               value: 2,
-              label: "Mrs",
+              label: "Nữ",
             },
             {
               value: 3,
-              label: "Other",
+              label: "Khác",
             },
           ],
         },
@@ -176,10 +326,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Mobile Phone",
+          label: "Số điện thoại",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Mobile Phone...",
+          placeholder: "Nhập số điện thoại...",
           maxlength: 50,
           error: "",
         },
@@ -193,7 +343,7 @@ export default {
           value: "",
           label: "Email",
           maxlength: 50,
-          placeholder: "Enter Email...",
+          placeholder: "Nhập Email...",
           error: "",
         },
         password: {
@@ -204,8 +354,8 @@ export default {
           type: "password",
           isRequired: "true",
           value: "",
-          label: "Password",
-          placeholder: "Enter Password...",
+          label: "Mật khẩu",
+          placeholder: "Nhập mật khẩu...",
           error: "",
         },
         confPassword: {
@@ -216,8 +366,8 @@ export default {
           type: "password",
           isRequired: "true",
           value: "",
-          label: "Confirm Password",
-          placeholder: "Enter Confirm Password...",
+          label: "Xác nhận mật khẩu",
+          placeholder: "Nhập xác nhận mật khẩu...",
           error: "",
         },
       },
@@ -237,6 +387,15 @@ export default {
             ).value || 0;
         }
       });
+      Object.keys(this.warehouseChainD || {}).map((key) => {
+        data[key] = this.warehouseChainD[key].value;
+        if (key == "wtaxDeclarationDate") {
+          data["wtaxDeclarationDate"] = moment(
+            data.wtaxDeclarationDatetaxDeclarationDate
+          ).format("YYYY-MM-DD HH:mm:ss");
+        }
+      });
+      console.log(data, "data");
       if (this.userInfor.password.value !== this.userInfor.confPassword.value) {
         this.$refs.observerAdd.setErrors({
           password: "Password and Confirm Password do not match",

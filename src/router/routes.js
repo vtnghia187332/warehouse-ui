@@ -44,7 +44,7 @@ const routes = [
     children: [
       {
         path: "dashboard",
-        name: "dashboard",
+        name: "Thống kê",
         component: Dashboard,
       },
       {
@@ -79,102 +79,102 @@ const routes = [
       },
       {
         path: "warehouse-list",
-        name: "warehouse-list",
+        name: "Danh sách Cửa hàng",
         component: WarehouseList,
       },
       {
         path: "/warehouse-detail",
-        name: "warehouse-detail",
+        name: "Chi tiết cửa hàng",
         component: WarehouseDetail,
       },
       {
         path: "warehouse-history",
-        name: "warehouse-history",
+        name: "Lịch sử thay đổi Cửa hàng",
         component: WarehouseHistory,
       },
       {
         path: "/address",
-        name: "address",
+        name: "Địa chỉ",
         component: AddressList,
       },
       {
         path: "/category",
-        name: "category",
+        name: "Danh mục",
         component: CategoryList,
       },
       {
         path: "/single-unit",
-        name: "Single-Unit",
+        name: "Đơn vị đo lường",
         component: singleUnitList,
       },
       {
         path: "/product",
-        name: "product",
+        name: "Danh sách Nguyên Vật Liệu",
         component: ProductList,
       },
       {
         path: "/product-history",
-        name: "product history",
+        name: "Lịch sử thay đổi Nguyên Vật Liệu",
         component: ProductHistory,
       },
       {
         path: "/product-detail",
-        name: "product-detail",
+        name: "Chi tiết Nguyên Vật Liệu",
         component: ProductDetail,
       },
       {
         path: "/contract",
-        name: "invoice",
+        name: "Hóa Đơn",
         component: ContractList,
       },
       {
         path: "/export-receipt",
-        name: "export-receipt",
+        name: "Danh sách phiếu thu-chi",
         component: ExportReceiptList,
       },
       {
         path: "/export-receipt-detail",
-        name: "export-receipt detail",
+        name: "Chi tiết phiếu thu-chi",
         component: ExportReceiptDetail,
       },
       {
         path: "/payment",
-        name: "payment",
+        name: "Thanh toán",
         component: Payment,
       },
       {
         path: "/export-receipt-history",
-        name: "export-receipt history",
+        name: "Lịch sử thay đổi phiếu thu-chi",
         component: ExportReceiptHistory,
       },
       {
         path: "/customer",
-        name: "customer",
+        name: "Danh sách khách hàng",
         component: CustomerList,
       },
       {
         path: "/customer-detail",
-        name: "customer-detail",
+        name: "Chi tiết khách hàng",
         component: CustomerDetail,
       },
       {
         path: "/invoice-history",
-        name: "invoice-history",
+        name: "Lịch sử thay đổi hóa đơn",
         component: InvoiceHistory,
       },
       {
         path: "/staff",
-        name: "staff",
+        name: "Danh sách Nhân Viên",
         component: StaffList,
       },
       {
         path: "/staff-detail",
-        name: "staff-detail",
+        name: "Chi tiết Nhân Viên",
         component: StaffDetail,
       },
       {
         path: "/staff-history",
-        name: "staff history",
+        name: "Lịch sử thay đổi Nhân Viên",
         component: StaffHistory,
       },
 

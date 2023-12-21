@@ -3,7 +3,7 @@
     <div class="mb-16">
       <el-row class="pt-4 pl-3 pr-3" :gutter="20">
         <el-col :span="18" class="forms grow">
-          <FormCard title="Information" class="mb-3">
+          <FormCard title="Thông tin Nguyên Vật Liệu" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12">
@@ -110,7 +110,7 @@
             </template>
           </FormCard>
 
-          <FormCard title="Conversion Unit" class="mb-3">
+          <FormCard title="Quy đổi đơn vị" class="mb-3">
             <template v-slot:content>
               <el-table
                 height="448"
@@ -125,22 +125,22 @@
                 </div>
                 <el-table-column label="STT" type="index" :index="indexMethod">
                 </el-table-column>
-                <el-table-column label="Conversation Unit" prop="">
+                <el-table-column label="Đơn vị chuyển đổi" prop="">
                   <template slot-scope="scope">
                     {{ scope.row.unitDestinationId }}
                   </template>
                 </el-table-column>
-                <el-table-column label="Conservation Rate" prop="time">
+                <el-table-column label="Tỉ lệ chuyển đổi" prop="time">
                   <template slot-scope="scope">
                     {{ scope.row.unitStockDestination }}
                   </template>
                 </el-table-column>
-                <el-table-column label="Caculation" prop="remark">
+                <el-table-column label="Phép tính" prop="remark">
                   <template slot-scope="scope">
                     {{ scope.row.calUnit }}
                   </template>
                 </el-table-column>
-                <el-table-column label="Description">
+                <el-table-column label="Mô tả">
                   <template slot-scope="scope">
                     {{
                       "1 " +
@@ -161,7 +161,7 @@
                       type="primary"
                       class="bg-blue-300"
                       @click="AddConversationUnit"
-                      >Add</el-button
+                      >Thêm</el-button
                     >
                   </template>
                   <template slot-scope="scope">
@@ -170,7 +170,7 @@
                       type="danger"
                       class="bg-red-300"
                       @click="handleDeleteUnit(scope)"
-                      >Delete</el-button
+                      >Xóa</el-button
                     >
                   </template>
                 </el-table-column>
@@ -179,7 +179,7 @@
           </FormCard>
         </el-col>
         <el-col :span="6">
-          <FormCard title="Product ID" class="mb-3">
+          <FormCard title="Nguyên vật liệu ID" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12">
@@ -194,7 +194,7 @@
               </div>
             </template>
           </FormCard>
-          <FormCard title="Photos" class="mb-3">
+          <FormCard title="Ảnh" class="mb-3">
             <template v-slot:content>
               <div class="">
                 <el-upload
@@ -264,12 +264,12 @@
             </template>
           </FormCard>
           <div class="footer-btn-fixed flex justify-end p-2">
-            <el-button @click="handleCancelSubmit">Cancel</el-button>
+            <el-button @click="handleCancelSubmit">Thoát</el-button>
             <el-button
               @click="handleSubmit"
               class="bg-blue-400"
               type="primary"
-              >{{ productPId != 0 ? "Update" : "Create" }}</el-button
+              >{{ productPId != 0 ? "Sửa" : "Thêm" }}</el-button
             >
           </div>
         </el-col>
@@ -342,10 +342,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Product Name",
+          label: "Nguyên Vật Liệu",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Product Name...",
+          placeholder: "Nhập nguyên vật liệu...",
           maxlength: 50,
           error: "",
         },
@@ -356,11 +356,11 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select Single Unit",
+          placeholder: "Chọn đơn vị",
           error: "",
           value: "",
           disabled: "notDisabled",
-          label: "Single Unit",
+          label: "Đơn vị",
           options: [],
         },
         importPrice: {
@@ -369,23 +369,23 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Import Price",
+          label: "Giá nhập",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Import Price...",
+          placeholder: "Nhập giá nhập...",
           maxlength: 50,
           error: "",
         },
         exportPrice: {
           id: "exportPrice",
-          name: "Export Price",
+          name: "exportPrice",
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Export Price",
+          label: "Giá bán",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Export Price...",
+          placeholder: "Nhập giá bán...",
           error: "",
         },
         quantity: {
@@ -394,10 +394,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Quantity",
+          label: "Số lượng",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Quantity...",
+          placeholder: "Nhập số lượng...",
           error: "",
         },
         minQuantity: {
@@ -406,10 +406,10 @@ export default {
           rules: "",
           classes: "w-full",
           type: "text",
-          label: "Min Quantitty",
+          label: "Số lượng tối thiểu",
           isRequired: "false",
           value: "",
-          placeholder: "Enter Min Quantitty...",
+          placeholder: "Nhập số lượng tối thiểu...",
           maxlength: 50,
           error: "",
         },
@@ -420,10 +420,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Code",
+          label: "Mã nguyên vật liệu",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Code...",
+          placeholder: "Nhập mã nguyên vật liệu...",
           maxlength: 50,
           error: "",
         },
@@ -434,10 +434,10 @@ export default {
           rules: "",
           classes: "w-full",
           type: "",
-          label: "Height",
+          label: "Chiều cao",
           isRequired: "",
           value: 0,
-          placeholder: "Enter Height...",
+          placeholder: "Nhập chiều cao...",
           error: "",
         },
         width: {
@@ -446,10 +446,10 @@ export default {
           rules: "",
           classes: "w-full",
           type: "",
-          label: "Width",
+          label: "Chiều rộng",
           isRequired: "",
           value: 0,
-          placeholder: "Enter Width...",
+          placeholder: "Nhập chiều rộng...",
           error: "",
         },
         length: {
@@ -458,10 +458,10 @@ export default {
           rules: "",
           classes: "w-full",
           type: "",
-          label: "Length",
+          label: "Chiều dài",
           isRequired: "",
           value: 0,
-          placeholder: "Enter Length...",
+          placeholder: "Nhập chiều dài...",
           error: "",
         },
         warehouseId: {
@@ -471,11 +471,11 @@ export default {
           rules: "",
           classes: "w-full",
           isRequired: "",
-          placeholder: "Select Warehouse",
+          placeholder: "Chọn cửa hàng",
           error: "",
           value: "",
           disabled: "notDisabled",
-          label: "Warehouse",
+          label: "Cửa hàng",
           options: [],
         },
         volume: {
@@ -484,10 +484,10 @@ export default {
           rules: "",
           classes: "w-full",
           type: "",
-          label: "Volume",
+          label: "Thể tích",
           isRequired: "",
           value: 0,
-          placeholder: "Enter Volume...",
+          placeholder: "Nhập vào thể tích...",
           error: "",
         },
 
@@ -497,10 +497,10 @@ export default {
           rules: "",
           classes: "w-full",
           type: "text",
-          label: "Color",
+          label: "Màu sắc",
           isRequired: "false",
           value: "",
-          placeholder: "Enter Color...",
+          placeholder: "Nhập màu sắc...",
           maxlength: 50,
           error: "",
         },
@@ -510,10 +510,10 @@ export default {
           rules: "",
           classes: "w-full col-span-6 !h-[64px]",
           type: "text",
-          label: "Description",
+          label: "Mô tả",
           isRequired: "false",
           value: "",
-          placeholder: "Enter Description...",
+          placeholder: "Nhập mô tả...",
           maxlength: 150,
           error: "",
         },
@@ -523,7 +523,7 @@ export default {
           rules: "",
           classes: "w-full",
           type: "text",
-          label: "Expired Date",
+          label: "Ngày hết hạn",
           isRequired: "false",
           value: "",
           error: "",
@@ -541,11 +541,11 @@ export default {
         rules: "",
         classes: "w-full",
         isRequired: "false",
-        placeholder: "Select Category",
+        placeholder: "Chọn danh mục",
         error: "",
         value: "",
         disabled: "notDisabled",
-        label: "Category",
+        label: "Danh mục",
         options: [],
       },
     };
@@ -563,7 +563,7 @@ export default {
       this.productPhotos = fileList;
     },
     handleRemove(file) {
-      this.$confirm("Are you sure to remove this unit?")
+      this.$confirm("Bạn có chắc muốn xóa?")
         .then((_) => {
           const index = this.productPhotos.indexOf(file);
           if (index > -1) {
@@ -583,7 +583,7 @@ export default {
       return index + 1;
     },
     handleDeleteUnit(item) {
-      this.$confirm("Are you sure to remove this unit?")
+      this.$confirm("Bạn có chắc muốn xóa?")
         .then((_) => {
           const index = item.$index;
           this.units.splice(index, 1);
@@ -811,7 +811,7 @@ export default {
             this.$router.push({ path: "/product" });
             this.$message({
               showClose: true,
-              message: "Created successfully",
+              message: "Sửa thành công",
               type: "success",
             });
           }
@@ -836,7 +836,7 @@ export default {
             this.$router.push({ path: "/product" });
             this.$message({
               showClose: true,
-              message: "Created successfully",
+              message: "Thêm thành công",
               type: "success",
             });
           }
@@ -851,9 +851,9 @@ export default {
         });
     },
     handleCancelSubmit() {
-      this.$confirm("Are you sure to cancel")
+      this.$confirm("Bạn có muốn thoát")
         .then((_) => {
-          this.$router.push({ path: "/product" });
+          this.$router.push({ name: "Danh sách Nguyên Vật Liệu" });
         })
         .catch((_) => {});
     },
@@ -933,7 +933,7 @@ export default {
   created() {},
   async mounted() {
     if (!this.$route.params.data) {
-      this.$router.push({ path: "/product" });
+      this.$router.push({ name: "Danh sách Nguyên Vật Liệu" });
       return;
     }
     if (!this.user?.roles.includes("ADMIN")) {

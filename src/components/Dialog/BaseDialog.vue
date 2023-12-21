@@ -15,13 +15,13 @@
         v-model="dataSpecialDay.remark.value"
       />
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleCloseDialog">Cancel</el-button>
+        <el-button @click="handleCloseDialog">Thoát</el-button>
         <el-button
           :disabled="invalid"
           type="primary"
           class="bg-blue-300"
           @click="handleData"
-          >Confirm</el-button
+          >Xác nhận</el-button
         >
       </span>
     </el-dialog>
@@ -58,7 +58,7 @@ export default {
           id: "SpecialDay",
           name: "Date",
           classes: "!w-full",
-          label: "Date",
+          label: "Ngày",
           isRequired: "true",
           rules: "required",
           value: "",
@@ -72,7 +72,7 @@ export default {
         time: {
           id: "Time",
           classes: "!w-full",
-          label: "Time",
+          label: "Thời gian",
           isRequired: "true",
           rules: "required",
           value: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
@@ -82,11 +82,11 @@ export default {
           id: "Remark",
           classes: "!w-full",
           type: "text",
-          label: "Remark",
+          label: "Ghi chú",
           rules: "required",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Remark",
+          placeholder: "Nhập ghi chú...",
           maxlength: 150,
           error: "",
         },
@@ -101,7 +101,7 @@ export default {
           id: "specialDay",
           name: "Date",
           classes: "!w-full",
-          label: "Date",
+          label: "Ngày",
           isRequired: "true",
           rules: "required",
           value: "",
@@ -115,7 +115,7 @@ export default {
         time: {
           id: "time",
           classes: "!w-full",
-          label: "Time",
+          label: "Thời gian",
           isRequired: "true",
           rules: "required",
           value: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 59)],
@@ -125,7 +125,7 @@ export default {
           id: "remark",
           classes: "!w-full",
           type: "text",
-          label: "Remark",
+          label: "Ghi chú",
           isRequired: "true",
           value: "",
           rules: "required",

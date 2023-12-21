@@ -4,7 +4,7 @@
     <div v-show="!loadingPageDetail" class="mb-16">
       <el-row class="pt-4 pl-3 pr-3" :gutter="20">
         <el-col :span="18" class="forms grow">
-          <FormCard title="Information" class="mb-3">
+          <FormCard title="Thông tin Nhân viên" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12 grid grid-cols-12 gap-x-6">
@@ -106,7 +106,7 @@
           </FormCard>
         </el-col>
         <el-col :span="6">
-          <FormCard title="User ID" class="mb-3">
+          <FormCard title="ID Nhân viên" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12">
@@ -121,7 +121,7 @@
               </div>
             </template>
           </FormCard>
-          <FormCard title="Avatar" class="mb-3">
+          <FormCard title="Ảnh" class="mb-3">
             <template v-slot:content>
               <div class="">
                 <el-upload
@@ -164,7 +164,7 @@
               </div>
             </template>
           </FormCard>
-          <FormCard title="More Information" class="mb-3">
+          <FormCard title="Thông tin chi tiết" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12">
@@ -234,10 +234,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Code",
+          label: "Mã nhân viên",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Code...",
+          placeholder: "Nhập mã...",
           maxlength: 50,
           error: "",
         },
@@ -247,10 +247,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "First Name",
+          label: "Tên",
           isRequired: "true",
           value: "",
-          placeholder: "Enter First Name...",
+          placeholder: "Nhập tên...",
           maxlength: 50,
           error: "",
         },
@@ -260,10 +260,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Last Name",
+          label: "Họ",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Last Name...",
+          placeholder: "Nhập họ...",
           maxlength: 50,
           error: "",
         },
@@ -276,7 +276,7 @@ export default {
           label: "Email",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Email...",
+          placeholder: "Nhập email...",
           maxlength: 50,
           error: "",
         },
@@ -287,24 +287,24 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Title",
+          label: "Giới tính",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Title...",
+          placeholder: "Nhập giới tính...",
           maxlength: 50,
           error: "",
           options: [
             {
               value: 1,
-              label: "Mr",
+              label: "Nam",
             },
             {
               value: 2,
-              label: "Mrs",
+              label: "Nữ",
             },
             {
               value: 3,
-              label: "Other",
+              label: "Khác",
             },
           ],
         },
@@ -314,10 +314,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Mobile Phone",
+          label: "Số điện thoại",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Mobile Phone...",
+          placeholder: "Nhập số điện thoại...",
           maxlength: 50,
           error: "",
         },
@@ -327,10 +327,10 @@ export default {
           rules: "",
           classes: "w-full",
           type: "text",
-          label: "National Number",
+          label: "CMT/CCCD",
           isRequired: "",
           value: "",
-          placeholder: "Enter National Number...",
+          placeholder: "Nhập vào CMT / CCCD...",
           maxlength: 50,
           error: "",
         },
@@ -338,7 +338,7 @@ export default {
           id: "expiredNationalNumber",
           name: "Expired National Number",
           classes: "!w-full",
-          label: "Expired National Number",
+          label: "Ngày hết hạn CMT / CCCD",
           isRequired: "false",
           rules: "",
           value: "",
@@ -349,7 +349,7 @@ export default {
           id: "birthDay",
           name: "Birthday",
           classes: "!w-full",
-          label: "Birthday",
+          label: "Ngày sinh",
           isRequired: "false",
           rules: "",
           value: "",
@@ -366,11 +366,10 @@ export default {
           rules: "",
           classes: "w-full",
           type: "text|currency",
-
-          label: "Salary",
+          label: "Lương",
           isRequired: "",
           value: "",
-          placeholder: "Enter Salary...",
+          placeholder: "Nhập lương...",
           maxlength: 50,
           error: "",
         },
@@ -380,10 +379,10 @@ export default {
           rules: "",
           classes: "w-full col-span-6 !h-[100px]",
           type: "text",
-          label: "Detail",
+          label: "Ghi chú",
           isRequired: "",
           value: "",
-          placeholder: "Enter Detail...",
+          placeholder: "Nhập ghi chú...",
           maxlength: 50,
           error: "",
         },
@@ -394,11 +393,11 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select Roles",
+          placeholder: "Chọn chức vụ",
           error: "",
           value: [],
           disabled: "notDisabled",
-          label: "Role",
+          label: "Chức vụ",
           options: [],
         },
         warehouseId: {
@@ -408,11 +407,11 @@ export default {
           rules: "",
           classes: "w-full",
           isRequired: "",
-          placeholder: "Select Warehouse",
+          placeholder: "Chọn cửa hàng",
           error: "",
           value: "",
           disabled: "notDisabled",
-          label: "Warehouse",
+          label: "Cửa hàng",
           options: [],
         },
       },

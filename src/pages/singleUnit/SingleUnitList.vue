@@ -10,14 +10,14 @@
           class="bg-red-600"
           v-show="singleUnitSelected.length > 0"
           @click="handleDeleteSingleUnit"
-          >Delete</el-button
+          >Xóa</el-button
         >
         <el-button
           class="bg-blue-400"
           icon="el-icon-plus"
           type="primary"
           @click="createUnit"
-          >Create</el-button
+          >Thêm</el-button
         >
       </div>
     </div>
@@ -34,11 +34,12 @@
         <el-empty :image-size="200"></el-empty>
       </div>
       <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column prop="createdAt" label="Created Date" width="250">
+      <el-table-column prop="createdAt" label="Ngày tạo" width="250">
       </el-table-column>
-      <el-table-column prop="editedAt" label="Updated Date" width="250">
+      <el-table-column prop="editedAt" label="Ngày sửa" width="250">
       </el-table-column>
-      <el-table-column prop="name" label="Name" width="400"> </el-table-column>
+      <el-table-column prop="name" label="Đơn vị đo lường" width="400">
+      </el-table-column>
     </el-table>
     <BasePagination
       :field="paginationVal"
@@ -120,17 +121,17 @@ export default {
     createUnit() {
       this.dialogVisible = true;
       this.unitField = {
-        title: "Create Single Unit",
+        title: "Thêm đơn vị đo lường",
         id: "singleUnit",
         refId: "",
         baseId: "",
         classes: "!w-full",
         type: "text",
-        label: "Single Unit",
+        label: "Đơn vị đo lường",
         rules: "required",
         isRequired: "true",
         value: "",
-        placeholder: "Typing Single Unit name...",
+        placeholder: "Nhập đơn vị đo lường...",
         maxlength: 50,
         error: "",
         actionType: "CREATED",
@@ -139,7 +140,7 @@ export default {
     updateUnit(row, col, event) {
       this.dialogVisible = true;
       this.unitField = {
-        title: "Update Single Unit",
+        title: "Sửa đơn vị đo lường",
         id: "singleUnit",
         refId: "",
         baseId: row.id,
@@ -149,7 +150,7 @@ export default {
         rules: "required",
         isRequired: "true",
         value: row.name,
-        placeholder: "Typing Single Unit name...",
+        placeholder: "Nhập đơn vị đo lường...",
         maxlength: 50,
         error: "",
         actionType: "UPDATED",
@@ -222,7 +223,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Created successfully",
+              message: "Thêm thành công",
               type: "success",
             });
             this.getSingleUnit();
@@ -252,7 +253,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Updated successfully",
+              message: "Sửa thành công",
               type: "success",
             });
             this.getSingleUnit();
@@ -276,7 +277,7 @@ export default {
           if (res.status === 200) {
             this.$message({
               showClose: true,
-              message: "Deleted successfully",
+              message: "Xóa thành công",
               type: "success",
             });
             this.getSingleUnit();

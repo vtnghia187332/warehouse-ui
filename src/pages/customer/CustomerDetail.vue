@@ -3,7 +3,7 @@
     <div class="mb-16">
       <el-row class="pt-4 pl-3 pr-3" :gutter="20">
         <el-col :span="18" class="forms grow">
-          <FormCard title="Information" class="mb-3">
+          <FormCard title="Thông tin khách hàng" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12 grid grid-cols-12 gap-x-6">
@@ -98,7 +98,7 @@
           </FormCard>
         </el-col>
         <el-col :span="6">
-          <FormCard title="Customer ID" class="mb-3">
+          <FormCard title="ID Khách hàng" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12">
@@ -113,7 +113,7 @@
               </div>
             </template>
           </FormCard>
-          <FormCard title="More Information" class="mb-3">
+          <FormCard title="Thêm thông tin" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6 border-b border-gray-200">
                 <div class="col-span-12">
@@ -135,13 +135,13 @@
             </template>
           </FormCard>
           <div class="footer-btn-fixed flex justify-end p-2">
-            <el-button @click="handleCancelSubmit">Cancel</el-button>
+            <el-button @click="handleCancelSubmit">Thoát</el-button>
             <el-button
               @click="handleSubmit"
               class="bg-blue-400"
               :disabled="invalid"
               type="primary"
-              >{{ customerPId != 0 ? "Update" : "Create" }}</el-button
+              >{{ customerPId != 0 ? "Sửa" : "Thêm" }}</el-button
             >
           </div>
         </el-col>
@@ -178,10 +178,10 @@ export default {
           rules: "",
           classes: "w-full col-span-6",
           type: "text",
-          label: "Full Name",
+          label: "Họ & Tên",
           isRequired: "",
           value: "",
-          placeholder: "Enter Full Name...",
+          placeholder: "Nhập họ & tên...",
           maxlength: 50,
           error: "",
         },
@@ -191,10 +191,10 @@ export default {
           rules: "",
           classes: "w-full col-span-6",
           type: "text",
-          label: "Company's Name",
+          label: "Công ty / doanh nghiệp",
           isRequired: "",
           value: "",
-          placeholder: "Enter Company's Name...",
+          placeholder: "Nhập vào công ty / doanh nghiệp...",
           maxlength: 50,
           error: "",
         },
@@ -204,10 +204,10 @@ export default {
           rules: "",
           classes: "w-full col-span-6",
           type: "text",
-          label: "Tax Number",
+          label: "Mã số thuế",
           isRequired: "",
           value: "",
-          placeholder: "Enter Tax Number...",
+          placeholder: "Nhập vào mã số thuế...",
           maxlength: 20,
           error: "",
         },
@@ -217,10 +217,10 @@ export default {
           rules: "required",
           classes: "w-full col-span-6",
           type: "text",
-          label: "Mobile Phone",
+          label: "Số điện thoại",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Mobile Phone...",
+          placeholder: "Nhập vào số điện thoại...",
           maxlength: 20,
           error: "",
         },
@@ -233,7 +233,7 @@ export default {
           label: "Email",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Email...",
+          placeholder: "Nhập vào email...",
           maxlength: 50,
           error: "",
         },
@@ -241,7 +241,7 @@ export default {
           id: "birthDay",
           name: "Birthday",
           classes: "!w-full",
-          label: "Birthday",
+          label: "Ngày sinh",
           isRequired: "false",
           rules: "",
           value: "",
@@ -258,10 +258,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Title",
+          label: "Giới tính",
           isRequired: "true",
           value: "",
-          placeholder: "Select Title...",
+          placeholder: "Chọn giới tính...",
           maxlength: 50,
           error: "",
           options: [
@@ -285,10 +285,10 @@ export default {
           rules: "required",
           classes: "w-full col-span-6 !h-[64px]",
           type: "text",
-          label: "Detail Address",
+          label: "Địa chỉ",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Detail Address...",
+          placeholder: "Nhập địa chỉ...",
           maxlength: 50,
           error: "",
         },
@@ -301,7 +301,7 @@ export default {
           label: "Note",
           isRequired: "",
           value: "",
-          placeholder: "Enter Detail Address...",
+          placeholder: "Nhập ghi chú...",
           maxlength: 50,
           error: "",
         },
@@ -312,11 +312,11 @@ export default {
           rules: "",
           classes: "w-full",
           isRequired: "",
-          placeholder: "Select Warehouse",
+          placeholder: "Chọn cửa hàng",
           error: "",
           value: "",
           disabled: "notDisabled",
-          label: "Warehouse",
+          label: "Cửa hàng",
           options: [],
         },
         country: {
@@ -325,11 +325,11 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select Country",
+          placeholder: "Chọn quốc gia",
           error: "",
           value: "",
           disabled: "notDisabled",
-          label: "Country",
+          label: "Quốc gia",
           options: [],
         },
         city: {
@@ -338,10 +338,10 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select City",
+          placeholder: "Chọn tỉnh / thành phố",
           error: "",
           value: "",
-          label: "City",
+          label: "Tỉnh/Thành phố",
           disabled: "disabled",
           options: [],
         },
@@ -351,11 +351,11 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select District",
+          placeholder: "Chọn quận/huyện",
           error: "",
           value: "",
           disabled: "disabled",
-          label: "District",
+          label: "Quận/Huyện",
           options: [],
         },
         subdistrict: {
@@ -364,11 +364,11 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select Sub District",
+          placeholder: "Chọn xã/phường",
           error: "",
           value: "",
           disabled: "disabled",
-          label: "Sub District",
+          label: "Xã/Phường",
           options: [],
         },
       },
@@ -399,9 +399,9 @@ export default {
     },
     getValueSubdistrict() {},
     handleCancelSubmit() {
-      this.$confirm("Are you sure to cancel")
+      this.$confirm("Bạn muốn thoát màn hình tạo mới khách hàng?")
         .then((_) => {
-          this.$router.push({ path: "/customer" });
+          this.$router.push({ name: "Danh sách khách hàng" });
         })
         .catch((_) => {});
     },
@@ -482,7 +482,7 @@ export default {
             this.$router.push({ path: "/customer" });
             this.$message({
               showClose: true,
-              message: "Created successfully",
+              message: "Thêm thành công",
               type: "success",
             });
           }
@@ -507,7 +507,7 @@ export default {
             this.$router.push({ path: "/customer" });
             this.$message({
               showClose: true,
-              message: "Created successfully",
+              message: "Sửa thành công",
               type: "success",
             });
           }
@@ -691,7 +691,7 @@ export default {
   },
   async mounted() {
     if (!this.$route.params.data) {
-      this.$router.push({ path: "/customer" });
+      this.$router.push({ name: "Danh sách khách hàng" });
       return;
     }
     if (!this.user?.roles.includes("ADMIN")) {

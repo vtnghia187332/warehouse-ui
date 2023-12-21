@@ -6,7 +6,7 @@
         <button
           class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
         >
-          <span class="ti-filter"></span> Filter
+          <span class="ti-filter"></span> Tìm kiếm
         </button>
       </div>
     </div>
@@ -20,15 +20,24 @@
         <el-table-column
           fixed
           prop="warehouseId"
-          label="Warehouse ID"
+          label="ID Cửa hàng"
           width="150"
         >
         </el-table-column>
-        <el-table-column prop="createdAt" label="Create Date" width="180">
+        <el-table-column prop="createdAt" label="Ngày tạo" width="180">
         </el-table-column>
-        <el-table-column prop="editedAt" label="Updated Date" width="180">
+        <el-table-column prop="editedAt" label="Ngày sửa" width="180">
         </el-table-column>
-        <el-table-column prop="actionType" label="Action" width="150">
+        <el-table-column
+          sortable
+          prop="createdBy"
+          label="Người tạo"
+          width="250"
+        >
+        </el-table-column>
+        <el-table-column sortable prop="editedBy" label="Người sửa" width="250">
+        </el-table-column>
+        <el-table-column prop="actionType" label="Hành động" width="150">
           <template slot-scope="scope">
             <el-tag
               :type="scope.row.actionType == 0 ? 'success' : 'primary'"
@@ -37,24 +46,20 @@
             >
           </template>
         </el-table-column>
-        <el-table-column prop="code" label="Warehouse Code" width="300">
+        <el-table-column prop="code" label="Mã cửa hàng" width="300">
         </el-table-column>
-        <el-table-column prop="name" label="Warehouse Name" width="300">
+        <el-table-column prop="name" label="Tên cửa hàng" width="300">
         </el-table-column>
         <el-table-column
           prop="shortName"
-          label="Warehouse Short Name"
+          label="Tên viết tắt cửa hàng"
           width="300"
         >
         </el-table-column>
-        <el-table-column
-          prop="addressDes"
-          label="Warehouse Address"
-          width="300"
-        >
+        <el-table-column prop="addressDes" label="Địa chỉ" width="300">
         </el-table-column>
 
-        <el-table-column prop="openWorkingHour" label="Monday" width="300">
+        <el-table-column prop="openWorkingHour" label="Thứ hai" width="300">
           <template slot-scope="scope">
             {{
               scope.row.openWorkingHour
@@ -65,33 +70,37 @@
             }}
           </template>
         </el-table-column>
-        <el-table-column prop="openWorkingHour" label="Tuesday" width="300">
+        <el-table-column prop="openWorkingHour" label="Thứ ba" width="300">
           <template slot-scope="scope"> </template>
         </el-table-column>
-        <el-table-column prop="openWorkingHour" label="Wednesday" width="300">
+        <el-table-column prop="openWorkingHour" label="Thứ tư" width="300">
           <template slot-scope="scope"> </template>
         </el-table-column>
-        <el-table-column prop="openWorkingHour" label="Thursday" width="300">
+        <el-table-column prop="openWorkingHour" label="Thứ năm" width="300">
           <template slot-scope="scope"> </template>
         </el-table-column>
-        <el-table-column prop="openWorkingHour" label="Friday" width="300">
+        <el-table-column prop="openWorkingHour" label="Thứ sáu" width="300">
           <template slot-scope="scope"> </template>
         </el-table-column>
-        <el-table-column prop="openWorkingHour" label="Saturday" width="300">
+        <el-table-column prop="openWorkingHour" label="Thứ bảy" width="300">
           <template slot-scope="scope"> </template>
         </el-table-column>
-        <el-table-column prop="openWorkingHour" label="Sunday" width="300">
+        <el-table-column prop="openWorkingHour" label="Chủ nhật" width="300">
           <template slot-scope="scope"> </template>
         </el-table-column>
 
-        <el-table-column prop="keyContactVos" label="Contact Title" width="300">
+        <el-table-column
+          prop="keyContactVos"
+          label="Giới tính người liên lạc"
+          width="300"
+        >
           <template slot-scope="scope">
             {{ scope.row.keyContactVos[0].title }}
           </template>
         </el-table-column>
         <el-table-column
           prop="keyContactVos"
-          label="Contact First Name"
+          label="Tên người liên lạc"
           width="300"
         >
           <template slot-scope="scope">
@@ -100,21 +109,25 @@
         </el-table-column>
         <el-table-column
           prop="keyContactVos"
-          label="Contact Last Name"
+          label="Họ người liên lạc"
           width="300"
         >
           <template slot-scope="scope">
             {{ scope.row.keyContactVos[0].lastName }}
           </template>
         </el-table-column>
-        <el-table-column prop="keyContactVos" label="Contact Email" width="300">
+        <el-table-column
+          prop="keyContactVos"
+          label="Email người liên lạc"
+          width="300"
+        >
           <template slot-scope="scope">
             {{ scope.row.keyContactVos[0].email }}
           </template>
         </el-table-column>
         <el-table-column
           prop="keyContactVos"
-          label="Contact Mobile Phone"
+          label="SĐT người liên lạc"
           width="300"
         >
           <template slot-scope="scope">
@@ -124,7 +137,7 @@
 
         <el-table-column
           prop="keyContactVos"
-          label="Contact Title 1"
+          label="Giới tính người liên lạc 1"
           width="300"
         >
           <template slot-scope="scope">
@@ -135,7 +148,7 @@
         </el-table-column>
         <el-table-column
           prop="keyContactVos"
-          label="Contact First Name 1"
+          label="Tên người liên lạc 1"
           width="300"
         >
           <template slot-scope="scope">
@@ -148,7 +161,7 @@
         </el-table-column>
         <el-table-column
           prop="keyContactVos"
-          label="Contact Last Name 1"
+          label="Họ người liên lạc 1"
           width="300"
         >
           <template slot-scope="scope">
@@ -161,7 +174,7 @@
         </el-table-column>
         <el-table-column
           prop="keyContactVos"
-          label="Contact Email 1"
+          label="Email người liên lạc 1"
           width="300"
         >
           <template slot-scope="scope">
@@ -172,7 +185,7 @@
         </el-table-column>
         <el-table-column
           prop="keyContactVos"
-          label="Contact Mobile Phone 1"
+          label="SĐT người liên lạc 1"
           width="300"
         >
           <template slot-scope="scope">
@@ -186,7 +199,7 @@
 
         <el-table-column
           prop="keyContactVos"
-          label="Contact Title 2"
+          label="Giới tính người liên lạc 2"
           width="300"
         >
           <template slot-scope="scope">
@@ -197,7 +210,7 @@
         </el-table-column>
         <el-table-column
           prop="keyContactVos"
-          label="Contact First Name 2"
+          label="Tên người liên lạc 2"
           width="300"
         >
           <template slot-scope="scope">
@@ -210,7 +223,7 @@
         </el-table-column>
         <el-table-column
           prop="keyContactVos"
-          label="Contact Last Name 2"
+          label="Họ người liên lạc 2"
           width="300"
         >
           <template slot-scope="scope">
@@ -223,7 +236,7 @@
         </el-table-column>
         <el-table-column
           prop="keyContactVos"
-          label="Contact Email 2"
+          label="Email người liên lạc 2"
           width="300"
         >
           <template slot-scope="scope">
@@ -234,7 +247,7 @@
         </el-table-column>
         <el-table-column
           prop="keyContactVos"
-          label="Contact Mobile Phone 2"
+          label="SĐT người liên lạc 2"
           width="300"
         >
           <template slot-scope="scope">
@@ -245,12 +258,14 @@
             }}
           </template>
         </el-table-column>
-        <el-table-column prop="isActive" label="Status" width="100">
+        <el-table-column prop="isActive" label="Trạng thái" width="150">
           <template slot-scope="scope">
             <el-tag
               :type="scope.row.isActive === 1 ? 'success' : 'danger'"
               disable-transitions
-              >{{ scope.row.isActive == 1 ? "ACTIVE" : "INACTIVE" }}</el-tag
+              >{{
+                scope.row.isActive == 1 ? "Hoạt động" : "Không hoạt động"
+              }}</el-tag
             >
           </template>
         </el-table-column>

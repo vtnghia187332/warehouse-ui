@@ -7,7 +7,7 @@
         class="bg-blue-400 !h-10 mt-auto mb-auto mr-3"
         type="primary"
         @click="handleClickBtn"
-        >Add</el-button
+        >Thêm</el-button
       >
     </div>
     <div class="p-3 border-t border-gray-200">

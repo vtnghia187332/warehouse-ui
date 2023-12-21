@@ -6,22 +6,16 @@
         <button
           class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
         >
-          <span class="ti-filter"></span> Filter
+          <span class="ti-filter"></span> Tìm kiếm
         </button>
       </div>
       <div>
         <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
-          @click=""
-        >
-          <i class="el-icon-plus ml font-bold"></i> Export
-        </button>
-        <button
-          class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="addCustomer"
         >
           <i class="el-icon-plus ml font-bold"></i>
-          Create
+          Thêm
         </button>
       </div>
     </div>
@@ -40,36 +34,36 @@
         <el-table-column
           fixed
           prop="customerId"
-          label="Customer ID"
+          label="ID Khách hàng"
           width="150"
         >
         </el-table-column>
         <el-table-column
           sortable
           prop="createdAt"
-          label="Create Date"
+          label="Ngày tạo"
           width="250"
         >
         </el-table-column>
         <el-table-column
           sortable
           prop="editedAt"
-          label="Updated Date"
+          label="Ngày sửa"
           width="250"
         >
         </el-table-column>
-        <el-table-column sortable prop="fullName" label="Full Name" width="250">
+        <el-table-column sortable prop="fullName" label="Họ & Tên" width="250">
         </el-table-column>
         <el-table-column
           sortable
           prop="companyName"
-          label="Company's Name"
+          label="Doanh nghiệp/Công ty"
           width="250"
         >
         </el-table-column>
-        <el-table-column sortable prop="titleTxt" label="Title" width="100">
+        <el-table-column sortable prop="titleTxt" label="Giới tính" width="150">
         </el-table-column>
-        <el-table-column sortable prop="birthDay" label="Birthday" width="200">
+        <el-table-column sortable prop="birthDay" label="Ngày sinh" width="200">
           <template slot-scope="scope">
             {{ moment(scope.row.birthDay.value).format("YYYY-MM-DD HH:mm:ss") }}
           </template>
@@ -77,7 +71,7 @@
         <el-table-column
           sortable
           prop="mobilePhone"
-          label="Mobile Phone"
+          label="Số điện thoại"
           width="250"
         >
         </el-table-column>
@@ -86,14 +80,14 @@
         <el-table-column
           sortable
           prop="taxNumber"
-          label="Tax Number"
+          label="Số thuế"
           width="100"
         >
         </el-table-column>
         <el-table-column
           sortable
           prop="detailAddress"
-          label="Address"
+          label="Địa chỉ"
           width="350"
         >
         </el-table-column>
@@ -153,7 +147,7 @@ export default {
         type: "ADD",
       };
       this.$router.push({
-        name: "customer-detail",
+        name: "Chi tiết khách hàng",
         params: { data },
       });
     },
@@ -163,7 +157,7 @@ export default {
         type: "EDIT",
       };
       this.$router.push({
-        name: "customer-detail", //use name for router push
+        name: "Chi tiết khách hàng", //use name for router push
         params: { data },
       });
     },

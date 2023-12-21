@@ -1,10 +1,10 @@
 <template>
   <el-tabs class="tab-warehouse-chain" v-model="activeName">
-    <el-tab-pane label="Warehouse Chain" name="first">
+    <el-tab-pane label="Chuỗi cửa hàng" name="first">
       <ValidationObserver v-slot="{ invalid }" ref="observerAdd">
         <el-row :gutter="20" class="pt-4 pl-3 pr-3">
           <el-col :span="18" class="forms grow">
-            <FormCard title="Information" class="mb-3">
+            <FormCard title="Thông tin chuỗi cửa hàng" class="mb-3">
               <template v-slot:content>
                 <div class="grid grid-cols-12 gap-x-6">
                   <div class="col-span-6">
@@ -50,7 +50,7 @@
             </FormCard>
           </el-col>
           <el-col :span="6" class="">
-            <FormCard title="Photo" class="mb-3">
+            <FormCard title="Ảnh" class="mb-3">
               <template v-slot:content>
                 <div class="">
                   <el-upload
@@ -102,14 +102,14 @@
                 class="bg-blue-400"
                 :disabled="invalid"
                 type="primary"
-                >Submit</el-button
+                >Xác nhận</el-button
               >
             </div>
           </el-col>
         </el-row>
       </ValidationObserver>
     </el-tab-pane>
-    <el-tab-pane label="Warehouse" name="second">
+    <el-tab-pane label="Cửa hàng" name="second">
       <div class="fix_highted">
         <div class="flex justify-between px-4 py-2">
           <div class="flex">
@@ -117,7 +117,7 @@
             <button
               class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
             >
-              <span class="ti-filter"></span> Filter
+              <span class="ti-filter"></span> Tìm kiếm
             </button>
           </div>
           <div>
@@ -125,27 +125,27 @@
               class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
               @click="goWarehouseHistoryPage"
             >
-              <i class="el-icon-files font-bold"></i> History
+              <i class="el-icon-files font-bold"></i> Lịch sử
             </button>
             <el-button
               @click="HandleImportWarehouse"
               class="ml-1 !bg-blue-400"
               type="primary"
               :disabled="!this.user.roles.includes('ADMIN')"
-              >Import</el-button
+              >Nhập khẩu</el-button
             >
             <el-button
               @click="testFunc"
               class="ml-1 !bg-blue-400"
               type="primary"
-              >Export</el-button
+              >Xuất khẩu</el-button
             >
             <el-button
               @click="HandleAddWarehouse"
               class="ml-1 !bg-blue-400"
               type="primary"
               :disabled="!this.user.roles.includes('ADMIN')"
-              >Create</el-button
+              >Thêm</el-button
             >
           </div>
         </div>
@@ -164,27 +164,27 @@
             <el-table-column
               fixed
               prop="warehouseId"
-              label="Warehouse ID"
+              label="ID Cửa hàng"
               width="150"
             >
             </el-table-column>
             <el-table-column
               sortable
               prop="createdAt"
-              label="Create Date"
+              label="Ngày tạo"
               width="250"
             >
             </el-table-column>
             <el-table-column
               sortable
               prop="editedAt"
-              label="Updated Date"
+              label="Ngày sửa"
               width="250"
             >
             </el-table-column>
             <el-table-column
               prop="warehouseChainInfo"
-              label="Warehouse Chain"
+              label="Chuỗi cửa hàng"
               width="300"
             >
               <template slot-scope="scope">
@@ -194,34 +194,34 @@
             <el-table-column
               sortable
               prop="code"
-              label="Warehouse Code"
+              label="Mã cửa hàng"
               width="300"
             >
             </el-table-column>
             <el-table-column
               sortable
               prop="name"
-              label="Warehouse Name"
+              label="Tên cửa hàng"
               width="300"
             >
             </el-table-column>
             <el-table-column
               sortable
               prop="shortName"
-              label="Warehouse Short Name"
+              label="Tên viết tắt"
               width="300"
             >
             </el-table-column>
             <el-table-column
               sortable
               prop="addressDes"
-              label="Warehouse Address"
+              label="Địa chỉ"
               width="300"
             >
             </el-table-column>
             <el-table-column
               prop="keyContactVos"
-              label="Contact Title"
+              label="Giới tính người liên lạc"
               width="300"
             >
               <template slot-scope="scope">
@@ -230,7 +230,7 @@
             </el-table-column>
             <el-table-column
               prop="keyContactVos"
-              label="Contact First Name"
+              label="Tên người liên lạc"
               width="300"
             >
               <template slot-scope="scope">
@@ -239,7 +239,7 @@
             </el-table-column>
             <el-table-column
               prop="keyContactVos"
-              label="Contact Last Name"
+              label="Họ người liên lạc"
               width="300"
             >
               <template slot-scope="scope">
@@ -248,7 +248,7 @@
             </el-table-column>
             <el-table-column
               prop="keyContactVos"
-              label="Contact Email"
+              label="Email người liên lạc"
               width="300"
             >
               <template slot-scope="scope">
@@ -257,14 +257,14 @@
             </el-table-column>
             <el-table-column
               prop="keyContactVos"
-              label="Contact Mobile Phone"
+              label="SĐT người liên lạc"
               width="300"
             >
               <template slot-scope="scope">
                 {{ scope.row.keyContactVos[0].mobilePhone }}
               </template>
             </el-table-column>
-            <el-table-column fixed="right" label="Operations" width="100">
+            <el-table-column fixed="right" label="Hành động" width="100">
               <template slot-scope="scope">
                 <el-button
                   @click="handeDuplicateDetail(scope.row)"
@@ -338,10 +338,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Code",
+          label: "Mã chuỗi cửa hàng",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Code...",
+          placeholder: "Nhập Mã chuỗi cửa hàng...",
           maxlength: 50,
           error: "",
         },
@@ -351,10 +351,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Name",
+          label: "Tên chuỗi",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Name...",
+          placeholder: "Nhập Tên chuỗi...",
           maxlength: 100,
           error: "",
         },
@@ -364,10 +364,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Short Name",
+          label: "Tên viết tắt",
           isRequired: "true",
           value: "",
-          placeholder: "Enter short Name...",
+          placeholder: "Nhập Tên viết tắt...",
           maxlength: 100,
           error: "",
         },
@@ -377,10 +377,10 @@ export default {
           rules: "required",
           classes: "w-full !h-[64px]",
           type: "text",
-          label: "Description",
+          label: "Mô tả",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Description...",
+          placeholder: "Nhập mô tả...",
           maxlength: 100,
           error: "",
         },
@@ -390,10 +390,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Tax Number",
+          label: "Mã số thuế",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Tax Number...",
+          placeholder: "Nhập mã số thuế...",
           maxlength: 100,
           error: "",
         },
@@ -403,7 +403,7 @@ export default {
           rules: "",
           classes: "w-full",
           type: "text",
-          label: "Tax Declaration Date",
+          label: "Ngày đăng ký MST",
           isRequired: "false",
           value: "",
           error: "",
@@ -513,7 +513,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Created successfully",
+              message: "Sửa đổi thành công",
               type: "success",
             });
             this.$router.push({ path: "/dashboard" });
@@ -602,7 +602,7 @@ export default {
         .catch(function (res) {});
     },
     goWarehouseHistoryPage() {
-      this.$router.push({ name: "warehouse-history" });
+      this.$router.push({ name: "Lịch sử thay đổi Cửa hàng" });
     },
     HandleImportWarehouse() {
       this.isOpenDialogImport = true;
@@ -625,7 +625,7 @@ export default {
         type: "ADD",
       };
       this.$router.push({
-        name: "warehouse-detail", //use name for router push
+        name: "Chi tiết cửa hàng", //use name for router push
         params: { data },
       });
     },
@@ -635,7 +635,7 @@ export default {
         type: "EDIT",
       };
       this.$router.push({
-        name: "warehouse-detail", //use name for router push
+        name: "Chi tiết cửa hàng", //use name for router push
         params: { data },
       });
     },
@@ -650,7 +650,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Deleted successfully",
+              message: "Xóa thành công",
               type: "success",
             });
           }
@@ -665,7 +665,7 @@ export default {
         .finally(() => this.getWarehouses());
     },
     handeDeleteDetail(row) {
-      this.$confirm(`Are you want to delete ${row.warehouseId}?`)
+      this.$confirm(`Bạn có chắc chắn muốn xóa cửa hàng: ${row.warehouseId}?`)
         .then((_) => {
           const ids = row.id;
           this.callApiToDelete(ids);
@@ -678,7 +678,7 @@ export default {
         type: "DUPLICATED",
       };
       this.$router.push({
-        name: "warehouse-detail", //use name for router push
+        name: "Chi tiết cửa hàng", //use name for router push
         params: { data },
       });
     },

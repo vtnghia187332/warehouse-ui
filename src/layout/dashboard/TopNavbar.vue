@@ -4,7 +4,7 @@
       <a class="navbar-brand">{{ routeName }}</a>
       <div class="flex !space-x-4 mr-4">
         <div class="m-auto">
-          <b> {{ warehouseChain.name }} / {{ warehouse.name }}</b>
+          <b> {{ warehouseChain.name }} - {{ warehouse.name }}</b>
         </div>
         <div class="m-auto">
           <div class="demo-type">

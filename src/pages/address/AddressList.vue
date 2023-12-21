@@ -13,7 +13,7 @@
             class="p-3 item-header border-b-2 flex justify-between items-center"
           >
             <div class="">
-              <div class="font-semibold text-lg">Country</div>
+              <div class="font-semibold text-lg">Quốc gia</div>
             </div>
             <div class="add-header-btn flex">
               <el-button
@@ -21,13 +21,13 @@
                 type="danger"
                 class="bg-red-600"
                 @click="handleDeleteCountry()"
-                >Delete</el-button
+                >Xóa</el-button
               >
               <el-button
                 type="primary"
                 icon="el-icon-plus"
                 @click="isCreateAddress('country')"
-                >Create</el-button
+                >Thêm</el-button
               >
             </div>
           </div>
@@ -71,7 +71,7 @@
             class="p-3 item-header border-b-2 flex justify-between items-center"
           >
             <div class="">
-              <div class="font-semibold text-lg">City</div>
+              <div class="font-semibold text-lg">Tỉnh / Thành phố</div>
             </div>
             <div class="add-header-btn flex">
               <el-button
@@ -79,13 +79,13 @@
                 type="danger"
                 class="bg-red-600"
                 @click="handleDeleteCity()"
-                >Delete</el-button
+                >Xóa</el-button
               >
               <el-button
                 type="primary"
                 icon="el-icon-plus"
                 @click="isCreateAddress('city')"
-                >Create</el-button
+                >Thêm</el-button
               >
             </div>
           </div>
@@ -129,7 +129,7 @@
             class="p-3 item-header border-b-2 flex justify-between items-center"
           >
             <div class="">
-              <div class="font-semibold text-lg">District</div>
+              <div class="font-semibold text-lg">Quận / Huyện</div>
             </div>
             <div class="add-header-btn flex">
               <el-button
@@ -137,13 +137,13 @@
                 type="danger"
                 class="bg-red-600"
                 @click="handleDeleteDistrict()"
-                >Delete</el-button
+                >Xóa</el-button
               >
               <el-button
                 type="primary"
                 icon="el-icon-plus"
                 @click="isCreateAddress('district')"
-                >Create</el-button
+                >Thêm</el-button
               >
             </div>
           </div>
@@ -189,7 +189,7 @@
             class="p-3 item-header border-b-2 flex justify-between items-center"
           >
             <div class="">
-              <div class="font-semibold text-lg">Subdistrict</div>
+              <div class="font-semibold text-lg">Xã / Phường</div>
             </div>
             <div class="add-header-btn flex">
               <el-button
@@ -197,13 +197,13 @@
                 type="danger"
                 class="bg-red-600"
                 @click="handleDeleteSubdistrict()"
-                >Delete</el-button
+                >Xóa</el-button
               >
               <el-button
                 type="primary"
                 icon="el-icon-plus"
                 @click="isCreateAddress('subdistrict')"
-                >Create</el-button
+                >Thêm</el-button
               >
             </div>
           </div>
@@ -448,17 +448,17 @@ export default {
         case "country":
           this.dialogVisible = true;
           this.addressField = {
-            title: "Update Country",
+            title: "Sửa Quốc gia",
             baseId: item.id,
             id: "country",
             refId: "",
             classes: "!w-full",
             type: "text",
-            label: "Country",
+            label: "Quốc gia",
             rules: "required",
             isRequired: "true",
             value: item.countryName,
-            placeholder: "Typing country name...",
+            placeholder: "Nhập quốc gia...",
             maxlength: 50,
             error: "",
             actionType: "UPDATED",
@@ -467,17 +467,17 @@ export default {
         case "city":
           this.dialogVisible = true;
           this.addressField = {
-            title: "Update City",
+            title: "Sửa Tỉnh / Thành phố",
             baseId: item.value,
             id: "city",
             refId: this.isCountrySelected,
             classes: "!w-full",
             type: "text",
-            label: "City",
+            label: "Tỉnh / Thành phố",
             rules: "required",
             isRequired: "true",
             value: item.label,
-            placeholder: "Typing city name...",
+            placeholder: "Nhập Tỉnh / Thành phố...",
             maxlength: 50,
             error: "",
             actionType: "UPDATED",
@@ -486,17 +486,17 @@ export default {
         case "district":
           this.dialogVisible = true;
           this.addressField = {
-            title: "Update District",
+            title: "Sửa Quận / Huyện",
             baseId: item.value,
             id: "district",
             refId: this.isCitySelected,
             classes: "!w-full",
             type: "text",
-            label: "District",
+            label: "Quận / Huyện",
             rules: "required",
             isRequired: "true",
             value: item.label,
-            placeholder: "Typing district name...",
+            placeholder: "Nhập Quận / Huyện...",
             maxlength: 50,
             error: "",
             actionType: "UPDATED",
@@ -505,17 +505,17 @@ export default {
         case "subdistrict":
           this.dialogVisible = true;
           this.addressField = {
-            title: "Update Subdistrict",
+            title: "Sửa Xã / Phường",
             baseId: item.value,
             id: "subdistrict",
             refId: this.isDistrictSelected,
             classes: "!w-full",
             type: "text",
-            label: "Subdistrict",
+            label: "Xã / Phường",
             rules: "required",
             isRequired: "true",
             value: item.label,
-            placeholder: "Typing subdistrict name...",
+            placeholder: "Nhập Xã / Phường...",
             maxlength: 50,
             error: "",
             actionType: "UPDATED",
@@ -587,16 +587,16 @@ export default {
         case "country":
           this.dialogVisible = true;
           this.addressField = {
-            title: "Create Country",
+            title: "Tạo mới Quốc gia",
             id: "country",
             refId: "",
             classes: "!w-full",
             type: "text",
-            label: "Country",
+            label: "Quốc gia",
             rules: "required",
             isRequired: "true",
             value: "",
-            placeholder: "Typing country name...",
+            placeholder: "Nhập vào quốc gia...",
             maxlength: 50,
             error: "",
             actionType: "CREATED",
@@ -605,7 +605,7 @@ export default {
         case "city":
           this.dialogVisible = true;
           this.addressField = {
-            title: "Create City",
+            title: "Tạo mới Tỉnh / Thành phố",
             id: "city",
             refId: this.isCountrySelected,
             classes: "!w-full",
@@ -614,7 +614,7 @@ export default {
             rules: "required",
             isRequired: "true",
             value: "",
-            placeholder: "Typing city name...",
+            placeholder: "Nhập Tỉnh / Thành phố...",
             maxlength: 50,
             error: "",
             actionType: "CREATED",
@@ -623,7 +623,7 @@ export default {
         case "district":
           this.dialogVisible = true;
           this.addressField = {
-            title: "Create District",
+            title: "Tạo mới Quận / Huyện",
             id: "district",
             refId: this.isCitySelected,
             classes: "!w-full",
@@ -632,7 +632,7 @@ export default {
             rules: "required",
             isRequired: "true",
             value: "",
-            placeholder: "Typing district name...",
+            placeholder: "Nhập vào Quận / Huyện...",
             maxlength: 50,
             error: "",
             actionType: "CREATED",
@@ -641,7 +641,7 @@ export default {
         case "subdistrict":
           this.dialogVisible = true;
           this.addressField = {
-            title: "Create Subdistrict",
+            title: "Tạo mới Xã / Phường",
             id: "subdistrict",
             refId: this.isDistrictSelected,
             classes: "!w-full",
@@ -650,7 +650,7 @@ export default {
             rules: "required",
             isRequired: "true",
             value: "",
-            placeholder: "Typing subdistrict name...",
+            placeholder: "Nhập vào Xã / Phường...",
             maxlength: 50,
             error: "",
             actionType: "CREATED",
@@ -778,7 +778,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Updated successfully",
+              message: "Sửa thành công",
               type: "success",
             });
             this.getCountries();
@@ -810,7 +810,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Updated successfully",
+              message: "Sửa thành công",
               type: "success",
             });
             this.getCitiesByCountry(this.isCountrySelected);
@@ -841,7 +841,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Updated successfully",
+              message: "Sửa thành công",
               type: "success",
             });
             this.getListDistrictByCity(this.isCitySelected);
@@ -872,7 +872,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Updated successfully",
+              message: "Sửa thành công",
               type: "success",
             });
             this.getListSubDistrictByDistrict(this.isDistrictSelected);
@@ -899,7 +899,7 @@ export default {
           if (res.status === 200) {
             this.$message({
               showClose: true,
-              message: "Created successfully",
+              message: "Xóa thành công",
               type: "success",
             });
             this.getCountries();
@@ -926,7 +926,7 @@ export default {
           if (res.status === 200) {
             this.$message({
               showClose: true,
-              message: "Deleted successfully",
+              message: "Xóa thành công",
               type: "success",
             });
             this.getCitiesByCountry(this.isCountrySelected);
@@ -940,6 +940,7 @@ export default {
             message: error.response.data.items,
             type: "error",
           });
+          this.loadingTable = false;
         });
     },
 
@@ -954,7 +955,7 @@ export default {
           if (res.status === 200) {
             this.$message({
               showClose: true,
-              message: "Deleted successfully",
+              message: "Xóa thành công",
               type: "success",
             });
             this.getListDistrictByCity(this.isCitySelected);
@@ -968,6 +969,7 @@ export default {
             message: error.response.data.items,
             type: "error",
           });
+          this.loadingTable = false;
         });
     },
 
@@ -982,7 +984,7 @@ export default {
           if (res.status === 200) {
             this.$message({
               showClose: true,
-              message: "Deleted successfully",
+              message: "Xóa thành công",
               type: "success",
             });
             this.getListSubDistrictByDistrict(this.isDistrictSelected);
@@ -996,6 +998,7 @@ export default {
             message: error.response.data.items,
             type: "error",
           });
+          this.loadingTable = false;
         });
     },
   },

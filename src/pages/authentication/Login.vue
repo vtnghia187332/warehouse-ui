@@ -5,7 +5,7 @@
         <div class="m-auto">
           <el-row class="pt-4 pl-3 pr-3 w-96">
             <el-col class="forms grow">
-              <FormCard title="Sign In" class="mb-3">
+              <FormCard title="Đăng nhập" class="mb-3">
                 <template v-slot:content>
                   <div class="grid grid-cols-12 gap-x-6">
                     <div class="col-span-12">
@@ -28,13 +28,13 @@
                       @click="handleSubmit"
                       class="bg-blue-400 w-full"
                       type="primary"
-                      >Submit</el-button
+                      >Đăng nhập</el-button
                     >
                   </div>
                   <div class="mt-3 flex justify-between">
-                    <el-link @click="handleSignUp">Sign up</el-link>
+                    <el-link @click="handleSignUp">Đăng ký</el-link>
                     <el-link @click="handleForgotPassword" type="primary"
-                      >Forgot your password?</el-link
+                      >Quên mật khẩu?</el-link
                     >
                   </div>
                 </template>
@@ -95,7 +95,7 @@ export default {
           type: "text",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Email...",
+          placeholder: "Nhập vào email...",
           error: "",
         },
         password: {
@@ -106,7 +106,7 @@ export default {
           type: "password",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Password...",
+          placeholder: "Nhập vào mật khẩu...",
           error: "",
         },
       },

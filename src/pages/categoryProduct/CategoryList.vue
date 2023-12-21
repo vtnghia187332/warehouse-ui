@@ -10,14 +10,14 @@
           v-show="cateSelected.length > 0"
           class="bg-red-600"
           @click="handleDeleteCate"
-          >Delete</el-button
+          >Xóa</el-button
         >
         <el-button
           class="bg-blue-400"
           icon="el-icon-plus"
           type="primary"
           @click="createCate"
-          >Create</el-button
+          >Thêm</el-button
         >
       </div>
     </div>
@@ -34,11 +34,11 @@
         <el-empty :image-size="200"></el-empty>
       </div>
       <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column prop="createdAt" label="Created Date" width="250">
+      <el-table-column prop="createdAt" label="Ngày tạo" width="250">
       </el-table-column>
-      <el-table-column prop="editedAt" label="Updated Date" width="250">
+      <el-table-column prop="editedAt" label="Ngày sửa" width="250">
       </el-table-column>
-      <el-table-column prop="name" label="Name" width="400"> </el-table-column>
+      <el-table-column prop="name" label="Danh mục" width="400"> </el-table-column>
     </el-table>
     <BasePagination
       :field="paginationVal"
@@ -120,16 +120,16 @@ export default {
     createCate() {
       this.dialogVisible = true;
       this.categoryField = {
-        title: "Create Category Product",
+        title: "Thêm mới danh mục",
         id: "categoryProduct",
         refId: "",
         classes: "!w-full",
         type: "text",
-        label: "Category Product",
+        label: "Danh mục",
         rules: "required",
         isRequired: "true",
         value: "",
-        placeholder: "Typing Category Product name...",
+        placeholder: "Nhập danh mục",
         maxlength: 50,
         error: "",
         actionType: "CREATED",
@@ -138,7 +138,7 @@ export default {
     updateCate(row, col, event) {
       this.dialogVisible = true;
       this.categoryField = {
-        title: "Update Category Product",
+        title: "Sửa danh mục",
         id: "categoryProduct",
         baseId: row.id,
         refId: "",
@@ -148,7 +148,7 @@ export default {
         rules: "required",
         isRequired: "true",
         value: row.name,
-        placeholder: "Typing Category Product name...",
+        placeholder: "Nhập danh mục...",
         maxlength: 50,
         error: "",
         actionType: "UPDATED",
@@ -220,7 +220,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Created successfully",
+              message: "Tạo thành công",
               type: "success",
             });
             this.getCategories();
@@ -250,7 +250,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Updated successfully",
+              message: "Sửa thành công",
               type: "success",
             });
             this.getCategories();
@@ -274,7 +274,7 @@ export default {
           if (res.status === 200) {
             this.$message({
               showClose: true,
-              message: "Deleted successfully",
+              message: "Xóa thành công",
               type: "success",
             });
             this.getCategories();

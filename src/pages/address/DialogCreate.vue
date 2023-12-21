@@ -45,7 +45,7 @@ export default {
   methods: {
     handleClose() {
       if (this.field.value != "") {
-        this.$confirm("Are you sure to close this dialog?")
+        this.$confirm("Bạn có muốn tắt cửa sổ không?")
           .then((_) => {
             this.$emit("update:dialogVisible", false);
           })

@@ -6,7 +6,7 @@
         <button
           class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
         >
-          <span class="ti-filter"></span> Filter
+          <span class="ti-filter"></span> Tìm kiếm
         </button>
       </div>
       <div class="flex space-x-1">
@@ -14,7 +14,7 @@
           class="w-[180px]"
           :disabled="warehouseData.disabled === 'disabled'"
           v-model="warehouseData.value"
-          placeholder="Select Warehouse"
+          placeholder="Chọn cửa hàng"
           @change="filterByWarehouse($event)"
           clearable
         >
@@ -30,13 +30,13 @@
           class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
           @click="handleHistoryPage"
         >
-          <i class="el-icon-files font-bold"></i> History
+          <i class="el-icon-files font-bold"></i> Lịch sử
         </button>
         <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="HandleAdd"
         >
-          <i class="el-icon-plus ml font-bold"></i> Create
+          <i class="el-icon-plus ml font-bold"></i> Thêm
         </button>
       </div>
     </div>
@@ -56,43 +56,33 @@
           sortable
           fixed
           prop="invoiceId"
-          label="Invoice ID"
+          label="Hóa đơn ID"
           width="150"
         >
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="createdAt"
-          label="Created At"
-          width="170"
-        >
+        <el-table-column sortable prop="createdAt" label="Ngày tạo" width="170">
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="editedAt"
-          label="Updated At"
-          width="170"
-        >
+        <el-table-column sortable prop="editedAt" label="Ngày sửa" width="170">
         </el-table-column>
-        <el-table-column sortable prop="name" label="Invoice Name" width="250">
+        <el-table-column sortable prop="name" label="Tên hóa đơn" width="250">
         </el-table-column>
-        <el-table-column sortable prop="code" label="Invoice Code" width="250">
+        <el-table-column sortable prop="code" label="Mã hóa đơn" width="250">
         </el-table-column>
         <el-table-column
           sortable
           prop="typeInvoice"
-          label="Type Invoice"
+          label="Loại hóa đơn"
           width="150"
         >
           <template slot-scope="scope">
             <el-tag
               :type="scope.row.typeInvoice == 1 ? 'success' : 'primary'"
               disable-transitions
-              >{{ scope.row.typeInvoice == 1 ? "RECEIPT" : "EXPORT" }}</el-tag
+              >{{ scope.row.typeInvoice == 1 ? "Nhập" : "Bán" }}</el-tag
             >
           </template>
         </el-table-column>
-        <el-table-column sortable prop="code" label="Customer Name" width="250">
+        <el-table-column sortable prop="code" label="Khách hàng" width="250">
           <template slot-scope="scope">
             {{ scope.row.customer.fullName }}
           </template>
@@ -100,21 +90,21 @@
         <el-table-column
           sortable
           prop="invoiceStage"
-          label="Invoice's Status"
+          label="Trạng thái"
           width="200"
         >
         </el-table-column>
         <el-table-column
           sortable
           prop="totalPaid"
-          label="Sub-Total Payment"
+          label="Tổng hóa đơn"
           width="200"
         >
         </el-table-column>
-        <el-table-column sortable prop="note" label="Note" width="300">
+        <el-table-column sortable prop="note" label="Ghi chú" width="300">
         </el-table-column>
 
-        <el-table-column fixed="right" label="Action" width="80">
+        <el-table-column fixed="right" label="Hành động" width="150">
           <template slot-scope="scope">
             <el-dropdown>
               <el-button @click="" type="text" size="small"
@@ -126,7 +116,7 @@
                     class="!bg-[#fdfdfd] text-black"
                     @click="handeCheckOut(scope.row)"
                   >
-                    <i class=""></i> Check Out
+                    <i class=""></i> Thanh toán
                   </button>
                 </el-dropdown-item>
                 <el-dropdown-item>
@@ -134,7 +124,7 @@
                     class="!bg-[#fdfdfd] !w-full text-black"
                     @click="handleDelete(scope.row)"
                   >
-                    <i class=""></i> Delete
+                    <i class=""></i> Xóa
                   </button>
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -175,7 +165,7 @@ export default {
         rules: "required",
         classes: "w-full",
         isRequired: "true",
-        placeholder: "Select Warehouse",
+        placeholder: "Chọn cửa hàng",
         error: "",
         value: "",
         options: [],
@@ -184,7 +174,7 @@ export default {
       search: {
         value: "",
         class: "w-96",
-        placeholder: "Search by Name, Code,..",
+        placeholder: "Tìm kiếm với tên, mã, ...",
       },
       loadingTable: false,
       paginationPage: {
@@ -226,7 +216,7 @@ export default {
       });
     },
     handleDelete(row) {
-      this.$confirm(`Are you want to delete ${row.invoiceId}?`)
+      this.$confirm(`Bạn có muốn xóa ${row.invoiceId}?`)
         .then((_) => {
           this.handleDeleteInvoice(row.id);
         })
@@ -243,7 +233,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Deleted successfully",
+              message: "Xóa thành công",
               type: "success",
             });
           }
@@ -294,7 +284,7 @@ export default {
         type: "EDIT",
       };
       this.$router.push({
-        name: "export-receipt detail", //use name for router push
+        name: "Chi tiết phiếu thu-chi", //use name for router push
         params: { data },
       });
     },
@@ -358,7 +348,7 @@ export default {
         });
     },
     handleHistoryPage() {
-      this.$router.push({ name: "export-receipt history" });
+      this.$router.push({ name: "Lịch sử thay đổi phiếu thu-chi" });
     },
     HandleImport() {},
     handleExport() {},
@@ -368,7 +358,7 @@ export default {
         type: "ADD",
       };
       this.$router.push({
-        name: "export-receipt detail",
+        name: "Chi tiết phiếu thu-chi",
         params: { data },
       });
     },

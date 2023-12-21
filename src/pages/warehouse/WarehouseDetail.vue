@@ -7,7 +7,7 @@
     >
       <el-row :gutter="20" class="flex gap-x-4 detail w-full">
         <el-col :span="15" class="forms grow">
-          <FormCard title="Information" class="mb-3">
+          <FormCard title="Thông tin cửa hàng" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-6">
@@ -50,14 +50,14 @@
             <div
               class="font-medium text-base text-primary-85 p-3 border border-divider"
             >
-              Window Time
+              Thời gian hoạt động
             </div>
             <div class="p-3 !pt-2 pb-0">
               <el-tabs v-model="activeName">
-                <el-tab-pane label="OpenHour" name="first">
+                <el-tab-pane label="Giờ mở cửa" name="first">
                   <div class="mb-4 items-center grid grid-cols-4 gap-4">
                     <el-checkbox class="" v-model="workingHour.monday.checked"
-                      >Monday</el-checkbox
+                      >Thứ hai</el-checkbox
                     >
                     <el-time-picker
                       ref="mondayPicker"
@@ -74,7 +74,7 @@
 
                   <div class="mb-4 items-center grid grid-cols-4 gap-4">
                     <el-checkbox class="" v-model="workingHour.tuesday.checked"
-                      >Tuesday</el-checkbox
+                      >Thứ ba</el-checkbox
                     >
                     <el-time-picker
                       ref="tuesdayPicker"
@@ -93,7 +93,7 @@
                     <el-checkbox
                       class=""
                       v-model="workingHour.wednesday.checked"
-                      >Wednesday</el-checkbox
+                      >Thứ tư</el-checkbox
                     >
                     <el-time-picker
                       ref="wednesdayPicker"
@@ -110,7 +110,7 @@
 
                   <div class="mb-4 items-center grid grid-cols-4 gap-4">
                     <el-checkbox class="" v-model="workingHour.thursday.checked"
-                      >Thursday</el-checkbox
+                      >Thứ năm</el-checkbox
                     >
                     <el-time-picker
                       ref="thursdayPicker"
@@ -127,7 +127,7 @@
 
                   <div class="mb-4 items-center grid grid-cols-4 gap-4">
                     <el-checkbox class="" v-model="workingHour.friday.checked"
-                      >Friday</el-checkbox
+                      >Thứ sáu</el-checkbox
                     >
                     <el-time-picker
                       ref="fridayPicker"
@@ -144,7 +144,7 @@
 
                   <div class="mb-4 items-center grid grid-cols-4 gap-4">
                     <el-checkbox class="" v-model="workingHour.saturday.checked"
-                      >Saturday</el-checkbox
+                      >Thứ bảy</el-checkbox
                     >
                     <el-time-picker
                       ref="saturdayPicker"
@@ -161,7 +161,7 @@
 
                   <div class="mb-4 items-center grid grid-cols-4 gap-4">
                     <el-checkbox class="" v-model="workingHour.sunday.checked"
-                      >Sunday</el-checkbox
+                      >Chủ nhật</el-checkbox
                     >
                     <el-time-picker
                       ref="sundayPicker"
@@ -178,7 +178,7 @@
                 </el-tab-pane>
                 <el-tab-pane
                   class="relative"
-                  label="Holiday, Special Day-Off"
+                  label="Ngày nghỉ đặc biệt"
                   name="second"
                 >
                   <el-table
@@ -197,12 +197,12 @@
                       :index="indexMethod"
                     >
                     </el-table-column>
-                    <el-table-column label="Date" prop="date">
+                    <el-table-column label="Ngày" prop="date">
                       <template slot-scope="scope">
                         {{ moment(scope.row.specialDay).format("YYYY-MM-DD") }}
                       </template>
                     </el-table-column>
-                    <el-table-column label="Time" prop="time">
+                    <el-table-column label="Thời gian" prop="time">
                       <template slot-scope="scope">
                         {{
                           moment(scope.row.time[0]).format("HH:mm") +
@@ -211,7 +211,7 @@
                         }}
                       </template>
                     </el-table-column>
-                    <el-table-column label="Remark" prop="remark">
+                    <el-table-column label="Ghi chú" prop="remark">
                       <template slot-scope="scope">
                         {{ scope.row.remark }}
                       </template>
@@ -224,7 +224,7 @@
                           class="bg-blue-300"
                           @click="handleAddSpecialDay(true, 'OFF')"
                           :handleAddSpecialDay="handleAddSpecialDay"
-                          >Add</el-button
+                          >Thêm</el-button
                         >
                       </template>
                       <template slot-scope="scope">
@@ -233,13 +233,13 @@
                           type="danger"
                           class="bg-red-300"
                           @click="handleDeleteSpecialDay(scope, 'OFF')"
-                          >Delete</el-button
+                          >Xóa</el-button
                         >
                       </template>
                     </el-table-column>
                   </el-table>
                 </el-tab-pane>
-                <el-tab-pane label="Special Day-On" name="third">
+                <el-tab-pane label="Ngày làm làm đặc biệt" name="third">
                   <el-table
                     height="448"
                     :data="specialDayOn"
@@ -257,12 +257,12 @@
                       :index="indexMethod"
                     >
                     </el-table-column>
-                    <el-table-column label="Date" prop="date">
+                    <el-table-column label="Ngày" prop="date">
                       <template slot-scope="scope">
                         {{ moment(scope.row.specialDay).format("YYYY-MM-DD") }}
                       </template>
                     </el-table-column>
-                    <el-table-column label="Time" prop="time">
+                    <el-table-column label="Thời gian" prop="time">
                       <template slot-scope="scope">
                         {{
                           moment(scope.row.time[0]).format("HH:mm") +
@@ -271,7 +271,7 @@
                         }}
                       </template>
                     </el-table-column>
-                    <el-table-column label="Remark" prop="remark">
+                    <el-table-column label="Ghi chú" prop="remark">
                       <template slot-scope="scope">
                         {{ scope.row.remark }}
                       </template>
@@ -284,7 +284,7 @@
                           class="bg-blue-300"
                           @click="handleAddSpecialDay(true, 'ON')"
                           :handleAddSpecialDay="handleAddSpecialDay"
-                          >Add</el-button
+                          >Thêm</el-button
                         >
                       </template>
                       <template slot-scope="scope">
@@ -293,7 +293,7 @@
                           type="danger"
                           class="bg-red-300"
                           @click="handleDeleteSpecialDay(scope, 'ON')"
-                          >Delete</el-button
+                          >Xóa</el-button
                         >
                       </template>
                     </el-table-column>
@@ -344,17 +344,17 @@
             </template>
           </FormCard>
           <div class="footer-btn-fixed flex justify-end p-2">
-            <el-button @click="handleCancelSubmit">Cancel</el-button>
+            <el-button @click="handleCancelSubmit">Thoát</el-button>
             <el-button
               @click="handleSubmit"
               class="bg-blue-400"
               type="primary"
-              >{{ warehouseId != 0 ? "Update" : "Create" }}</el-button
+              >{{ warehouseId != 0 ? "Sửa" : "Thêm" }}</el-button
             >
           </div>
         </el-col>
         <el-col :span="5" class="">
-          <FormCard title="Warehouse ID" class="mb-3">
+          <FormCard title="ID Cửa hàng" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12">
@@ -463,10 +463,10 @@ export default {
           rules: "required",
           classes: "w-full col-span-6",
           type: "text",
-          label: "Code",
+          label: "Mã cửa hàng",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Warehouse Code",
+          placeholder: "Nhập mã cửa hàng",
           maxlength: 20,
           error: "",
         },
@@ -476,10 +476,10 @@ export default {
           rules: "required",
           classes: "col-span-12",
           type: "text",
-          label: "Name",
+          label: "Tên cửa hàng",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Warehouse Name",
+          placeholder: "Nhập vào tên cửa hàng",
           maxlength: 150,
           error: "",
         },
@@ -490,9 +490,9 @@ export default {
           classes: "col-span-12",
           type: "text",
           isRequired: "true",
-          label: "Short Name",
+          label: "Tên viết tắt",
           value: "",
-          placeholder: "Enter Warehouse Short Name",
+          placeholder: "Nhập vào tên viết tắt",
           maxlength: 100,
           error: "",
         },
@@ -502,10 +502,10 @@ export default {
           rules: "",
           classes: "col-span-12 !h-[64px]",
           type: "text",
-          label: "Description",
+          label: "Mô tả",
           isRequired: "false",
           value: "",
-          placeholder: "Enter Warehouse Description",
+          placeholder: "Nhập mô tả cửa hàng",
           maxlength: 150,
           error: "",
         },
@@ -517,10 +517,10 @@ export default {
           rules: "",
           classes: "col-span-12 !h-[64px]",
           type: "text",
-          label: "Address Detail",
+          label: "Chi tiết địa chỉ",
           isRequired: "false",
           value: "",
-          placeholder: "Enter Address Detail",
+          placeholder: "Nhập chi tiết địa chỉ",
           maxlength: 150,
           error: "",
         },
@@ -530,11 +530,11 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select Country",
+          placeholder: "Chọn Quốc gia",
           error: "",
           value: "",
           disabled: "notDisabled",
-          label: "Country",
+          label: "Quốc gia",
           options: [],
         },
         city: {
@@ -543,10 +543,10 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select City",
+          placeholder: "Chọn tỉnh/thành phố",
           error: "",
           value: "",
-          label: "City",
+          label: "Tỉnh/Thành phố",
           disabled: "disabled",
           options: [],
         },
@@ -556,11 +556,11 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select District",
+          placeholder: "Chọn quận/huyện",
           error: "",
           value: "",
           disabled: "disabled",
-          label: "District",
+          label: "Quận/Huyện",
           options: [],
         },
         subdistrict: {
@@ -569,11 +569,11 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select Sub District",
+          placeholder: "Chọn xã/phường",
           error: "",
           value: "",
           disabled: "disabled",
-          label: "Sub District",
+          label: "Xã/Phường",
           options: [],
         },
       },
@@ -612,9 +612,9 @@ export default {
     },
     getValueSubdistrict() {},
     handleCancelSubmit() {
-      this.$confirm("Are you sure to cancel adding Warehouse")
+      this.$confirm("Bạn muốn thoát màn hình thêm cửa hàng?")
         .then((_) => {
-          this.$router.push({ path: "/warehouse-list" });
+          this.$router.push({ name: "Danh sách Cửa hàng" });
         })
         .catch((_) => {});
     },
@@ -690,7 +690,7 @@ export default {
               this.$router.push({ path: "/warehouse-list" });
               this.$message({
                 showClose: true,
-                message: "Updated successfully",
+                message: "Sửa thành công",
                 type: "success",
               });
             }
@@ -714,7 +714,7 @@ export default {
               this.$router.push({ path: "/warehouse-list" });
               this.$message({
                 showClose: true,
-                message: "Created successfully",
+                message: "Thêm thành công",
                 type: "success",
               });
             }
@@ -973,7 +973,7 @@ export default {
   },
   async mounted() {
     if (!this.$route.params.data) {
-      this.$router.push({ path: "/warehouse-list" });
+      this.$router.push({ name: "Danh sách Cửa hàng" });
       return;
     }
     await this.getListAddress();

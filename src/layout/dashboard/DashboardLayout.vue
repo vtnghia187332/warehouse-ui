@@ -2,20 +2,24 @@
   <div class="wrapper">
     <side-bar>
       <template slot="links">
-        <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel" />
-        <sidebar-link to="/warehouse-list" name="Warehouse" icon="ti-home" />
-        <sidebar-link to="/customer" name="Customer" icon="ti-user" />
-        <sidebar-link to="/contract" name="Invoice" icon="ti-pencil-alt" />
+        <sidebar-link to="/dashboard" name="Thống kê" icon="ti-panel" />
+        <sidebar-link to="/warehouse-list" name="Cửa hàng" icon="ti-home" />
+        <sidebar-link to="/customer" name="Khách hàng" icon="ti-user" />
+        <sidebar-link to="/contract" name="Hóa đơn" icon="ti-pencil-alt" />
         <sidebar-link
           to="/export-receipt"
-          name="Export-Receipt"
+          name="Phiếu Thu-Chi"
           icon="ti-bookmark-alt"
         />
-        <sidebar-link to="/product" name="Product" icon="ti-package" />
-        <sidebar-link to="/category" name="Category" icon="ti-list-ol" />
-        <sidebar-link to="/single-unit" name="Single-Unit" icon="ti-slice" />
-        <sidebar-link to="/staff" name="Staff" icon="ti-headphone-alt" />
-        <sidebar-link to="/address" name="Address" icon="ti-map" />
+        <sidebar-link to="/product" name="Nguyên Vật Liệu" icon="ti-package" />
+        <sidebar-link to="/category" name="Danh mục" icon="ti-list-ol" />
+        <sidebar-link
+          to="/single-unit"
+          name="Đơn vị Đo Lường"
+          icon="ti-slice"
+        />
+        <sidebar-link to="/staff" name="Nhân viên" icon="ti-headphone-alt" />
+        <sidebar-link to="/address" name="Địa chỉ" icon="ti-map" />
       </template>
       <mobile-menu>
         <li class="nav-item">

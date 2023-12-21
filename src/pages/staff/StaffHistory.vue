@@ -8,7 +8,7 @@
         <el-select
           class="w-[180px]"
           v-model="warehouseData.value"
-          placeholder="Select Warehouse"
+          placeholder="Chọn cửa hàng"
           @change="filterByWarehouse($event)"
           clearable
         >
@@ -34,53 +34,38 @@
         <div slot="append" v-if="staffs.length == '0'">
           <el-empty :image-size="300"></el-empty>
         </div>
-        <el-table-column fixed prop="userId" label="User ID" width="150">
+        <el-table-column fixed prop="userId" label="ID nhân viên" width="150">
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="createdAt"
-          label="Create Date"
-          width="250"
-        >
+        <el-table-column sortable prop="createdAt" label="Ngày tạo" width="250">
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="editedAt"
-          label="Updated Date"
-          width="250"
-        >
+        <el-table-column sortable prop="editedAt" label="Ngày sửa" width="250">
         </el-table-column>
         <el-table-column
           sortable
           prop="createdBy"
-          label="Created By"
+          label="Người tạo"
           width="250"
         >
         </el-table-column>
-        <el-table-column sortable prop="editedBy" label="Edited By" width="250">
+        <el-table-column sortable prop="editedBy" label="Người sửa" width="250">
         </el-table-column>
 
-        <el-table-column sortable prop="code" label="Code" width="250">
+        <el-table-column sortable prop="code" label="Mã nhân viên" width="250">
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="firstname"
-          label="First Name"
-          width="200"
-        >
+        <el-table-column sortable prop="firstname" label="Tên" width="200">
         </el-table-column>
-        <el-table-column sortable prop="lastname" label="Last Name" width="200">
+        <el-table-column sortable prop="lastname" label="Họ" width="200">
         </el-table-column>
         <el-table-column sortable prop="email" label="Email" width="250">
         </el-table-column>
         <el-table-column
           sortable
           prop="nationalNumber"
-          label="National Number"
+          label="CMT / CCCD"
           width="180"
         >
         </el-table-column>
-        <el-table-column sortable prop="role" label="Role" width="200">
+        <el-table-column sortable prop="role" label="Chức vụ" width="200">
           <template slot-scope="scope">
             {{ scope.row.roles[0].roleName }}
           </template>
@@ -88,16 +73,18 @@
         <el-table-column
           sortable
           prop="mobilePhone"
-          label="Mobile Phone"
+          label="Số điện thoại"
           width="150"
         >
         </el-table-column>
-        <el-table-column prop="isActive" label="Status" width="100">
+        <el-table-column prop="isActive" label="Trạng thái" width="150">
           <template slot-scope="scope">
             <el-tag
               :type="scope.row.isActive === 1 ? 'success' : 'danger'"
               disable-transitions
-              >{{ scope.row.isActive == 1 ? "ACTIVE" : "INACTIVE" }}</el-tag
+              >{{
+                scope.row.isActive == 1 ? "Hoạt động" : "Không hoạt động"
+              }}</el-tag
             >
           </template>
         </el-table-column>
@@ -160,7 +147,7 @@ export default {
     filterByWarehouse(item) {
       if (!item) {
         this.warehouseData.value = null;
-        this.handleGetUsers();
+        this.handleGetUsersHis();
       } else {
         const itemStr =
           this.warehouseData.options.find(
@@ -171,7 +158,7 @@ export default {
         } else {
           this.warehouseData.value = itemStr;
         }
-        this.handleGetUsers();
+        this.handleGetUsersHis();
       }
     },
     handleSizeChange(param) {
