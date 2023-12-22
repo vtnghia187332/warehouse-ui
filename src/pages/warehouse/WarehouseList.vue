@@ -577,15 +577,29 @@ export default {
     },
     async testFunc() {
       let me = this;
-      // time biến thành tên của file
+      let params = {
+        searchText: me.search.value,
+        pageNo: me.paginationPage.pageNo,
+        pageSize: me.paginationPage.pageSize,
+        sorting: me.paginationPage.sorting,
+        orderBy: me.paginationPage.orderBy,
+        warehouse: me.warehouse.warehouseId,
+      };
+      if (!me.warehouse?.warehouseId && me.user.roles.includes("ADMIN")) {
+        params = {
+          ...params,
+          warehouseChainId: me.warehouseChain.warehouseChainId,
+          roleOfUser: me.user.roles.join(),
+        };
+      }
       const tempDateTime = new Date();
-      const fileName = `Warehouse${tempDateTime.getTime()}.xlsx`;
-      //  Khai báo mảng để hứng dữ liệu nguyên vật liệu trả về
+      const fileName = `Cua_hang_${tempDateTime.getTime()}.xlsx`;
       await axios
-        .get("http://localhost:9090/api/v1/warehouse/template", {
+        .get("http://localhost:9090/api/v1/warehouse/export", {
           responseType: "blob",
           contentType: "application/json-patch+json",
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params,
         })
         .then(function (res) {
           if (res) {
@@ -599,7 +613,13 @@ export default {
             a.remove();
           }
         })
-        .catch(function (res) {});
+        .catch(function (error) {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
     },
     goWarehouseHistoryPage() {
       this.$router.push({ name: "Lịch sử thay đổi Cửa hàng" });

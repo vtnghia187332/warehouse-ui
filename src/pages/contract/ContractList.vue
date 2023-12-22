@@ -6,7 +6,7 @@
         <button
           class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
         >
-          <span class="ti-filter"></span> Filter
+          <span class="ti-filter"></span> Tìm kiếm
         </button>
       </div>
       <div class="flex space-x-1">
@@ -14,7 +14,7 @@
           class="w-[180px]"
           v-model="typeInvoice.value"
           :disabled="warehouseData.disabled === 'disabled'"
-          placeholder="Select Type Invoice"
+          placeholder="Chọn loại hóa đơn"
           @change="updateInputType($event)"
           clearable
         >
@@ -29,7 +29,7 @@
         <el-select
           class="w-[180px]"
           v-model="statusInvoice.value"
-          placeholder="Select Invoice Status"
+          placeholder="Chọn trạng thái"
           @change="getInvoiceByStatus($event)"
           clearable
         >
@@ -45,7 +45,7 @@
         <el-select
           class="w-[180px]"
           v-model="warehouseData.value"
-          placeholder="Select Warehouse"
+          placeholder="Chọn cửa hàng"
           @change="filterByWarehouse($event)"
           clearable
         >
@@ -62,13 +62,13 @@
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="getInvoiceHistory"
         >
-          <i class="el-icon-plus ml font-bold"></i> History
+          <i class="el-icon-plus ml font-bold"></i> Lịch sử
         </button>
         <button
           class="ml-1 !bg-blue-400 text-white font-bold py-2 px-4 rounded-sm"
           @click="exportInvoiceExport"
         >
-          <i class="el-icon-plus ml font-bold"></i> Export
+          <i class="el-icon-plus ml font-bold"></i> Xuất khẩu
         </button>
       </div>
     </div>
@@ -88,43 +88,35 @@
           sortable
           fixed
           prop="invoiceId"
-          label="Invoice ID"
+          label="Hóa đơn ID"
           width="150"
         >
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="createdAt"
-          label="Created At"
-          width="200"
-        >
+        <el-table-column sortable prop="createdAt" label="Ngày tạo" width="200">
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="editedAt"
-          label="Updated At"
-          width="200"
-        >
+        <el-table-column sortable prop="editedAt" label="Ngày sửa" width="200">
         </el-table-column>
-        <el-table-column sortable prop="name" label="Invoice Name" width="250">
+        <el-table-column sortable prop="name" label="Tên hóa đơn" width="250">
         </el-table-column>
-        <el-table-column sortable prop="code" label="Invoice Code" width="250">
+        <el-table-column sortable prop="code" label="Mã hóa đơn" width="250">
         </el-table-column>
         <el-table-column
           sortable
           prop="typeInvoice"
-          label="Type Invoice"
+          label="Loại hóa đơn"
           width="150"
         >
           <template slot-scope="scope">
             <el-tag
               :type="scope.row.typeInvoice == 1 ? 'success' : 'primary'"
               disable-transitions
-              >{{ scope.row.typeInvoice == 1 ? "RECEIPT" : "EXPORT" }}</el-tag
+              >{{
+                scope.row.typeInvoice == 1 ? "Nhập hàng" : "Bán hàng"
+              }}</el-tag
             >
           </template>
         </el-table-column>
-        <el-table-column sortable prop="" label="Customer Name" width="250">
+        <el-table-column sortable prop="" label="Khách hàng" width="250">
           <template slot-scope="scope">
             {{ scope.row.customer.fullName }}
           </template>
@@ -132,40 +124,44 @@
         <el-table-column
           sortable
           prop="invoiceStage"
-          label="Invoice's Status"
+          label="Trạng thái"
           width="200"
         >
         </el-table-column>
         <el-table-column
           sortable
           prop="totalPaid"
-          label="Total Payment"
+          label="Tổng tiền hóa đơn"
           width="200"
         >
         </el-table-column>
-        <el-table-column prop="moneyPaid" label="Money Paid" width="200">
+        <el-table-column prop="moneyPaid" label="Số tiền đã trả" width="200">
         </el-table-column>
-        <el-table-column prop="consignee" label="Consignee" width="200">
+        <el-table-column prop="consignee" label="Người nhận hàng" width="200">
         </el-table-column>
         <el-table-column
           prop="phoneNumberReceipt"
-          label="Phone Number Receipt"
+          label="SĐT người nhận"
           width="200"
         >
         </el-table-column>
         <el-table-column
           prop="deliveryAddress"
-          label="Delivery Address"
+          label="Địa chỉ giao hàng"
           width="300"
         >
         </el-table-column>
-        <el-table-column prop="moneyRefund" label="Money Refund" width="200">
+        <el-table-column
+          prop="moneyRefund"
+          label="Số tiền hoàn trả"
+          width="200"
+        >
         </el-table-column>
-        <el-table-column prop="reason" label="Reason Refund" width="300">
+        <el-table-column prop="reason" label="Lý do hoàn tiền" width="300">
         </el-table-column>
-        <el-table-column prop="reasonCancel" label="Reason Cancel" width="300">
+        <el-table-column prop="reasonCancel" label="Lý do hủy" width="300">
         </el-table-column>
-        <el-table-column fixed="right" label="Action" width="80">
+        <el-table-column fixed="right" label="Hành động" width="100">
           <template slot-scope="scope">
             <el-dropdown>
               <el-button @click="" type="text" size="small"
@@ -177,7 +173,7 @@
                     class="!bg-[#fdfdfd] text-black"
                     @click="handeExportPDF(scope.row)"
                   >
-                    <i class=""></i>Export PDF
+                    <i class=""></i>In file PDF
                   </button>
                 </el-dropdown-item>
                 <el-dropdown-item>
@@ -186,7 +182,7 @@
                     @click="handleAcquit(scope.row)"
                     :disabled="scope.row.invoiceStage == 'CANCELED'"
                   >
-                    <i class=""></i>Acquit
+                    <i class=""></i>Trả nợ
                   </button>
                 </el-dropdown-item>
                 <el-dropdown-item>
@@ -195,7 +191,7 @@
                     @click="handeRefund(scope.row)"
                     :disabled="scope.row.invoiceStage == 'CANCELED'"
                   >
-                    <i class=""></i>Refund
+                    <i class=""></i>Hoàn tiền
                   </button>
                 </el-dropdown-item>
                 <el-dropdown-item>
@@ -204,7 +200,7 @@
                     @click="handeCancel(scope.row)"
                     :disabled="scope.row.invoiceStage == 'CANCELED'"
                   >
-                    <i class=""></i> Cancel
+                    <i class=""></i> Hủy
                   </button>
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -284,14 +280,14 @@ export default {
       search: {
         value: "",
         class: "w-96",
-        placeholder: "Search by Name, Code,..",
+        placeholder: "Tìm kiếm theo Tên, Mã, ...",
       },
       typeInvoice: {
         value: "",
         options: [
-          { label: "All", value: 0 },
-          { label: "Receipt", value: 1 },
-          { label: "Export", value: 2 },
+          { label: "Tất cả", value: 0 },
+          { label: "Nhập hàng", value: 1 },
+          { label: "Bán hàng", value: 2 },
         ],
       },
       acquited: {
@@ -304,10 +300,10 @@ export default {
           rules: "required",
           classes: "w-full col-span-6",
           type: "text",
-          label: "Acquit Money",
+          label: "Tiền thanh toán",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Acquit Money...",
+          placeholder: "Nhập số tiền cần thanh toán...",
           maxlength: 100,
           error: "",
         },
@@ -321,10 +317,10 @@ export default {
           rules: "required",
           classes: "w-full col-span-6 !h-[64px]",
           type: "text",
-          label: "Reason",
+          label: "Lý do",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Reason...",
+          placeholder: "Nhập lý do hủy...",
           maxlength: 250,
           error: "",
         },
@@ -339,10 +335,10 @@ export default {
           rules: "required",
           classes: "w-full",
           type: "text",
-          label: "Money Refund",
+          label: "Hoàn trả",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Money Refund...",
+          placeholder: "Nhập số tiền hoàn trả...",
           maxlength: 50,
           error: "",
         },
@@ -352,10 +348,10 @@ export default {
           rules: "required",
           classes: "w-full col-span-6 !h-[64px]",
           type: "text",
-          label: "Reason",
+          label: "Lý do hoàn tiền",
           isRequired: "true",
           value: "",
-          placeholder: "Enter Reason...",
+          placeholder: "Nhập lý do hoàn trả...",
           maxlength: 250,
           error: "",
         },
@@ -396,7 +392,7 @@ export default {
       });
     },
     getInvoiceHistory() {
-      this.$router.push({ name: "invoice-history" });
+      this.$router.push({ name: "Lịch sử thay đổi hóa đơn" });
     },
     filterByWarehouse(item) {
       if (!item) {
@@ -436,7 +432,7 @@ export default {
       let me = this;
       // time biến thành tên của file
       const tempDateTime = new Date();
-      const fileName = `Invoice${tempDateTime.getTime()}.pdf`;
+      const fileName = `Hoa_Don_ ${tempDateTime.getTime()}.pdf`;
       //  Khai báo mảng để hứng dữ liệu nguyên vật liệu trả về
       await axios
         .get("http://localhost:9090/api/v1/invoice/generate/pdf", {
@@ -600,7 +596,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Updated successfully",
+              message: "Sửa thành công",
               type: "success",
             });
             this.handleGetInvoicesEx();

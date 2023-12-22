@@ -6,14 +6,14 @@
         <button
           class="ml-1 !bg-[#f4f3ef] border !border-gray-300 text-black font-medium py-2 px-4 rounded-sm"
         >
-          <span class="ti-filter"></span> Filter
+          <span class="ti-filter"></span> Tìm kiếm
         </button>
       </div>
       <div class="flex space-x-1">
         <el-select
           class="w-[180px]"
           v-model="warehouseData.value"
-          placeholder="Select Warehouse"
+          placeholder="Chọn cửa hàng"
           @change="filterByWarehouse($event)"
           clearable
         >
@@ -42,45 +42,30 @@
           sortable
           fixed
           prop="invoiceId"
-          label="Invoice ID"
+          label="Hóa đơn ID"
           width="150"
         >
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="createdAt"
-          label="Created At"
-          width="170"
-        >
+        <el-table-column sortable prop="createdAt" label="Ngày tạo" width="170">
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="editedAt"
-          label="Updated At"
-          width="170"
-        >
+        <el-table-column sortable prop="editedAt" label="Ngày sửa" width="170">
         </el-table-column>
 
         <el-table-column
           sortable
           prop="createdBy"
-          label="Created By"
+          label="Người tạo"
           width="170"
         >
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="editedBy"
-          label="Updated By"
-          width="170"
-        >
+        <el-table-column sortable prop="editedBy" label="Người sửa" width="170">
         </el-table-column>
 
-        <el-table-column sortable prop="name" label="Invoice Name" width="250">
+        <el-table-column sortable prop="name" label="Tên hóa đơn" width="250">
         </el-table-column>
-        <el-table-column sortable prop="code" label="Invoice Code" width="250">
+        <el-table-column sortable prop="code" label="Mã hóa đơn" width="250">
         </el-table-column>
-        <el-table-column sortable prop="" label="Customer Name" width="250">
+        <el-table-column sortable prop="" label="Khách hàng" width="250">
           <template slot-scope="scope">
             {{ scope.row.customer.fullName }}
           </template>
@@ -88,58 +73,58 @@
         <el-table-column
           sortable
           prop="typeInvoice"
-          label="Type Invoice"
+          label="Loại hóa đơn"
           width="150"
         >
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.actionType == 1 ? 'success' : 'primary'"
+              :type="scope.row.typeInvoice == 1 ? 'success' : 'primary'"
               disable-transitions
-              >{{ scope.row.actionType == 1 ? "RECEIPT" : "EXPORT" }}</el-tag
+              >{{
+                scope.row.typeInvoice == 1 ? "Nhập hàng" : "bán hàng"
+              }}</el-tag
             >
           </template>
         </el-table-column>
         <el-table-column
           sortable
           prop="invoiceStage"
-          label="Invoice's Status"
+          label="Trạng thái"
           width="200"
         >
         </el-table-column>
-        <el-table-column sortable prop="code" label="Customer Name" width="250">
-          <template slot-scope="scope">
-            {{ scope.row.customer.fullName }}
-          </template>
-        </el-table-column>
-
         <el-table-column
           sortable
           prop="totalPaid"
-          label="Total Payment"
+          label="Tổng tiền hóa đơn"
           width="200"
         >
         </el-table-column>
-        <el-table-column prop="moneyPaid" label="Money Paid" width="200">
+        <el-table-column prop="moneyPaid" label="Số tiền đã trả" width="200">
         </el-table-column>
-        <el-table-column prop="consignee" label="Consignee" width="200">
+        <el-table-column prop="consignee" label="Người nhận hàng" width="200">
         </el-table-column>
         <el-table-column
           prop="phoneNumberReceipt"
-          label="Phone Number Receipt"
+          label="SĐT Người nhận"
           width="200"
         >
         </el-table-column>
         <el-table-column
           prop="deliveryAddress"
-          label="Delivery Address"
+          label="Địa chỉ giao hàng"
           width="300"
         >
         </el-table-column>
-        <el-table-column prop="moneyRefund" label="Money Refund" width="200">
+        <el-table-column
+          prop="moneyRefund"
+          label="Số tiền hoàn trả"
+          width="200"
+        >
         </el-table-column>
-        <el-table-column prop="reason" label="Reason Refund" width="300">
+        <el-table-column prop="reason" label="Lý do hoàn trả" width="300">
         </el-table-column>
-        <el-table-column prop="reasonCancel" label="Reason Cancel" width="300">
+        <el-table-column prop="reasonCancel" label="Lý do hủy" width="300">
         </el-table-column>
       </el-table>
     </div>
@@ -179,8 +164,8 @@ export default {
         rules: "required",
         classes: "w-full",
         isRequired: "true",
-        placeholder: "Select Warehouse",
-        disabled:"non-disabled",
+        placeholder: "Chọn cửa hàng",
+        disabled: "non-disabled",
         error: "",
         value: "",
         options: [],
@@ -189,7 +174,7 @@ export default {
       search: {
         value: "",
         class: "w-96",
-        placeholder: "Search by Name, Code,..",
+        placeholder: "Tìm kiếm theo tên, mã, ...",
       },
       loadingTable: false,
       paginationPage: {
@@ -305,7 +290,6 @@ export default {
     if (!this.user.roles.includes("ADMIN")) {
       this.warehouseData.value = this.warehouse.warehouseId;
       this.warehouseData.disabled = "disabled";
-
     }
     await this.handleGetInvoices();
     await this.getWarehouseSel();

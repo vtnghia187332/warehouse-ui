@@ -1,7 +1,7 @@
 <template>
   <ValidationObserver v-slot="{ invalid }" ref="observer">
     <el-dialog
-      title="Conversation Unit"
+      title="Quy đổi đơn vị"
       :visible="dialogVisibleUnit"
       :before-close="handleCloseDialog"
       width="80%"
@@ -86,7 +86,7 @@ export default {
           rules: "",
           classes: "w-full col-span-6",
           type: "text",
-          label: "Single Unit",
+          label: "Đơn vị",
           isRequired: "false",
           value: "",
           valueTxt: "",
@@ -100,12 +100,12 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select Single Unit",
+          placeholder: "Chọn đơn vị quy đổi",
           error: "",
           value: "",
           valueTxt: "",
           disabled: "notDisabled",
-          label: "Conservation Unit",
+          label: "Đơn vị quy đổi",
           options: [],
         },
         unitStockDestination: {
@@ -114,10 +114,10 @@ export default {
           rules: "",
           classes: "w-full col-span-6",
           type: "text",
-          label: "Conservation Rate",
+          label: "Tỉ số",
           isRequired: "false",
           value: "",
-          placeholder: "Enter Conservation Rate...",
+          placeholder: "Nhập vào tỉ số...",
           error: "",
         },
         calUnit: {
@@ -126,12 +126,12 @@ export default {
           rules: "required",
           classes: "w-full",
           isRequired: "true",
-          placeholder: "Select Calculation",
+          placeholder: "Chọn phép tính",
           error: "",
           value: "",
           valueTxt: "",
           disabled: "notDisabled",
-          label: "Calculation",
+          label: "Phép tính",
           options: [
             {
               label: "+",
@@ -157,7 +157,7 @@ export default {
           rules: "",
           classes: "w-full col-span-6",
           type: "text",
-          label: "Description",
+          label: "Mô tả",
           isRequired: "false",
           value: this.description,
           placeholder: "",

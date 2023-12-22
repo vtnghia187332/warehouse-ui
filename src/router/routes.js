@@ -180,7 +180,7 @@ const routes = [
 
       {
         path: "/changepwd",
-        name: "changePwd",
+        name: "Thay đổi mật khẩu",
         component: ChangePwd,
       },
     ],

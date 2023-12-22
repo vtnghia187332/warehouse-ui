@@ -303,7 +303,7 @@
             </div>
           </div>
 
-          <FormCard title="Address" class="mb-3">
+          <FormCard title="Địa chỉ" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12">
@@ -345,11 +345,8 @@
           </FormCard>
           <div class="footer-btn-fixed flex justify-end p-2">
             <el-button @click="handleCancelSubmit">Thoát</el-button>
-            <el-button
-              @click="handleSubmit"
-              class="bg-blue-400"
-              type="primary"
-              >{{ warehouseId != 0 ? "Sửa" : "Thêm" }}</el-button
+            <el-button @click="handleSubmit" class="bg-blue-400" type="primary"
+              >Đồng ý</el-button
             >
           </div>
         </el-col>

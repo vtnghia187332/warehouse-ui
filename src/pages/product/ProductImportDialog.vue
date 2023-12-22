@@ -3,13 +3,13 @@
     <el-dialog
       v-show="this.step === 'IMPORTED'"
       :append-to-body="true"
-      title="Import Product"
+      title="Nhập khẩu Nguyên Vật Liệu"
       :before-close="handleCloseDialog"
       :visible="isOpenDialogImport"
     >
       <div class="flex">
         <el-button class="mb-2 ml-auto" @click="downloadFileTemplate"
-          >Download Template</el-button
+          >Tải file mẫu</el-button
         >
       </div>
       <el-upload
@@ -25,21 +25,21 @@
       >
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">
-          <b>Click or drag file to this area</b>
+          <b>Chọn hoặc kéo thả file tại đây</b>
         </div>
         <div class="el-upload__text">
-          Only .xls or .xlsx file format is supported.
+          chỉ file có đuôi .xls or .xlsx được hỗ trợ.
         </div>
-        <div class="el-upload__text">The maximum allow file size is 5MB</div>
+        <div class="el-upload__text">Kích thước lớn nhất của file 5MB</div>
       </el-upload>
       <span slot="footer" class="dialog-footer">
         <div class="flex justify-end border-spacing-1">
-          <el-button @click="handleCloseDialog">Cancel</el-button>
+          <el-button @click="handleCloseDialog">Thoát</el-button>
           <el-button
             :disabled="!this.dataImporting"
             @click="handleImportFunc"
             class="bg-blue-400 text-white"
-            >Import</el-button
+            >Nhập khẩu</el-button
           >
         </div>
       </span>
@@ -53,16 +53,17 @@
     >
       <div class="flex justify-center mt-4 mb-4">
         <div class="text-2xl">
-          Select
+          Chọn
           <span>
-            Product you want to <span class="underline">override</span></span
+            nguyên vật liệu mà bạn muốn
+            <span class="underline">ghi đè</span></span
           >
         </div>
       </div>
       <div class="flex justify-center mt-4 mb-4">
         <div class="text-center w-[403px]">
-          Found 1 item imported Product with the same Code, Name as the current
-          Product. Select new imported Product you want to override
+          Tìm thấy 1 nguyên vật liệu được nhập khẩu có thông tin giống với
+          nguyên vật liệu hiện tại. Chọn nguyên vật liệu mà bạn muốn ghi đè.
         </div>
       </div>
       <div class="mt-4 mb-4">
@@ -82,23 +83,19 @@
             <el-table-column
               fixed
               prop="productId"
-              label="Product ID"
+              label="Sản phẩm ID"
               width="150"
             >
             </el-table-column>
-            <el-table-column prop="code" label="Product Code" width="250">
+            <el-table-column prop="code" label="Mã sản phẩm" width="250">
             </el-table-column>
-            <el-table-column prop="name" label="Product Name" width="250">
+            <el-table-column prop="name" label="Tên sản phẩm" width="250">
             </el-table-column>
-            <el-table-column
-              prop="description"
-              label="Product Description"
-              width="250"
-            >
+            <el-table-column prop="description" label="Mô tả" width="250">
             </el-table-column>
-            <el-table-column prop="createdAt" label="Create Date" width="250">
+            <el-table-column prop="createdAt" label="Ngày tạo" width="250">
             </el-table-column>
-            <el-table-column prop="editedAt" label="Updated Date" width="250">
+            <el-table-column prop="editedAt" label="Ngày sửa" width="250">
             </el-table-column>
           </el-table>
         </div>
@@ -110,11 +107,11 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <div class="flex justify-end border-spacing-1">
-          <el-button @click="handleCancelConfirmDlg">Cancel</el-button>
+          <el-button @click="handleCancelConfirmDlg">Thoát</el-button>
           <el-button
             @click="handleContinueImport"
             class="bg-blue-400 text-white"
-            >Continue</el-button
+            >Tiếp tục</el-button
           >
         </div>
       </span>
@@ -138,14 +135,14 @@
           v-if="this.importError.numberSuccessItem.numItems > 0"
           class="text-2xl"
         >
-          Import successfully
+          Nhập khẩu thành công
         </h2>
-        <h2 v-else class="text-2xl">Import unsuccessfully</h2>
+        <h2 v-else class="text-2xl">Nhập khẩu không thành công</h2>
       </div>
       <div class="flex justify-center mb-4">
         <h2>
-          <span class="font-bold">{{ importError.fileName.join() }}</span> have
-          been uploaded and information has been update
+          <span class="font-bold">{{ importError.fileName.join() }}</span> đã
+          được nhập khẩu và thông tin đang được hệ thống xử lý
         </h2>
       </div>
       <div
@@ -160,7 +157,7 @@
                 ? this.importError.numberSuccessItem.numItems
                 : 0
             }}</span>
-            <span>item have been updated</span>
+            <span>nguyên vật liệu được cập nhật</span>
           </div>
         </div>
       </div>
@@ -176,15 +173,15 @@
                 <span class="ml-1 mr-1 text-red-400">{{
                   this.importError.numberErrItem.numItems
                 }}</span>
-                <span>item with an issue</span>
+                <span>thông tin nguyên vật liệu có lỗi</span>
               </div>
               <div class="text-red-300 font-medium text-xs">
-                Item with an issue will not be uploaded and save to servier.
-                Please solve these issues, and reupload file
+                Thông tin nguyên vật liệu gặp lỗi sẽ không được xử lý. Hãy sửa
+                lại thông tin và nhập khẩu lại
               </div>
             </div>
             <div class="">
-              <el-button plain @click="downloadErrorFile">Download</el-button>
+              <el-button plain @click="downloadErrorFile">Tải về</el-button>
             </div>
           </div>
         </div>
@@ -193,7 +190,7 @@
         <div class="flex justify-end border-spacing-1">
           <el-button @click="handleCloseDialog">Cancel</el-button>
           <el-button @click="reUploadFile" class="bg-blue-400 text-white"
-            >Reupload File</el-button
+            >Nhậu khẩu</el-button
           >
         </div>
       </span>
@@ -475,7 +472,7 @@ export default {
         });
     },
     handleCancelConfirmDlg() {
-      this.$confirm("Are you sure to close Confirm dialog?")
+      this.$confirm("Bạn có muốn thoát khỏi cửa sổ?")
         .then((_) => {
           this.step = "IMPORTED";
         })
@@ -495,19 +492,19 @@ export default {
     },
     handleCloseDialog() {
       if (this.dataImporting !== null) {
-        this.$confirm("Are you sure to close import dialog?")
+        this.$confirm("Bạn có muốn thoát khỏi cửa sổ?")
           .then((_) => {
             this.clearStateFile();
             this.step = "";
             this.$emit("update:isOpenDialogImport", false);
-            this.$router.push({ name: "product" });
+            this.$router.push({ name: "Danh sách Nguyên Vật Liệu" });
           })
           .catch((_) => {});
       } else {
         this.clearStateFile();
         this.step = "";
         this.$emit("update:isOpenDialogImport", false);
-        this.$router.push({ name: "product" });
+        this.$router.push({ name: "Danh sách Nguyên Vật Liệu" });
       }
     },
     clearStateFile() {

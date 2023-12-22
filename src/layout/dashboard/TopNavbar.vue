@@ -22,12 +22,12 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>
                 <button @click="handleLogout" class="!bg-[#fdfdfd] text-black">
-                  <i class=""></i>Log out
+                  <i class=""></i>Đăng xuất
                 </button>
               </el-dropdown-item>
               <el-dropdown-item>
                 <button @click="changePwd" class="!bg-[#fdfdfd] text-black">
-                  <i class=""></i>Change password
+                  <i class=""></i>Đổi mật khẩu
                 </button>
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -82,7 +82,7 @@ export default {
   methods: {
     ...mapActions(["updateUserDetail"]),
     changePwd() {
-      this.$router.push({ path: "/changepwd" });
+      this.$router.push({ name: "Thay đổi mật khẩu" });
     },
     async handleLogout() {
       await axios
@@ -95,7 +95,7 @@ export default {
             localStorage.removeItem("token");
             this.$message({
               showClose: true,
-              message: "You have been successfully log out of the system",
+              message: "Đăng xuất thành công",
               type: "success",
             });
             this.updateUserDetail(this.defaultUserDetail);

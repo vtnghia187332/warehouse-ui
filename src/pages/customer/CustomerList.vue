@@ -38,19 +38,9 @@
           width="150"
         >
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="createdAt"
-          label="Ngày tạo"
-          width="250"
-        >
+        <el-table-column sortable prop="createdAt" label="Ngày tạo" width="250">
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="editedAt"
-          label="Ngày sửa"
-          width="250"
-        >
+        <el-table-column sortable prop="editedAt" label="Ngày sửa" width="250">
         </el-table-column>
         <el-table-column sortable prop="fullName" label="Họ & Tên" width="250">
         </el-table-column>
@@ -77,12 +67,7 @@
         </el-table-column>
         <el-table-column sortable prop="email" label="Email" width="250">
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="taxNumber"
-          label="Số thuế"
-          width="100"
-        >
+        <el-table-column sortable prop="taxNumber" label="Số thuế" width="100">
         </el-table-column>
         <el-table-column
           sortable
@@ -90,6 +75,20 @@
           label="Địa chỉ"
           width="350"
         >
+        </el-table-column>
+        <el-table-column
+          sortable
+          prop="type"
+          label="Tệp khách hàng"
+          width="160"
+        >
+          <template slot-scope="scope">
+            <el-tag
+              :type="scope.row.type == 0 ? 'success' : 'primary'"
+              disable-transitions
+              >{{ scope.row.type == 0 ? "Nhập hàng" : "Bán hàng" }}</el-tag
+            >
+          </template>
         </el-table-column>
       </el-table>
     </div>

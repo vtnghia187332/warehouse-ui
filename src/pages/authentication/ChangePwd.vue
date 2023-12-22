@@ -4,7 +4,7 @@
       <div class="m-auto">
         <el-row class="pt-4 pl-3 pr-3 !w-[500px]">
           <el-col class="forms grow">
-            <FormCard title="Change Password" class="mb-3">
+            <FormCard title="Thay đổi mật khẩu" class="mb-3">
               <template v-slot:content>
                 <div class="grid grid-cols-12 gap-x-6">
                   <div class="col-span-12">
@@ -32,7 +32,7 @@
                     @click="handleSubmit"
                     class="bg-blue-400 w-full"
                     type="primary"
-                    >Submit</el-button
+                    >Đồng ý</el-button
                   >
                 </div>
               </template>
@@ -65,8 +65,8 @@ export default {
           type: "password",
           isRequired: "true",
           value: "",
-          label: "Old Password",
-          placeholder: "Enter Old Password...",
+          label: "Mật khẩu cũ",
+          placeholder: "Nhập mật khẩu cũ...",
           error: "",
         },
         newPwd: {
@@ -77,8 +77,8 @@ export default {
           type: "password",
           isRequired: "true",
           value: "",
-          label: "New Password",
-          placeholder: "Enter New Password...",
+          label: "Mật khẩu mới",
+          placeholder: "Nhập mật khẩu mới...",
           error: "",
         },
         conNewPwd: {
@@ -89,8 +89,8 @@ export default {
           type: "password",
           isRequired: "true",
           value: "",
-          label: "Confirm New Password",
-          placeholder: "Enter Confirm New Password...",
+          label: "Xác nhận mật khẩu mới",
+          placeholder: "Nhập mật khẩu mới...",
           error: "",
         },
       },
@@ -129,7 +129,7 @@ export default {
             me.$router.push({ path: "/dashboard" });
             me.$message({
               showClose: true,
-              message: "Updated Successfully",
+              message: "Thay đổi thành công",
               type: "success",
             });
           }

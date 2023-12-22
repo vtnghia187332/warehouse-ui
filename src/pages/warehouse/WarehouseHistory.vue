@@ -71,22 +71,70 @@
           </template>
         </el-table-column>
         <el-table-column prop="openWorkingHour" label="Thứ ba" width="300">
-          <template slot-scope="scope"> </template>
+          <template slot-scope="scope">
+            {{
+              scope.row.openWorkingHour
+                ? scope.row.openWorkingHour.tuesdayStart +
+                  " - " +
+                  scope.row.openWorkingHour.tuesdayEnd
+                : ""
+            }}
+          </template>
         </el-table-column>
         <el-table-column prop="openWorkingHour" label="Thứ tư" width="300">
-          <template slot-scope="scope"> </template>
+          <template slot-scope="scope">
+            {{
+              scope.row.openWorkingHour
+                ? scope.row.openWorkingHour.wednesdayStart +
+                  " - " +
+                  scope.row.openWorkingHour.wednesdayEnd
+                : ""
+            }}
+          </template>
         </el-table-column>
         <el-table-column prop="openWorkingHour" label="Thứ năm" width="300">
-          <template slot-scope="scope"> </template>
+          <template slot-scope="scope">
+            {{
+              scope.row.openWorkingHour
+                ? scope.row.openWorkingHour.thursdayStart +
+                  " - " +
+                  scope.row.openWorkingHour.thursdayEnd
+                : ""
+            }}
+          </template>
         </el-table-column>
         <el-table-column prop="openWorkingHour" label="Thứ sáu" width="300">
-          <template slot-scope="scope"> </template>
+          <template slot-scope="scope">
+            {{
+              scope.row.openWorkingHour
+                ? scope.row.openWorkingHour.fridayStart +
+                  " - " +
+                  scope.row.openWorkingHour.fridayEnd
+                : ""
+            }}
+          </template>
         </el-table-column>
         <el-table-column prop="openWorkingHour" label="Thứ bảy" width="300">
-          <template slot-scope="scope"> </template>
+          <template slot-scope="scope">
+            {{
+              scope.row.openWorkingHour
+                ? scope.row.openWorkingHour.saturdayStart +
+                  " - " +
+                  scope.row.openWorkingHour.saturdayEnd
+                : ""
+            }}
+          </template>
         </el-table-column>
         <el-table-column prop="openWorkingHour" label="Chủ nhật" width="300">
-          <template slot-scope="scope"> </template>
+          <template slot-scope="scope">
+            {{
+              scope.row.openWorkingHour
+                ? scope.row.openWorkingHour.sundayStart +
+                  " - " +
+                  scope.row.openWorkingHour.sundayEnd
+                : ""
+            }}
+          </template>
         </el-table-column>
 
         <el-table-column
@@ -295,9 +343,15 @@ import axios from "axios";
 import BasePagination from "@/components/Pagination/BasePagination";
 import BaseSearch from "../../components/Inputs/BaseSearch.vue";
 import LoadingPage from "../../components/Cards/LoadingPage.vue";
+import moment from "moment";
 
 export default {
   components: { BaseSearch, BasePagination, LoadingPage },
+  computed: {
+    moment() {
+      return moment;
+    },
+  },
   data() {
     return {
       loadingTable: false,

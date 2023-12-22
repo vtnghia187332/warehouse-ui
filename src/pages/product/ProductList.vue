@@ -341,7 +341,7 @@ export default {
         };
       }
       const tempDateTime = new Date();
-      const fileName = `Export_Product_${tempDateTime.getTime()}.xlsx`;
+      const fileName = `Nguyen_Vat_lieu_${tempDateTime.getTime()}.xlsx`;
       await axios
         .get("http://localhost:9090/api/v1/product/export", {
           responseType: "blob",

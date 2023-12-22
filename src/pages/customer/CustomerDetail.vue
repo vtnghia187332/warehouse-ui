@@ -3,10 +3,52 @@
     <div class="mb-16">
       <el-row class="pt-4 pl-3 pr-3" :gutter="20">
         <el-col :span="18" class="forms grow">
-          <FormCard title="Thông tin khách hàng" class="mb-3">
+          <FormCard title="Khách hàng" class="mb-3">
+            <template v-slot:content>
+              <div class="">
+                <el-tabs v-model="activeName">
+                  <el-tab-pane label="Cá nhân" name="first">
+                    <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                      <div class="col-span-6">
+                        <BaseInput
+                          :field="customer.fullName"
+                          v-model="customer.fullName.value"
+                        />
+                      </div>
+                      <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                        <div class="col-span-6">
+                          <DatePicker
+                            :field="customer.birthDay"
+                            v-model="customer.birthDay.value"
+                          />
+                        </div>
+                        <div class="col-span-6">
+                          <BaseSelection
+                            :field="customer.title"
+                            v-model="customer.title.value"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </el-tab-pane>
+                  <el-tab-pane label="Doanh nghiệp" name="second">
+                    <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                      <div class="col-span-6">
+                        <BaseInput
+                          :field="customer.companyName"
+                          v-model="customer.companyName.value"
+                        />
+                      </div>
+                    </div>
+                  </el-tab-pane>
+                </el-tabs>
+              </div>
+            </template>
+          </FormCard>
+          <FormCard title="Thông tin chung" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
-                <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                <!-- <div class="col-span-12 grid grid-cols-12 gap-x-6">
                   <div class="col-span-6">
                     <BaseInput
                       :field="customer.fullName"
@@ -19,7 +61,7 @@
                       v-model="customer.companyName.value"
                     />
                   </div>
-                </div>
+                </div> -->
 
                 <div class="col-span-12 grid grid-cols-12 gap-x-6">
                   <div class="col-span-6">
@@ -43,20 +85,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-span-12 grid grid-cols-12 gap-x-6">
-                  <div class="col-span-6">
-                    <DatePicker
-                      :field="customer.birthDay"
-                      v-model="customer.birthDay.value"
-                    />
-                  </div>
-                  <div class="col-span-6">
-                    <BaseSelection
-                      :field="customer.title"
-                      v-model="customer.title.value"
-                    />
-                  </div>
-                </div>
+
                 <div class="col-span-12 grid grid-cols-12 gap-x-6">
                   <div class="col-span-6">
                     <BaseSelection
@@ -123,6 +152,15 @@
                   />
                 </div>
               </div>
+              <div class="grid grid-cols-12 gap-x-6 border-b border-gray-200">
+                <div class="col-span-12">
+                  <BaseSelection
+                    @getValue=""
+                    v-model="customer.type.value"
+                    :field="customer.type"
+                  />
+                </div>
+              </div>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12">
                   <BaseSelection
@@ -139,7 +177,6 @@
             <el-button
               @click="handleSubmit"
               class="bg-blue-400"
-              :disabled="invalid"
               type="primary"
               >{{ customerPId != 0 ? "Sửa" : "Thêm" }}</el-button
             >
@@ -170,16 +207,17 @@ export default {
   },
   data() {
     return {
+      activeName: "first",
       customerPId: 0,
       customer: {
         fullName: {
           id: "fullname",
           name: "Full Name",
-          rules: "",
+          rules: "required",
           classes: "w-full col-span-6",
           type: "text",
           label: "Họ & Tên",
-          isRequired: "",
+          isRequired: "true",
           value: "",
           placeholder: "Nhập họ & tên...",
           maxlength: 50,
@@ -188,11 +226,11 @@ export default {
         companyName: {
           id: "companyName",
           name: "Company's name",
-          rules: "",
+          rules: "required",
           classes: "w-full col-span-6",
           type: "text",
           label: "Công ty / doanh nghiệp",
-          isRequired: "",
+          isRequired: "true",
           value: "",
           placeholder: "Nhập vào công ty / doanh nghiệp...",
           maxlength: 50,
@@ -267,15 +305,38 @@ export default {
           options: [
             {
               value: 1,
-              label: "Mr",
+              label: "Nam",
             },
             {
               value: 2,
-              label: "Mrs",
+              label: "Nữ",
             },
             {
               value: 3,
-              label: "Other",
+              label: "Khác",
+            },
+          ],
+        },
+        type: {
+          id: "type",
+          name: "type",
+          rules: "required",
+          classes: "w-full",
+          type: "text",
+          label: "Tệp khách hàng",
+          isRequired: "true",
+          value: "",
+          placeholder: "Chọn tệp khách hàng...",
+          maxlength: 50,
+          error: "",
+          options: [
+            {
+              value: 0,
+              label: "Nhập hàng",
+            },
+            {
+              value: 1,
+              label: "Mua hàng",
             },
           ],
         },
@@ -298,7 +359,7 @@ export default {
           rules: "",
           classes: "w-full !h-[135px]",
           type: "text",
-          label: "Note",
+          label: "Ghi chú",
           isRequired: "",
           value: "",
           placeholder: "Nhập ghi chú...",

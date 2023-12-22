@@ -8,8 +8,7 @@
           v-model="warehouseData.value"
           :field="warehouseData"
         />
-        <!-- <DatePicker :field="dateTo" v-model="dateTo.value" />
-        <DatePicker :field="dateFrom" v-model="dateFrom.value" /> -->
+        <DatePicker :field="dateFrom" v-model="dateFrom.value" />
         <div class="mb-2">
           <label class="!font-bold block"> Ngày </label>
           <el-date-picker
@@ -48,7 +47,7 @@
           </div>
           <div class="col-span-4">
             <div class="font-bold text-blue-600/100">Tổng tiền trả lại</div>
-            <div>$ {{ addCommas(detail.totalRefundPrice) }}</div>
+            <div>{{ addCommas(detail.totalRefundPrice) }} VNĐ</div>
           </div>
         </div>
 
@@ -58,7 +57,7 @@
           </div>
           <div class="col-span-4">
             <div class="font-bold text-blue-600/100">Giảm giá</div>
-            <div>$ {{ addCommas(detail.totalDiscountPrice) }}</div>
+            <div>$ {{ addCommas(detail.totalDiscountPrice) }} VNĐ</div>
           </div>
         </div>
 
@@ -68,7 +67,7 @@
           </div>
           <div class="col-span-4">
             <div class="font-bold text-blue-600/100">Tiền thuế</div>
-            <div>$ {{ addCommas(detail.totalTaxPrice) }}</div>
+            <div>$ {{ addCommas(detail.totalTaxPrice) }} VNĐ</div>
           </div>
         </div>
 
@@ -78,7 +77,7 @@
           </div>
           <div class="col-span-4">
             <div class="font-bold text-blue-600/100">Doanh thu trước thuế</div>
-            <div>$ {{ addCommas(detail.totalRevenueWithTax) }}</div>
+            <div>$ {{ addCommas(detail.totalRevenueWithTax) }} VNĐ</div>
           </div>
         </div>
       </div>
@@ -149,28 +148,32 @@
             <div class="grid grid-cols-6 gap-4 mt-2">
               <el-col class="col-span-4">Hóa đơn xuất</el-col>
               <el-col class="">{{ detail.numberInvoiceInDebtExport }}</el-col>
-              <el-col class="">{{ detail.totalInDebtExport }}</el-col>
+              <el-col class="">{{ detail.totalInDebtExport }} VNĐ</el-col>
             </div>
             <div class="grid grid-cols-6 gap-4 mt-2">
               <el-col class="col-span-4">Hóa đơn nhập</el-col>
               <el-col class="">{{ detail.numberInvoiceInDebtReceipt }}</el-col>
-              <el-col class="">{{ detail.totalInDebtReceipt }}</el-col>
+              <el-col class="">{{ detail.totalInDebtReceipt }} VNĐ</el-col>
             </div>
           </el-card>
 
           <div class="font-semibold">Nguyên vật liệu bán chạy</div>
           <el-card shadow="always">
             <div class="grid grid-cols-5 gap-4 border-b-2 border-black-900">
-              <el-col class="col-span-4 font-semibold">Tên Nguyên vật liệu</el-col>
-              <el-col class="font-semibold">Số lượng</el-col>
+              <el-col class="col-span-3 font-semibold"
+                >Tên Nguyên vật liệu</el-col
+              >
+              <el-col class="col-span-1 font-semibold">Số lượng</el-col>
+              <el-col class="col-span-1 font-semibold">Đơn vị</el-col>
             </div>
             <div
               class="grid grid-cols-5 gap-4 mt-2"
               v-for="(item, index) in highestProductSells"
               :key="index"
             >
-              <el-col class="col-span-4 text-ellipsis">{{ item.name }}</el-col>
-              <el-col class="">{{ item.quantity }}</el-col>
+              <el-col class="col-span-3 text-ellipsis">{{ item.name }}</el-col>
+              <el-col class="col-span-1">{{ item.quantity }}</el-col>
+              <el-col class="col-span-1">{{ item.singleUnit }}</el-col>
             </div>
           </el-card>
         </div>
@@ -283,8 +286,8 @@ export default {
             type: "shadow",
           },
           formatter: (params) => {
-            return `Receipt Total: $<span />${params[0].value}<br />
-                Export Total: $<span />${params[1].value}<span />`;
+            return `Tổng nhập: <span />${params[0].value} VNĐ<br />
+                Tổng bán: <span />${params[1].value} VNĐ<span />`;
           },
         },
         series: [],
@@ -293,7 +296,7 @@ export default {
       paymentMethodsStas: {
         tooltip: {
           trigger: "item",
-          formatter: "{b} : ${c} - ({d}%)",
+          formatter: "{b} : {c} VNĐ - ({d}%)",
         },
         series: [
           {
