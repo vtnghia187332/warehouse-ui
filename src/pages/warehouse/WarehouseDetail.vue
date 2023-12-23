@@ -769,7 +769,6 @@ export default {
           this.specialDayOff.push({ ...param, id: this.specialDayOff.length });
         }
       }
-      console.log(this.specialDayOn, this.specialDayOff);
     },
     initKeyContactForm(data) {
       this.$refs["key-contact"].initKeyContact(data);

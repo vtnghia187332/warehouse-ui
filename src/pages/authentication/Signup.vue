@@ -395,7 +395,6 @@ export default {
           ).format("YYYY-MM-DD HH:mm:ss");
         }
       });
-      console.log(data, "data");
       if (this.userInfor.password.value !== this.userInfor.confPassword.value) {
         this.$refs.observerAdd.setErrors({
           password: "Password and Confirm Password do not match",

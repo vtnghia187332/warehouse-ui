@@ -67,7 +67,19 @@
         </el-table-column>
         <el-table-column sortable prop="email" label="Email" width="250">
         </el-table-column>
-        <el-table-column sortable prop="taxNumber" label="Số thuế" width="100">
+        <el-table-column
+          sortable
+          prop="taxNumber"
+          label="MST Cá nhân"
+          width="150"
+        >
+        </el-table-column>
+        <el-table-column
+          sortable
+          prop="taxNumberEnter"
+          label="MST Doanh nghiệp"
+          width="180"
+        >
         </el-table-column>
         <el-table-column
           sortable

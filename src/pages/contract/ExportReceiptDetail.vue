@@ -419,7 +419,7 @@ export default {
           type: "EDIT",
         };
         this.$router.push({
-          name: "payment",
+          name: "Thanh toán",
           params: { data },
         });
       }
@@ -501,7 +501,7 @@ export default {
                   type: "EDIT",
                 };
                 this.$router.push({
-                  name: "payment",
+                  name: "Hóa Đơn",
                   params: { data },
                 });
               }
@@ -540,10 +540,19 @@ export default {
               this.invoiceId = response.data.items;
               if (type === "CREATED") {
                 this.$router.push({ name: "Danh sách phiếu thu-chi" });
+              } else {
+                let data = {
+                  id: this.invoiceId,
+                  type: "EDIT",
+                };
+                this.$router.push({
+                  name: "Thanh toán",
+                  params: { data },
+                });
               }
               this.$message({
                 showClose: true,
-                message: "Thêm thành công",
+                message: "Thêm mới thành công",
                 type: "success",
               });
             }

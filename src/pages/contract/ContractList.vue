@@ -121,6 +121,11 @@
             {{ scope.row.customer.fullName }}
           </template>
         </el-table-column>
+        <el-table-column sortable prop="" label="Doanh nghiệp" width="250">
+          <template slot-scope="scope">
+            {{ scope.row.customer.companyName }}
+          </template>
+        </el-table-column>
         <el-table-column
           sortable
           prop="invoiceStage"
@@ -430,6 +435,16 @@ export default {
     },
     async handeExportPDF(item) {
       let me = this;
+      let params = {
+        warehouse: me.warehouse.warehouseId,
+        invoiceId: item.invoiceId,
+      };
+      if (!me.warehouse?.warehouseId && me.user.roles.includes("ADMIN")) {
+        params = {
+          ...params,
+          warehouseChainId: me.warehouseChain.warehouseChainId,
+        };
+      }
       // time biến thành tên của file
       const tempDateTime = new Date();
       const fileName = `Hoa_Don_ ${tempDateTime.getTime()}.pdf`;
@@ -437,9 +452,7 @@ export default {
       await axios
         .get("http://localhost:9090/api/v1/invoice/generate/pdf", {
           responseType: "blob",
-          params: {
-            invoiceId: item.invoiceId,
-          },
+          params,
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
           contentType: "application/json-patch+json",
         })
@@ -575,6 +588,7 @@ export default {
       this.refund.invoiceId = row.invoiceId;
       this.refund.totalInvoicePaid = row.totalPaid;
       this.refund.moneyRefund.value = 0;
+      this.refund.reason.value = "";
       this.dialogVisible = true;
     },
     handleUpdateContract(row) {

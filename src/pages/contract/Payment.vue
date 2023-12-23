@@ -79,26 +79,26 @@
               <div class="bg-white radius-shadow_add p-3 flex justify-end">
                 <div class="!w-96 !mb-1">
                   <div class="flex justify-between font-bold text-base">
-                    <div>Subtotal:</div>
-                    <div class="">${{ subTotal }}</div>
+                    <div>Tổng tiền hàng:</div>
+                    <div class="">{{ subTotal }} VNĐ</div>
                   </div>
                   <div class="flex justify-between font-bold text-base">
-                    <div>Shipping:</div>
-                    <div class="">${{ this.order.shippingFee.value }}</div>
+                    <div>Vận chuyển:</div>
+                    <div class="">{{ this.order.shippingFee.value }} VNĐ</div>
                   </div>
                   <div class="flex justify-between font-bold text-base">
-                    <div>Discount:</div>
+                    <div>Giảm giá:</div>
                     <div class="">{{ this.order.discount.value }}%</div>
                   </div>
                   <div class="flex justify-between font-bold text-base">
-                    <div>Tax:</div>
+                    <div>Thuế:</div>
                     <div class="">{{ this.order.taxPercentage.value }}%</div>
                   </div>
 
                   <div class="flex justify-between font-bold text-2xl">
-                    <div>Total:</div>
+                    <div>Tổng thanh toán:</div>
                     <div class="">
-                      ${{
+                      {{
                         calMoneyPaid(
                           subTotal,
                           order.discount.value,
@@ -106,6 +106,7 @@
                           order.taxPercentage.value
                         )
                       }}
+                      VNĐ
                     </div>
                   </div>
                 </div>
@@ -158,7 +159,7 @@
               </div>
             </template>
           </FormCard>
-          <FormCard title="Payment money" class="mb-3">
+          <FormCard title="Thanh toán" class="mb-3">
             <template v-slot:content>
               <div class="col-span-12 grid grid-cols-12 gap-x-6">
                 <div class="col-span-6">
@@ -590,6 +591,7 @@ export default {
               opt.label == item.singleUnit || opt.value == item.singleUnit
           ).value || "";
       });
+
       if (this.$route.params.data.type === "EDIT") {
         this.handleCheckOutOder(order);
       }
@@ -607,10 +609,10 @@ export default {
           if (response.status === 200) {
             me.$message({
               showClose: true,
-              message: "Purchase was successful",
+              message: "Thanh toán thành công",
               type: "success",
             });
-            me.$router.push({ name: "invoice" });
+            me.$router.push({ name: "Hóa Đơn" });
             me.loadingPageDetail = false;
           }
         })
@@ -652,8 +654,18 @@ export default {
             if (res.status === 200) {
               me.materials = res.data.items["productInvoices"];
               if (res.data.items["typeInvoice"] == 2) {
-                me.customer.fullName.value =
-                  res.data.items["customer"].fullName;
+                if (res.data.items["customer"].fullName) {
+                  me.customer.fullName.value =
+                    res.data.items["customer"].fullName;
+                  me.order.consignee.value =
+                    res.data.items["customer"].fullName;
+                } else {
+                  me.customer.fullName.value =
+                    res.data.items["customer"].companyName;
+                  me.order.consignee.value =
+                    res.data.items["customer"].companyName;
+                }
+
                 me.order.deliveryAddress.value =
                   res.data.items["customer"].detailAddress +
                   ", " +
@@ -664,7 +676,6 @@ export default {
                   res.data.items["customer"].district +
                   ", " +
                   res.data.items["customer"].subDistrict;
-                me.order.consignee.value = res.data.items["customer"].fullName;
                 me.order.phoneNumberReceipt.value =
                   res.data.items["customer"].mobilePhone;
                 me.materials.forEach((item) => {
@@ -675,7 +686,6 @@ export default {
               } else if (res.data.items["typeInvoice"] == 1) {
                 me.customer.fullName.value =
                   res.data.items["customer"].fullName;
-                console.log(res.data.items["deliveryAddress"], "aaa");
                 if (res.data.items["deliveryAddress"]) {
                   me.order.deliveryAddress.value =
                     res.data.items["deliveryAddress"];

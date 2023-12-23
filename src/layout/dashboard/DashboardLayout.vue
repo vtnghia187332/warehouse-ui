@@ -93,7 +93,7 @@ export default {
           localStorage.removeItem("token");
           this.$message({
             showClose: true,
-            message: "Your session has expired. Please login again!",
+            message: "Phiên làm việc đã hết. Mời bạn đăng nhập lại",
             type: "warning",
           });
           this.updateUserDetail(this.defaultUserDetail);

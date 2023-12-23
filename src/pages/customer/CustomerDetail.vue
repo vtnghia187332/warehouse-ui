@@ -9,11 +9,19 @@
                 <el-tabs v-model="activeName">
                   <el-tab-pane label="Cá nhân" name="first">
                     <div class="col-span-12 grid grid-cols-12 gap-x-6">
-                      <div class="col-span-6">
-                        <BaseInput
-                          :field="customer.fullName"
-                          v-model="customer.fullName.value"
-                        />
+                      <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                        <div class="col-span-6">
+                          <BaseInput
+                            :field="customer.fullName"
+                            v-model="customer.fullName.value"
+                          />
+                        </div>
+                        <div class="col-span-6">
+                          <BaseInput
+                            :field="customer.taxNumber"
+                            v-model="customer.taxNumber.value"
+                          />
+                        </div>
                       </div>
                       <div class="col-span-12 grid grid-cols-12 gap-x-6">
                         <div class="col-span-6">
@@ -39,6 +47,12 @@
                           v-model="customer.companyName.value"
                         />
                       </div>
+                      <div class="col-span-6">
+                        <BaseInput
+                          :field="customer.taxNumberEnter"
+                          v-model="customer.taxNumberEnter.value"
+                        />
+                      </div>
                     </div>
                   </el-tab-pane>
                 </el-tabs>
@@ -48,21 +62,6 @@
           <FormCard title="Thông tin chung" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
-                <!-- <div class="col-span-12 grid grid-cols-12 gap-x-6">
-                  <div class="col-span-6">
-                    <BaseInput
-                      :field="customer.fullName"
-                      v-model="customer.fullName.value"
-                    />
-                  </div>
-                  <div class="col-span-6">
-                    <BaseInput
-                      :field="customer.companyName"
-                      v-model="customer.companyName.value"
-                    />
-                  </div>
-                </div> -->
-
                 <div class="col-span-12 grid grid-cols-12 gap-x-6">
                   <div class="col-span-6">
                     <BaseInput
@@ -74,14 +73,6 @@
                     <BaseInput
                       :field="customer.email"
                       v-model="customer.email.value"
-                    />
-                  </div>
-                </div>
-                <div class="col-span-12 grid grid-cols-12 gap-x-6">
-                  <div class="col-span-6">
-                    <BaseInput
-                      :field="customer.taxNumber"
-                      v-model="customer.taxNumber.value"
                     />
                   </div>
                 </div>
@@ -242,10 +233,23 @@ export default {
           rules: "",
           classes: "w-full col-span-6",
           type: "text",
-          label: "Mã số thuế",
+          label: "Mã số thuế Cá nhân",
           isRequired: "",
           value: "",
-          placeholder: "Nhập vào mã số thuế...",
+          placeholder: "Nhập vào mã số thuế cá nhân...",
+          maxlength: 20,
+          error: "",
+        },
+        taxNumberEnter: {
+          id: "taxNumberEnter",
+          name: "Tax Number For",
+          rules: "required",
+          classes: "w-full col-span-6",
+          type: "text",
+          label: "Mã số thuế Doanh nghiệp",
+          isRequired: "true",
+          value: "",
+          placeholder: "Nhập vào Mã số thuế Doanh nghiệp...",
           maxlength: 20,
           error: "",
         },
@@ -654,6 +658,9 @@ export default {
                       opt.value ==
                         res.data.items.warehouseDetailRes?.warehouseId
                   ).value || "";
+              }
+              if (!this.customer.fullName.value) {
+                this.activeName = "second";
               }
             }
           })

@@ -36,7 +36,7 @@
           />
         </div>
         <div class="col-span-2">
-          <label class="!font-bold block"> Description </label>
+          <label class="!font-bold block"> Mô tả </label>
           <input
             :value="description"
             class="p-2 pl-3 relative border rounded-sm w-full focus:!border-gray-700 focus:!ring-gray-700"
@@ -45,13 +45,13 @@
       </div>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleCloseDialog">Cancel</el-button>
+        <el-button @click="handleCloseDialog">Huỷ</el-button>
         <el-button
           :disabled="invalid"
           type="primary"
           class="bg-blue-300"
           @click="handleData"
-          >Confirm</el-button
+          >Xác nhận</el-button
         >
       </span>
     </el-dialog>

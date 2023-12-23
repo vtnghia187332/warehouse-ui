@@ -468,9 +468,9 @@ export default {
           id: "warehouseId",
           baseId: 0,
           name: "warehouseId",
-          rules: "",
+          rules: "required",
           classes: "w-full",
-          isRequired: "",
+          isRequired: "true",
           placeholder: "Chọn cửa hàng",
           error: "",
           value: "",
@@ -734,6 +734,13 @@ export default {
         });
     },
     handleSubmit() {
+      if(!this.warehouseId.value){
+        this.$message({
+            showClose: true,
+            message: "Bắt buộc nhập cửa hàng",
+            type: "error",
+          });
+      }
       if (this.units?.length > 0) {
         this.units.forEach((item) => {
           item.unitOriginId =
