@@ -556,6 +556,26 @@ export default {
     },
     ...mapGetters(["user", "warehouse", "warehouseChain"]),
   },
+  watch: {
+    "product.importPrice.value": function (newValue, oldvalue) {
+      if (newValue) {
+        const result = newValue
+          .toString()
+          .replace(/\D/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        this.$nextTick(() => (this.product.importPrice.value = result));
+      }
+    },
+    "product.exportPrice.value": function (newValue, oldvalue) {
+      if (newValue) {
+        const result = newValue
+          .toString()
+          .replace(/\D/g, "")
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        this.$nextTick(() => (this.product.exportPrice.value = result));
+      }
+    },
+  },
   methods: {
     ...mapMutations(["setUserDetail"]),
     ...mapActions(["updateUserDetail"]),
@@ -761,6 +781,16 @@ export default {
           }
         }
       });
+      if (productDetail.importPrice) {
+        productDetail.importPrice = Number(
+          productDetail.importPrice.replace(/[^0-9\.-]+/g, "")
+        );
+      }
+      if (productDetail.exportPrice) {
+        productDetail.exportPrice = Number(
+          productDetail.exportPrice.replace(/[^0-9\.-]+/g, "")
+        );
+      }
       const productDetailForm = this.transformInToFormObject(productDetail);
       if (this.productPhotos[0]) {
         productDetailForm.append("image", this.productPhotos[0].raw);

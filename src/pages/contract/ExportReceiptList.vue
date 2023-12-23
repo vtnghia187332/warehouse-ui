@@ -211,7 +211,7 @@ export default {
         type: "EDIT",
       };
       this.$router.push({
-        name: "payment", //use name for router push
+        name: "Thanh toán", //use name for router push
         params: { data },
       });
     },

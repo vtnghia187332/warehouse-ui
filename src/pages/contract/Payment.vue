@@ -3,11 +3,11 @@
     <loading-page v-show="loadingPageDetail"></loading-page>
     <div v-show="!loadingPageDetail">
       <div class="font-semibold text-2xl pl-3">
-        {{ typeInvoice == 1 ? "Receipt Order" : "Export Order" }}
+        {{ typeInvoice == 1 ? "Hoá đơn nhập hàng" : "Hoá đơn bán hàng" }}
       </div>
       <el-row class="pt-4 pl-3 pr-3 !ml-1 !mr-1" :gutter="24">
         <el-col :span="12">
-          <FormCard title="Order's Information" class="mb-3">
+          <FormCard title="Thông tin nguyên vật liệu" class="mb-3">
             <template v-slot:content>
               <div class="custom-css">
                 <el-table
@@ -17,17 +17,37 @@
                   @selection-change=""
                   height="497"
                 >
-                  <el-table-column prop="name" label="Product" width="350">
+                  <el-table-column
+                    prop="name"
+                    label="Nguyên vật liệu"
+                    width="350"
+                  >
                   </el-table-column>
-                  <el-table-column prop="quantity" label="Quantity" width="80">
+                  <el-table-column prop="name" label="Đơn giá(VNĐ)" width="130">
+                    <template slot-scope="scope">
+                      {{
+                        typeInvoice == 1
+                          ? scope.row.importPrice
+                          : scope.row.exportPrice
+                      }}
+                    </template>
                   </el-table-column>
-                  <el-table-column prop="singleUnit" label="Unit" width="100">
+                  <el-table-column prop="quantity" label="Số lượng" width="100">
+                  </el-table-column>
+                  <el-table-column prop="singleUnit" label="ĐVT" width="100">
                   </el-table-column>
                   <el-table-column
                     prop="exportPrice"
-                    label="Price($)"
+                    label="Thành tiền(VNĐ)"
                     width="150"
                   >
+                    <template slot-scope="scope">
+                      {{
+                        typeInvoice == 1
+                          ? scope.row.importPrice * scope.row.quantity
+                          : scope.row.exportPrice * scope.row.quantity
+                      }}
+                    </template>
                   </el-table-column>
                 </el-table>
               </div>
@@ -94,7 +114,7 @@
           </el-row>
         </el-col>
         <el-col :span="12">
-          <FormCard title="Customer's Information" class="mb-3">
+          <FormCard title="Thông tin khách hàng" class="mb-3">
             <template v-slot:content>
               <div class="grid grid-cols-12 gap-x-6">
                 <div class="col-span-12">
@@ -112,7 +132,7 @@
               </div>
             </template>
           </FormCard>
-          <FormCard title="Delivery" class="mb-3">
+          <FormCard title="Địa chỉ giao hàng" class="mb-3">
             <template v-slot:content>
               <div class="col-span-12 grid grid-cols-12 gap-x-6">
                 <div class="col-span-6">
@@ -334,7 +354,7 @@ export default {
           classes: "w-full col-span-6",
           disabled: true,
           type: "text",
-          label: "Full Name",
+          label: "Họ và tên",
           isRequired: "",
           value: "",
           placeholder: "",
@@ -354,7 +374,7 @@ export default {
           classes: "w-full col-span-6",
           disabled: false,
           type: "text",
-          label: "Payment Method",
+          label: "Phương thức thanh toán",
           isRequired: "",
           value: 2,
           placeholder: "",
@@ -362,23 +382,23 @@ export default {
           options: [
             {
               value: 1,
-              label: "Bank Transfer",
+              label: "Chuyển khoản",
             },
             {
               value: 2,
-              label: "Cash",
+              label: "Tiền mặt",
             },
             {
               value: 3,
-              label: "Card",
+              label: "Thẻ tín dụng",
             },
             {
               value: 4,
-              label: "Cheque",
+              label: "Séc",
             },
             {
               value: 5,
-              label: "E-Wallet",
+              label: "Ví điện tử",
             },
           ],
         },
@@ -389,7 +409,7 @@ export default {
           classes: "w-full col-span-6 !h-[64px]",
           type: "text",
           disabled: false,
-          label: "Delivery Address",
+          label: "Địa chỉ giao hàng",
           isRequired: "",
           value: "",
           maxlength: 250,
@@ -403,7 +423,7 @@ export default {
           classes: "w-full col-span-6",
           type: "text",
           disabled: false,
-          label: "Consignee",
+          label: "Người nhận",
           isRequired: "",
           maxlength: 150,
           value: "",
@@ -417,7 +437,7 @@ export default {
           classes: "w-full col-span-6 !h-[35px]",
           type: "number, currency",
           disabled: false,
-          label: "Discount (%)",
+          label: "Giảm giá (%)",
           isRequired: "",
           value: 0,
           placeholder: "",
@@ -430,7 +450,7 @@ export default {
           classes: "w-full col-span-6 !h-[35px]",
           type: "number, currency",
           disabled: false,
-          label: "Shipping Fee ($)",
+          label: "Phí vận chuyển (VNĐ)",
           isRequired: "",
           value: 0,
           placeholder: "",
@@ -443,7 +463,7 @@ export default {
           classes: "w-full col-span-6 !h-[35px]",
           type: "number, currency",
           disabled: false,
-          label: "VAT Fee (%)",
+          label: "Thuế (%)",
           isRequired: "",
           value: 0,
           placeholder: "",
@@ -456,7 +476,7 @@ export default {
           classes: "w-full col-span-6",
           type: "text",
           disabled: false,
-          label: "Phone Number",
+          label: "SĐT người nhận",
           isRequired: "",
           maxlength: 20,
           value: "",
@@ -470,7 +490,7 @@ export default {
           classes: "w-full col-span-6",
           type: "number, currency",
           disabled: false,
-          label: "Amount Paid ($)",
+          label: "Số tiền trả (VNĐ)",
           isRequired: "",
           value: 0,
           placeholder: "",
@@ -488,7 +508,7 @@ export default {
           classes: "w-full col-span-6",
           type: "text",
           disabled: true,
-          label: "Unpaid Amount ($)",
+          label: "Số tiền còn phải trả (VNĐ)",
           isRequired: "",
           value: 0,
           placeholder: "",
@@ -501,7 +521,7 @@ export default {
           classes: "w-full col-span-6",
           type: "text",
           disabled: true,
-          label: "In Change ($)",
+          label: "Tiền thừa (VNĐ)",
           isRequired: "",
           value: 0,
           placeholder: "",
@@ -756,7 +776,7 @@ export default {
   },
   async mounted() {
     if (!this.$route.params.data) {
-      this.$router.push({ name: "payment" });
+      this.$router.push({ name: "Thanh toán" });
       return;
     }
     await this.handleGetSingleUnit();

@@ -388,7 +388,9 @@ export default {
   },
   methods: {
     getWarehouseDataSel() {
-      this.handleGetProducts();
+      if (this.order.warehouseId.value) {
+        this.handleGetProducts();
+      }
     },
     AddCus() {
       this.handleGetCustomers();
@@ -725,6 +727,7 @@ export default {
                       opt.value ==
                         res.data.items.warehouseDetailRes?.warehouseId
                   ).value || "";
+                this.handleGetProducts();
               }
             }
           })
