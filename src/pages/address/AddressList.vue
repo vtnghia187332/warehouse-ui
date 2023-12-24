@@ -334,7 +334,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Created successfully",
+              message: "Thêm mới thành công",
               type: "success",
             });
             this.getCountries();
@@ -365,7 +365,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Created successfully",
+              message: "Thêm mới thành công",
               type: "success",
             });
             this.getCitiesByCountry(field.refId);
@@ -396,7 +396,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Created successfully",
+              message: "Thêm mới thành công",
               type: "success",
             });
             this.getListDistrictByCity(field.refId);
@@ -427,7 +427,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Created successfully",
+              message: "Thêm mới thành công",
               type: "success",
             });
             this.getListSubDistrictByDistrict(field.refId);

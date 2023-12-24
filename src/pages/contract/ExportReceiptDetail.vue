@@ -595,7 +595,7 @@ export default {
         });
     },
     handleCancelSubmit() {
-      this.$confirm("Are you sure to cancel")
+      this.$confirm("Bạn có muốn thoát khỏi màn hình này?")
         .then((_) => {
           this.$router.push({ name: "Danh sách phiếu thu-chi" });
         })

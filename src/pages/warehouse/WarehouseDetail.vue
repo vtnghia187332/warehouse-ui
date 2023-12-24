@@ -616,6 +616,7 @@ export default {
         .catch((_) => {});
     },
     handleSubmit() {
+      this.loadingPageDetail = true;
       const keyContactReqs = this.$refs["key-contact"].getDataKeyContacts();
       this.specialDayOn.forEach((object) => {
         object.specialStartDay = object.time[0];
@@ -714,6 +715,7 @@ export default {
                 message: "Thêm thành công",
                 type: "success",
               });
+              this.loadingPageDetail = false;
             }
           })
           .catch((error) => {
@@ -723,6 +725,7 @@ export default {
               type: "error",
             });
             this.$refs.observerAdd.setErrors(error.response.data.items);
+            this.loadingPageDetail = false;
           });
       }
     },

@@ -365,7 +365,7 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Created successfully",
+              message: "Thêm mới thành công",
               type: "success",
             });
           }

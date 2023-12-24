@@ -8,7 +8,6 @@
           v-model="warehouseData.value"
           :field="warehouseData"
         />
-        <DatePicker :field="dateFrom" v-model="dateFrom.value" />
         <div class="mb-2">
           <label class="!font-bold block"> Ngày </label>
           <el-date-picker

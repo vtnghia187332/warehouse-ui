@@ -80,7 +80,7 @@
                 <div class="!w-96 !mb-1">
                   <div class="flex justify-between font-bold text-base">
                     <div>Tổng tiền hàng:</div>
-                    <div class="">{{ subTotal }} VNĐ</div>
+                    <div class="">{{ subTotalView }} VNĐ</div>
                   </div>
                   <div class="flex justify-between font-bold text-base">
                     <div>Vận chuyển:</div>
@@ -96,18 +96,8 @@
                   </div>
 
                   <div class="flex justify-between font-bold text-2xl">
-                    <div>Tổng:</div>
-                    <div class="">
-                      {{
-                        calMoneyPaid(
-                          subTotal,
-                          order.discount.value,
-                          order.shippingFee.value,
-                          order.taxPercentage.value
-                        )
-                      }}
-                      VNĐ
-                    </div>
+                    <div>Tổng thanh toán:</div>
+                    <div class="">{{ totalPayment }} VNĐ</div>
                   </div>
                 </div>
               </div>
@@ -168,36 +158,11 @@
                     v-model="order.moneyPaid.value"
                   />
                 </div>
-                <div class="col-span-6">
-                  <BaseInput
-                    v-if="
-                      order.unpaidAmount.value >= 0 && order.inChange.value == 0
-                    "
-                    :field="order.unpaidAmount"
-                    v-model="order.unpaidAmount.value"
-                  />
-                  <BaseInput
-                    v-if="order.inChange.value > 0"
-                    :field="order.inChange"
-                    v-model="order.inChange.value"
-                  />
-                </div>
               </div>
             </template>
           </FormCard>
           <div class="footer-btn-fixed flex justify-end p-2">
-            <el-button
-              :disabled="this.$route.params.data.type === 'VIEW'"
-              @click="handleCancelSubmit"
-              >Cancel</el-button
-            >
-            <el-button
-              :disabled="this.$route.params.data.type === 'VIEW'"
-              @click="handleSubmit"
-              class="bg-blue-400"
-              type="primary"
-              >Submit</el-button
-            >
+            <el-button @click="handleCancelSubmit">Cancel</el-button>
           </div>
         </el-col>
       </el-row>
@@ -225,122 +190,10 @@ export default {
     LoadingPage,
     ValidationObserver,
   },
-  watch: {
-    "order.taxPercentage.value": function (newVal, oldVal) {
-      this.order.moneyPaid.value = 0;
-      if (!newVal && newVal == 0) {
-        this.order.taxPercentage.value = 0;
-        this.order.unpaidAmount.value = this.calMoneyPaid(
-          this.subTotal,
-          this.order.discount.value,
-          this.order.shippingFee.value,
-          newVal
-        );
-      } else if (newVal <= 100) {
-        this.order.taxPercentage.value = newVal;
-        let afterChangeMoney = this.calMoneyPaid(
-          this.subTotal,
-          this.order.discount.value,
-          this.order.shippingFee.value,
-          newVal
-        );
-        if (afterChangeMoney < 0) {
-          this.order.unpaidAmount.value = 0;
-          this.order.inChange.value = Math.abs(afterChangeMoney);
-        }
-        if (afterChangeMoney >= 0) {
-          this.order.inChange.value = 0;
-          this.order.unpaidAmount.value = afterChangeMoney;
-        }
-      }
-    },
-    "order.discount.value": function (newVal, oldVal) {
-      this.order.moneyPaid.value = 0;
-      if (!newVal && newVal == 0) {
-        this.order.discount.value = 0;
-        this.order.unpaidAmount.value = this.calMoneyPaid(
-          this.subTotal,
-          newVal,
-          this.order.shippingFee.value,
-          this.order.taxPercentage.value
-        );
-      } else if (newVal <= 100) {
-        this.order.discount.value = newVal;
-        let afterChangeMoney = this.calMoneyPaid(
-          this.subTotal,
-          newVal,
-          this.order.shippingFee.value,
-          this.order.taxPercentage.value
-        );
-        if (afterChangeMoney < 0) {
-          this.order.unpaidAmount.value = 0;
-          this.order.inChange.value = Math.abs(afterChangeMoney);
-        }
-        if (afterChangeMoney >= 0) {
-          this.order.inChange.value = 0;
-          this.order.unpaidAmount.value = afterChangeMoney;
-        }
-      }
-    },
-    "order.shippingFee.value": function (newVal, oldVal) {
-      this.order.moneyPaid.value = 0;
-      if (!newVal && newVal == 0) {
-        this.order.shippingFee.value = 0;
-        this.order.unpaidAmount.value = this.calMoneyPaid(
-          this.subTotal,
-          this.order.discount.value,
-          newVal,
-          this.order.taxPercentage.value
-        );
-      } else {
-        this.order.shippingFee.value = newVal;
-        let afterChangeMoney = this.calMoneyPaid(
-          this.subTotal,
-          this.order.discount.value,
-          newVal,
-          this.order.taxPercentage.value
-        );
-        if (afterChangeMoney < 0) {
-          this.order.unpaidAmount.value = 0;
-          this.order.inChange.value = Math.abs(afterChangeMoney);
-        }
-        if (afterChangeMoney >= 0) {
-          this.order.inChange.value = 0;
-          this.order.unpaidAmount.value = afterChangeMoney;
-        }
-      }
-    },
-    "order.moneyPaid.value": function (newVal, oldVal) {
-      if (newVal == null || newVal == undefined || newVal == 0) {
-        this.order.moneyPaid.value = 0;
-        this.order.unpaidAmount.value = this.calMoneyPaid(
-          this.subTotal,
-          this.order.discount.value,
-          this.order.shippingFee.value,
-          this.order.taxPercentage.value
-        );
-      } else {
-        this.order.moneyPaid.value = newVal;
-        let afterChangeMoney =
-          this.calMoneyPaid(
-            this.subTotal,
-            this.order.discount.value,
-            this.order.shippingFee.value,
-            this.order.taxPercentage.value
-          ) - Number(newVal);
-        if (Number(afterChangeMoney) < 0) {
-          this.order.unpaidAmount.value = 0;
-          this.order.inChange.value = Math.abs(Number(afterChangeMoney));
-        } else if (Number(afterChangeMoney) >= 0) {
-          this.order.inChange.value = 0;
-          this.order.unpaidAmount.value = Number(afterChangeMoney);
-        }
-      }
-    },
-  },
-
   data() {
     return {
+      subTotalView: 0,
+      totalPayment: 0,
       warehouseData: {},
       amount: 0,
       currency: "USD",
@@ -532,102 +385,10 @@ export default {
     };
   },
   methods: {
-    calMoneyPaid(subtotal, discount, shipFee, taxFee) {
-      return (
-        Number(subtotal) +
-        Number(shipFee) +
-        (Number(subtotal) * Number(taxFee)) / 100 -
-        (Number(subtotal) * Number(discount)) / 100
-      );
-    },
-    formatCurrency(value) {
-      if (!isNaN(parseFloat(value))) {
-        value = parseFloat(value);
-        return value.toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-        });
-      }
-    },
-    handleSubmit() {
-      let order = {
-        warehouseId: this.warehouse.warehouseId,
-        id: this.id,
-        invoiceId: this.invoiceId,
-        productInvoices: this.materials,
-        moneyPaid: this.order.moneyPaid.value,
-        shippingFee: this.order.shippingFee.value,
-        discount: this.order.discount.value,
-        taxPercentage: this.order.taxPercentage.value,
-        deliveryAddress: this.order.deliveryAddress.value,
-        consignee: this.order.consignee.value,
-        phoneNumberReceipt: this.order.phoneNumberReceipt.value,
-        typeInvoice: this.typeInvoice,
-        modePayment: this.order.modePayment.value,
-        totalPaid: this.calMoneyPaid(
-          this.subTotal,
-          this.order.discount.value,
-          this.order.shippingFee.value,
-          this.order.taxPercentage.value
-        ),
-        totalNeedPaid: Number(this.subTotal),
-      };
-      if (Number(order.moneyPaid) > Number(order.totalPaid)) {
-        order.moneyPaid = order.totalPaid;
-      }
-
-      order.modePayment =
-        this.order.modePayment.options.find(
-          (opt) =>
-            opt.value == this.order.modePayment.value ||
-            opt.label == this.order.modePayment.value
-        ).value || "";
-
-      order.productInvoices.forEach((item) => {
-        item.productId = item.id;
-        item.singleUnit =
-          this.singleUnits.find(
-            (opt) =>
-              opt.label == item.singleUnit || opt.value == item.singleUnit
-          ).value || "";
-      });
-
-      if (this.$route.params.data.type === "EDIT") {
-        this.handleCheckOutOder(order);
-      }
-    },
-    async handleCheckOutOder(order) {
-      var me = this;
-      me.loadingPageDetail = true;
-      await axios({
-        method: "put",
-        url: "http://localhost:9090/api/v1/invoice/check-out",
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-        data: order,
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            me.$message({
-              showClose: true,
-              message: "Thanh toán thành công",
-              type: "success",
-            });
-            me.$router.push({ name: "Hóa Đơn" });
-            me.loadingPageDetail = false;
-          }
-        })
-        .catch((error) => {
-          me.$message({
-            showClose: true,
-            message: error.response.data.items,
-            type: "error",
-          });
-        });
-    },
     handleCancelSubmit() {
       this.$confirm("Bạn có muốn thoát khỏi màn hình này?")
         .then((_) => {
-          this.$router.push({ path: "/export-receipt" });
+          this.$router.push({ name: "Hóa Đơn" });
         })
         .catch((_) => {});
     },
@@ -653,82 +414,25 @@ export default {
           .then((res) => {
             if (res.status === 200) {
               me.materials = res.data.items["productInvoices"];
-              if (res.data.items["typeInvoice"] == 2) {
-                if (res.data.items["customer"].fullName) {
-                  me.customer.fullName.value =
-                    res.data.items["customer"].fullName;
-                  me.order.consignee.value =
-                    res.data.items["customer"].fullName;
-                } else {
-                  me.customer.fullName.value =
-                    res.data.items["customer"].companyName;
-                  me.order.consignee.value =
-                    res.data.items["customer"].companyName;
-                }
-
-                me.order.deliveryAddress.value =
-                  res.data.items["customer"].detailAddress +
-                  ", " +
-                  res.data.items["customer"].country +
-                  ", " +
-                  res.data.items["customer"].city +
-                  ", " +
-                  res.data.items["customer"].district +
-                  ", " +
-                  res.data.items["customer"].subDistrict;
-                me.order.phoneNumberReceipt.value =
-                  res.data.items["customer"].mobilePhone;
-                me.materials.forEach((item) => {
-                  subTotalVal = item.quantity * item.exportPrice;
-                  me.subTotal = me.subTotal + subTotalVal;
-                  me.singleUnit = item.singleUnit;
-                });
-              } else if (res.data.items["typeInvoice"] == 1) {
-                if (res.data.items["customer"].fullName) {
-                  me.customer.fullName.value =
-                    res.data.items["customer"].fullName;
-                } else {
-                  me.customer.fullName.value =
-                    res.data.items["customer"].companyName;
-                }
-                if (res.data.items["deliveryAddress"]) {
-                  me.order.deliveryAddress.value =
-                    res.data.items["deliveryAddress"];
-                } else {
-                  me.order.deliveryAddress.value =
-                    res.data.items["warehouseDetailRes"].addressDes +
-                    ", " +
-                    res.data.items["warehouseDetailRes"].countryName +
-                    ", " +
-                    res.data.items["warehouseDetailRes"].cityName +
-                    ", " +
-                    res.data.items["warehouseDetailRes"].districtName +
-                    ", " +
-                    res.data.items["warehouseDetailRes"].subdistrictName;
-                }
-                me.order.phoneNumberReceipt.value = "";
-                me.materials.forEach((item) => {
-                  subTotalVal = item.quantity * item.importPrice;
-                  me.subTotal = me.subTotal + subTotalVal;
-                  me.singleUnit = item.singleUnit;
-                });
+              if (res.data.items["customer"].fullName) {
+                me.customer.fullName.value =
+                  res.data.items["customer"].fullName;
+                me.order.consignee.value = res.data.items["customer"].fullName;
+              } else {
+                me.customer.fullName.value =
+                  res.data.items["customer"].companyName;
                 me.order.consignee.value =
-                  res.data.items["warehouseDetailRes"].name;
+                  res.data.items["customer"].companyName;
               }
-
-              me.id = res.data.items.id;
-              me.invoiceId = res.data.items.invoiceId;
-              me.typeInvoice = res.data.items.typeInvoice;
-              if (!res.data.items.discount) {
-                me.order.discount.value = 0;
-              } else {
-                me.order.discount.value = res.data.items.discount;
-              }
-              if (!res.data.items.moneyPaid) {
-                me.order.moneyPaid.value = 0;
-              } else {
-                me.order.moneyPaid.value = res.data.items.moneyPaid;
-              }
+              me.subTotalView = res.data.items["totalNeedPaid"];
+              me.totalPayment = res.data.items["totalPaid"];
+              me.order.discount.value = res.data.items.discount;
+              me.order.moneyPaid.value = res.data.items.moneyPaid;
+              me.order.shippingFee.value = res.data.items.shippingFee;
+              me.order.taxPercentage.value = res.data.items.taxPercentage;
+              me.order.deliveryAddress.value = res.data.items.deliveryAddress;
+              me.order.phoneNumberReceipt.value =
+                res.data.items.phoneNumberReceipt;
             }
           })
           .catch((error) => {

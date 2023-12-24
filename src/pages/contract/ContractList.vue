@@ -176,14 +176,6 @@
                 <el-dropdown-item>
                   <button
                     class="!bg-[#fdfdfd] text-black"
-                    @click="handeExportPDF(scope.row)"
-                  >
-                    <i class=""></i>In file PDF
-                  </button>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <button
-                    class="!bg-[#fdfdfd] text-black"
                     @click="handleAcquit(scope.row)"
                     :disabled="scope.row.invoiceStage == 'CANCELED'"
                   >
@@ -392,7 +384,7 @@ export default {
         type: "VIEW",
       };
       this.$router.push({
-        name: "Thanh toán", //use name for router push
+        name: "Hoá đơn chi tiết", //use name for router push
         params: { data },
       });
     },
@@ -435,6 +427,7 @@ export default {
     },
     async handeExportPDF(item) {
       let me = this;
+      me.loadingTable = true;
       let params = {
         warehouse: me.warehouse.warehouseId,
         invoiceId: item.invoiceId,
@@ -466,9 +459,17 @@ export default {
             document.body.appendChild(a);
             a.click();
             a.remove();
+            me.loadingTable = false;
           }
         })
-        .catch(function (res) {});
+        .catch(function (response) {
+          me.loadingTable = false;
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
     },
     updateInputType(item) {
       if (!item) {
@@ -480,12 +481,15 @@ export default {
     },
     async exportInvoiceExport() {
       let me = this;
+      me.loadingTable = true;
       let params = {
         searchText: me.search.value,
         pageNo: me.paginationPage.pageNo,
         pageSize: me.paginationPage.pageSize,
         sorting: me.paginationPage.sorting,
         orderBy: me.paginationPage.orderBy,
+        invoiceType: me.paginationPage.invoiceType,
+        invoiceStatus: me.paginationPage.invoiceStatus,
         warehouse: me.warehouseData.value,
       };
       if (!me.warehouseData?.value) {
@@ -514,6 +518,7 @@ export default {
             document.body.appendChild(a);
             a.click();
             a.remove();
+            me.loadingTable = false;
           }
         })
         .catch(function (error) {
@@ -522,6 +527,7 @@ export default {
             message: error.response.data.items,
             type: "error",
           });
+          me.loadingTable = false;
         });
     },
     getBaseSearchVal(param) {
@@ -662,6 +668,8 @@ export default {
         pageSize: me.paginationPage.pageSize,
         sorting: me.paginationPage.sorting,
         orderBy: me.paginationPage.orderBy,
+        invoiceType: me.paginationPage.invoiceType,
+        invoiceStatus: me.paginationPage.invoiceStatus,
         warehouse: me.warehouseData.value,
       };
       if (!me.warehouseData?.value) {
@@ -686,6 +694,7 @@ export default {
           me.paginationVal.total = response.data.items.totalElements;
         })
         .catch((error) => {
+          me.loadingTable = false;
           this.$message({
             showClose: true,
             message: error.response.data.items,

@@ -34,6 +34,7 @@ import Login from "@/pages/authentication/Login.vue";
 import Signup from "@/pages/authentication/Signup.vue";
 import ChangePwd from "@/pages/authentication/ChangePwd.vue";
 import ForgotPassword from "@/pages/authentication/ForgotPassword.vue";
+import ContractView from "@/pages/contract/ContractView.vue";
 
 const routes = [
   {
@@ -141,6 +142,11 @@ const routes = [
         path: "/payment",
         name: "Thanh toán",
         component: Payment,
+      },
+      {
+        path: "/invoice",
+        name: "Hoá đơn chi tiết",
+        component: ContractView,
       },
       {
         path: "/export-receipt-history",

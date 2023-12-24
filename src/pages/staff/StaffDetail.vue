@@ -531,7 +531,7 @@ export default {
               this.$router.push({ path: "/staff" });
               this.$message({
                 showClose: true,
-                message: "Created successfully",
+                message: "Thêm mới thành công",
                 type: "success",
               });
               this.loadingPageDetail = false;

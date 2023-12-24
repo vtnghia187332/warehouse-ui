@@ -204,7 +204,7 @@ export default {
           this.conversationUnit.unitStockDestination.value +
           " " +
           unitCal +
-          " " +
+          " 1" +
           unitOri
         );
       }

@@ -149,7 +149,7 @@
                       scope.row.unitStockDestination +
                       " " +
                       scope.row.calUnit +
-                      " " +
+                      " 1 " +
                       scope.row.unitOriginId
                     }}
                   </template>
@@ -734,13 +734,6 @@ export default {
         });
     },
     handleSubmit() {
-      if(!this.warehouseId.value){
-        this.$message({
-            showClose: true,
-            message: "Bắt buộc nhập cửa hàng",
-            type: "error",
-          });
-      }
       if (this.units?.length > 0) {
         this.units.forEach((item) => {
           item.unitOriginId =
@@ -798,21 +791,29 @@ export default {
           productDetail.exportPrice.replace(/[^0-9\.-]+/g, "")
         );
       }
-      const productDetailForm = this.transformInToFormObject(productDetail);
-      if (this.productPhotos[0]) {
-        productDetailForm.append("image", this.productPhotos[0].raw);
+      if (!productDetail.warehouseId) {
+        this.$message({
+          showClose: true,
+          message: "Bắt buộc nhập cửa hàng",
+          type: "error",
+        });
       } else {
-        productDetailForm.append("image", "");
-      }
-      productDetailForm.append("numberOfImg", this.productPhotos?.length);
-      if (this.$route.params.data.type === "EDIT") {
-        productDetailForm.delete("id");
-        productDetailForm.delete("productId");
-        productDetailForm.append("id", this.productPId);
-        productDetailForm.append("productId", this.$route.params.data.id);
-        this.handleEditProduct(productDetailForm);
-      } else {
-        this.handleCreateProduct(productDetailForm);
+        const productDetailForm = this.transformInToFormObject(productDetail);
+        if (this.productPhotos[0]) {
+          productDetailForm.append("image", this.productPhotos[0].raw);
+        } else {
+          productDetailForm.append("image", "");
+        }
+        productDetailForm.append("numberOfImg", this.productPhotos?.length);
+        if (this.$route.params.data.type === "EDIT") {
+          productDetailForm.delete("id");
+          productDetailForm.delete("productId");
+          productDetailForm.append("id", this.productPId);
+          productDetailForm.append("productId", this.$route.params.data.id);
+          this.handleEditProduct(productDetailForm);
+        } else {
+          this.handleCreateProduct(productDetailForm);
+        }
       }
     },
     transformInToFormObject(data) {

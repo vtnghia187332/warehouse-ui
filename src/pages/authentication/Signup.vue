@@ -416,7 +416,7 @@ export default {
             me.$router.push({ path: "/login" });
             me.$message({
               showClose: true,
-              message: "Created Successfully",
+              message: "Thêm mới thành công",
               type: "success",
             });
             me.loadingPageDetail = false;
