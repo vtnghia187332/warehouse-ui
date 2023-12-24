@@ -748,6 +748,7 @@ export default {
     },
     handleSpecialDayDetail(row, col, event) {
       this.rowDataSpecialDay = row;
+      this.$refs["special-time"].typeSpecialTime = row.dayType;
       this.$refs["special-time"].initData({ ...row, id: { value: row.index } });
       this.dialogVisible = true;
     },

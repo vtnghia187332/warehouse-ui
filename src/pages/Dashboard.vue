@@ -36,7 +36,7 @@
             <div class="font-bold text-blue-600/100">
               Tổng giá nhập Vật Liệu
             </div>
-            <div>$ {{ addCommas(detail.totalImportPrice) }}</div>
+            <div>{{ addCommas(detail.totalImportPrice) }} VNĐ</div>
           </div>
         </div>
 
@@ -56,7 +56,7 @@
           </div>
           <div class="col-span-4">
             <div class="font-bold text-blue-600/100">Giảm giá</div>
-            <div>$ {{ addCommas(detail.totalDiscountPrice) }} VNĐ</div>
+            <div>{{ addCommas(detail.totalDiscountPrice) }} VNĐ</div>
           </div>
         </div>
 
@@ -66,7 +66,7 @@
           </div>
           <div class="col-span-4">
             <div class="font-bold text-blue-600/100">Tiền thuế</div>
-            <div>$ {{ addCommas(detail.totalTaxPrice) }} VNĐ</div>
+            <div>{{ addCommas(detail.totalTaxPrice) }} VNĐ</div>
           </div>
         </div>
 
@@ -76,7 +76,7 @@
           </div>
           <div class="col-span-4">
             <div class="font-bold text-blue-600/100">Doanh thu trước thuế</div>
-            <div>$ {{ addCommas(detail.totalRevenueWithTax) }} VNĐ</div>
+            <div>{{ addCommas(detail.totalRevenueWithTax) }} VNĐ</div>
           </div>
         </div>
       </div>
@@ -285,8 +285,8 @@ export default {
             type: "shadow",
           },
           formatter: (params) => {
-            return `Tổng nhập: <span />${params[0].value} VNĐ<br />
-                Tổng bán: <span />${params[1].value} VNĐ<span />`;
+            return `Tổng nhập: <span />${this.addCommas(params[0].value)} VNĐ<br />
+                Tổng bán: <span />${this.addCommas(params[1].value)} VNĐ<span />`;
           },
         },
         series: [],
