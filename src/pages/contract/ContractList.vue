@@ -13,7 +13,6 @@
         <el-select
           class="w-[180px]"
           v-model="typeInvoice.value"
-          :disabled="warehouseData.disabled === 'disabled'"
           placeholder="Chọn loại hóa đơn"
           @change="updateInputType($event)"
           clearable
@@ -45,6 +44,7 @@
         <el-select
           class="w-[180px]"
           v-model="warehouseData.value"
+          :disabled="warehouseData.disabled === 'disabled'"
           placeholder="Chọn cửa hàng"
           @change="filterByWarehouse($event)"
           clearable

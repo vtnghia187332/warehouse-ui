@@ -243,8 +243,8 @@
                 <div class="col-span-12">
                   <BaseSelection
                     @getValue=""
-                    v-model="product.warehouseId.value"
-                    :field="product.warehouseId"
+                    v-model="warehouseId.value"
+                    :field="warehouseId"
                   />
                 </div>
               </div>
@@ -312,6 +312,20 @@ export default {
       dialogImageUrl: "",
       dialogVisible: false,
       disabled: false,
+      warehouseId: {
+        id: "warehouseId",
+        baseId: 0,
+        name: "warehouseId",
+        rules: "required",
+        classes: "w-full",
+        isRequired: "true",
+        placeholder: "Chọn cửa hàng",
+        error: "",
+        value: "",
+        disabled: "notDisabled",
+        label: "Cửa hàng",
+        options: [],
+      },
       calculations: [
         {
           label: "+",
@@ -464,20 +478,7 @@ export default {
           placeholder: "Nhập chiều dài...",
           error: "",
         },
-        warehouseId: {
-          id: "warehouseId",
-          baseId: 0,
-          name: "warehouseId",
-          rules: "required",
-          classes: "w-full",
-          isRequired: "true",
-          placeholder: "Chọn cửa hàng",
-          error: "",
-          value: "",
-          disabled: "notDisabled",
-          label: "Cửa hàng",
-          options: [],
-        },
+
         volume: {
           id: "volume",
           name: "Volume",
@@ -722,7 +723,7 @@ export default {
         })
         .then((res) => {
           if (res.status === 200) {
-            this.product.warehouseId.options = res.data.items;
+            this.warehouseId.options = res.data.items;
           }
         })
         .catch((error) => {
@@ -755,10 +756,10 @@ export default {
         warehouseIdLocal = this.warehouse.warehouseId;
       } else {
         warehouseIdLocal =
-          this.product.warehouseId.options.find(
+          this.warehouseId.options.find(
             (opt) =>
-              opt.label == this.product.warehouseId.value ||
-              opt.value == this.product.warehouseId.value
+              opt.label == this.warehouseId.value ||
+              opt.value == this.warehouseId.value
           ).value || 0;
       }
       const productDetail = {
@@ -791,30 +792,24 @@ export default {
           productDetail.exportPrice.replace(/[^0-9\.-]+/g, "")
         );
       }
-      if (!productDetail.warehouseId) {
-        this.$message({
-          showClose: true,
-          message: "Bắt buộc nhập cửa hàng",
-          type: "error",
-        });
+
+      const productDetailForm = this.transformInToFormObject(productDetail);
+      if (this.productPhotos[0]) {
+        productDetailForm.append("image", this.productPhotos[0].raw);
       } else {
-        const productDetailForm = this.transformInToFormObject(productDetail);
-        if (this.productPhotos[0]) {
-          productDetailForm.append("image", this.productPhotos[0].raw);
-        } else {
-          productDetailForm.append("image", "");
-        }
-        productDetailForm.append("numberOfImg", this.productPhotos?.length);
-        if (this.$route.params.data.type === "EDIT") {
-          productDetailForm.delete("id");
-          productDetailForm.delete("productId");
-          productDetailForm.append("id", this.productPId);
-          productDetailForm.append("productId", this.$route.params.data.id);
-          this.handleEditProduct(productDetailForm);
-        } else {
-          this.handleCreateProduct(productDetailForm);
-        }
+        productDetailForm.append("image", "");
       }
+      productDetailForm.append("numberOfImg", this.productPhotos?.length);
+      if (this.$route.params.data.type === "EDIT") {
+        productDetailForm.delete("id");
+        productDetailForm.delete("productId");
+        productDetailForm.append("id", this.productPId);
+        productDetailForm.append("productId", this.$route.params.data.id);
+        this.handleEditProduct(productDetailForm);
+      } else {
+        this.handleCreateProduct(productDetailForm);
+      }
+      console.log(productDetail, "productDetail");
     },
     transformInToFormObject(data) {
       let formData = new FormData();
@@ -924,11 +919,11 @@ export default {
                 this.productPhotos = [];
               }
               if (
-                this.product.warehouseId?.options.length > 0 &&
+                this.warehouseId?.options.length > 0 &&
                 res.data.items?.warehouseDetailRes !== null
               ) {
-                this.product.warehouseId.value =
-                  this.product.warehouseId.options?.find(
+                this.warehouseId.value =
+                  this.warehouseId.options?.find(
                     (opt) =>
                       opt.label ==
                         res.data.items.warehouseDetailRes?.warehouseId ||
@@ -975,8 +970,8 @@ export default {
       return;
     }
     if (!this.user?.roles.includes("ADMIN")) {
-      this.product.warehouseId.value = this.warehouse.name;
-      this.product.warehouseId.disabled = "disabled";
+      this.warehouseId.value = this.warehouse.name;
+      this.warehouseId.disabled = "disabled";
     }
     await this.getValueCategory();
     await this.getValueSingleUnit();
