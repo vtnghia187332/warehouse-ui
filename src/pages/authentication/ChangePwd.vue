@@ -95,7 +95,7 @@ export default {
         },
       },
     };
-  },
+},
   methods: {
     ...mapMutations(["setUserDetail"]),
     ...mapActions(["updateUserDetail"]),

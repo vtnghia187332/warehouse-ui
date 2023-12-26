@@ -115,7 +115,7 @@
               </FormCard>
             </el-col>
             <div class="flex justify-end p-2">
-              <el-button @click="">Thoát</el-button>
+              <el-button @click="hadnleCancelSubmit">Thoát</el-button>
               <el-button
                 :disabled="invalid"
                 @click="handleSubmit"
@@ -374,6 +374,9 @@ export default {
     };
   },
   methods: {
+    hadnleCancelSubmit() {
+      this.$router.push({ name: "Login" });
+    },
     handleSubmit() {
       const data = {};
       Object.keys(this.userInfor).map((key) => {

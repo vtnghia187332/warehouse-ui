@@ -96,7 +96,7 @@
                   </div>
 
                   <div class="flex justify-between font-bold text-2xl">
-                    <div>Tổng thanh toán:</div>
+                    <div>Tổng:</div>
                     <div class="">{{ totalPayment }} VNĐ</div>
                   </div>
                 </div>

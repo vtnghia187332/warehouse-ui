@@ -28,11 +28,17 @@
                       />
                     </div>
                   </div>
-                  <div class="mt-3">
+                  <div class="mt-3 flex justify-end">
+                    <el-button
+                      @click="handleCancelSubmit"
+                      class="bg-gray-400"
+                      type="primary"
+                      >Thoát</el-button
+                    >
                     <el-button
                       :disabled="invalid"
                       @click="handleSubmit"
-                      class="bg-blue-400 w-full"
+                      class="bg-blue-400"
                       type="primary"
                       >Gửi</el-button
                     >
@@ -102,6 +108,9 @@ export default {
     };
   },
   methods: {
+    handleCancelSubmit(){
+      this.$router.push({ name: "Login" });
+    },
     handleSubmit() {
       const data = {
         email: this.userInfor.email.value,

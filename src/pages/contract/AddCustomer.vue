@@ -1,94 +1,140 @@
 <template>
   <ValidationObserver v-slot="{ invalid }" ref="observer">
     <el-dialog
-      title="Add Customer"
+      title="Thêm khách hàng"
       :visible.sync="dialogVisible"
       width="40%"
       :before-close="handleClose"
       :append-to-body="true"
       destroy-on-close
     >
-      <div class="grid grid-cols-12 gap-x-6">
-        <div class="col-span-12">
-          <BaseInput
-            :field="customer.fullName"
-            v-model="customer.fullName.value"
-          />
-        </div>
+      <div>
+        <FormCard title="Khách hàng" class="mb-3">
+          <template v-slot:content>
+            <div class="">
+              <el-tabs v-model="activeName">
+                <el-tab-pane label="Cá nhân" name="first">
+                  <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                    <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                      <div class="col-span-6">
+                        <BaseInput
+                          :field="customer.fullName"
+                          v-model="customer.fullName.value"
+                        />
+                      </div>
+                      <div class="col-span-6">
+                        <BaseInput
+                          :field="customer.taxNumber"
+                          v-model="customer.taxNumber.value"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                      <div class="col-span-6">
+                        <DatePicker
+                          :field="customer.birthDay"
+                          v-model="customer.birthDay.value"
+                        />
+                      </div>
+                      <div class="col-span-6">
+                        <BaseSelection
+                          :field="customer.title"
+                          v-model="customer.title.value"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </el-tab-pane>
+                <el-tab-pane label="Doanh nghiệp" name="second">
+                  <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                    <div class="col-span-6">
+                      <BaseInput
+                        :field="customer.companyName"
+                        v-model="customer.companyName.value"
+                      />
+                    </div>
+                    <div class="col-span-6">
+                      <BaseInput
+                        :field="customer.taxNumberEnter"
+                        v-model="customer.taxNumberEnter.value"
+                      />
+                    </div>
+                  </div>
+                </el-tab-pane>
+              </el-tabs>
+            </div>
+          </template>
+        </FormCard>
+        <FormCard title="Thông tin chung" class="mb-3">
+          <template v-slot:content>
+            <div class="grid grid-cols-12 gap-x-6">
+              <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                <div class="col-span-6">
+                  <BaseInput
+                    :field="customer.mobilePhone"
+                    v-model="customer.mobilePhone.value"
+                  />
+                </div>
+                <div class="col-span-6">
+                  <BaseInput
+                    :field="customer.email"
+                    v-model="customer.email.value"
+                  />
+                </div>
+              </div>
+              <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                <div class="col-span-6">
+                  <BaseSelection
+                    @getValue=""
+                    v-model="customer.warehouseId.value"
+                    :field="customer.warehouseId"
+                  />
+                </div>
+              </div>
 
-        <div class="col-span-12 grid grid-cols-12 gap-x-6">
-          <div class="col-span-6">
-            <BaseInput
-              :field="customer.mobilePhone"
-              v-model="customer.mobilePhone.value"
-            />
-          </div>
-          <div class="col-span-6">
-            <BaseInput :field="customer.email" v-model="customer.email.value" />
-          </div>
-        </div>
-
-        <div class="col-span-12 grid grid-cols-12 gap-x-6">
-          <div class="col-span-6">
-            <DatePicker
-              :field="customer.birthDay"
-              v-model="customer.birthDay.value"
-            />
-          </div>
-          <div class="col-span-6">
-            <BaseSelection
-              :field="customer.title"
-              v-model="customer.title.value"
-            />
-          </div>
-        </div>
-        <div class="col-span-12 grid grid-cols-12 gap-x-6">
-          <div class="col-span-6">
-            <BaseSelection
-              @getValue="getValueCountry"
-              v-model="customer.country.value"
-              :field="customer.country"
-            />
-          </div>
-          <div class="col-span-6">
-            <BaseSelection
-              @getValue="getValueCity"
-              v-model="customer.city.value"
-              :field="customer.city"
-            />
-          </div>
-          <div class="col-span-6">
-            <BaseSelection
-              @getValue="getValueDistrict"
-              v-model="customer.district.value"
-              :field="customer.district"
-            />
-          </div>
-          <div class="col-span-6">
-            <BaseSelection
-              @getValue="getValueSubdistrict"
-              v-model="customer.subdistrict.value"
-              :field="customer.subdistrict"
-            />
-          </div>
-        </div>
-        <div class="col-span-12">
-          <BaseTextArea
-            :field="customer.detailAddress"
-            v-model="customer.detailAddress.value"
-          />
-        </div>
-        <div class="col-span-12">
-          <BaseTextArea :field="customer.note" v-model="customer.note.value" />
-        </div>
+              <div class="col-span-12 grid grid-cols-12 gap-x-6">
+                <div class="col-span-6">
+                  <BaseSelection
+                    @getValue="getValueCountry"
+                    v-model="customer.country.value"
+                    :field="customer.country"
+                  />
+                </div>
+                <div class="col-span-6">
+                  <BaseSelection
+                    @getValue="getValueCity"
+                    v-model="customer.city.value"
+                    :field="customer.city"
+                  />
+                </div>
+                <div class="col-span-6">
+                  <BaseSelection
+                    @getValue="getValueDistrict"
+                    v-model="customer.district.value"
+                    :field="customer.district"
+                  />
+                </div>
+                <div class="col-span-6">
+                  <BaseSelection
+                    @getValue="getValueSubdistrict"
+                    v-model="customer.subdistrict.value"
+                    :field="customer.subdistrict"
+                  />
+                </div>
+              </div>
+              <div class="col-span-12">
+                <BaseTextArea
+                  :field="customer.detailAddress"
+                  v-model="customer.detailAddress.value"
+                />
+              </div>
+            </div>
+          </template>
+        </FormCard>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">Cancel</el-button>
-        <el-button
-          :disabled="invalid"
-          class="bg-blue-700"
-          type="primary"
-          @click="handleData"
+        <el-button class="bg-blue-700" type="primary" @click="handleData"
           >Create</el-button
         >
       </span>
@@ -103,6 +149,8 @@ import BaseSelection from "../../components/Inputs/BaseSelection.vue";
 import BaseTextArea from "./../../components/Inputs/BaseTextArea.vue";
 import DatePicker from "../../components/Date/DatePicker.vue";
 import { ValidationObserver } from "vee-validate";
+import FormCard from "./../../components/Cards/FormCard.vue";
+
 export default {
   components: {
     BaseInput,
@@ -110,6 +158,7 @@ export default {
     BaseSelection,
     BaseTextArea,
     DatePicker,
+    FormCard,
   },
   computed: {
     ...mapGetters(["user", "warehouse", "warehouseChain"]),
@@ -121,6 +170,7 @@ export default {
   },
   data() {
     return {
+      activeName: "first",
       customer: {
         fullName: {
           id: "fullname",
@@ -226,6 +276,59 @@ export default {
           isRequired: "",
           value: "",
           placeholder: "Enter Detail Address...",
+          maxlength: 50,
+          error: "",
+        },
+        taxNumber: {
+          id: "taxNumber",
+          name: "Tax Number",
+          rules: "",
+          classes: "w-full col-span-6",
+          type: "text",
+          label: "Mã số thuế Cá nhân",
+          isRequired: "",
+          value: "",
+          placeholder: "Nhập vào mã số thuế cá nhân...",
+          maxlength: 20,
+          error: "",
+        },
+        warehouseId: {
+          id: "warehouseId",
+          baseId: 0,
+          name: "warehouseId",
+          rules: "",
+          classes: "w-full",
+          isRequired: "",
+          placeholder: "Chọn cửa hàng",
+          error: "",
+          value: "",
+          disabled: "notDisabled",
+          label: "Cửa hàng",
+          options: [],
+        },
+        taxNumberEnter: {
+          id: "taxNumberEnter",
+          name: "Tax Number For",
+          rules: "required",
+          classes: "w-full col-span-6",
+          type: "text",
+          label: "Mã số thuế Doanh nghiệp",
+          isRequired: "true",
+          value: "",
+          placeholder: "Nhập vào Mã số thuế Doanh nghiệp...",
+          maxlength: 20,
+          error: "",
+        },
+        companyName: {
+          id: "companyName",
+          name: "Company's name",
+          rules: "required",
+          classes: "w-full col-span-6",
+          type: "text",
+          label: "Công ty / doanh nghiệp",
+          isRequired: "true",
+          value: "",
+          placeholder: "Nhập vào công ty / doanh nghiệp...",
           maxlength: 50,
           error: "",
         },
@@ -351,8 +454,32 @@ export default {
             opt.label == customerDetail.subdistrict ||
             opt.value == customerDetail.subdistrict
         ).value || 0;
-
+      customerDetail.warehouseId =
+        this.customer.warehouseId.options.find(
+          (opt) =>
+            opt.label == this.customer.warehouseId.value ||
+            opt.value == this.customer.warehouseId.value
+        ).value || 0;
       this.handleCreateCustomer(customerDetail);
+    },
+    async getWarehouseSel() {
+      await axios
+        .get("http://localhost:9090/api/v1/warehouse/data-list", {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          params: { warehouseChainId: this.warehouseChain.warehouseChainId },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.customer.warehouseId.options = res.data.items;
+          }
+        })
+        .catch((error) => {
+          this.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
+        });
     },
     handleCreateCustomer(customerDetail) {
       axios({
@@ -461,7 +588,12 @@ export default {
     },
   },
   async created() {
+    if (!this.user?.roles.includes("ADMIN")) {
+      this.customer.warehouseId.value = this.warehouse.name;
+      this.customer.warehouseId.disabled = "disabled";
+    }
     await this.getListAddress();
+    await this.getWarehouseSel();
   },
 };
 </script>

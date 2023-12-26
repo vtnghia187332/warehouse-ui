@@ -185,7 +185,9 @@
               class="bg-blue-400"
               :disabled="invalid"
               type="primary"
-              >{{ userPrimaryKey.userId != 0 ? "Sửa đổi" : "Thêm mới" }}</el-button
+              >{{
+                userPrimaryKey.userId != 0 ? "Sửa đổi" : "Thêm mới"
+              }}</el-button
             >
           </div>
         </el-col>
@@ -514,6 +516,7 @@ export default {
               message: error.response.data.items,
               type: "error",
             });
+            this.loadingPageDetail = false;
           });
       } else {
         this.loadingPageDetail = true;
@@ -543,6 +546,7 @@ export default {
               message: error.response.data.items,
               type: "error",
             });
+            this.loadingPageDetail = false;
           });
       }
     },
