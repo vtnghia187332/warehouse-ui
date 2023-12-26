@@ -329,6 +329,7 @@ export default {
     },
     handeRenewPwd(data) {
       const emailReq = data.email;
+      this.loadingTable = true;
       axios({
         method: "post",
         url: "http://localhost:9090/api/v1/user/renew-pwd",
@@ -339,9 +340,10 @@ export default {
           if (response.status === 200) {
             this.$message({
               showClose: true,
-              message: "Reseted successfully",
+              message: "Đổi mật khẩu thành công",
               type: "success",
             });
+            this.loadingTable = false;
           }
         })
         .catch((error) => {
@@ -350,6 +352,7 @@ export default {
             message: error.response.data.items,
             type: "error",
           });
+          this.loadingTable = false;
         })
         .finally(() => this.handleGetUsers());
     },

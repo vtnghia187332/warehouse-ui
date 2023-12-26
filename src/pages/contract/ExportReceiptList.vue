@@ -366,6 +366,7 @@ export default {
   async mounted() {
     if (!this.user.roles.includes("ADMIN")) {
       this.warehouseData.value = this.warehouse.warehouseId;
+      this.warehouseData.disabled = "disabled";
     }
     await this.handleGetInvoices();
     await this.getWarehouseSel();

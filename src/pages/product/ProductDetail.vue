@@ -269,6 +269,7 @@
               @click="handleSubmit"
               class="bg-blue-400"
               type="primary"
+              :disabled="invalid"
               >{{ productPId != 0 ? "Sửa" : "Thêm" }}</el-button
             >
           </div>
@@ -316,7 +317,6 @@ export default {
         id: "warehouseId",
         baseId: 0,
         name: "warehouseId",
-        rules: "required",
         classes: "w-full",
         isRequired: "true",
         placeholder: "Chọn cửa hàng",

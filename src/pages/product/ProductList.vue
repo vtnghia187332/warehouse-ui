@@ -101,6 +101,13 @@
           width="200"
         >
         </el-table-column>
+        <el-table-column
+          sortable
+          prop="quantity"
+          label="Số lượng tồn kho"
+          width="200"
+        >
+        </el-table-column>
         <el-table-column prop="color" label="Màu sắc" width="150">
         </el-table-column>
         <el-table-column prop="singleUnit" label="Đơn vị" width="150">
@@ -120,7 +127,7 @@
         <el-table-column sortable prop="volume" label="Thể tích" width="150">
         </el-table-column>
 
-        <el-table-column prop="categoryProductRes" label="Danh mục" width="150">
+        <el-table-column prop="categoryProductRes" label="Danh mục" width="200">
           <template slot-scope="scope">
             {{ scope.row.categoryProductRes.name }}
           </template>

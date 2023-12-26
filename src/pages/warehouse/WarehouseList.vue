@@ -100,7 +100,7 @@
               <el-button
                 @click="handleSubmitWHC"
                 class="bg-blue-400"
-                :disabled="invalid"
+                :disabled="isButtonForAdmin === 'disabled'"
                 type="primary"
                 >Xác nhận</el-button
               >
@@ -326,6 +326,7 @@ export default {
   },
   data() {
     return {
+      isButtonForAdmin: "",
       disabled: false,
       dialogImageUrl: "",
       dialogVisiblePhoto: false,
@@ -780,6 +781,9 @@ export default {
     },
   },
   async mounted() {
+    if (!this.user?.roles.includes("ADMIN")) {
+      this.isButtonForAdmin = "disabled";
+    }
     (this.paginationPage = {
       pageNo: 1,
       pageSize: 30,

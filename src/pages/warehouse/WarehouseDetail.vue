@@ -345,7 +345,11 @@
           </FormCard>
           <div class="footer-btn-fixed flex justify-end p-2">
             <el-button @click="handleCancelSubmit">Thoát</el-button>
-            <el-button @click="handleSubmit" class="bg-blue-400" type="primary"
+            <el-button
+              @click="handleSubmit"
+              :disabled="invalid"
+              class="bg-blue-400"
+              type="primary"
               >Đồng ý</el-button
             >
           </div>
@@ -511,11 +515,11 @@ export default {
         addressDes: {
           id: "addressDes",
           name: "addressDes",
-          rules: "",
+          rules: "required",
           classes: "col-span-12 !h-[64px]",
           type: "text",
           label: "Chi tiết địa chỉ",
-          isRequired: "false",
+          isRequired: "true",
           value: "",
           placeholder: "Nhập chi tiết địa chỉ",
           maxlength: 150,

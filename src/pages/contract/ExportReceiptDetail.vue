@@ -118,12 +118,14 @@
             <el-button
               class="bg-blue-400"
               type="primary"
+              :disabled="invalid"
               @click="handleSubmit('CREATED')"
               >Thêm</el-button
             >
             <el-button
               class="bg-green-400"
               type="success"
+              :disabled="invalid"
               @click="handlePayment"
               >Thanh toán</el-button
             >
@@ -174,7 +176,7 @@ export default {
           id: "product",
           baseId: 0,
           name: "product",
-          rules: "required",
+          rules: "",
           classes: "w-full",
           isRequired: "true",
           placeholder: "Chọn nguyên vật liệu",
@@ -206,7 +208,7 @@ export default {
           id: "singleUnit",
           baseId: 0,
           name: "singleUnit",
-          rules: "required",
+          rules: "",
           classes: "w-full",
           isRequired: "true",
           placeholder: "Chọn đơn vị",
@@ -219,7 +221,7 @@ export default {
         quantity: {
           id: "quantity",
           name: "Quantity",
-          rules: "required",
+          rules: "",
           classes: "w-full",
           type: "text",
           label: "Số lượng",
@@ -253,11 +255,11 @@ export default {
             rules: "",
             classes: "w-full",
             isRequired: "",
-            placeholder: "Chọn hạn sử dụng",
+            placeholder: "Chọn ngày bảo hành",
             error: "",
             value: "",
             disabled: "notDisabled",
-            label: "Hạn sử dụng",
+            label: "Ngày bảo hành",
             pickerOptions: {
               disabledDate(time) {
                 return time.getTime() < Date.now();
