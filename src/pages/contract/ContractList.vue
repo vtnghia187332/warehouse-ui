@@ -288,7 +288,7 @@ export default {
         ],
       },
       acquited: {
-        title: "Acquit Money",
+        title: "Trả thêm tiền",
         invoiceId: null,
         needToPay: 0,
         moneyPaid: {
@@ -306,7 +306,7 @@ export default {
         },
       },
       canceled: {
-        title: "Cancel",
+        title: "Huỷ hoá đơn",
         invoiceId: null,
         reasonCancel: {
           id: "reasonCancel",
@@ -323,7 +323,7 @@ export default {
         },
       },
       refund: {
-        title: "Refund",
+        title: "Hoàn lại tiền",
         invoiceId: null,
         totalInvoicePaid: 0,
         moneyRefund: {

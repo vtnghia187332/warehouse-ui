@@ -8,7 +8,7 @@
       :append-to-body="true"
       destroy-on-close
     >
-      <label class="!font-bold block"> Need To Pay </label>
+      <label class="!font-bold block"> Số tiền cần trả thêm </label>
       <input
         class="p-2 pl-3 relative border rounded-sm w-full focus:!border-gray-700 focus:!ring-gray-700"
         :value="addCommas(field.needToPay)"

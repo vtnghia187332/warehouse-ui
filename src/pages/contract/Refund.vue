@@ -8,7 +8,7 @@
       :append-to-body="true"
       destroy-on-close
     >
-      <label class="!font-bold block"> Total Invoice Paid </label>
+      <label class="!font-bold block"> Tổng số tiền đã trả </label>
       <input
         class="p-2 pl-3 relative border rounded-sm w-full focus:!border-gray-700 focus:!ring-gray-700"
         :value="addCommas(field.totalInvoicePaid)"

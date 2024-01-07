@@ -345,11 +345,7 @@
           </FormCard>
           <div class="footer-btn-fixed flex justify-end p-2">
             <el-button @click="handleCancelSubmit">Thoát</el-button>
-            <el-button
-              @click="handleSubmit"
-              :disabled="invalid"
-              class="bg-blue-400"
-              type="primary"
+            <el-button @click="handleSubmit" class="bg-blue-400" type="primary"
               >Đồng ý</el-button
             >
           </div>
@@ -681,6 +677,7 @@ export default {
         ).value || 0;
 
       if (this.$route.params.data.type === "EDIT") {
+        this.loadingPageDetail = true;
         axios({
           method: "put",
           url: "http://localhost:9090/api/v1/warehouse",
@@ -695,9 +692,11 @@ export default {
                 message: "Sửa thành công",
                 type: "success",
               });
+              this.loadingPageDetail = false;
             }
           })
           .catch((error) => {
+            this.loadingPageDetail = false;
             this.$message({
               showClose: true,
               message: error.response.data.items,
@@ -705,6 +704,7 @@ export default {
             });
           });
       } else {
+        this.loadingPageDetail = true;
         axios({
           method: "post",
           url: "http://localhost:9090/api/v1/warehouse",
@@ -982,7 +982,6 @@ export default {
     }
     await this.getListAddress();
     await this.getWarehouseDetail();
-    this.loadingPageDetail = false;
   },
 };
 </script>
