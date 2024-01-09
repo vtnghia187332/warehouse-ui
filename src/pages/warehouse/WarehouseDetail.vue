@@ -1,10 +1,6 @@
 <template>
   <ValidationObserver v-slot="{ invalid }" ref="observerAdd">
-    <loading-page v-show="loadingPageDetail"></loading-page>
-    <div
-      v-show="!loadingPageDetail"
-      class="bg-page-background overflow-y-auto w-full py-4 mb-16"
-    >
+    <div class="bg-page-background overflow-y-auto w-full py-4 mb-16">
       <el-row :gutter="20" class="flex gap-x-4 detail w-full">
         <el-col :span="15" class="forms grow">
           <FormCard title="Thông tin cửa hàng" class="mb-3">
@@ -616,7 +612,6 @@ export default {
         .catch((_) => {});
     },
     handleSubmit() {
-      this.loadingPageDetail = true;
       const keyContactReqs = this.$refs["key-contact"].getDataKeyContacts();
       this.specialDayOn.forEach((object) => {
         object.specialStartDay = object.time[0];

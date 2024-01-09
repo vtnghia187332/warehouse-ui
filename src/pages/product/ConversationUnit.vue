@@ -1,5 +1,5 @@
 <template>
-  <ValidationObserver v-slot="{ invalid }" ref="observer">
+  <ValidationObserver v-slot="{ invalid }" ref="observerrrr">
     <el-dialog
       title="Quy đổi đơn vị"
       :visible="dialogVisibleUnit"
@@ -87,7 +87,7 @@ export default {
           classes: "w-full col-span-6",
           type: "text",
           label: "Đơn vị",
-          isRequired: "false",
+          isRequired: "",
           value: "",
           valueTxt: "",
           placeholder: "",
@@ -97,9 +97,9 @@ export default {
         unitDestinationId: {
           id: "Conservation Unit",
           name: "Conservation Unit",
-          rules: "required",
+          rules: "",
           classes: "w-full",
-          isRequired: "true",
+          isRequired: "",
           placeholder: "Chọn đơn vị quy đổi",
           error: "",
           value: "",
@@ -123,9 +123,9 @@ export default {
         calUnit: {
           id: "Calculation",
           name: "Calculation",
-          rules: "required",
+          rules: "",
           classes: "w-full",
-          isRequired: "true",
+          isRequired: "",
           placeholder: "Chọn phép tính",
           error: "",
           value: "",

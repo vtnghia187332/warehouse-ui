@@ -39,21 +39,16 @@
         <div slot="append" v-if="products.length == '0'">
           <el-empty :image-size="300"></el-empty>
         </div>
-        <el-table-column fixed prop="productId" label="ID Nguyên vật liệu" width="150">
-        </el-table-column>
         <el-table-column
-          sortable
-          prop="createdAt"
-          label="Ngày tạo"
-          width="250"
+          fixed
+          prop="productId"
+          label="ID Nguyên vật liệu"
+          width="150"
         >
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="editedAt"
-          label="Ngày sửa"
-          width="250"
-        >
+        <el-table-column sortable prop="createdAt" label="Ngày tạo" width="250">
+        </el-table-column>
+        <el-table-column sortable prop="editedAt" label="Ngày sửa" width="250">
         </el-table-column>
         <el-table-column
           sortable
@@ -73,16 +68,21 @@
             >
           </template>
         </el-table-column>
-        <el-table-column sortable prop="code" label="Mã Nguyên vật liệu" width="250">
-        </el-table-column>
-        <el-table-column sortable prop="name" label="Nguyên vật liệu" width="250">
+        <el-table-column
+          sortable
+          prop="code"
+          label="Mã Nguyên vật liệu"
+          width="250"
+        >
         </el-table-column>
         <el-table-column
           sortable
-          prop="description"
-          label="Mô tả"
-          width="150"
+          prop="name"
+          label="Nguyên vật liệu"
+          width="250"
         >
+        </el-table-column>
+        <el-table-column sortable prop="description" label="Mô tả" width="150">
         </el-table-column>
         <el-table-column prop="quantity" label="Số lượng" width="150">
         </el-table-column>
@@ -124,7 +124,9 @@
             <el-tag
               :type="scope.row.isActive === 1 ? 'success' : 'danger'"
               disable-transitions
-              >{{ scope.row.isActive == 1 ? "Hoạt động" : "Không hoạt động" }}</el-tag
+              >{{
+                scope.row.isActive == 1 ? "Hoạt động" : "Không hoạt động"
+              }}</el-tag
             >
           </template>
         </el-table-column>
@@ -201,7 +203,7 @@ export default {
         type: "EDIT",
       };
       this.$router.push({
-        name: "payment",
+        name: "Hoá đơn chi tiết",
         params: { data },
       });
     },
