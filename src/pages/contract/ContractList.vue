@@ -623,19 +623,12 @@ export default {
           }
         })
         .catch((error) => {
-          if (error.response.data.message) {
-            this.$message({
-              showClose: true,
-              message: error.response.data.message,
-              type: "error",
-            });
-          } else if (error.response.data.items) {
+          if (error.response.data.items) {
             this.$message({
               showClose: true,
               message: error.response.data.items,
               type: "error",
             });
-            this.$refs.observerAdd.setErrors(error.response.data.items);
           }
         });
     },

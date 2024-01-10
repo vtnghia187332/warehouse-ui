@@ -146,13 +146,21 @@
             </div>
             <div class="grid grid-cols-6 gap-4 mt-2">
               <el-col class="col-span-4">Hóa đơn xuất</el-col>
-              <el-col class="">{{ detail.numberInvoiceInDebtExport }}</el-col>
-              <el-col class="">{{ detail.totalInDebtExport }} VNĐ</el-col>
+              <el-col class="">{{
+                addCommas(detail.numberInvoiceInDebtExport)
+              }}</el-col>
+              <el-col class=""
+                >{{ addCommas(detail.totalInDebtExport) }} VNĐ</el-col
+              >
             </div>
             <div class="grid grid-cols-6 gap-4 mt-2">
               <el-col class="col-span-4">Hóa đơn nhập</el-col>
-              <el-col class="">{{ detail.numberInvoiceInDebtReceipt }}</el-col>
-              <el-col class="">{{ detail.totalInDebtReceipt }} VNĐ</el-col>
+              <el-col class="">{{
+                addCommas(detail.numberInvoiceInDebtReceipt)
+              }}</el-col>
+              <el-col class=""
+                >{{ addCommas(detail.totalInDebtReceipt) }} VNĐ</el-col
+              >
             </div>
           </el-card>
 
@@ -285,8 +293,12 @@ export default {
             type: "shadow",
           },
           formatter: (params) => {
-            return `Tổng nhập: <span />${this.addCommas(params[0].value)} VNĐ<br />
-                Tổng bán: <span />${this.addCommas(params[1].value)} VNĐ<span />`;
+            return `Tổng nhập: <span />${this.addCommas(
+              params[0].value
+            )} VNĐ<br />
+                Tổng bán: <span />${this.addCommas(
+                  params[1].value
+                )} VNĐ<span />`;
           },
         },
         series: [],

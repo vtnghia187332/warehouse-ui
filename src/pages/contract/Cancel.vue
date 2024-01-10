@@ -19,7 +19,7 @@
           class="bg-blue-700"
           type="primary"
           @click="handleData"
-          >{{ field.actionType == "CREATED" ? "Create" : "Update" }}</el-button
+          >{{ field.actionType == "CREATED" ? "Thêm mới" : "Cập nhật" }}</el-button
         >
       </span>
     </el-dialog>

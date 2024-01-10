@@ -23,7 +23,7 @@
           class="bg-blue-700"
           type="primary"
           @click="handleData"
-          >Update</el-button
+          >Cập nhật</el-button
         >
       </span>
     </el-dialog>
