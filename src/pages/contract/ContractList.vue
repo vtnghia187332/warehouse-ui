@@ -356,12 +356,12 @@ export default {
       statusInvoice: {
         value: "",
         options: [
-          { label: "UNPAID", value: 1 },
-          { label: "PAID", value: 2 },
-          { label: "CANCELED", value: 3 },
-          { label: "REFUND_ALL", value: 4 },
-          { label: "REFUND_LITTLE", value: 5 },
-          { label: "IN_DEBT", value: 6 },
+          { label: "Chưa trả", value: 1 },
+          { label: "Đã trả", value: 2 },
+          { label: "Huỷ", value: 3 },
+          { label: "Hoàn tiền toàn phần", value: 4 },
+          { label: "Hoàn tiền một phần", value: 5 },
+          { label: "Ghi nợ", value: 6 },
         ],
       },
       loadingTable: false,
@@ -420,7 +420,19 @@ export default {
         if (!itemStr) {
           this.paginationPage.invoiceStatus = null;
         } else {
-          this.paginationPage.invoiceStatus = itemStr;
+          if ("Chưa trả" == itemStr) {
+            this.paginationPage.invoiceStatus = "UNPAID";
+          } else if ("Đã trả" == itemStr) {
+            this.paginationPage.invoiceStatus = "PAID";
+          } else if ("Huỷ" == itemStr) {
+            this.paginationPage.invoiceStatus = "CANCELED";
+          } else if ("Hoàn tiền toàn phần" == itemStr) {
+            this.paginationPage.invoiceStatus = "REFUND_ALL";
+          } else if ("Hoàn tiền một phần" == itemStr) {
+            this.paginationPage.invoiceStatus = "REFUND_LITTLE";
+          } else if ("Ghi nợ" == itemStr) {
+            this.paginationPage.invoiceStatus = "IN_DEBT";
+          }
         }
         this.handleGetInvoicesEx();
       }
