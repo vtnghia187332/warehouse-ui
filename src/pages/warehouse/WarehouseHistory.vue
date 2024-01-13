@@ -320,12 +320,19 @@
 
         <el-table-column fixed="right" label="Action" width="70">
           <template slot-scope="scope">
-            <el-button
-              @click="handleRestoreWarehouse(scope.row)"
-              type="text"
-              size="small"
-              ><i class="el-icon-document-copy text-2xl"></i
-            ></el-button>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="Khôi phục"
+              placement="bottom"
+            >
+              <el-button
+                @click="handleRestoreWarehouse(scope.row)"
+                type="text"
+                size="small"
+                ><i class="el-icon-refresh text-2xl"></i
+              ></el-button>
+            </el-tooltip>
           </template>
         </el-table-column>
       </el-table>
@@ -408,7 +415,7 @@ export default {
         .then((res) => {
           this.$message({
             showClose: true,
-            message: "Restored successfully",
+            message: "Khôi phục thành công",
             type: "success",
           });
           this.getHistoryWarehouses();
