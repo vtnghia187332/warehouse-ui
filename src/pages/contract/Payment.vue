@@ -189,14 +189,14 @@
             <el-button
               :disabled="this.$route.params.data.type === 'VIEW'"
               @click="handleCancelSubmit"
-              >Cancel</el-button
+              >Huỷ</el-button
             >
             <el-button
               :disabled="this.$route.params.data.type === 'VIEW'"
               @click="handleSubmit"
               class="bg-blue-400"
               type="primary"
-              >Submit</el-button
+              >Đồng ý</el-button
             >
           </div>
         </el-col>

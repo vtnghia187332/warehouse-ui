@@ -142,12 +142,6 @@
         <el-table-column fixed="right" label="Hành động" width="100">
           <template slot-scope="scope">
             <el-button
-              @click="handeDuplicateDetail(scope.row)"
-              type="text"
-              size="small"
-              ><i class="el-icon-document-copy text-2xl"></i
-            ></el-button>
-            <el-button
               @click="handeDeleteDetail(scope.row)"
               type="text"
               size="small"

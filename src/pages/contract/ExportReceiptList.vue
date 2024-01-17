@@ -84,7 +84,11 @@
         </el-table-column>
         <el-table-column sortable prop="code" label="Khách hàng" width="250">
           <template slot-scope="scope">
-            {{ scope.row.customer.fullName }}
+            {{
+              scope.row.customer.fullName
+                ? scope.row.customer.fullName
+                : scope.row.customer.companyName
+            }}
           </template>
         </el-table-column>
         <el-table-column
