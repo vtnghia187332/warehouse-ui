@@ -188,7 +188,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <div class="flex justify-end border-spacing-1">
-          <el-button @click="handleCloseDialog">Cancel</el-button>
+          <el-button @click="handleCloseDialog">Huỷ</el-button>
           <el-button @click="reUploadFile" class="bg-blue-400 text-white"
             >Nhậu khẩu</el-button
           >

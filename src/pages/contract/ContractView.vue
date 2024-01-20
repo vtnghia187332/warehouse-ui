@@ -162,7 +162,7 @@
             </template>
           </FormCard>
           <div class="footer-btn-fixed flex justify-end p-2">
-            <el-button @click="handleCancelSubmit">Cancel</el-button>
+            <el-button @click="handleCancelSubmit">Huỷ</el-button>
           </div>
         </el-col>
       </el-row>

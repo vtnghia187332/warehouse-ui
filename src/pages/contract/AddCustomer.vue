@@ -133,7 +133,7 @@
         </FormCard>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">Cancel</el-button>
+        <el-button @click="handleClose">Huỷ</el-button>
         <el-button class="bg-blue-700" type="primary" @click="handleData"
           >Create</el-button
         >

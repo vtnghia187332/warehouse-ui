@@ -11,7 +11,7 @@
       <BaseInput :field="field.roleName" v-model="field.roleName.value" />
       <BaseTextArea :field="field.roleDes" v-model="field.roleDes.value" />
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">Cancel</el-button>
+        <el-button @click="handleClose">Huỷ</el-button>
         <el-button
           :disabled="invalid"
           class="bg-blue-700"

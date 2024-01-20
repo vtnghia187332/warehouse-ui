@@ -10,7 +10,7 @@
     >
       <BaseInput :field="field" v-model="field.value" />
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">Cancel</el-button>
+        <el-button @click="handleClose">Huỷ</el-button>
         <el-button
           :disabled="invalid"
           class="bg-blue-700"

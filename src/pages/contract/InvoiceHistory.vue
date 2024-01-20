@@ -70,6 +70,11 @@
             {{ scope.row.customer.fullName }}
           </template>
         </el-table-column>
+        <el-table-column sortable prop="" label="Doanh nghiệp" width="250">
+          <template slot-scope="scope">
+            {{ scope.row.customer.companyName }}
+          </template>
+        </el-table-column>
         <el-table-column
           sortable
           prop="typeInvoice"

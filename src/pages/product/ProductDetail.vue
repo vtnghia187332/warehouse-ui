@@ -632,7 +632,10 @@ export default {
           return el.index == item.id ? { ...item } : el;
         });
       } else {
-        this.units.push({ ...item, id: this.units?.length });
+        if (!this.units) {
+          this.units = [];
+        }
+        this.units.push({ ...item, id: this.units ? this.units.length : 0 });
       }
     },
     handleCalUnitDetail(row, col, event) {
