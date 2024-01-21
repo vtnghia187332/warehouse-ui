@@ -95,7 +95,7 @@ export default {
         },
       },
     };
-},
+  },
   methods: {
     ...mapMutations(["setUserDetail"]),
     ...mapActions(["updateUserDetail"]),
@@ -135,7 +135,11 @@ export default {
           }
         })
         .catch(function (error) {
-          me.$refs.observerAdd.setErrors(error.response.data.items);
+          me.$message({
+            showClose: true,
+            message: error.response.data.items,
+            type: "error",
+          });
         });
     },
   },

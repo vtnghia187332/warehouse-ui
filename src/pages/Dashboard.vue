@@ -14,8 +14,7 @@
             v-model="dateFromToSearch"
             type="daterange"
             align="right"
-            unlink-panels
-            range-separator="To"
+            range-separator="Đến ngày"
             start-placeholder="Start Date"
             format="yyyy-MM-dd"
             value-format="yyyy-MM-dd"
@@ -307,7 +306,12 @@ export default {
       paymentMethodsStas: {
         tooltip: {
           trigger: "item",
-          formatter: "{b} : {c} VNĐ - ({d}%)",
+          formatter: (params) => {
+            var me = this;
+            return `${params.data.name}: ${me.addCommas(
+              params.data.value
+            )} VNĐ<span />, chiếm ${params.percent}%`;
+          },
         },
         series: [
           {
@@ -371,9 +375,22 @@ export default {
   },
   methods: {
     checkDateSearch(data) {
-      this.handleGetApiDashboard();
+      if (!data) {
+        if (error.response.data.items) {
+          this.$message({
+            showClose: true,
+            message: "Ngày tìm kiếm không được để trống",
+            type: "error",
+          });
+        }
+      } else {
+        this.handleGetApiDashboard();
+      }
     },
     addCommas(nStr) {
+      if (!nStr) {
+        return 0;
+      }
       nStr += "";
       const x = nStr.split(".");
       let x1 = x[0];

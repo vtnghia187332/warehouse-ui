@@ -133,14 +133,15 @@
           width="200"
         >
         </el-table-column>
-        <el-table-column
-          sortable
-          prop="totalPaid"
-          label="Tổng tiền hóa đơn"
-          width="200"
-        >
+        <el-table-column sortable label="Tổng tiền hóa đơn" width="200">
+          <template slot-scope="scope">
+            {{ !scope.row.totalPaid ? "" : addCommas(scope.row.totalPaid) }}
+          </template>
         </el-table-column>
-        <el-table-column prop="moneyPaid" label="Số tiền đã trả" width="200">
+        <el-table-column label="Số tiền đã trả" width="200">
+          <template slot-scope="scope">
+            {{ !scope.row.moneyPaid ? "" : addCommas(scope.row.moneyPaid) }}
+          </template>
         </el-table-column>
         <el-table-column prop="consignee" label="Người nhận hàng" width="200">
         </el-table-column>
@@ -156,11 +157,10 @@
           width="300"
         >
         </el-table-column>
-        <el-table-column
-          prop="moneyRefund"
-          label="Số tiền hoàn trả"
-          width="200"
-        >
+        <el-table-column label="Số tiền hoàn trả" width="200">
+          <template slot-scope="scope">
+            {{ !scope.row.moneyRefund ? "" : addCommas(scope.row.moneyRefund) }}
+          </template>
         </el-table-column>
         <el-table-column prop="reason" label="Lý do hoàn tiền" width="300">
         </el-table-column>
@@ -378,6 +378,17 @@ export default {
     };
   },
   methods: {
+    addCommas(nStr) {
+      nStr += "";
+      const x = nStr.split(".");
+      let x1 = x[0];
+      const x2 = x.length > 1 ? "." + x[1] : "";
+      const rgx = /(\d+)(\d{3})/;
+      while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, "$1" + "," + "$2");
+      }
+      return x1 + x2;
+    },
     goToDetail(row) {
       let data = {
         id: row.invoiceId,
